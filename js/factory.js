@@ -1,3 +1,59 @@
+
+//函数节流,可以限制频繁触发函数的频率。如输入框输入之后自动延迟搜索，拖拽等。参数：延迟执行函数 ， 延迟执行时间,单位ms，在一定时间内必执行，默认为30ms ，state 是否立即执行, true 立即执行， false 否，默认false；
+function throttling(fn, delay, t, state){
+    "use strict";
+
+    if(t){
+        var time = 0;//距离开始的时间
+
+        delay = delay || 1000;
+        t = t || 30;
+        //初始fn.isUpdata false ,设置开始时间， isUpdata 设置为true，判断isUpdata 状态，决定是否更新开始时间；
+        if(!fn.isUpdata){
+            fn.start = new Date().getTime();
+            fn.isUpdata = true;
+        }
+        //每次执行，更新当前时间，即结束时间；
+        fn.end = new Date().getTime();
+        //获得距离开始的时间；
+        time = (fn.end - fn.start);
+        //如果距离开始的时间，大于或等于设置的在一定时间内必须执行的时间，则直接执行函数，将当前时间更新为开始时间，isUpdata设置为false;
+        if(time >= t){
+            return (function (){
+                fn.start = fn.end;
+                fn.isUpdata = false;
+                fn();
+            })();
+        }
+    }
+
+    //执行函数节流函数之前，将上一个延时器清除，从新设置延时器，若一段时间不触发，则在延迟执行时间之后执行函数；
+    return (function (){
+        clearTimeout(fn.id);
+        if( !state){
+            fn.id = setTimeout(fn,delay);
+        }else{
+            fn();
+        }
+
+    })();
+
+}
+
+
+/*
+*
+* 过滤Json项
+* filterData可以为数组，或者函数
+*
+* */
+function filterJson (data,filterData){
+    "use strict";
+    var newData = JSON.stringify(data,filterData);
+    return JSON.parse(newData);
+
+}
+
 //判断是否为数组
 function isArray(obj){
     return Object.prototype.toString.call(obj) === '[object Array]';
@@ -12,36 +68,40 @@ function maxArr_$(arr){
     if(!isArray(arr))return;
     var item = arr[0];
     for(var i=1;i<arr.length;i++){
-        if(item<arr[i])item=arr[i]
+        if(item<arr[i]){
+            item=arr[i];
+        }
     }
-    return item
+    return item;
 }
 function minArr_$(arr){
     if(!isArray(arr))return;
     var item = arr[0];
     for(var i=1;i<arr.length;i++){
-        if(item>arr[i])item=arr[i]
+        if(item>arr[i]){
+            item=arr[i];
+        }
     }
-    return item
+    return item;
 }
 //去重
 function removal_$(arr){
     if(!isArray(arr)){
-        return
+        return;
     }
     var newArr= new Array("");
     for(var i=0;i<arr.length;i++){
         if(newArr.indexOf(arr[i])===-1){
-            newArr.push(arr[i])
+            newArr.push(arr[i]);
         }
     }
     return newArr;
 }
 //排序
 function sort_$(arr){
-    var minArr=new Array();
-    var maxArr = new Array();
-    var newArr = new Array();
+    var minArr=[];
+    var maxArr = [];
+    var newArr = [];
     (function sort_inner(arr){
         var maxItem = maxArr_$(arr);
         maxArr.unshift(maxItem);
@@ -50,9 +110,9 @@ function sort_$(arr){
         minArr.push(minItem);
         arr.splice(arr.indexOf(minItem),1);
         if(arr.length>0){
-            sort_inner(arr)
+            sort_inner(arr);
         }else{
-            return newArr=minArr.concat(maxArr)
+            return newArr=minArr.concat(maxArr);
         }
     })(arr);
     return newArr;
