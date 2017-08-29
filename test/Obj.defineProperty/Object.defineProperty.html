@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="text" id="value2">
+<span id="value"></span>
+</body>
+
+<script>
+    var obj = {};
+    //为对象设置属性
+    Object.defineProperty(obj,'value2',{
+        //不能 同时设置访问器 (get 和 set) 和 wriable 或 value，否则会错，就是说想用(get 和 set)，就不能用（wriable 或 value中的任何一个）
+//        value: '',//属性的值
+//        writable: false,// 如果为false，属性的值只能读，不能重写
+//        enumerable: false,//总开关，一旦设置为false ,就不能设置其他，且第二次设置也不生效。
+//        configurable: false,//是否能在for … in 循环中遍历出来或者在 Object.keys 中列举出来
+        set:function(newVal){
+            document.getElementById('value2').value = newVal;
+            document.getElementById('value').innerHTML = newVal;
+        }
+    });
+
+    Object.defineProperty(obj, 'value', {
+        value:111
+    });
+
+    document.addEventListener('keyup',function(e){
+        obj.value2 = e.target.value;
+        console.log(obj)
+    });
+</script>
+</html>
