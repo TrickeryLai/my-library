@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Maze</title>
+</head>
+<style>
+    *{
+        margin:0;
+        padding:0;
+    }
+    .clear:after{
+        content:"";
+        display:block;
+        width:0;
+        height:0;
+        clear:both;
+    }
+    div,span{
+        margin:0;
+        padding:0;
+    }
+    #mazeWrap{
+        border:1px solid #000;
+        position:absolute;
+        left:0;
+        right:0;
+        top:0;
+        bottom:0;
+        margin:auto;
+        width:60%;
+    }
+    .ceil{
+        width:10px;
+        height:10px;
+        border:1px solid #000;
+        display:block;
+        float:left
+    }
+    .ceil-first-true{
+        background:yellow;
+    }
+    .ceil-last-true{
+        background:red;
+    }
+    .ceil-left-true{
+        border-left-color:transparent;
+    }
+    .ceil-top-true{
+        border-top-color:transparent;
+    }
+    .ceil-right-true{
+        border-right-color:transparent;
+    }
+    .ceil-down-true{
+        border-bottom-color:transparent;
+    }
+    .ceil-nowPlace-true{
+        background:orange;
+    }
+    .ceil-isBranch-true{
+    }
+</style>
+<body>
+    <div class="" id="mazeSetting">
+        <input type="text" id="mazeRow">
+        <input type="text" id="mazeCol">
+        <button type="button" id="mazeReset">开始</button>
+    </div>
+
+</body>
+<script src="js/index.js"></script>
+
+</html>
