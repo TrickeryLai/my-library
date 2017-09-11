@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .wrap{
+            position:absolute;
+            margin:200px;
+            transform-style: preserve-3d;
+            backface-visibility:hidden;/*后面元素不可见*/
+            perspective: 600px; /*透视*/
+            transform-origin:center;
+        }
+        .perspective{
+            perspective: 600px; /*透视*/
+        }
+        .box{
+            position:absolute;
+            width:100px;
+            height:100px;
+            box-shadow: 0px 0px 50px 0px lightblue inset,0px 0px 20px 0px red inset;
+            /*background:lightblue;*/
+            /*transform-origin:bottom left;*/
+            /*transform: rotate3d(0, 0, 1, 5deg);*/
+            /*transform:rotateX(5deg) rotateY(5deg) rotateZ(5deg);*/
+        }
+        .box1{
+            position:absolute;
+            left:100px;
+            transform:rotateY(-90deg);
+            transform-origin:left;
+        }
+        .box2{
+            position:absolute;
+            left:-100px;
+            transform:rotateY(90deg);
+            transform-origin:right;
+        }
+        .box3{
+            position:absolute;
+            top:-100px;
+            transform:rotateX(-90deg);
+            transform-origin:bottom;
+        }
+        .box4{
+            position:absolute;
+            top:100px;
+            transform:rotateX(180deg);
+            transform-origin:top;
+        }
+        .box5{
+            position:absolute;
+            top:-200px;
+            transform:rotateX(90deg);
+            transform-origin:bottom;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="wrap" class="wrap">
+        <div class="box">
+           <div class="box box1"></div>
+           <div class="box box2"></div>
+           <div class="box box3"></div>
+           <div class="box box4">
+               <div class="box box5"></div>
+           </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    function getStyle(ele) {
+        var style = null;
+        if(window.getComputedStyle) {
+            style = window.getComputedStyle(ele, null);
+        }else{
+            style = ele.currentStyle;
+        }
+        return style;
+    }
+    window.onload = function(){
+        var wrapDom = document.getElementById('wrap');
+
+        var lastClient = {
+            x: null,
+            y: null
+        };
+
+        var rotate = {
+            x:0,
+            y:0,
+            z:0
+        };
+        wrapDom.onmousedown = function(e){
+            var click = {
+                x: e.clientX,
+                Y: e.clientY
+            };
+            lastClient = click;
+            console.log(getStyle(this).transform);
+            document.onmousemove = function(e){
+                var style = '';
+               if(lastClient.x < e.clientX){
+                   console.log('右滑');
+                   //z 轴，逆时针
+                   style +='rotateZ('+rotate.z-- +'deg)';
+               }else{
+                   console.log('左滑');
+                   style += 'rotateZ('+rotate.z++ +'deg)';
+               }
+
+               if(lastClient.y < e.clientY){
+                   console.log('下滑');
+                   //y 轴 逆时针
+                   style += 'rotateX('+rotate.x++ +'deg)';
+               }else{
+                   console.log('上滑');
+                   style += 'rotateX('+rotate.x-- +'deg)';
+               }
+                this.style.transform = style;
+               lastClient = {
+                   x: e.clientX,
+                   y: e.clientY
+               }
+            }.bind(this)
+        };
+        document.onmouseup = function(){
+            this.onmousemove = function(){
+                return null;
+            }
+        }
+    }
+
+</script>
+</html>

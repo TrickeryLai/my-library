@@ -10,8 +10,6 @@
 
     myColor.prototype= {
         create: function(){
-            var a = b = c =0;
-
 
 
         },
