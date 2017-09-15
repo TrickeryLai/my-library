@@ -21,7 +21,7 @@
     }
 
     Maze.prototype = {
-
+        //创建基本数据
         createCeil: function(row, col){
           var ceilArr = [],
                 rowArr = [];
@@ -40,6 +40,36 @@
               ceilArr.push(rowArr);
           }
           return ceilArr;
+        },
+        //获取可以走的方向，返回arr [0,1,2,3]，上、右、下、左
+        getDirection: function getDirection(x, y, ceilData, row, col){
+            var dirArrAll = [],
+                _this = {
+                    row: row,
+                    col: col
+                };
+
+            // 如果x轴大于一，可以往上，并且上面方向的墙未通,且上面未被访问
+            if(x >= 1 &&  !ceilData[x][y].topWall && !ceilData[x-1][y].isVisited){
+                dirArrAll.push(0);
+            }
+            // 如果x轴小于最大边，可以往下, 并且下面方向的墙未通
+
+            if( x < _this.row -1 && !ceilData[x][y].downWall && !ceilData[x- (-1)][y].isVisited){
+                dirArrAll.push(2);
+            }
+
+            // 如果y 轴大于一，可以往左，并且左边方向的墙未通
+            if(y >=1 && !ceilData[x][y].leftWall && !ceilData[x][y-1].isVisited){
+                dirArrAll.push(3);
+            }
+
+            // 如果y轴小于最大边，可以往右
+            if(y <_this.col-1 && !ceilData[x][y].rightWall && !ceilData[x][y- (-1)].isVisited){
+                dirArrAll.push(1);
+            }
+
+            return dirArrAll;
         },
 
         create: function(){
@@ -129,28 +159,9 @@
                 if(visitedCanThrough.indexOf(ceilData[x][y].id) === -1 && x !== endA && y !== endB){
                     visitedCanThrough.push(ceilData[x][y].id);
                 }
-                var dirArrAll = [];
-
-                // 如果x轴大于一，可以往上，并且上面方向的墙未通,且上面未被访问
-                if(x >= 1 &&  !ceilData[x][y].topWall && !ceilData[x-1][y].isVisited){
-                    dirArrAll.push(0);
-                }
-                // 如果x轴小于最大边，可以往下, 并且下面方向的墙未通
-
-                if( x < _this.row -1 && !ceilData[x][y].downWall && !ceilData[x- (-1)][y].isVisited){
-                    dirArrAll.push(2);
-                }
-
-                // 如果y 轴大于一，可以往左，并且左边方向的墙未通
-                if(y >=1 && !ceilData[x][y].leftWall && !ceilData[x][y-1].isVisited){
-                    dirArrAll.push(3);
-                }
-
-                // 如果y轴小于最大边，可以往右
-                if(y <_this.col-1 && !ceilData[x][y].rightWall && !ceilData[x][y- (-1)].isVisited){
-                    dirArrAll.push(1);
-                }
-                randomDirect(dirArrAll);
+                //获取可以通的方向，随机方向
+                randomDirect(_this.getDirection(x, y, ceilData, _this.row, _this.col));
+                /*----------------------------------------------------------------------------------*/
                 function randomDirect(dirArr){
                     if(dirArr.length === 1 && visitedCanThrough.indexOf(ceilData[x][y].id) !== -1){
                         //将已经四周都被访问过的点，从 visitedCanThrough 中删除
@@ -284,6 +295,10 @@
             }
 
             return this;
+        },
+        autoPath: function(){
+            //自动寻路
+
         }
     };
     var row, col, myMaze;

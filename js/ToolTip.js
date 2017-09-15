@@ -17,7 +17,13 @@
     var ToolTip = function(params){
         var color = params ? (params.color ? params.color : '#c8c8c8') : '#c8c8c8';
         this.delayTime = 500;//鼠标移入延迟时间显示
-        this.element = document.createElement('div');
+
+        if(document.getElementById('_title-tooltip')){
+            this.element = document.getElementById('_title-tooltip');
+        }else{
+            this.element = document.createElement('_title-tooltip');
+        }
+
         this.element.id = 'util-toolTip';
         this._utilId = 'util-toolTip';//将此 id 存储，方便后续使用
         // this.element.style.display = 'none';

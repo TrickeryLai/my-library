@@ -53,6 +53,21 @@ function filterJson (data,filterData){
     return JSON.parse(newData);
 
 }
+//判断字符串是否为回文结构
+
+function isPalindrome(str){
+    "use strict";
+     str = str.replace(/W/g, '').toLowerCase();
+    return (str === str.split('').reverse().join(''));
+}
+
+//判断是否为isNaN 类型
+function isNaN (n){
+    if(typeof n === 'number' && n === n){
+        return false;
+    }
+    return true;
+}
 
 //判断是否为数组
 function isArray(obj){
