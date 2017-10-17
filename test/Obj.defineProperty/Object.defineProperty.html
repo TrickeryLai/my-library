@@ -6,9 +6,12 @@
 </head>
 <body>
 <input type="text" id="value2">
-<span id="value"></span>
+<div id="value"></div>
+<span ng-bind="value3"></span>
+<span ng-bind="value3"></span>
+<span ng-bind="value3"></span>
+<span ng-bind="value3"></span>
 </body>
-
 <script>
     var obj = {};
     //为对象设置属性
@@ -19,8 +22,8 @@
 //        enumerable: false,//总开关，一旦设置为false ,就不能设置其他，且第二次设置也不生效。
 //        configurable: true,//是否能在for … in 循环中遍历出来或者在 Object.keys 中列举出来
         set:function(newVal){
-            document.getElementById('value2').value = newVal;
-            document.getElementById('value').innerHTML = newVal;
+//            document.getElementById('value2').value = newVal;
+            document.getElementById('value').innerText = newVal;
         }
     });
 
@@ -28,9 +31,32 @@
         value:111
     });
 
+
+    function setData (){
+        obj[arguments[0]] = arguments[1];
+        var arg = arguments;
+        Object.defineProperty(obj,arguments[0],{
+            set:function(){
+                var allNodes = document.querySelector('body').childNodes;
+                for(var i = 0; i<allNodes.length; i++){
+                    if(allNodes[i].nodeType !== 3 && allNodes[i].getAttribute('ng-bind') == arg[0]){
+                        allNodes[i].innerText = arg[1];
+                    }
+                }
+            },
+            get: function(){
+                return arg[1];
+            }
+        });
+        obj[arguments[0]] = arguments[1];
+    }
+
     document.getElementById('value2').addEventListener('keyup',function(e){
         obj.value2 = e.target.value;
-        console.log(obj)
+        setData('value3', e.target.value);
+        obj.a = 123124;
+        console.log(obj);
     });
+
 </script>
 </html>

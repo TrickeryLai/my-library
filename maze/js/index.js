@@ -286,6 +286,7 @@
                     default:
                         break;
                 }
+                //如果走到了终点
                 if(_this.now.x === _this.end.x && _this.now.y === _this.end.y){
                     console.log('走了'+stepNum+'步');
                     document.removeEventListener('keydown',moveFn);

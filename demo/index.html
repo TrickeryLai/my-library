@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo</title>
+</head>
+<body>
+
+</body>
+<script>
+    var a = 111;
+    function isNaN(n){
+        if(typeof n === 'number' && n === n){
+            return false
+        }
+        return true;
+    }
+
+
+    function isPalindrome(str){
+        "use strict";
+        str = str.replace(/\W/g, '').toLowerCase();
+        console.log(str);
+        return (str === str.split('').reverse().join(''));
+    }
+
+    (function(){
+        var a = b = 3;
+    })();
+    console.log(a);
+    console.log(b);
+    console.log(isNaN(a));
+
+    console.log(isPalindrome('CARAC'));
+</script>
+</html>

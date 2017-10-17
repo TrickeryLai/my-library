@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #textarea{
+            border:1px solid #ccc;
+            width:100px;
+            height:100px;
+            overflow:auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="textarea" type="textarea">
+
+    </div>
+    <textarea name="" id="" cols="30" rows="10"></textarea>
+    <div contenteditable = true style="user-modify: read-write-plaintext-only" id="divTextarea">
+        <br/>
+        这是一段可以编辑的文本
+        -webkit-user-modify: read-write-plaintext-only;目前webkit 内核支持
+         <span contenteditable="false" style="min-height: 100px;display:inline-block;min-width:10px;border:1px solid #ccc;" id="aaa">
+             我不可以编辑
+        <i contenteditable="className">我也不可以编辑</i>
+    </span>
+    </div>
+    <div contenteditable = 'plaintext-only'>
+        qeqwrq<br/>
+    </div>
+
+    <div>
+        6876767687867
+    </div>
+</body>
+<script>
+    (window.onload = function(){
+        var textarea = document.querySelector('#textarea'),
+            oldTxt = null,
+            intervalN = 0,
+            intervalTimer = null,
+            isfocus = false,
+            keyFunCode = [16,17,18,9,20];
+
+       textarea.onclick = function(){
+           if( isfocus){
+               return;
+           }
+           isfocus = true;
+           intervalN = 0;
+            oldTxt = textarea.innerText || '';
+            document.body.onkeydown = function(e){
+                if( !isfocus){
+                    return;
+                }
+
+                if(keyFunCode.indexOf(e.keyCode) !== -1){
+                    return;
+                }
+
+                if(e.keyCode === 13){
+                    oldTxt += '\n';
+                    textarea.innerText = oldTxt;
+                    textarea.scrollTop = textarea.scrollHeight;
+                    return;
+                }
+                if(e.keyCode === 8 ){
+                    oldTxt = oldTxt.length > 0 ? oldTxt.slice(0,oldTxt.length - 1) : '';
+                    textarea.innerText = oldTxt;
+                    textarea.scrollTop = textarea.scrollHeight;
+                    return
+                }
+                oldTxt += e.key;
+                textarea.innerText = oldTxt;
+                textarea.scrollTop = textarea.scrollHeight;
+            };
+           intervalTimer = setInterval(function(){
+               intervalN ++;
+               if(intervalN % 2){
+                   textarea.innerText = oldTxt + '';
+               }else{
+                   textarea.innerText = oldTxt + '|';
+               }
+            },500)
+
+       };
+
+       document.body.onclick = function(e){
+           var target = e.target;
+           if(target.getAttribute('type') !== 'textarea'){
+               clearInterval(intervalTimer);
+               textarea.innerText = oldTxt;
+               isfocus = false;
+           }
+       }
+
+       document.getElementById('aaa').onclick = function(){
+           console.log(this.innerText)
+       }
+    })();
+    (function(){
+        var divTxt = document.getElementById('divTextarea');
+        //复制文本
+        divTxt.addEventListener('paste', pasteFn);
+        function pasteFn(e){
+            console.log(window.select);
+            console.log(e.originalEvent);
+            var reg = '/<[\/]{0, 1}[^>]*[\/]{0, 1}>/g';
+            console.log(e.target.innerHTML.replace(reg, ' '));
+            console.log(e.target.innerHTML);
+//            console.log(e)
+//            this.innerText = e.target.innerText;
+        }
+    })()
+</script>
+</html>

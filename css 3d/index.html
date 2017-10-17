@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
+        .stage{
+            width:50%;
+            height:300px;
+        }
         .wrap{
             position:absolute;
             margin:200px;
@@ -13,12 +17,13 @@
             transform-origin:center;
         }
         .perspective{
-            perspective: 600px; /*透视*/
+            perspective: 300px; /*透视*/
         }
         .box{
             position:absolute;
             width:100px;
             height:100px;
+            background:red;
             box-shadow: 0px 0px 50px 0px lightblue inset,0px 0px 20px 0px red inset;
             /*background:lightblue;*/
             /*transform-origin:bottom left;*/
@@ -46,29 +51,32 @@
         .box4{
             position:absolute;
             top:100px;
-            transform:rotateX(180deg);
+            transform:rotateX(90deg);
             transform-origin:top;
         }
         .box5{
             position:absolute;
-            top:-200px;
+            top:100px;
             transform:rotateX(90deg);
-            transform-origin:bottom;
+            transform-origin:top;
         }
     </style>
 
 </head>
 <body>
+<div class="stage">
     <div id="wrap" class="wrap">
         <div class="box">
-           <div class="box box1"></div>
-           <div class="box box2"></div>
-           <div class="box box3"></div>
-           <div class="box box4">
-               <div class="box box5"></div>
-           </div>
+            <div class="box box1"></div>
+            <div class="box box2"></div>
+            <div class="box box3"></div>
+            <div class="box box4">
+                <div class="box box5"></div>
+            </div>
         </div>
     </div>
+</div>
+
 </body>
 
 <script>
@@ -115,10 +123,10 @@
                if(lastClient.y < e.clientY){
                    console.log('下滑');
                    //y 轴 逆时针
-                   style += 'rotateX('+rotate.x++ +'deg)';
+                   style += 'rotateX('+ rotate.x++ +'deg)';
                }else{
                    console.log('上滑');
-                   style += 'rotateX('+rotate.x-- +'deg)';
+                   style += 'rotateX('+ rotate.x-- +'deg)';
                }
                 this.style.transform = style;
                lastClient = {
