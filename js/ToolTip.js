@@ -52,7 +52,7 @@
         addEvnt: function(e,text){
             var _this = this,
                 titleText = text,
-                showFn =function(e, text){
+                showFn = function(e, text){
                     _this.delayShow(e, text);
                 },
 
@@ -164,35 +164,4 @@ function getCurrentStyle(node) {
     return style;
 }
 
-//价格输入，默认保留两位小数
-function currency(value,n){
-    'use strict';
-    if( isNaN(n) ){
-        console.warn(n + '错误');
-        return ;
-    }
-    if( !n && parseInt(n) !== 0){//保留小数位数
-        n=2;
-    }
-    var result=value.trim(),
-        firstNode = result.indexOf("."), //第一个‘.’的位置
-        lastNode = result.lastIndexOf(".");//最后一个‘.’ 的位置
-    //如果输入的不是数字，则截取输入之前的值
-    if( isNaN(result) && result){
-        result=result.substring(0,result.length-1);
-        return result;
-    }
-    //如果 n 为0 ；则只能输入整数
-    if( n === 0){
-        result = result.substring(0, firstNode > 0 ? firstNode  : result.length);
-    }
-    //如果result，有“.”，并且有多个（最多2个,因为，每次输入的时候都会进行此次验证，当多于一个的时候就会去掉一个），截取开始到第一个小数点之前的所有，如果第一个小数点和第二个小数点之间大于需要保留的位数，则截取从第一个“.”到第一个“.”后n位为止，不然截取到第二个“.”为止。
-    else if(firstNode !== lastNode && firstNode !== -1){
-        result=result.substring(0, firstNode)+result.substring( firstNode,(lastNode - firstNode) > n ? ( firstNode + n + 1 ) : lastNode);
-        //如果输入存在“.”,则需要开始验证n，从"."位置后开始截取，如果长度大于n，则从新截取result，把多余的舍去。
-    }else if(firstNode !== -1 && result.substring(firstNode).length > n){
-        result=result.substring(0, firstNode)+result.substring(firstNode, ( firstNode + n + 1));
-    }
-    return result;
-}
 

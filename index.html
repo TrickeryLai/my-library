@@ -27,11 +27,11 @@
 <script src="./js/jquery-1.8.0.min.js"></script>
 <script src="./js/factory.js"></script>
 <script src="./js/ToolTip.js"></script>
-<script src="./js/index.js"></script>
-<script src="./js/observer.js"></script>
+<!--<script src="./js/observer.js"></script>-->
 <script src="js/position.js"></script>
 <script src="./js/canvas.js"></script>
 <script src="js/data.js"></script>
+<script src="./es6/observer.js"></script>
 <script>
 //    var a=document.getElementById("bbb").getElementById("aaa");
 //    var smalls = document.getElementById('bbb').getElementById('aaa');
@@ -44,6 +44,20 @@
 //    window.onresize = function(){
 //       throttling(fn, 1000, 500)
 //    }
+
+
+function a(d){
+    console.log(d+ 'aaa')
+}
+function b(d){
+    console.log(d+'bbbb')
+}
+    var obs = new Observer(),
+        aaa = [];
+
+    obs.subscribe(a).subscribe(b).unsubscribe(a).publish('es6');
+    obs.subscribe(a).subscribe(b).publish('1111');
+    console.log(aaa)
 
 </script>
 </html>

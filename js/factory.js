@@ -62,24 +62,26 @@ function isPalindrome(str){
 }
 
 //判断是否为isNaN 类型
-function isNaN (n){
-    if(typeof n === 'number' && n === n){
-        return false;
-    }
-    return true;
+function isNaN( n ){
+    "use strict";
+    return typeof n === 'number' && n !== n;
 }
 
 //判断是否为数组
 function isArray(obj){
+    "use strict";
     return Object.prototype.toString.call(obj) === '[object Array]';
 }
+
 //分割字符串
 function split_$(str){
+    "use strict";
     if(typeof(str)==="string"){
         return str.split(/\s+/);//任意空格分割字符串
     }
 }
 function maxArr_$(arr){
+    "use strict";
     if(!isArray(arr))return;
     var item = arr[0];
     for(var i=1;i<arr.length;i++){
@@ -90,6 +92,7 @@ function maxArr_$(arr){
     return item;
 }
 function minArr_$(arr){
+    "use strict";
     if(!isArray(arr))return;
     var item = arr[0];
     for(var i=1;i<arr.length;i++){
@@ -101,6 +104,7 @@ function minArr_$(arr){
 }
 //去重
 function removal_$(arr){
+    "use strict";
     if(!isArray(arr)){
         return;
     }
@@ -114,9 +118,10 @@ function removal_$(arr){
 }
 //排序
 function sort_$(arr){
-    var minArr=[];
-    var maxArr = [];
-    var newArr = [];
+    "use strict";
+    var minArr=[],
+         maxArr = [],
+         newArr = [];
     (function sort_inner(arr){
         var maxItem = maxArr_$(arr);
         maxArr.unshift(maxItem);
@@ -132,19 +137,51 @@ function sort_$(arr){
     })(arr);
     return newArr;
 }
+
+//价格输入，默认保留两位小数
+function currency(value,n){
+    'use strict';
+    if( isNaN(n) ){
+        console.warn(n + '错误');
+        return ;
+    }
+    if( !n && parseInt(n) !== 0){//保留小数位数
+        n=2;
+    }
+    var result=value.trim(),
+        firstNode = result.indexOf("."), //第一个‘.’的位置
+        lastNode = result.lastIndexOf(".");//最后一个‘.’ 的位置
+    //如果输入的不是数字，则截取输入之前的值
+    if( isNaN(result) && result){
+        result=result.substring(0,result.length-1);
+        return result;
+    }
+    //如果 n 为0 ；则只能输入整数
+    if( n === 0){
+        result = result.substring(0, firstNode > 0 ? firstNode  : result.length);
+    }
+    //如果result，有“.”，并且有多个（最多2个,因为，每次输入的时候都会进行此次验证，当多于一个的时候就会去掉一个），截取开始到第一个小数点之前的所有，如果第一个小数点和第二个小数点之间大于需要保留的位数，则截取从第一个“.”到第一个“.”后n位为止，不然截取到第二个“.”为止。
+    else if(firstNode !== lastNode && firstNode !== -1){
+        result=result.substring(0, firstNode)+result.substring( firstNode,(lastNode - firstNode) > n ? ( firstNode + n + 1 ) : lastNode);
+        //如果输入存在“.”,则需要开始验证n，从"."位置后开始截取，如果长度大于n，则从新截取result，把多余的舍去。
+    }else if(firstNode !== -1 && result.substring(firstNode).length > n){
+        result=result.substring(0, firstNode)+result.substring(firstNode, ( firstNode + n + 1));
+    }
+    return result;
+}
+
 function getElement(str){
+    "use strict";
     var parent = document;
     parent = getElementRecursion(parent,str);
     function getElementRecursion(parent,str){
-        var str_first=str.slice(0,1);
-        var str_value=str.slice(1);
+        var str_first=str.slice(0,1),
+             str_value=str.slice(1);
         switch(str_first){
             case ".":
                 return parent.getElementsByClassName(str_value);
-                break;
             case "#":
                 return parent.getElementById(str_value);
-                break;
             default:
                 return parent.getElementsByTagName(str);
         }
@@ -153,7 +190,9 @@ function getElement(str){
 }
 
 (function(){
+
     function _$(strs){
+
         this.elements=[];
         for(var i=0;i<strs.length;i++){
             var str=strs[i];
@@ -161,7 +200,7 @@ function getElement(str){
         }
     }
     _$.prototype = {
-        css:function(attr,str){
+        css:function(attr, str){
             for(var n=0;n<this.elements.length;n++){
                 var obj= this.elements[n];
                 if(typeof (attr) ==="object"){
@@ -187,10 +226,10 @@ function getElement(str){
         },
         addClass:function(str){
             for(var n=0;n<this.elements.length;n++){
-                var obj=this.elements[n];
-                var strArr = split_$(str);//添加的类
-                var objClassArr = split_$(obj.className);//元素本身的类
-                var allClass = objClassArr.concat(strArr);//所有的类，未去重
+                var obj=this.elements[n],
+                     strArr = split_$(str),//添加的类
+                     objClassArr = split_$(obj.className),//元素本身的类
+                     allClass = objClassArr.concat(strArr);//所有的类，未去重
                 allClass = removal_$(allClass);//去重
                 obj.className=allClass.join(" ").trim();//以空格转换为字符串
             }
@@ -198,16 +237,16 @@ function getElement(str){
         },
         removeClass:function(str){
             for(var n=0;n<this.elements.length;n++){
-                var obj=this.elements[n];
-                var strArr = split_$(str);//去除的类
-                var objClassArr = split_$(obj.className);//元素本身的类
+                var obj=this.elements[n],
+                    strArr = split_$(str),//去除的类
+                    objClassArr = split_$(obj.className);//元素本身的类
                 objClassArr = (function(){
                     for(var i=0;i<strArr.length;i++){
                         if(objClassArr.indexOf(strArr[i])!==-1){
-                            objClassArr.splice(objClassArr.indexOf(strArr[i]),1)
+                            objClassArr.splice(objClassArr.indexOf(strArr[i]),1);
                         }
                     }
-                    return objClassArr
+                    return objClassArr;
                 })();
                 obj.className=objClassArr.join(" ").trim();
             }

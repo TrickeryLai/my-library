@@ -1,78 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="./Object"></script>
 </head>
+
 <body>
-<span id="value"></span>
-<input id="value2" />
-<button type="button" id="add"> +1</button>
-<button type="button" id="reduce"> -1</button>
+    <span id="value"></span>
+    <input id="value2" />
+    <button type="button" id="add"> +1</button>
+    <button type="button" id="reduce"> -1</button>
 </body>
 <script>
-    var value= document.getElementById('value'),
+    var value = document.getElementById('value'),
         addBtn = document.getElementById('add'),
         reduceBtn = document.getElementById('reduce');
 
 
-    function DataFn(){
-        if( !this.data){
+    function DataFn() {
+        if (!this.data) {
             this.data = {
 
             }
         }
 
-        this.setData = function(){
-            if(arguments.length >=2){
+        this.setData = function() {
+            if (arguments.length >= 2) {
                 this.data[arguments[0]] = arguments[1];
-            }else{
-                for(var i in arguments[0]){
+            } else {
+                for (var i in arguments[0]) {
                     this.data[i] = arguments[0][i];
                 }
             }
         };
 
-        this.getData = function(){
+        this.getData = function() {
             return this.data[arguments[0]];
         }
     }
 
-    function add(){
+    function add() {
         var data = this.getData('a');
-        data ++;
-        this.setData({a:data});
+        data++;
+        this.setData({
+            a: data
+        });
         value.innerHTML = this.getData('a');
     }
 
-    function reduce(){
+    function reduce() {
         var data = this.getData('a');
-        data --;
-        this.setData('a',data);
+        data--;
+        this.setData('a', data);
         value.innerHTML = this.getData('a');
     }
 
     var fn = new DataFn(),
-         fn2 = new DataFn();
+        fn2 = new DataFn();
 
-    (function init(){
+    (function init() {
         this.data = {
-            a:11
+            a: 11
         }
     }).call(fn);
 
-    (function init(){
+    (function init() {
         this.data = {
-            a:88
+            a: 88
         }
     }).call(fn2);
 
 
-    addBtn.onclick = function(){
-       add.call(fn)
+    addBtn.onclick = function() {
+        add.call(fn)
     };
-    reduceBtn.onclick = function(){
-       reduce.call(fn2)
+    reduceBtn.onclick = function() {
+        reduce.call(fn2)
     }
 </script>
+
 </html>
