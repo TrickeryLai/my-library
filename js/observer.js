@@ -1,6 +1,4 @@
-/**
- * Created by dachen on 2017/7/12.
- */
+
 
 var Observer = function(){
     "use strict";

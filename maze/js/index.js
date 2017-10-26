@@ -299,6 +299,19 @@
         },
         autoPath: function(){
             //自动寻路
+            var beginA = this.begin.x ,
+                beginB = this.begin.y ,
+                endA = this.end.x,
+                endB =  this.end.y,
+                mazeData = this.mazeData;
+
+            var throughArr = [];//已经通过的路径
+
+            throughArr.push(mazeData[beginA][beginB]);
+
+        //    判断四周可通过
+
+
 
         }
     };

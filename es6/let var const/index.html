@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>let var const</title>
+</head>
+
+<body>
+<div>
+    <select name="" id="select">
+        <option value="1">1</option>
+        <option value="3">3</option>
+        <option value="2">2</option>
+    </select>
+</div>
+</body>
+<script>
+    console.log(window.navigator.userAgent.toLowerCase());
+    {
+        let select = document.getElementById('select');
+        select.onclick = () => {
+           alert(111);
+        }
+    }
+var a = [];
+var b = [];
+for(let i =0; i < 10; i++){
+    a[i] = function(){
+        console.log(i)
+    }
+}
+a[1]();
+
+    for(var n = 0; n < 10; n++){
+
+        b[n] = function(){
+            console.log(n);
+        }
+
+    }
+    b[1]();
+
+    var tmp = '123213';
+    function tmpFn(){
+        console.log(tmp);
+        if(false){
+            var tmp = 1111111;
+        }
+    }
+    tmpFn();
+    try{
+        console.log(1111)
+    }catch (e){
+        console.log(e)
+    }
+
+    function fn(){console.log(111)}
+    (function(){
+
+        if(false){
+            function fn(){
+                console.log(2222)
+            }
+        }
+//       fn();//fn is not a function
+    })();
+
+    const foo = Object.freeze([]);
+//    foo.push(111);
+
+    console.log(window)
+
+    let [x = 1, y = 2, z = 3] = [undefined,'undefined', null];
+
+    console.log(x, y, z); //1, "undefined", null
+
+    let foo1 = ()=>{
+        console.log(2222)
+    };
+
+    let [foo2 = foo1()] = [22];
+    console.log(foo2);
+
+    let foo3 = 11;
+    ({foo3} = {foo3: 555});
+    console.log(foo3)
+
+
+    let {length: len} = 'hello';
+    console.log(len);
+
+    let [foox,fooy] = [1, 2];
+    [foox, fooy] = [fooy, foox];//数值交换
+
+    'x'.repeat(3);
+
+    //padStart(), padEnd()
+    var a1 = 1;
+    //模板字符串  ${ }
+    console.log`aaa${ a1 }123`
+
+    function aaaaa (x, y= 1){
+        console.log(x + y)
+    }
+    aaaaa(1, 12);
+
+    let fn1 = ()=> void doesNotReturn();
+
+    var a = 222;
+    function aaa(){
+        this.a = 11;
+    }
+    function bb(a,b,c){
+        console.log(this.a,a,b,c)
+    }
+    bb.call(aaa(),1,2,3);
+    bb.apply(aaa(),[1,2,3]);
+    bb.bind(aaa(),1,2,3)
+
+
+    console.log(1, ...[1, 2, 3]);
+
+    var arr1 = [1,2];
+    var arr2 = arr1;
+    arr2[0] = 2;
+    console.log(arr1);
+    console.log(Array(3)); /*只有一个参数时候，为长度*/
+    console.log(Array.of(3));/*弥补上述*/
+    console.log([{a:11},{a:22}].includes({a:11})); /*false*/
+
+const obj = {
+    get foo() {},
+    set foo(x) {}
+};
+
+//console.log(obj.get.name)
+
+    console.log(Object.keys({a:111, b:222, c:444}));
+
+{
+    let a = {x:1,y:2},
+        b= {x:3,y:4},
+        x = 5,
+        y = 6;
+    let ab = {...a, ...b, x};
+    console.log(ab)
+}
+{
+    let s1 = Symbol('aaaaa');
+    let s2 = Symbol('aaaaa');
+    let s3 = Symbol('aaa2aa');
+    let a = {
+        [s1]: 111,
+        [s2]: 222
+    };
+    a[s1] = 222;
+    a[Symbol('aaaaa')] = '3333';
+    a[s3] = 4444;
+    console.log(a[s3], a);
+}
+
+{
+    let propx = new Proxy({aaa:11,bb:22},{
+        get(target, property){
+            return 123;
+        }
+    });
+
+    console.log(propx.bb);
+
+}
+
+{
+    let promise = new Promise(function(resolve, reject){
+        let value = 111,
+            error = 'false';
+        if(false){
+            resolve(value);
+            console.log('promise')
+        }else{
+            reject(error); //需要注释该行， throw 生效
+            throw new Error('test error');
+        }
+    }).then((value) => console.log(value), error => console.log(error))
+        .catch((error) =>{
+            console.log(error);
+        });
+
+    console.log('promiseV')
+}
+
+//{
+//    function readLinesSync(file) {
+//        return {
+//            next() {
+//                return { done: false };
+//            },
+//            return() {
+//                file.close();
+//                return { done: true };
+//            },
+//        };
+//    }
+//
+//    // 情况一
+//    for (let line of readLinesSync(fileName)) {
+//        console.log(line);
+//        break;
+//    }
+//
+//// 情况二
+//    for (let line of readLinesSync(fileName)) {
+//        console.log(line);
+//        continue;
+//    }
+//
+//// 情况三
+//    for (let line of readLinesSync(fileName)) {
+//        console.log(line);
+//        throw new Error();
+//    }
+//}
+
+    {
+        let arr = [11, 22, 33];
+        for(let value of arr){
+            console.log(value);
+        }
+        for( let key in arr){
+            console.log(key);
+    }
+    }
+    {
+        for( let i of [1, 2, 3, 4]){
+            console.log(i);
+        }
+    }
+    {
+        let a = 11;
+
+        function* helloWorldGenerator() {
+            a = a + 1;
+            yield a;
+            yield a;
+            return a;
+        }
+
+        function* hello(){
+            console.log();
+            yield a;
+            yield a;
+            return a;
+        }
+
+        var hw = helloWorldGenerator();
+
+        console.log(hw.next());
+
+        console.log(hello().next(11));
+        console.log('-----------------------------')
+    }
+    {
+        function gen(){
+          return (function* (){
+              var y = 2 * (yield( x + 1 ));
+              var z = yield( y / 3);
+              return (x + y + z)
+          })()
+        }
+
+        function* foo(x) {
+            var y = 2 * (yield (x + 1));
+            var z = yield (y / 3);
+            return (x + y + z);
+        }
+        var b = foo(5);
+        console.log(b.next()); // { value:6, done:false }
+        console.log(b.next(12)); // { value:8, done:false }
+        console.log(b.next(13));
+        console.log('-----------------------');
+        var a = gen();
+        console.log(a.next(1));
+        console.log(a.next(12));
+        console.log(a.next(1));
+    }
+    {
+        function* numbers () {
+            yield 1;
+            yield 2;
+            yield 4;
+            return 3;
+        }
+        //扩展运算符
+        console.log([...numbers()]);
+        //Array.from 的方法
+        console.log(Array.from(numbers()));
+//        解构赋值
+        let [x, y] = numbers();
+        console.log(x, y);
+//        for ... of循环
+        for(let n of numbers()){
+            console.log(n);
+        }
+    }
+    {
+        function* gen(x){
+            var y = yield x + 2;
+            return y;
+        }
+
+        var g = gen(1);
+        console.log(g.next()); // { value: 3, done: false }
+        console.log(g.next(2)); // { value: 2, done: true }
+    }
+    {
+        async function aa(){
+
+            throw new Error({a:'错误1', b: '错误2'});
+            return 111;
+
+        }
+        aa().then(function(rsp){
+            console.log(rsp);
+
+        }, function(error){
+
+            console.log(11,error);
+
+        })
+            .catch(error =>{
+                console.log(error);
+            });
+
+        console.log('-------------------------')
+    }
+    {
+        console.log('====================');
+
+        async function a(){
+            try {
+                await Promise.reject('出错了!');
+            }catch(e) {
+                console.log(e);//出错了
+            }
+            return await Promise.resolve('hello world!');
+        }
+
+        a().then(function(e){
+            console.log(e);//hello world!
+        }, function(e){
+            console.log(e)
+        })
+    }
+
+</script>
+
+</html>

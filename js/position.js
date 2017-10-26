@@ -1,6 +1,4 @@
-/**
- * Created by dachen on 2017/7/13.
- */
+
 
 window.addEventListener('load', function(){
     "use strict";
