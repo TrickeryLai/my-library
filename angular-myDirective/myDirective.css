@@ -1,0 +1,62 @@
+
+/*inputSelect*/
+.position-relative{
+    position:relative;
+}
+.mydirective-select-list-wrap{
+    position:absolute;
+    width:100%;
+    top:34px;
+    left:0;
+    border:1px solid #ddd;
+    box-shadow: 1px 0 1px 0 #ddd;
+    background:#fff;
+    z-index:99;
+    max-height:200px;
+    border-radius:0 0 5px 5px;
+    overflow:auto;
+}
+.mydirective-select-list{
+
+}
+.mydirective-select-block:after{
+
+}
+.mydirective-select-ul{
+    background:#fff;
+}
+.mydirective-select-ul > li{
+    padding:4px 10px;
+    cursor:pointer;
+}
+.mydirective-select-ul > li.active{
+    background:#ddd;
+}
+/*rightMenu*/
+.mydirective-menu-wrap{
+    width: 160px;
+    background:#fafafa;
+    padding:10px 0;
+    border:1px solid #d5d5d5;
+    box-shadow: 1px 1px 1px 0 #d5d5d5;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+.mydirective-menu-wrap > li{
+    height:30px;
+    line-height:30px;
+    color:#171717;
+    font-size:14px;
+    padding: 0 20px;
+}
+.mydirective-menu-wrap > li.menuList-disabled{
+    color:#aaa;
+}
+.mydirective-menu-wrap > li.menuList-disabled:hover{
+    background:#fafafa;
+}
+.mydirective-menu-wrap > li:hover{
+    background: #EDEFF2;
+}

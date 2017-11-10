@@ -147,6 +147,7 @@ const obj = {
     console.log(ab)
 }
 {
+    console.log('symbol--------------------');
     let s1 = Symbol('aaaaa');
     let s2 = Symbol('aaaaa');
     let s3 = Symbol('aaa2aa');
@@ -158,6 +159,7 @@ const obj = {
     a[Symbol('aaaaa')] = '3333';
     a[s3] = 4444;
     console.log(a[s3], a);
+    console.log('symbol--------------------');
 }
 
 {
@@ -353,18 +355,89 @@ const obj = {
         })
     }
     {
-        var a = '测试部分提交1';
-    }
-    {
-        var a = '测试部分提交333';
-    }
-    {
-        var a = '测试部分提交666';
-    }
-    {
-        var a = '测试部分提交777';
-    }
 
+        //静态方法 static 用于类中 eg: Demo， 实例 new Demo();
+
+        console.log('class-----------------------------');
+
+        class Demo{
+
+            constructor (props){
+                this.state = {
+                    1:122,
+                    2:333
+                };
+
+            }
+            foo (){
+                console.log(Demo.name);
+                console.log(this.state);
+                this.baz();
+            }
+
+            baz (){
+                console.log('hello')
+            }
+
+            static baz() {
+                console.log('name');
+            }
+        }
+
+        new Demo().foo()
+    }
+    {
+        console.log('extends------------------------');
+
+        class Point{
+            constructor(props){
+                this.state = {11:222};
+                this.name = 'hello'
+            }
+
+            bar(){
+                console.log(this.name)
+            }
+        }
+
+        Point.prototype.name1 = 333;
+
+        //子类覆盖父类
+        class ColorPoint extends Point{
+            //默认添加 constructor 方法
+           constructor(props){
+               super(props);
+               console.log(super.valueOf());
+               this.name = 'helloColor';
+               console.log(this.name1);
+               console.log(props)
+           }
+
+           bar(){
+               console.log(111);
+           }
+
+           pstate(){
+               super.bar();//helloColor
+               this.bar();//111
+               console.log(this.name);//继承父类
+           }
+        }
+
+        new ColorPoint().pstate();
+
+        console.log('extends---------------------------------');
+    }
+    {
+        console.log('正则===============');
+
+        let str = '1qw2',
+            pat = new RegExp('[0-9]*'),
+            patter = new RegExp('^[0-9A-Za-z][0-9A-Za-z()（）]$');
+        str = str.replace(pat, '*');
+        console.log(str);
+
+        console.log('正则===--============');
+    }
 </script>
-
 </html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<iframe id="./demo.html">
+
+</iframe>
+
+<script>
+//    document.domain = 'https://mp.weixin.qq.com';
+//    var ifrm1 = document.getElementById('weixin');
+//    ifrm1.onload = function(){
+//        alert(ifrm1.contentWindow.document.getElementById('innerDiv').innerHTML);//弹出恭喜你操作到内部iframe中的元素了！！！
+//    };
+
+    //获取iframe的window对象
+    var topWin = window.top.document.getElementById("weixin").contentWindow;
+    //通过获取到的window对象操作HTML元素，这和普通页面一样
+console.log(topWin.document.getElementById("123"));
+</script>
+
+</body>
+</html>
