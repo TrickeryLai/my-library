@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<textarea type="text" id="inputV"></textarea>
+<button type="button" id="btn">验证</button>
+<button type="button" id="btn1">验证</button>
+</body>
+<script type="text/javascript">
+
+    function getDom(str){
+
+       return document.querySelectorAll(str);
+
+    }
+
+    window.onload = function(){
+        let inputV = getDom('#inputV')[0],
+            btnArray = getDom('button'),
+            btn = btnArray[0],
+            btn1 = btnArray[1],
+
+            pat = new RegExp('匹配|测试'),
+            patter = new RegExp('^[0-9A-Za-z][0-9A-Za-z()（）]$');
+
+        btn.onclick = function(){
+            console.log(inputV.value);
+            inputV.value = inputV.value.replace(pat, '**');
+        }
+
+
+    }
+</script>
+</html>
