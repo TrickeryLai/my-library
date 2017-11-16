@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>caculate</title>
+    <script src="./js/vue.js"></script>
+</head>
+<body>
+
+<div id="app">
+    {{total}}
+    <div is="caculate-item" @click = 'add' txt="加"></div>
+    <div is="caculate-item" @click = 'reduce' txt="减"></div>
+</div>
+
+<script>
+    Vue.component('caculate-item', {
+        template: '<button type="button" @click="buttonClick">点击次数{{txt}},{{counter}}</button>',
+        data: function(){
+            return {
+                counter: 0
+            }
+        },
+//        props: ['txt'],
+        props: {
+            txt: {
+                required: true,
+                type: String
+            }
+        },
+        methods:{
+            buttonClick: function(){
+                this.counter ++;
+                //触发 click，同时，返回组件本身，方便调用
+                this.$emit('click',this);
+            },
+            limit: function(){
+                this.counter --;
+               alert('000000');
+            }
+        }
+    });
+
+    new Vue({
+        el: '#app',
+        data:{
+            total: 0
+        },
+        methods:{
+            add: function(){
+                this.total = this.total + 1;
+                console.log(123);
+            },
+            reduce: function(_this){
+                if(this.total <= 0){
+                    _this.limit();
+                    return;
+                }
+                this.total = this.total - 1;
+            }
+        }
+    })
+</script>
+</body>
+</html>

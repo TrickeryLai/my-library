@@ -364,6 +364,21 @@ const obj = {
     {
         var a = '测试部分提交777';
     }
+    {
+        var reg=/<script[^>]*>(.|\n)*?(?=<\/script>)<\/script>/gi;
+        const a = 123;
+
+        const aa = `foo${a}bar`;
+        //        等同于下面
+//        const aa = `foo` + a + `bar`;
+
+        console.log(aa);
+    }
+    {
+        var a = 123;
+        var aa = `foo${a}bar`;
+        console.log(aa);
+    }
 
 </script>
 

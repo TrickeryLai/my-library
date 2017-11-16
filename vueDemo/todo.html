@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>todo</title>
+    <script src="./js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input
+                type="checkbox"
+                v-model="inputVal"
+                v-bind:true-value = "a"
+                v-bind:false-value = "b"
+            >
+        <input type="text" v-model="val" placeholder="enter 结束" @keyup.enter="submit">
+        <ul>
+            <li
+                    is="todo-item"
+                    v-for="item in todos"
+                    :item="item"
+                    @remove="remove(item)"></li>
+            <li v-show="todos.length <=0">无</li>
+        </ul>
+
+        <div>
+            <div v-for="n in 5">
+                <!-- $on() 事件 在这 v-on 侦听 add 事件-->
+                <div is="counter-item" @add = "add"></div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+
+    Vue.component('todo-item', {
+        props: ['item'],
+       template: '<li>' +
+       '<span>{{item.name}}</span>' +
+       '<button type="button" @click="btnClick(item)" >X</button>' +
+       '</li>',
+        data(){
+            return {
+
+            }
+        },
+        methods: {
+            btnClick: function(item){
+                console.log(item.name);
+                this.$emit('remove');
+            }
+        }
+    });
+
+       Vue.component('counter-item', {
+          props:['item'],
+          template: '<span @click="btnClick()">{{counter}}</span>',
+          data(){
+              return {
+                  counter: 0
+              }
+          },
+          methods: {
+              btnClick:function(){
+                  this.counter ++;
+                  //组件，触发 add 事件，传递参数
+                  this.$emit('add',this.counter,1,2,3);
+              }
+          }
+        });
+
+    var app = new Vue({
+        el: '#app',
+        data:{
+            inputVal: '',
+            a: '123',
+            b:'456',
+            val: '',
+            todos: [
+
+            ]
+        },
+        methods: {
+            submit(){
+                if( !this.val) return;
+
+                this.todos.push({
+                    name: this.val,
+                    id: this.todos.length
+                });
+
+                console.log(this.inputVal);
+
+                this.val = '';
+            },
+            remove(item){
+                this.todos = this.todos.filter(function(i){
+                    return i.id !== item.id;
+                })
+            },
+            add (...item){
+                console.log(item)
+            }
+        }
+    })
+</script>
+</html>
