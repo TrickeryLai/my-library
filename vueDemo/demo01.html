@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo01</title>
+    <script src="./js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <span v-bind:title="time" v-if="seen" :class="classObj">
+            {{message}}
+        </span>
+        <template v-for = "item in todos">
+            <p v-if="item.isShow" v-on:click = 'itemClick(item)'> {{item.name}}</p>
+        </template>
+        <div>
+            <input type="text" v-model="inputVal">
+            <button type="button" v-on:click = 'getInput(inputVal)'>click</button>
+            <span>{{showInputVal}}</span>
+            <span>{{inputVal}}</span>
+        </div>
+        <ol>
+            <todo-item v-for = "item in todos"
+                        v-bind:todo = "item"
+                       v-bind:key = "item.id"
+            ></todo-item>
+        </ol>
+        <div>
+            <template v-if="show">
+                <label for="">123</label>
+                <input type="text">
+            </template>
+            <template v-else = "!show">
+                <label for="">1234</label>
+                <input type="text">
+            </template>
+        </div>
+    </div>
+
+    <script>
+
+        //组件不会提升
+        Vue.component('todo-item', {
+            props: ['todo'],
+            template: '<li>{{ todo.name }}</li>'
+        });
+
+        let app = new Vue({
+            el: '#app',
+            data:{
+                message: 'hello',
+                time: `页面加载于${ new Date().toLocaleString()}`,
+                seen: true,
+                inputVal:'',
+                showInputVal: '',
+                show: true,
+                todos: [
+                    {
+                        name: '标题1',
+                        isShow: true,
+                        id :0,
+                    },
+                    {
+                        name: '标题二',
+                        isShow:true,
+                        id: 1,
+                    }
+                ],
+
+            },
+            //方法
+            methods: {
+                itemClick(item){
+                    console.log(item.name)
+                },
+                getInput(val){
+                    this.showInputVal = val;
+                },
+            },
+            //计算属性
+            computed: {
+                classObj(){
+                    return {
+                        active: this.seen,
+                    }
+                }
+
+            }
+        });
+
+    </script>
+</body>
+</html>
