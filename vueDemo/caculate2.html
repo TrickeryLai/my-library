@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>caculate</title>
+    <script src="js/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <p>{{totalN}}</p>
+        <div is="button-item" @btnclick="btnClick" ref = 'btn'><template slot="text" slot-scope="props">点击 slot{{props.text}}</template></div>
+        <div is="button-item" txt="点击" @btnclick="btnClick"></div>
+    </div>
+</body>
+<script>
+    Vue.component('button-item', {
+        template: '<button type="button" @click = "buttonClick"><slot name="text" text="hello for vue">{{txt}}</slot><slot></slot></button>',
+        props: ['txt'],
+        data: function(){
+            return {
+                clickN: 0,
+            }
+        },
+        methods:{
+            buttonClick: function(){
+                this.clickN++;
+                this.$emit('btnclick', this);
+            }
+        }
+    });
+
+    var app = new Vue({
+        el: '#app',
+        component:{
+
+        },
+        data:{
+            totalN: 0,
+            props:{
+                text: null,
+            }
+        },
+        methods:{
+            btnClick:function(that){
+                if(this.totalN > 5){
+                    that.clickN --;
+                    return;
+                }
+                this.totalN ++;
+                console.log(this.$refs.btn);
+            }
+        },
+        computed:{
+
+        }
+    })
+</script>
+</html>

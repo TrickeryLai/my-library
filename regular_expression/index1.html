@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="./../js/jquery-1.8.0.min.js"></script>
+    <style>
+        *{margin: 0;padding: 0;}
+        .box{ width: 400px; height: 400px; border: 1px solid #000; margin: 100px auto; overflow: auto;}
+        ul{ list-style: none;}
+        li{ height:40px; line-height: 40px; padding-left: 10px; border: 1px solid #ccc; box-sizing: border-box;}
+        .active{ background: #ccc;}
+    </style>
+    <script>
+        $(function(){
+            $(document).on("keydown",function(e){
+                //计算什么时候开始滚动
+
+                var keycode= e.keyCode;
+                up_down_key(e,keycode);
+            });
+
+            $("ul").on("click","li",function(){
+                var _index=$(this).index();
+                $(this).addClass("active").siblings().removeClass("active");
+                sc=_index;
+            });
+
+
+            var sc=0;
+            function up_down_key(e,keycode){
+                var cur_li_top=$("li").eq(sc).offset().top,
+                    box_top=$(".box").offset().top, //100px
+                    boxH = $(".box").height(),
+                    t=cur_li_top - box_top - boxH;
+                var len=$("li").length;
+                switch (keycode){
+                    case 40: //向下箭头↓
+                        sc = sc + 1;
+                        if(sc > len-1) sc = 0;
+                        $("li").eq(sc).click().addClass("active").siblings().removeClass("active");
+
+                        if(t < -60 && sc < len - 2){
+                            e.preventDefault();
+                        }else{
+                            $(".box").scrollTop(cur_li_top - boxH - 60);
+                        }
+
+                        break;
+                    case 38: //向上箭头↓
+                        sc = sc - 1;
+
+                        if(sc < 0) sc = len-1;
+                        $("li").eq(sc).click().addClass("active").siblings().removeClass("active");
+
+                        if(sc > 7 && t > (-boxH + 50)){
+                            e.preventDefault();
+                        }else{
+                            $(".box").scrollTop(cur_li_top - boxH);
+                        }
+                        break;
+                }
+
+                $("#result").html(t + ',' + sc + ',' + (-boxH - 60) + ',' + t);
+            }
+
+        });
+    </script>
+</head>
+<body>
+<p id="result"></p>
+<div class="box">
+    <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+    </ul>
+</div>
+</body>
+</html>
