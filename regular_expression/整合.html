@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="css/demo.css" rel="stylesheet" />
+    <script src="./../js/jquery-1.8.0.min.js"></script>
+    <style>
+        *{margin: 0;padding: 0;}
+        .box{ width: 400px; height: 211px; border: 1px solid #000; margin: 100px auto; overflow: auto;}
+        ul{ list-style: none;}
+        li{ height:39px; line-height: 39px; padding-left: 10px; border: 1px solid #ccc; box-sizing: border-box;}
+        .active{ background: #ccc;}
+    </style>
+    <script>
+        $(function(){
+
+            $(document).on("keydown",function(e){
+               e.preventDefault();
+
+                var keycode= e.keyCode;
+                up_down_key(keycode);
+            });
+
+            $("ul").on("click","li",function(){
+                var _index=$(this).index();
+                $(this).addClass("active").siblings().removeClass("active");
+                sc=_index;
+            });
+
+            /*--height()计算高度不包括边框--*/
+            var boxH = $(".box").height();//容器高度
+            var ulH=$("ul").height();//内容高度
+            var liH = $("li").height()+2;//item高度
+            var N = Math.floor(boxH / liH);//向下取整
+            var sc=0;
+            function up_down_key(keycode){
+                var len=$("li").length;
+                switch (keycode){
+                    case 40: //向下箭头↓
+                        sc++;
+                        if(sc > len-1) sc = 0;
+                        $("li").eq(sc).click().addClass("active").siblings().removeClass("active");
+
+                            var cur_li_top=$("li").eq(sc).offset().top-1+liH;
+                            var box_top=$(".box").offset().top; //100px
+                            var s=$(".box").scrollTop();
+                            var n=Math.floor(s/liH);
+                            var t=cur_li_top-box_top;
+                            //距离上边部分
+                            var h1=liH - (s - liH*n);
+
+                            console.log("h1",h1);
+                            console.log("t",t);
+                            console.log("s",s);
+                            console.log("N",N);
+
+                            //开始滚动,分两种情况。1.h1等于liH  2.h1不等于liH
+                            if(h1 == liH){
+                                //除了最后一条，开始往下按
+                                if( t == (N+1)*liH ){
+
+                                    $(".box").scrollTop(s+liH -(boxH - liH*(N-1) - h1));
+                                    console.log("当h1等于liH时候，第一种情况");
+                                }
+                                //从最后一条部分li，开始往下按
+                                if( (t-h1) == (N+1)*liH){
+
+                                    $(".box").scrollTop(s+(liH-(boxH - liH*(N) - h1)));
+                                    console.log("当h1等于liH时候，第二种情况");
+                                }
+
+
+                            }else{
+                                //当容器中间显示（N-1）个完整的li，同时从最后一条部分li，开始往下按。或者容器上边缘有部分li,同时从最后一条完整li，开始往下按
+                                if( (t-h1) == (N+1)*liH){
+
+                                    $(".box").scrollTop(s+(liH-(boxH - liH*(N) - h1)));
+                                    console.log("当h1不等于等于liH时候，第一种情况");
+                                }
+                                //当容器中间显示 N 个完整的li，同时容器上下边缘有部分li，从最后一条部分li，开始往下按
+                                if( (t-h1) == (N+2)*liH){
+
+                                    $(".box").scrollTop(s+(liH-(boxH - liH*(N) - h1))+liH);
+                                    console.log("当h1不等于等于liH时候，第二种种情况");
+                                }
+                                //当容器中间显示（N-1）或者 N 个完整的li，同时从其中（N-1）或者 N 个完整的li，开始往下按
+                                if( (t-h1) == (N)*liH){
+
+                                    $(".box").scrollTop(s+(liH-(boxH - liH*(N-1) - h1)));
+                                    console.log("当h1不等于等于liH时候，第三种情况");
+                                }
+                            }
+
+                            //当滚动到最底部的时候
+                            if(sc == 0){
+
+                                $(".box").scrollTop(0);
+                                console.log("当滚动到最底部的时候");
+                            }
+
+
+
+
+                        break;
+                    case 38: //向上箭头↓
+                        sc--;
+                        if(sc < 0) sc = len-1;
+                        $("li").eq(sc).click().addClass("active").siblings().removeClass("active");
+
+                        var cur_li_top=$("li").eq(sc).offset().top-1+liH;
+                        var box_top=$(".box").offset().top; //100px
+                        var s=$(".box").scrollTop();
+                        var n=Math.floor(s/liH);
+                        var t=cur_li_top-box_top;
+                        //距离上边部分
+                        var h1=liH - (s - liH*n);
+                        console.log("h1",h1);
+                        console.log("t",t);
+                        console.log("s",s);
+
+                            //开始滚动
+                            if(t == h1){
+                                $(".box").scrollTop(s - (liH - h1));
+
+                                console.log("向下键第一种情况");
+                            }
+                            if((h1-t) == liH){
+
+                                $(".box").scrollTop(s - (liH-h1+liH));
+                                console.log("向下键第二种情况");
+                            }
+
+                            if(sc == (len-1)){
+                                $(".box").scrollTop((ulH - boxH));
+                                console.log("向下键第三种情况");
+                            }
+
+                        break;
+                }
+            }
+
+
+        });
+    </script>
+</head>
+<body>
+<div class="box">
+    <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+        <li>5</li>
+        <li>6</li>
+        <li>7</li>
+        <li>8</li>
+        <li>9</li>
+        <li>10</li>
+    </ul>
+</div>
+</body>
+</html>

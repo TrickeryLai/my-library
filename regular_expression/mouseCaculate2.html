@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./../js/jquery-1.8.0.min.js"></script>
+    <!--<script src="mine.js"></script>-->
+    <script>
+        $(function(){
+
+            $.extend({
+                //获取滚轮事件
+                _mouseWheel: function (){
+
+                    if(navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('firefox')>=0){
+                        return "DOMMouseScroll";
+                    }else{
+                        return "mousewheel";
+                    }
+                },
+                //判断滚动方向
+                _mouseWheelDirection(e){
+
+                var directionV = e.originalEvent.wheelDelta || - e.originalEvent.detail; // 兼容谷歌 火狐，判断依据是相反的
+
+                if(directionV > 0){
+                    return true;
+                }else{
+                    return false
+                }
+            }
+            });
+
+            $.fn.extend({
+
+                //setting
+                /**
+                 *
+                 * @param setting
+                 *
+                 *
+                 * {
+                 *      value: number,// 操作变化的值，全局
+                 *      original: boolean,//操作方向，默认 false 向下滚动 -，全局
+                 *      valueN: number,//操作结果保留位数，默认根据 value 自适应，可能导致计算结果有偏差，全局
+                 *      maxValue: number, //最大值 全局
+                 *      minValue: number, //最小值，全局
+                 *      operation: {
+                 *                      operationKey: {
+                 *                          value: number,//同上，优先级高于全局
+                 *                          original: boolean,
+                 *                          valueN: number,
+                 *                          maxValue: number,
+                 *                          minValue: number,
+                 *                      }
+                 *                  }
+                 * }
+                 * @returns {*|jQuery|HTMLElement}
+                 */
+
+                mouseCaculate: function(setting){
+                    var set = setting,
+                        globalSetting = {
+                            value: setting.value || 1,//全局设置的改变值
+                            original: setting.original,
+                            valueN: setting.valueN,
+                            maxValue: setting.maxValue,
+                            minValue: setting.minValue,
+                            fn: setting.fn
+                        };  //全局设置
+
+                    if(!setting || !setting.operation){
+                        //自定义初始化设置
+                        set = {
+                            'alt':{
+                                value: 0.01, //每次按键的数值变化
+                                original: false, //表示方向， 往上滚为 +, 默认向下为 -
+                            },
+                            'ctrl':{
+                                value: 0.1,
+                                original: false, //表示方向， 往上滚为 +, 默认向下为 -
+                            },
+                            'default':{
+                                value: 1,
+                                original: false, //表示方向， 往上滚为 +, 默认向下为 -
+                            },
+                        }
+                    }else{
+                        set = setting.operation;
+                    }
+
+                    function getResult (e, set) {
+                        var v = parseFloat($(this).val()),//获取初始值
+                            finalV = null;//最终结果
+
+                        for( var item in set){
+
+                            finalV = getValue(e, set[item], v) - 0;//设置对应的改变的值
+
+                            //值保留位数，未设置，根据变化的值保留默认
+                            if(typeof set[item].valueN === 'undefined' && typeof globalSetting.valueN === 'undefined'){
+                                finalV = finalV.toFixed(getMaxFixedN(set)) - 0;
+                            }else{
+                                finalV = finalV.toFixed((typeof set[item].valueN !== 'undefined') ? set[item].valueN : globalSetting.valueN);
+                            }
+
+                            if (item.toLowerCase() !== 'default') {
+                                if (e[item.toLowerCase() + 'Key']) {
+                                    $(this).val(finalV);
+                                }
+                            } else {
+                                if( !isPress(e, set)){
+                                    $(this).val(finalV);
+                                }
+                            }
+                        }
+
+                        globalSetting.fn && globalSetting.fn.apply(this, [finalV]);
+
+                    };
+
+                    //滚动计算
+                    function getValue(e, item, v){
+
+                        var value = globalSetting.value - 0,
+                            maxValue = item.maxValue || setting.maxValue,
+                            minValue = item.minValue || setting.minValue;
+                        if(typeof item.value !== 'undefined'){
+                            value = item.value - 0;
+                        }
+
+                        if($._mouseWheelDirection(e) > 0){
+                            if(item.original){
+                                v += value;
+                            }else{
+                                v -= value;
+                            }
+                        }else{
+                            if(item.original){
+                                v -= value;
+                            }else{
+                                v += value;
+                            }
+                        }
+
+
+                        if(typeof maxValue !== 'undefined' && v > maxValue){
+                            v = maxValue;
+                        }
+                        if(typeof minValue !== 'undefined' && v < minValue){
+                            v = minValue;
+                        }
+
+                        return v;
+                    }
+
+//                  判断滚动的时候是否按键了, true 按键了
+                    function isPress(e, set){
+                        var n = 0;
+                        for(var item in set){
+                            if(e[item.toLowerCase() + 'Key']){
+                                n++;
+                            }
+                        }
+                        return n;
+                    }
+
+                    // 根据设置的 value 获取最大保存位数
+                    function getMaxFixedN(set){
+                        var maxN = 0,
+                            isAllValue = 0;//是否都存在值, 大于0 ，则有未设置value 的子项
+                        for(var item in set){
+                            if(typeof set[item].value !== 'undefined'){
+                               maxN = Math.max(maxN, getFixed(set[item].value));
+                            }else{
+                                isAllValue ++;
+                            }
+                        }
+
+                        //如果不是全部都 设置了value ,并且 设置有全局默认值， 则会吧全局默认的值，也加入保留位数比较
+                        if(isAllValue && globalSetting.value && (maxN <= getFixed(globalSetting.value))){
+                            maxN = getFixed(globalSetting.value);
+                        }
+                        return maxN;
+                    }
+
+                    function getFixed(value){
+                        if( !value){
+                            return 0;
+                        }
+                        var n = 0;
+
+                       while(value < 1){
+                           value = value * 10;
+                           n ++;
+                       }
+
+                       return n;
+                    }
+
+                    $(this).on($._mouseWheel(), function(e){
+                        //阻止滚动事件
+                        e.preventDefault();
+
+                        if( !$(this).val()){
+                            $(this).val(0);
+                        }
+
+                        getResult.call(this, e, set);
+                    });
+
+                    return $(this)
+                }
+            });
+
+            var a = 1,
+                b = 2;
+
+            function  getR(b, c, a){
+                console.log(b, c, a);
+            }
+
+            var aaa = getR.bind(this, a, b);
+            aaa.call(getR, 5);
+
+
+            $('.input1').mouseCaculate({
+                value: 10,
+                valueN: 3,
+                fn: getR.bind(this, a, b),
+                operation: {
+                    'ctrl':{
+//                        value: 0.1
+                    },
+                    'alt':{
+                        value: 0.1, //每次按键的数值变化
+                        valueN: 1,
+                        maxValue: 1
+                    },
+                    'default':{
+                        value: 0.01,
+                        valueN: 2
+                    },
+                }
+            });
+            $('.input2').mouseCaculate({
+                'alt':{
+                    value: 10, //每次按键的数值变化
+                    valueN: 0, //结果保留的位数
+                    original: true, //表示方向， 往上滚为 +, 默认向下为 -
+                },
+                'ctrl':{
+                    value: 100,
+                    valueN: 0,
+                    original: true, //表示方向， 往上滚为 +, 默认向下为 -
+                },
+                'default':{
+                    value: 1000,
+                    valueN: 0,
+                    original: true, //表示方向， 往上滚为 +, 默认向下为 -
+                },
+            });
+            $('.input3').mouseCaculate({
+                'alt':{
+                    value: 3, //每次按键的数值变化
+                    valueN: 0, //结果保留的位数
+                    original: false, //表示方向， 往上滚为 +, 默认向下为 -
+                },
+                'ctrl':{
+                    value: 6,
+                    valueN: 0,
+                    original: false, //表示方向， 往上滚为 +, 默认向下为 -
+                },
+                'default':{
+                    value: 9,
+                    valueN: 0,
+                    original: false, //表示方向， 往上滚为 +, 默认向下为 -
+                },
+            });
+
+
+
+
+
+        });
+    </script>
+</head>
+<body>
+<input autocomplete="off" type="text" value="5" style="width: 200px; height: 50px; border: 1px solid #000; font-size:20px;" class = 'input1'/>
+<input autocomplete="off" type="text" value="5" style="width: 200px; height: 50px; border: 1px solid #000; font-size:20px;" class = 'input2'/>
+<input autocomplete="off" type="text" value="5" style="width: 200px; height: 50px; border: 1px solid #000; font-size:20px;" class = 'input3'/>
+</body>
+</html>

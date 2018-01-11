@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>router</title>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <style>
+        .aa{
+            position:absolute;
+            left:0;
+            top:0;
+            width:100%;
+            height:100px;
+            background-image: linear-gradient(to bottom, rgba(0, 0, 0, .1) 0%, rgba(255, 255, 255, 0) 100%);
+            /*background-image:repeating-linear-gradient(to bottom, red 0%, yellow 10%);*/
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="aa">12314</div>
+        <div>1231241242141412421421412421421421421412421 w2423424 42423 234234 23423423 2 23 423 424242424242 2 2 2 24 </div>
+        <h1> Hello, APP</h1>
+        <button type="button" onclick="test()" v-show = "!isMount">挂载</button>
+        <router-link to = "/foo/13">Go To Foo12</router-link>
+        <router-link to = "/bar">Go To Bar</router-link>
+
+        <!--路由出口-->
+        <router-view></router-view>
+    </div>
+</body>
+<script>
+    const Foo = {template: '<div>foo  <router-link to = "fooC">Go To FooC</router-link><router-view></router-view></div>'},
+        FooChild = {template:'<div>fooChild</div>'},
+        Home = {template:'<div>Home</div>'},
+        Bar = {template: '<div>bar</div>'};
+
+
+    const routes = [
+        {path: '/', component: Home},
+        {path:'/foo/:id', component: Foo,children: [
+            {path: '/foo/fooC', component: FooChild},
+        ]},
+        {path: '/bar', component: Bar}
+    ];
+
+    const router = new VueRouter({
+        routes
+    });
+
+    const data = {
+      isMount: false,
+    };
+
+    let vm = new  Vue({
+        router,
+        data
+    });
+
+    //手动挂载
+    function test(){
+        vm.$mount('#app');
+    }
+
+    //等同于
+     vm = new Vue({
+        el: '#app',
+        router,
+        data:{
+            isMount: false,
+            id: 111,
+        },
+         watch: {
+            '$route'( to, from){
+//                console.log(to);
+//                console.log(from);
+            }
+         }
+    })
+
+
+    var a = {};
+
+    function _liveSetDonwDate(_start,_end){
+        let lastTime,indentTime
+        let newDate =new Date().getTime(); //系统时间
+        let start = new Date(_start);  // 开始时间
+        let end =new Date(_end);   // 结束时间
+        let startTime = Math.abs((newDate-start)/1000);   //直播已开始时间
+        let endTime =  Math.abs((end-newDate)/1000); // 直播剩余时间
+
+        lastTime=Math.floor(startTime/3600);
+        indentTime=Math.floor(endTime/3600);
+        console.log(' 开始时间 ' + lastTime + '小时 距结束 ' + indentTime + '小时 ');
+        return ' 开始时间 '+lastTime+'小时 距结束 '+indentTime+'小时 ';
+    }
+
+    console.log(a.constructor === Object);
+
+    var a = new Date().getTime() + 1800 * 1000;
+
+    var a = 1510738140000;
+    console.log(new Date(a).toLocaleDateString());
+
+        var a = new Date(2017,11,5,23,59,59).getTime();
+    console.log(a);
+    _liveSetDonwDate(a);
+    console.log(new Date(2017,11,6,23,59,59).toLocaleDateString());
+
+    function aaa (){
+        var b = {
+            a:11,
+            b:222
+        };
+        return b
+    }
+
+    console.log(aaa());
+    setInterval(function(){
+       var now = new Date().getTime()/1000,
+           lastTime,
+           d,last,h,m,s;
+
+       if(a/1000 > now){
+           lastTime = a/1000 - now;
+       }else{
+           lastTime = now - a/1000;
+       }
+
+        d = Math.floor(lastTime / (60*60*24)),
+        last = lastTime % (3600 * 24 ),
+        h = Math.floor(last / 3600);
+       last = last % 3600;
+       m = Math.floor(last / 60);
+       last = last % 60;
+        s = Math.ceil(last);
+        console.log(d + '天' + h + '小时'+ m + '分' + s + '秒' )
+    },1000)
+
+</script>
+</html>

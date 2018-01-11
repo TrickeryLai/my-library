@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./../js/jquery-1.8.0.min.js"></script>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+
+        #app ul{
+            height: 200px;
+            overflow: auto;
+            border: 1px solid #f5f5f5;
+            width:200px;
+            margin: 200px auto;
+        }
+        #app ul li{
+            list-style: none;
+            padding: 5px 0;
+        }
+        #app ul li.active,
+        #app ul li:hover{
+            background: #19a9d5;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+</body>
+<script>
+    window.onload = function(){
+        var datas = [
+            {
+                name: 0,
+                id: 0
+            },
+            {
+                name: 1,
+                id: 1
+            },
+            {
+                name: 2,
+                id: 2
+            },
+            {
+                name: 3,
+                id: 3
+            },
+            {
+                name: 4,
+                id: 4
+            },
+            {
+                name: 5,
+                id: 5
+            },
+            {
+                name: 6,
+                id: 6
+            },
+            {
+                name: 7,
+                id: 7
+            },
+            {
+                name: 8,
+                id: 8
+            }
+        ];
+
+        function getHtml(data){
+            var str = '<ul>';
+            for(var i = 0; i < data.length; i++){
+                str += `<li>${data[i].name}</li>`;
+            }
+            str += '</ul>';
+
+            return str;
+        }
+
+       $('#app').html(getHtml(datas))
+           .delegate('li', 'click', function(e){
+               $(this).addClass('active').siblings('li').removeClass('active');
+           })
+           .on('click', function(){
+               $(this).focus();
+               $(document).on('keydown', function(e){
+
+               })
+        })
+    }
+</script>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo01</title>
+</head>
+<body>
+    <div>
+        <textarea type="text" id="val"></textarea>
+        <button type="button" id="btn">测试</button>
+        <div id="result"></div>
+    </div>
+</body>
+<script>
+    window.onload = function(){
+        function getElement(id){
+            return document.getElementById(id);
+        }
+
+        var val = getElement('val'),
+            btn = getElement('btn'),
+            result = getElement('result');
+        var a = '2000'
+
+        var pat = /windows( + a + |98|)/g;
+
+        pat = new RegExp('windows(' + a + '|98|)');
+
+
+//        pat = /\b([a-z]+)([A-Z]+) \1\b/ig;
+
+//      http://www.baidu.com:80/abc.html
+
+//        pat = /(\w+):\/\/([^/:]+)(:\d*)?([^# ]*)/;
+//        pat = /([ab]+)\1/g;
+
+        btn.onclick = function(){
+            var str = val.value;
+            result.innerText = str.match(pat);
+        }
+    }
+</script>
+</html>

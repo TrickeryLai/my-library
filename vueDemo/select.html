@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>select</title>
+    <script src="https://unpkg.com/vue"></script>
+    <!--<script src="js/vue.js"></script>-->
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        .active{
+            color: blue;
+            background:#f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <button type="button" @click="choseBtn">{{choseTxt}}</button>
+        <div v-show="choseShowState">
+            <div style="display:inline-block;width:30%;position:relative">
+                <div style="position:absolute" is="select-wrap" :data="selectData" @item-click="itemClick" :init-item="selectItem.n"></div>
+            </div>
+            <div style="display:inline-block;width:30%;position:relative">
+                <div style="position:absolute"  v-if="seconedData && seconedData.length > 0" is="select-wrap" :data="seconedData" @item-click="itemClickSeconed" :init-item="selectItem.item"></div>
+            </div>
+
+            <div style="display:inline-block;width:30%;position:relative">
+                <div v-for="item in allData"  style="position:absolute" is="select-wrap" :data="item" @item-click="itemClick" :init-item="selectItem.n"></div>
+            </div>
+
+        </div>
+
+    </div>
+</body>
+<script>
+
+    //重新组合数据
+    var initData = function(data, childStr){
+        //寻找每层的子集，构建一个新的数组
+        var dataArr = [];
+
+        if(!childStr){
+            childStr = 'children';
+        }
+
+        function getArr(data){
+            var arr = [],
+                item = null;
+            for(var i = 0; i < data.length ;i++){
+                item = data[i];
+
+                if(item.constructor === Object && item[childStr] && item[childStr].length > 0){
+                    arr.push(item[childStr]);
+                }
+
+                if(item.constructor === Array && item.length > 0){
+                    for(var j = 0; j < item.length; j++){
+                        if(item[j].constructor === Object && item[j][childStr] && item[j][childStr].length > 0){
+                            arr.push(item[j][childStr]);
+                        }
+                    }
+                }
+            }
+
+            if(arr.length > 0){
+                dataArr[dataArr.length] = arr;
+                getArr(arr);
+            }else{
+                return arr;
+            }
+        }
+        getArr(data);
+
+        dataArr.unshift(data);
+
+        return dataArr;
+    };
+
+    var data  = [
+        {
+            name: "q1",
+            id:"q1",
+            children:[
+                {
+                    name: "q11",
+                    id:"q11",
+                    children: [
+                        {
+                            name: "q111",
+                            id:"q111",
+                            children: [
+                                {
+                                    name: "q1111",
+                                    id:"q1111",
+                                    children: []
+                                },
+                            ]
+                        },
+                        {
+                            name: "q112",
+                            id:"q112",
+                            children: []
+                        },
+                    ]
+                },
+                {
+                    name: "q12",
+                    id:"q12",
+                    children: []
+                },
+            ],
+        },{
+            name:"q2",
+            id:"q2",
+            children:[
+                {
+                    name: "q21",
+                    id:"q21",
+                    children: []
+                },
+                {
+                    name: "q21",
+                    id:"q21",
+                    children: []
+                },
+                {
+                    name: "q21",
+                    id:"q21",
+                    children: []
+                }
+            ]
+        },{
+            name:"q3",
+            id:"q3",
+            children:[
+                {
+                    name: "q31",
+                    id:"q31",
+                    children: [
+                        {
+                            name: "q311",
+                            id:"q311",
+                            children:[]
+                        },
+                        {
+                            name: "q312",
+                            id:"q312",
+                            children:[]
+                        }
+                    ]
+                }
+            ]
+        },{
+            name:"q4",
+            id:"q4",
+            children:[
+                {
+                    name: "q41",
+                    id:"q41",
+                    children: [
+                        {
+                            name: "q411",
+                            id:"q411",
+                            children:[]
+                        }
+                    ]
+                }
+            ]
+        }
+
+    ];
+
+    Vue.prototype.$ajax = function(setting){
+        var xmlHttpReg = null;
+
+        if(window.ActiveXObject) {//ie
+            xmlHttpReg = new ActiveXObject('Microsoft.XMLHTTP');
+        }else if(window.XMLHttpRequest) {
+            xmlHttpReg = new XMLHttpRequest();
+        }
+
+        if(xmlHttpReg != null) {
+            xmlHttpReg.open(setting.methods, setting.url, true);
+            xmlHttpReg.send(setting.data);
+            xmlHttpReg.onreadystatechange = doResult;
+        }
+
+        function doResult(){
+            if(xmlHttpReg.readyState === 4){
+                if(xmlHttpReg.status === 200){
+                    var res = JSON.parse(xmlHttpReg.responseText);
+                    setting.successFn && setting.successFn(res);
+                }
+            }
+        }
+    };
+
+    let select = {
+        template: '<div style="display:block;width:100%;" >' +
+        '<ul style="display:block" >' +
+        '<li style="display:block" v-for="(item, index) in data" :key="item.id" @click = "btnClick(index)" :class="{active : initItem === index}">{{item.name}}</li>' +
+        '</ul>' +
+        '</div>',
+        props:['data','initItem'],
+        data: function(){
+            return {
+                selectData: this.$props.data,
+            }
+        },
+        methods: {
+            btnClick:function(i){
+               this.$emit('item-click',i);
+            }
+        }
+    };
+
+    new Vue({
+        el: '#app',
+        data: {
+            allData: initData(data),
+            selectData: null,
+            seconedData:null,
+            selectItem: {},
+            choseShowState: false,
+            choseTxt: '请选择',
+        },
+        components: {
+            'select-wrap': select,
+        },
+        methods: {
+            choseBtn: function(){
+                this.choseShowState = !this.choseShowState;
+            },
+            itemClick:function(i){
+                this.selectItem = Object.assign({}, this.selectItem, {
+                    n: i,
+                    item: -1,
+                    chooseP: Object.assign({},this.selectData[i]),
+                    chooseC:null
+                });
+                if(this.selectData[i].children.length > 0){
+                    this.seconedData = this.selectData[i].children;
+                }else{
+                    this.seconedData = [];
+                }
+                this.choseTxt = this.getChoseTxt();
+            },
+            itemClickSeconed: function(i){
+                this.selectItem = Object.assign({}, this.selectItem, {
+                    item: i,
+                    chooseC: Object.assign({},this.seconedData[i])
+                });
+                this.choseShowState = false;
+                this.choseTxt = this.getChoseTxt();
+            },
+            getChoseTxt:function(){
+                let name = "";
+                if(this.selectItem.chooseC){
+                    name = '-' + this.selectItem.chooseC.name
+                }
+                return this.selectItem.chooseP.name + name;
+            }
+        },
+        computed:{
+
+        },
+        mounted:function(){
+            this.$ajax({
+                methods: 'get',
+                url: 'http://192.168.3.231/health/base/getAllDepts ',
+                successFn:(res) => {
+                    if(res.resultCode === 1){
+                        this.selectData = res.data;
+                    }
+                }
+            })
+        }
+    })
+</script>
+</html>

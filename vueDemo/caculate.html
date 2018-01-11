@@ -49,7 +49,14 @@
         methods:{
             add: function(){
                 this.total = this.total + 1;
-                console.log(123);
+
+//                console.log(123);
+//                console.log(this.$refs.aaa);
+                this.translateTime();
+            },
+
+            translateTime:function(){
+                console.log('new Date().toTimeString()',new Date().toTimeString().split(' ')[0].substring(0, 5));
             },
             reduce: function(_this){
                 if(this.total <= 0){
@@ -60,6 +67,7 @@
             }
         }
     })
+
 </script>
 </body>
 </html>
