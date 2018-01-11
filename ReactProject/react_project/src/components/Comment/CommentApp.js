@@ -11,8 +11,6 @@ import CommentBlock from './CommentBlock';
 import CommentsData from './CommentsData';
 
 
-import ThreeDemo from './ThreeDemo';
-
 import { createAction } from './../../redux/actions/actions';
 
 
@@ -103,7 +101,6 @@ class CommentApp extends Component {
                     {/*initData是 空时候，显示下面内容*/}
                     无
                 </CommentsData>
-                <ThreeDemo />
             </div>
         );
     }
