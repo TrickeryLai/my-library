@@ -5,6 +5,13 @@ window.onload = function(){
   var initSize = new InitSize();
     initSize.onloadSet();
 
+    document.body.onclick = function(e){
+        var fireWork = new Firework();
+
+
+        fireWork.createBlock(e.clientX, e.clientY);
+    };
+
 };
 
 function InitSize(){
