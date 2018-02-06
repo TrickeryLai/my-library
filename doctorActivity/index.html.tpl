@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" style = "font-size: 10px">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>css</title>
     <!-- 禁止 Chrome 浏览器中自动提示翻译 -->
     <meta name="google" value="notranslate">
     <!-- 禁止百度转码 -->
@@ -14,19 +14,25 @@
     <meta http-equiv="expires" content="0" />
     <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
     <meta http-equiv="pragma" content="no-cache" />
-
+    
     <!-- 手机屏幕适配 -->
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
     <meta name="format-detection" content="telephone=no">
-
-    <!-- -->
+    
+    <!-- 大辰项目版本号 -->
     <meta name="dachen-version" content="@@version">
-    <script src="./js/index.js"></script>
-    <script src="./js/firework.js"></script>
+
+    <title></title>
+
+    <script type="text/javascript" src="https://default.file.dachentech.com.cn/doctororg/react&react-dom&react-router.js"></script>
+    <script type="text/javascript" src="https://default.file.dachentech.com.cn/doctororg/antdMobile.min.js"></script>
+
 </head>
-<body>
-<div style="font-size: 1rem">
-    1231241
-</div>
+
+<body id="body">
+
+    <div id="app" style="width: 100%;height: 100%;overflow: hidden;"></div>
+    <div id="deviceready" class="blink" style="display:none"></div>
 </body>
+
 </html>

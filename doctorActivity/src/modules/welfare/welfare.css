@@ -1,0 +1,138 @@
+.welfare_info .am-wingblank .am-list .am-list-body{
+    border-top:0 !important;
+}
+.welfare_info .am-wingblank.am-wingblank-lg{
+    /*margin-top:.18rem;*/
+}
+.welfare_info .am-wingblank .am-list .am-list-body p{
+    font-size: 12px;
+    color: #999999;
+    text-align: justify;
+}
+.welfare_item{
+    padding-top: .4rem;
+}
+.welfare_item img{
+    vertical-align: middle;
+}
+.welfare_item strong{
+    color: #000;
+}
+.welfare_item_btn{
+    text-align: center;
+    padding: .5rem 0;
+}
+.welfare_info{
+    -webkit-overflow-scrolling : touch;
+    background: rgba(255, 255, 255, 1);
+}
+.welfare_check_btn{
+    background: rgba(255,255,255,0.92);
+    width:100%;
+    position: fixed;
+    text-align:center;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.welfare_check_box{
+    display: inline-block;
+    width: 100%;
+    background: #4BA7F7;
+    border-radius: 5px;
+    color: #fff;
+    font-size: 18px;
+    margin: 5px 0 5px;
+    padding: .15rem 0;
+}
+.welfare-red{
+    color: #F85D5D !important;
+}
+/*微学堂*/
+.welfareClass-speakerBlock{
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f5f5f5;
+}
+.welfareClass-speakerPic{
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    margin-right: 4%;
+}
+.welfareClass-speakerPic img{
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+}
+.welfareClass-speakerInfo{
+    display:inline-block;
+    font-size: 14px;
+    color: #999;
+}
+.welfareClass-circle{
+    font-style: normal;
+    font-size: 14px;
+    color: #666;
+}
+.welfareClass-t-b-border:before, .welfareClass-t-b-border:after{
+    content: '';
+    display: block;
+    height: 10px;
+    background: #f5f5f5;
+    margin: 0 -1rem;
+}
+.circle-item{
+    background: #FFFFFF;
+    border: 1px solid #E5E5E5;
+    border-radius: 3px;
+    padding: 3px 5px;
+    margin: 5px 5px;
+    color: #666;
+    font-size: 14px;
+    transition: all .3s;
+}
+.circle-item.circle-chose{
+    color: #4BA7F7;
+    background: #F5FAFF;
+    border: 1px solid #4BA7F7;
+
+}
+.circle-block{
+    padding: 10px 10px 25px;
+    background: #fff;
+    overflow-y: scroll;
+    word-break:keep-all;/* 不换行 */
+    white-space:nowrap;/* 不换行 */
+}
+.circle-block-wrap{
+    margin-bottom: -15px;
+    padding: 0 .1rem;
+    overflow: hidden;
+}
+.welfareClass .am-list-body, .welfareClass .am-list-line::after{
+    border-top: none;
+    border-bottom: none;
+}
+.am-list-body::after{
+    content: '';
+    border:0;
+}
+/*病例讨论*/
+
+.welfareCase-label-item{
+    color: #999;
+    font-size: 12px;
+    border: 1px solid #C0C0C0;
+    border-radius: 2px;
+    margin: 3px 5px;
+    margin-left: 0;
+    padding: 0px 2px;
+    display:inline-block;
+}
+.welfare-baseInfo{
+    font-size: 15px !important;
+    color: #171717 !important;
+    letter-spacing: 0 !important;
+    font-weight: normal!important;
+}
