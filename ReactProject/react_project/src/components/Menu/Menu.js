@@ -17,6 +17,7 @@ class Menu extends Component {
     constructor(props){
         super(props);
         this.state = {
+            url: '123.jpg',
             linkData: {
                 "commentApp":{
                     url: '/commentApp',
@@ -25,22 +26,38 @@ class Menu extends Component {
                 "zoom":{
                     url: '/zoom',
                     txt: 'zoom'
+                },
+                "calculate":{
+                    url: '/calculate',
+                    txt: 'Calculate'
+                },
+                "maze":{
+                    url: '/maze',
+                    txt: 'Maze'
                 }
             }
         };
     }
     componentWillMount(){
         //设置zoom 参数
-        let data = {
-                id: 11
-            },
-            zoomUrl = this.state.linkData.zoom.url,
-            url = {
-                pathname: zoomUrl,
-                query: data
-            };
+        // let data = {
+        //         id: 11
+        //     },
+        //     zoomUrl = this.state.linkData.zoom.url,
+        //     url = {
+        //         pathname: zoomUrl,
+        //         query: data
+        //     };
+        //
+        // this.setLinkData('zoom', {url});
 
-        this.setLinkData('zoom', {url});
+        //url 传递
+        // let url = {
+        //     url: `/zoom/${this.state.url}`
+        // };
+        //
+        // this.setLinkData('zoom', url);
+
     }
     componentDidMount(){
 
