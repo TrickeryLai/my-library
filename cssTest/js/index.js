@@ -6,8 +6,9 @@ window.onload = function(){
     initSize.onloadSet();
 
     document.body.onclick = function(e){
-        var fireWork = new Firework();
-
+        var fireWork = new Firework({
+            number: 100
+        });
 
         fireWork.createBlock(e.clientX, e.clientY);
     };
