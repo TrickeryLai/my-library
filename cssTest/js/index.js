@@ -7,17 +7,23 @@ window.onload = function(){
 
     document.body.onclick = function(e){
         var fireWork = new Firework({
-            number: 100
+            number: 5,
+            minSize: 50
         });
 
-        fireWork.createBlock(e.clientX, e.clientY);
+        fireWork.createFireWork(e.clientX, e.clientY);
     };
 
 };
 
-function InitSize(){
+function InitSize(obj){
+
+    obj = obj || {};
+
     this.initSize = 750;
     this.initFont = 10;
+    this.minSize = obj.minSize;
+    this.maxSize = obj.maxSize;
 }
 
 InitSize.prototype = {
