@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>事件的阶段</title>
+	<style type="text/css">
+		#content{
+			background: #666;
+		}
+	</style>
+</head>
+<body>
+<div id="content" style="fontSize: 16px; color: red;">
+	<span></span>
+</div>
+</body>
+<script type="text/javascript" src="../common/index.js"></script>
+<script type="text/javascript">
+	
+	window.onload = function(){
+		var phase = [
+			{
+				name: '捕获阶段',
+			},
+			{
+				name: '目标阶段',
+			},
+			{
+				name: '冒泡阶段'
+			}
+		],
+		url = 'https://blog.csdn.net/toumingyumaohuiyi/article/details/53609935',
+		title = '事件的阶段';
+
+		var obj1 = {a:{b:1,aaa:123},c: function(){console.log(123)}}, obj2 = {a: {b:12,c:11},b:2}, obj3 = {};
+		obj3 = common_until.extends(obj1, obj2);
+		console.log(obj1, obj3);
+
+		console.log(common_until.getStyle(document.getElementById('content')));
+
+	}
+</script>
+</html>

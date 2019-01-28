@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>cookie</title>
+</head>
+<body>
+
+</body>
+<script type="text/javascript">
+	var a = 1, b = 2, c = 555;
+	var d = a && b && c;
+	console.log(d)
+
+	var string1 = 'abc', string2 = 'bcd';
+
+	console.log(string1, string1.concat(string2));
+	document.cookie = "username=lll;path=/";
+
+	//判断浏览器是否支持 cookie
+	var dt = new Date(); 
+	dt.setSeconds(dt.getSeconds() + 60); 
+	document.cookie = "cookietest=1; expires=" + dt.toGMTString(); 
+	var cookiesEnabled = document.cookie.indexOf("cookietest=") != -1; 
+	if(!cookiesEnabled) { 
+		//没有启用cookie 
+		alert("没有启用cookie ");
+	} else{
+		//已经启用cookie 
+		alert("已经启用cookie ");
+	}
+
+	// currentStyle() && window.getComputedStyle();
+
+	function aafn(n){
+		var arr = [];
+
+		return (function fn(n, arr){
+			arr = arr || [];
+
+			arr.push(n);
+
+			n -= 1;
+			if(n < 0){
+				return arr;
+			}
+
+			return fn(n, arr)
+		})(n)
+		
+	}
+
+	function fbc(n){
+		return (function fn(n, result, progress){
+			result = result || 1;
+			progress = progress ? progress + (' X ' + n): n;
+
+			result *= n;
+
+
+			n -=1;
+			
+			if(n === 0){
+				progress += (' = ' + result);
+				return {result: result, progress: progress};
+			}
+
+			return fn(n, result, progress)
+		})(n)
+	};
+
+	console.log(fbc(10))
+	console.log(aafn(5))
+	setTimeout(function (startTime) {
+		return null;
+		console.log(arguments)
+	 	setTimeout(arguments.callee.bind(this, new Date().getTime()), 10000);
+		var endTime = 0, totalTime = 0;
+
+		startTime = startTime || new Date().getTime();
+
+		for(var i = 0 ;i < 100000000; i++){}
+		totalTime = new Date().getTime() - startTime;
+	 	console.log(totalTime+'毫秒之后被调用');
+	}, 10000);
+</script>
+</html>

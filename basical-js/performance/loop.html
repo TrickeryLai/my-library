@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript" src="./../common/index.js"></script>
+</head>
+<body>
+
+</body>
+<script>
+	function computeMaxCallStackSize() {
+	    try {
+
+	        return 1 + computeMaxCallStackSize();
+	    } catch (e) {
+	        // Call stack overflow
+	        return 1;
+	    }
+	}
+
+	console.log(computeMaxCallStackSize())
+
+	var arrTest = [], testTimes = 5;
+	arrTest = _common.getRunTime('getArr', function(){
+		var arr = [];
+
+		arr = Array(testTimes).fill(1);
+
+		return arr;
+	});
+
+	arrTest = _common.getRunTime('getArrFor', function(){
+		var arr = [], i = 0;
+
+		for(i; i < testTimes; i++){
+			arr.push(1);
+		}
+		return arr;
+	})
+
+ 	function getArrT(length, arr){
+
+ 		// if(length > 9000){
+ 		// 	length = 9000
+ 		// }
+		var a = arr || [];
+
+		if(a.length < length){
+			a.push(a.length)	
+			getArrT(length, a);
+		}else{
+			return a;
+		}
+		
+	}
+	// console.count('getArrT')
+	arrTest = _common.getRunTime('getArrT', getArrT(testTimes))
+
+	function a(b){
+		console.log("%d年%d月%d日",2011,3,26);
+		console.trace();
+		return b;
+	}
+
+	function c(b){
+		return a(b);
+	}
+
+	function d(b){
+		return c(b);
+	}
+
+	var e = d(2)
+</script>
+</html>

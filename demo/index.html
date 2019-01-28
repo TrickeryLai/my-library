@@ -6,6 +6,8 @@
 </head>
 <body>
     <div>34535346346346</div>
+    <input type="" name="" id="input">
+    <input type="" name="" id="input2">
 </body>
 <script>
 
@@ -33,5 +35,36 @@
     console.log(isNaN(a));
 
     console.log(isPalindrome('CARAC'));
+
+    /**/
+
+    var debounce = function ( fn, params ){
+        var times;
+        
+        return (function(){
+            var times = 500;
+            clearTimeout(fn.timeout);
+            fn.timeout = setTimeout( function(){
+                fn && fn();
+            }, times)
+        })();      
+    }
+    function bb(){
+        console.log('change')
+    }
+    function cc(){
+        console.log('change222')
+    }
+    document.getElementById('input').onkeyup = function(){
+        console.log(123)
+        debounce(bb)
+    }
+
+    document.getElementById('input2').onkeyup = function(){
+
+        debounce(function(){
+            console.log('12412')
+        })
+    }
 </script>
 </html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>console</title>
+</head>
+<body>
+<div id="abc">
+	123214
+</div>
+</body>
+
+<script type="text/javascript">
+	window.onload = function(){
+
+		/**
+		 * [assert description]
+		 * @param  {[type]} boolean [description]
+		 * @param  {[type]} result  [boolean 不成立 console result]
+		 * @return {[type]}         [null]
+		 */
+		function assert(boolean, result){
+			console.assert(boolean, result);
+		}
+
+		console.info('assert-------------------')
+		assert(true, '条件成立不输出');
+
+		assert(false, '条件不成立输出');
+
+		console.info('assert-------------------')
+		//清除
+		// console.clear();
+
+
+		//计数
+		for(var i = 0; i < 10; i ++ ){
+			// console.count('count123');
+			// ab();
+		}
+
+		function ab(){
+			console.count('count-ab');
+		}
+
+
+		//报错
+		console.error("Error: %s (%i)", "Server is not responding",500);
+
+
+		console.group('第一层');
+  			console.group('第二层');
+
+    			console.log('error');
+    			console.error('error');
+    			console.warn('error');
+
+  			console.groupEnd(); 
+		console.groupEnd();
+
+
+		console.info('console info');
+		console.log('console log');
+
+
+		// table
+		// 
+		var arr = [
+			{num: 1,aa: 22, cc: 41},
+			{num: 2,aa: 33, dd: 45},
+			{num: 3,aa: 44, ee: 45}
+		];
+
+		var obj = {
+			a: {num: 1,aa: 22, cc: 41},
+			b: {num: 2,aa: 33, dd: 45},
+			c: {num: 3,aa: 44, ee: 45}
+		};
+		console.table(arr);
+
+		console.table(obj);
+
+
+		//计时器
+		//
+		console.time('time');
+
+		for(var time = 0; time ++; time < 100){
+
+		}
+
+		console.timeEnd('time');
+
+		//追踪函数调用
+		function eFn(d){
+			console.trace()
+			return d;
+		}
+
+		function dFn(d){
+			return eFn(d);
+		}
+
+		function cFn(d){
+			return dFn(d);
+		}
+
+		cFn('d');
+
+		console.log('console上述的集中度支持printf的占位符格式，支持的占位符有：字符（%s）、整数（%d或%i）、浮点数（%f）和对象（%o）')
+		};
+
+		console.log('%O', document.getElementById('abc'))
+
+		console.log('输出%c富文本\n13123','color: red; font-size: 30px; font-weight: 800;background:url(https://static.runoob.com/images/runoob-logo.png) no-repeat center;background-position: cover;padding:50px 30px;');
+
+		console.log("%c","background:url(https://static.runoob.com/images/runoob-logo.png) no-repeat;padding:50px 300px;line-height:120px");
+
+		console.dirxml(document.getElementById('abc'));
+
+		function All() {
+		  // alert(1);
+		  for (var i = 0; i < 10; i++) {
+		    funcA(1000);
+		  }　　　　
+		  funcB(10000);　　
+		}
+		 　
+		function funcA(count) {　　　　
+		  for (var i = 0; i < count; i++) {}　　
+		}
+		 　　
+		function funcB(count) {　　　　
+		  for (var i = 0; i < count; i++) {}　　
+		}
+		 
+		console.profile('性能分析器');
+		All();　　
+		console.profileEnd();
+
+</script>
+</html>

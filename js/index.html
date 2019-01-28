@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>jQuery+blockDrag.js拖动div栅格布局代码</title>
+
+<style type="text/css">
+	*{
+		padding: 0;
+		margin: 0;
+	}
+	#box{
+		height:800px;
+
+		position: relative;
+		left: 50px;
+		top: 50px;
+	}
+	#box:after{
+		content:".";
+		font-size: 0px;
+		display: block;
+		clear: both;
+		height: 0;
+	}
+	.drag{
+		position:absolute;
+		width: 100px;
+		height: 100px;
+		cursor: pointer;
+		background: #eee;
+	}
+
+	#box .item{
+		margin:5px;
+		float: left;
+		outline: 1px solid #dfdfdf;
+	}
+	#box .active{ background: #007aff };
+</style>
+	<script type="text/javascript" src="jquery-1.8.0.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+
+			//设置背景栅格，可根据需要添加
+			var row=4;
+			var col=4;
+			var blockW=100;
+			var blockH=100;
+			var marginL=5;
+			var marginT=5;
+			for(var x=1;x<=row;x++){
+				for(var y=1;y<=col;y++){
+					$("<div class='item' wz='"+((y-1)*(blockW+10)+marginL)+"-"+((x-1)*(blockH+10)+marginT)+"' top='"+((x-1)*(blockH+10)+marginT)+"' left='"+((y-1)*(blockW+10)+marginL)+"' style='width:"+blockW+"px;height:"+blockH+"px'></div>").appendTo($(".gz"));
+				}
+			}
+
+			$("#box").css({
+				width: col * (blockW + (marginL*2)) + "px",
+				height:row * (blockH + (marginT*2)) + "px"
+			});
+
+			var dragStr="";
+			for( var i=0;i<2;i++ ){
+				dragStr+="<div class='drag' style='left:"+(i * (blockW+10) + marginL)+"px;top:"+(i * (blockH+10) + marginT )+"px' ></div>";
+			}
+			$(".dragContainer").empty().append(dragStr);
+
+
+			$("#box").on("mousedown",".drag",function(e){
+
+				var firstTime=new Date().getTime();
+
+				var _this=$(this);
+				var c = parseInt(_this.css("left"));
+				var d = parseInt(_this.css("top"));
+				var f = e.pageX;
+				var g = e.pageY;
+				e.stopPropagation();
+				function moveFn(e) {
+
+					var lastTime=new Date().getTime();
+					//限制，大于两秒才能移动
+					if( (lastTime - firstTime) < 200 ){
+						return;
+					}
+
+					var x = e.pageX;
+					var y = e.pageY;
+					_this.css({
+						left: (c + x - f) + "px",
+						top: (d + y - g) + "px"
+					});
+
+					/*var l = parseInt(_this.css("left"));
+					var m = parseInt(_this.css("top"));
+
+					var i = blockW / 2;//空格宽度一半50
+					var h = blockH / 2;//空格高度一半50
+					var k = parseInt((l) / i);
+					var n = parseInt((m) / h);
+					k < 0 ? k = 0 : null;
+					n < 0 ? n = 0 : null;
+					k > (col - 1) * 2 ? k = (col - 1) * 2 : null;
+					n > (row - 1) * 2 ? n = (row - 1) * 2 : null;
+
+					$(".item").removeClass("active");
+					if(k % 2 == 0){console.log(1)
+
+						var left=(((k + 2) / 2) - 1) * blockW + 10*(((k + 2) / 2) - 1)+5;
+						if(n % 2 == 0){
+							var top=(((n + 2) / 2) - 1) * blockH + 10*(((n + 2) / 2) - 1)+5;
+							$(".item[wz='"+left+"-"+top+"']").addClass("active");
+						}else{
+							var top=(((n + 3) / 2) - 1) * blockH + 10*(((n + 2) / 2) - 1)+5;
+							$(".item[wz='"+left+"-"+top+"']").addClass("active");
+						}
+
+					}else{ console.log(2)
+
+						var left=(((k + 3) / 2) - 1) * blockW + 10*(((k + 2) / 2) - 1)+5;
+						if(n % 2 == 0){
+							var top=(((n + 2) / 2) - 1) * blockH + 10*(((n + 2) / 2) - 1)+5;
+							$(".item[wz='"+left+"-"+top+"']").addClass("active");
+						}else{
+							var top=(((n + 3) / 2) - 1) * blockH + 10*(((n + 2) / 2) - 1)+5;
+							$(".item[wz='"+left+"-"+top+"']").addClass("active");
+						}
+					}*/
+
+
+				}
+				$(document).on("mousemove", moveFn);
+				if(_this.get(0).setCapture) {
+					_this.get(0).setCapture()
+				}
+
+				$(document).mouseup(function(j) {
+
+
+					var l = parseInt(_this.css("left"));
+					var m = parseInt(_this.css("top"));
+
+					var i = blockW / 2;//空格宽度一半75
+					var h = blockH / 2;//空格高度一半55
+					var k = parseInt(l / i);
+					var n = parseInt(m / h);
+					k < 0 ? k = 0 : null;
+					n < 0 ? n = 0 : null;
+					k > (col - 1) * 2 ? k = (col - 1) * 2 : null;
+					n > (row - 1) * 2 ? n = (row - 1) * 2 : null;
+console.log('k',k);
+console.log('n',n);
+					var left=null,top=null;
+					if(k % 2 == 0){
+						left=(((k + 2) / 2) - 1) * blockW + 10*(((k + 2) / 2) - 1)+5;
+					}else{
+						left=(((k + 3) / 2) - 1) * blockW + 10*(((k + 3) / 2) - 1)+5;
+					}
+					if(n % 2 == 0){
+						top=(((n + 2) / 2) - 1) * blockH + 10*(((n + 2) / 2) - 1)+5;
+					}else{
+						top=(((n + 3) / 2) - 1) * blockH + 10*(((n + 3) / 2) - 1)+5;
+					}
+
+					//限制，已有格子，不能放置
+					var targetArr=[{left:left,top:top}];
+					if( judgeCell_isEmpty(targetArr,dragArr()) ){
+						_this.animate({ left:c,top:d },200,"linear");
+					}else{
+						_this.animate({left: left+"px",top:top+"px"},50);
+					}
+
+					$(document).off("mousemove").off("mouseup");
+					_this.off("mouseup")
+
+				})
+
+			});
+
+		});
+	</script>
+</head>
+<body>
+
+<div id="box">
+	<div class="dragContainer">
+
+	</div>
+	<div class="gz">
+
+	</div>
+</div>
+
+</body>
+</html>
+<script>
+
+	function dragArr(){
+		var a=[];
+		$(".drag").each(function(){
+			a.push({
+				left:parseInt($(this).css("left")),
+				top:parseInt($(this).css("top"))
+			});
+		});
+		return a;
+	}
+
+
+	function judgeCell_isEmpty(targetArr,dragArr){
+
+		var state=false;
+		for( var x=0;x<targetArr.length;x++ ){
+			for( var y=0;y<dragArr.length;y++ ){
+				if( targetArr[x].left == dragArr[y].left && targetArr[x].top == dragArr[y].top ){
+					state=true;
+					break;
+				}else{
+					state=false;
+				}
+			}
+		}
+		return state;
+	}
+
+</script>

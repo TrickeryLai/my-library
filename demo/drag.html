@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>drag</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			font-size: 16px;
+			background: #fff;
+		}
+
+		html, body{
+			width: 100%;
+			height: 100%;
+		}
+		.drag{
+			display: inline-block;
+			width: 80px;
+			height: 80px;
+			background: #ccc;
+			text-align: center;
+			line-height: 50px;
+			left: 0;
+			top: 0;
+		}
+	</style>
+</head>
+<body>
+<div id="main">
+	<div class="drag">124124</div>
+	<div class="drag123">12115</div>
+
+</div>
+</body>
+
+
+<script type="text/javascript">
+	
+	window.onload = function(){
+
+		//通用设置
+		var common_setting = {
+			SIZE_WIDTH: 150,
+			SIZE_HEIGHT: 150,
+			DRAG_DOM: ['drag'],
+			
+		};
+
+		//common function
+		var _common_fn = {
+			/**
+			 * [getStyle description]
+			 * @param  {[type]} ele [description]
+			 * @return {[type]}     [style]
+			 */
+			getStyle: function(ele){
+				var style = null;
+
+				if(window.getComputedStyle){
+					style = window.getComputedStyle(ele, null);
+				}else{
+					style = ele.currentStyle;
+				}
+
+				return style;
+			}
+		};
+
+
+		document.onmousedown = function(e){
+			var target = e.target, newTarget = target.cloneNode(true), clickX = e.x, clickY = e.y;
+
+			if(common_setting.DRAG_DOM.indexOf(target.className) < 0){
+				return;
+			}
+
+
+			// target.parentNode.insertBefore(newTarget, target);
+			drag(target, target, clickX, clickY)
+
+		}
+
+
+		function drag(ele, oldele, clickX, clickY){
+			var eleStyle = _common_fn.getStyle(ele);
+			
+			
+			ele.onmousemove = function(e){
+				var x, y;
+
+				x = e.x;
+				y = e.y;
+				console.log(x - clickX + parseFloat(eleStyle.left))
+				this.style.position = 'fixed';
+				this.style.left = x - clickX + parseFloat(eleStyle.left)  + 'px';
+
+				this.style.top = y - clickY + parseFloat(eleStyle.top) + 'px';
+
+			}
+
+			ele.onmouseup = function(){
+				this.onmousemove = null;
+
+				// ele.parentNode.removeChild(ele);
+			}
+		}
+
+	}
+</script>
+</html>
