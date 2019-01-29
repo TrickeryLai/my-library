@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>setTimeout Interval</title>
+</head>
+<body>
+<div></div>
+<script type="text/javascript">
+	window.onload = function(){
+
+		//setTimeout setInterval 都是属于宏任务队列
+		
+		var a = 1;
+		console.log('1');
+		setTimeout(function(){
+			console.log('setTimeout1');
+
+			setTimeout(function(){
+				console.log('setTimeout1--1')
+			})
+		})
+
+		console.log('2');
+
+		setTimeout(function(){
+			console.log('setTimeout2');
+
+			setTimeout(function(){
+				console.log('setTimeout2--2');
+			})
+		})
+
+		console.log('3');
+
+		//--------------------执行顺序分析 -------------------------------
+		//整个script 属于宏任务，先执行 script，执行整个script 中的微任务， 遇到宏任务插入队列中；
+		//第一个打印出 1， 遇到 setTimeout1 ,插入宏队列（setTimeout1），打印 2 ，遇到 setTimeout2，插入队列（setTimeout1, setTimeout2）,打印 3，整个 script 执行完毕，取宏队列中的宏任务执行，取出 seTimeout1 , 打印 setTimeout1, 遇到 setTimeout1-1, 插入队列（setTimeout2, setTimeout 1-1), setTimeout 1-1 执行完毕，循环上述步骤，直至 宏队列不存在任务结束。
+		
+		//
+		//1 2 3 setTimeout1 setTimeout2  setTimeout1 -1 setTimeout2-2
+		//
+		//
+		//宏任务 常见包括 script（整体代码），setTimeout，setInterval，setImmediately，I/O,UI render
+		//微任务队列有：promise，process.nexttick,Object.observe(已经不用了),Mutation.observe
+		
+		setTimeout(function(){
+				    console.log('1')
+				});
+ 
+		new Promise(function(resolve){
+		    console.log('2');
+		    resolve()
+		}).then(function(){
+		    console.log('3')
+		});
+		 
+		console.log('4');
+
+	}
+</script>
+</body>
+</html>

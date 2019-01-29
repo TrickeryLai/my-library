@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>common</title>
+	<script type="text/javascript" src="./index.js"></script>
+	<style type="text/css">
+		p:first-line{
+			color: red;
+			background: blue;
+		}
+		/**:empty:not(input){
+			width: 20px;
+			height: 20px;
+			background: red;
+			display: inline-block;
+		}*/
+		input + span {
+			background: yellow;
+			width: 20px;
+			height: 20px;
+			display:inline-block;
+		}
+		input ~ span {
+			background: green;
+			width: 20px;
+			height: 20px;
+			display: inline-block;
+		}
+	</style>
+</head>
+<body>
+	<div>
+		<img src="">
+		<input type="text" name="" id="myInput">
+		<span id="inputShow"></span>
+		<span></span>
+		<span></span>
+	</div>
+	<input type="" name="">
+	<span></span>
+	<p>
+		a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为
+	</p>
+
+	<script type="text/javascript">
+		
+		window.onload = function(){
+			var myInput = document.getElementById('myInput'),
+				inputShow = document.getElementById('inputShow');
+
+
+			function inputFn(){
+				inputShow.innerHTML = this.value;
+			}
+
+			myInput.addEventListener('input', _common.shake.bind(null, inputFn.bind(myInput), 500, 400))
+			
+		}
+
+	</script>
+</body>
+</html>

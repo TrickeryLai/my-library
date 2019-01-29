@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>js 数据类型</title>
+</head>
+<body>
+<div>
+	
+	<a href="https://www.cnblogs.com/cxying93/p/6106469.html">引用数据类型，基本数据类型</a>
+</div>
+</body>
+
+<script type="text/javascript">
+	
+	window.onload = function (){
+		// 6 大数据类型 ------- 查看类型 typeof null 为object, function 单独为function, function 也可以归为 object 这数据类型
+		// string, number, boolean, null, object, undefined
+		// 
+		var stringD = 'string';// string
+
+		var numberD = 123; //number
+
+		var booleanD = true;// boolean
+
+		var undefinedD; //undefined
+
+		var objectD = [];//object
+			objectD = {};
+			objectD = document.getElementsByTagName('div');
+
+		document.getElementById('notExistElement');//null
+
+		console.log(document.getElementById('notExistElement'));
+
+		//typeof 返回类型 查看类型操作符
+		console.log(typeof stringD);// string
+
+		console.log(typeof numberD);//number
+
+		console.log(typeof booleanD);//boolean
+
+		console.log(typeof undefinedD);//undefined
+
+		console.log(typeof []);//object
+
+		console.log(typeof {});//object
+
+		console.log(typeof null);//object
+
+		console.log(typeof function(){});//function
+
+
+		//-------------------------基本数据类型和引用数据类型----------------------------------------
+
+
+		//基本数据类型 是指简单的数据段，是按值访问，进行赋值操作，可以直接操作保存在变量中的实际值 常见的有 number, string, boolean, undefined, null
+		//
+		
+
+		//引用数据类型，也指对象类型，是保存在堆内存中的对象，不可以直接操作保存在堆内的对象，只能操作栈内存中的引用地址
+		//
+		//
+		// 参考 https://www.cnblogs.com/cxying93/p/6106469.html
+		// 
+		// 
+		
+
+		alert(a); //弹出：function a(){alert(4);}
+		var a=1; //预解析中的a改为了1
+
+		alert(a);  //弹出1
+		function a(){alert(2);}//函数声明，没有改变a的值。什么也没发生。
+
+		alert(a); //继续弹出1，因为a在预处理库里面的值没有被改过。
+		var a=3; //预处理中a的值变为3
+
+		alert(a); //弹出3
+		function a(){alert(4);} //函数声明，什么也没有发生
+
+		alert(a); //继续弹出3
+		a(); //报错 a is not a function
+	}
+</script>
+</html>

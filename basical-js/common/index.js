@@ -8,11 +8,72 @@ var _common = {
 	 */
 	getRunTime: function(name, callback){
 		var returnData = '';
+		if(typeof name !== 'string'){
+			callback = name;
+
+			name = 'test';
+		}
 		console.time(name);
+
 		if(callback){
 			returnData = callback();
 		}
 		console.timeEnd(name)
 		return returnData;
+	},
+
+	getStyle: function(obj, attr){
+		var ele = obj;
+		if(typeof obj == 'string'){
+			ele = document.querySelector(obj);
+		}
+
+		return ele.currentStyle ?  ele.currentStyle[attr] : getComputedStyle(ele)[attr];
+	},
+
+	/**
+	 * [shake description]
+	 * @param  {Function} fn        [执行的操作]
+	 * @param  {[type]}   time      [延迟执行时间]
+	 * @param  {[type]}   delayTime [多长时间之后必执行]
+	 * @return {[type]}             [null]
+	 */
+	shake: function(fn, time, delayTime){
+		var nowTime = 0;
+
+		if(typeof time !== 'number'){
+			time = 400;
+		}
+		
+		clearTimeout(fn._timeout_);
+
+		if( !fn._hasFinished_  && delayTime){
+			fn._startTime_ = new Date().getTime();
+			fn._hasFinished_ = true;
+		}
+
+		nowTime = new Date().getTime() - fn._startTime_;
+
+		if(nowTime >= delayTime && delayTime){
+
+			if(fn){
+
+				fn();
+				fn._statTime = new Date().getTime();
+				fn._hasFinished_ = false;
+
+			}
+
+		}else{
+
+			fn._timeout_ = setTimeout(function(){
+				if(fn){
+					fn();
+					fn._statTime = new Date().getTime();
+					fn._hasFinished_ = false;
+				}
+			}, time);
+
+		}
 	}
 }

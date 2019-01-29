@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>nodeList</title>
+	<script type="text/javascript" src="./../common/index.js"></script>
+</head>
+<body>
+
+	<a href="https://github.com/cncounter/translation/blob/master/tiemao_2014/NodeList/NodeList.md"> 参考 </a>
+	<div id="nodeListId" class="nodeListClass">
+		<span></span>
+		<span></span>
+		<span></span>
+	</div>
+
+	<button type="button" id="changeBtn">tagBtn</button>
+	<button type="button" id="queryBtn">queryBtn</button>
+
+	<div id="result">
+		
+	</div
+
+
+<script type="text/javascript">
+	
+	window.onload = function(){
+		// 参考 https://github.com/cncounter/translation/blob/master/tiemao_2014/NodeList/NodeList.md
+		// 
+		// 主要为 动态nodeList, 静态nodeList两大类区分 动态nodeList 获取要比静态nodelist 快很多
+		// 
+		//----------------获取 nodeList 的几种方式 -----------------------------------
+		
+		var nodeId = document.getElementById('nodeListId');//静态获取
+
+		var nodeClass = document.getElementsByClassName('nodeListClass')[0];
+
+		var nodeTag = document.getElementsByTagName('div')[0];
+
+		var nodeQuery = document.querySelector('div');
+
+		var nodeQuerys = document.querySelectorAll('div')[0];
+
+
+		var changeBtn, resultD, spanT, spanQ, queryBtn;
+
+		changeBtn = document.getElementById('changeBtn');
+
+		queryBtn = document.getElementById('queryBtn');
+
+		resultD = document.getElementById('result');
+
+		spanT = document.getElementsByTagName('span');//HTMLCollection
+
+		spanQ = document.querySelectorAll('span');//Nodelist
+
+		function changeFn(){
+			var random = Math.ceil(Math.random()*100);
+			console.log(spanT);
+			for(var i = 0, lenI = spanT.length; i < lenI; i++){
+				spanT[i].className = 'className_' + random;
+			}
+		}
+
+		function queryBtnFn(){
+			var random = Math.ceil(Math.random()*100);
+			console.log(spanQ);
+			for(var j = 0, lenJ = spanQ.length; j < lenJ; j++){
+				spanQ[j].className = 'className_' + random;
+			}
+		}
+
+		_common.getRunTime('nodeId',function(){
+			for(var i = 0; i < 1000; i++){
+				document.getElementById('nodeListId');
+			}
+		});
+
+		_common.getRunTime('nodeClass', function(){
+			for(var i = 0; i < 1000; i++){
+				document.getElementsByClassName('nodeListClass')
+			}
+		})
+
+		_common.getRunTime('query', function(){
+			for(var i = 0; i < 1000; i++){
+				document.querySelector('.nodeListClass')
+			}
+		})
+
+		changeBtn.addEventListener('click', changeFn)
+
+		queryBtn.addEventListener('click', queryBtnFn)
+
+	}
+
+
+</script>
+</body>
+</html>
