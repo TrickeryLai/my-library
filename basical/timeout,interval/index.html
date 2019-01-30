@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>setTimeout Interval</title>
+</head>
+<body>
+<div></div>
+<script type="text/javascript">
+	window.onload = function(){
+
+		//setTimeout setInterval 都是属于宏任务队列
+		
+		// var a = 1;
+		// console.log('1');
+		// setTimeout(function(){
+		// 	console.log('setTimeout1');
+
+		// 	setTimeout(function(){
+		// 		console.log('setTimeout1--1')
+		// 	})
+		// })
+
+		// console.log('2');
+
+		// setTimeout(function(){
+		// 	console.log('setTimeout2');
+
+		// 	setTimeout(function(){
+		// 		console.log('setTimeout2--2');
+		// 	})
+		// })
+
+		// console.log('3');
+
+		//---------------------------执行顺序分析 -------------------------------
+		//整个script 属于宏任务，先执行 script，执行整个script 中的微任务， 遇到宏任务插入队列中；
+		//第一个打印出 1， 遇到 setTimeout1 ,插入宏队列（setTimeout1），打印 2 ，遇到 setTimeout2，插入队列（setTimeout1, setTimeout2）,打印 3，整个 script 执行完毕，取宏队列中的宏任务执行，取出 seTimeout1 , 打印 setTimeout1, 遇到 setTimeout1-1, 插入队列（setTimeout2, setTimeout 1-1), setTimeout 1-1 执行完毕，循环上述步骤，直至 宏队列不存在任务结束。
+		
+		//
+		//1 2 3 setTimeout1 setTimeout2  setTimeout1 -1 setTimeout2-2
+		//
+		//
+		//宏任务 常见包括 script（整体代码），setTimeout，setInterval，setImmediately，I/O,UI render
+		//微任务队列有：promise，process.nexttick,Object.observe(已经不用了),Mutation.observe
+		
+		// setTimeout(function(){
+		// 		    console.log('1')
+		// 		});
+ 
+		// new Promise(function(resolve){
+		//     console.log('2');
+		//     resolve();
+		//     // setTimeout(function(){
+		//     // 	resolve();
+
+		//     // 	console.log(12)
+		//     // })
+		// }).then(function(){
+		//     console.log('3')
+		// });
+		 
+
+				 
+		// console.log('4');
+
+		//-------------------------------执行顺序分析---------------------------
+		//
+		//执行 script , 遇到 setTimeout 加入宏队列 （setTimeout）,遇到 promise , 立即执行 function 打印 2，resolve 放入当前微任务队列执行 then， 打印 4 ，之后执行插入的 then ,打印 3， 当前宏任务执行完毕， 从宏队列中取出 setTimeout ，执行，打印 1， 当前宏任务 微任务执行完毕， 宏队列执行完毕，结束
+		//
+		//
+		//打印结果 2 4 3 1
+		//
+		//
+		//
+		var value = 123;
+		window.value = 11111;
+		console.log(window.value)
+		setTimeout(function(){
+				    console.log('1')
+				});
+ 
+		new Promise(function(resolve){
+		    console.log('2');
+		    var value = 'promise 123';
+		    setTimeout(function(){
+		    	resolve();
+		    	console.log(this.value);
+		    	console.log(12)
+		    })
+		}).then(function(){
+		    console.log('3')
+		});
+				 
+		console.log('4');
+
+		//2 4 1 12 3;
+		//
+		//promise 执行顺序为 立即执行生成的 function, resolve() 主导 then 的执行， resolve ()所在的宏任务中，会将对应的 then 执行放在当前宏任务的所有 微任务之后执行。
+		
+	}
+</script>
+</body>
+</html>

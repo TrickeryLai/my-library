@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>vertical-align</title>
+	<style type="text/css">
+		.wrap{
+			width: 100%;
+			height: 200px;
+			border: 1px solid #000;
+			position: relative;
+			user-select: none;
+		}
+		.inline-block{
+			display: inline-block;
+			border: 1px solid red;
+			
+		}
+		.normal{
+			width: 100px;
+			height: 100px;
+			border : 1px solid green;
+			display: inline-block;
+		}
+		.line{
+			width: 100%;
+			height: 2px;
+			background: blue;
+			cursor: pointer;
+			position: absolute;
+			left: 0;
+			top: 0;
+			opacity: .6;	
+		}
+		.line:hover, 
+		.line:active{
+			height: 5px;
+		}
+		ul{
+			margin: 0px;
+			padding: 0px;
+			list-style: none;
+			background: #fff;
+			color: #333;
+			border: 1px solid #ccc;
+			font-size: 12px;
+
+		}
+		ul li{
+			padding: 5px 8px;
+			border-top: 1px solid #ccc;
+			background: #fff;
+		}
+		ul li:hover{
+			background:#ccc;
+			cursor: pointer;
+		}
+		ul li:first-child{
+			border-top: none;
+		}
+		button{
+			margin: 5px;
+			padding: 8px 5px;
+			border: 1px solid #666;
+			background: #fff;
+			border-radius: 3px;
+			color: #333;
+			
+		}
+		button:hover{
+			cursor: pointer;
+			
+		}
+		button:active,
+		button:focus {
+			background: #e12311;
+			color: #fff;
+			border-color: #e12311;
+		}
+
+	</style>
+</head>
+<body>
+	<div id = "btnBox">
+		
+	</div>
+	<div id="btnsToggle">
+		<!-- <button id="btnTogether" opp-type="together">button Together</button>
+		<button id="remove">button remove</button> -->
+		<button id="addLine">AddLine</button>
+
+	</div>
+	<div id = "lineBtnBox">
+		<button type="button" opp-type="destory" opp-id="line">line1</button>
+		<button type="button" opp-type="destory" opp-id="line2">line2</button>
+	</div>
+<div class = "wrap" id="dragBox">
+	<div id = "line" class="line">line1</div>
+	<div id="line2" class= "line" style="background: red;margin-top: 20px;">line2</div>
+	<span style="font-size: 30px;border:1px solid green;">X<sup style="font-size:12px">X</sup> &nbspX<sub style="font-size:12px">X</sub>&nbspX</span>
+	
+	<div class = "inline-block btnChange">
+		<div class = "normal"></div>
+		<div class = "normal"></div>
+	</div>
+	<div class = "inline-block btnChange">
+		<div class = "normal"></div>
+		<div class = "normal">
+			12314
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	window.onload = function(){
+		var btnBox = document.getElementById('btnBox');
+
+		var btnCont = [
+			{
+				name: 'overflow-hidden',
+				style: 'overflow: hidden;'
+			},
+			{
+				name: 'vertical-top',
+				style: 'vertical-align: top;'
+			},
+			{
+				name: 'vertical-middle',
+				style: 'vertical-align: middle;'
+			},
+			{
+				name: 'vertical-bottom',
+				style: 'vertical-align: bottom;'
+			},
+			{
+				name: 'vertical-super',
+				style: 'vertical-align: super;'
+			},
+			{
+				name: 'vertical-sub',
+				style: 'vertical-align: sub;'
+			},
+			{
+				name: 'vertical-text-bottom',
+				style: 'vertical-align: text-bottom'
+			},
+			{
+				name: 'vertical-text-top',
+				style: 'vertical-align: text-top'
+			}
+		];
+
+		var getBtnDom = function(data){
+			var str = "";
+			for(var i = 0, len = data.length; i < len; i++){
+				str += '<button name = '+ data[i].name +'>' + data[i].name + '</button>';
+			}
+
+			return str;
+		};
+
+		var getDataItem = function(data, val, str){
+			str = str || 'name';
+			for(var i = 0 ,len = data.length; i < len; i++){
+				if(data[i][str] === val){
+					return data[i];
+				}
+			}
+
+			return '';
+		};
+
+		var btnChangesD = document.getElementsByClassName('btnChange');
+
+		var lineD = document.getElementById('line');
+
+		btnBox.innerHTML = getBtnDom(btnCont);
+
+		var Drag = function(params){
+			params = params || {};
+			this.client = {
+				x: 0, 
+				y: 0
+			},
+			this.domStyle = {
+				x: 0,
+				y: 0
+			};
+			this.state = {
+				isMouseDown: false,
+				isMouseUp: false
+			};
+			//拖拽方向， true 开启， false 关闭
+			this.dragState = {
+				vertical: params.dragState && params.dragState.vertical || true, //垂直方向
+				horizen: params.dragState && params.dragState.horizen || false // 水平方向
+			};
+
+			this.events = [];
+			this.dom;
+
+			this.concatMoveObj = [];
+
+			this.dragObj;
+		};
+
+		Drag.prototype = {
+			_all_: [],
+			_drag_menuId: '_drag_contextmenu',
+			//获取样式
+			getStyle: function(dom){
+				var style = dom.currentStyle || getComputedStyle(dom);
+
+				return style;
+			},
+
+			//获取初始位置
+			getDomStyle: function(){
+				var dom = this.dom, domStyle = this.getStyle(dom);
+
+				var result = {
+					x: dom.offsetLeft - parseFloat(domStyle.marginLeft),
+					y: dom.offsetTop - parseFloat(domStyle.marginTop)
+				};
+				return result;
+			},
+
+
+			mouseDown: function(dom, event){
+
+				var clientX = event.x,
+					clientY = event.y,
+					domStyle = this.getStyle(dom);
+
+				var getDomStyleD = this.getDomStyle();
+
+				this.client = {
+					x: clientX,
+					y: clientY
+				};
+
+				this.domStyle.x = getDomStyleD.x;
+				this.domStyle.y = getDomStyleD.y;
+				this.state.isMouseDown = true;
+				this.state.isMouseUp = false;
+
+				if(this.concatMoveObj.length > 0){
+					this.concatMoveObj.forEach(function(item){
+						item.concatMoveObjDomStyle = item.obj.getDomStyle();
+					})
+					// this.concatMoveObjDomStyle = this.concatMoveObj.getDomStyle();
+				}
+			},
+
+			mouseMove: function(dom, event){
+				dom._state = dom._state ? dom._state : {};
+				dom._domStyle = dom._domStyle ? dom._domStyle : {};
+
+
+				var moveX = event.x,
+					moveY = event.y;
+
+				var client = this.client, resultX = 0, resultY = 0, parensStyle = this.getStyle(dom.parentNode), domStyle = this.getStyle(dom);
+
+				var finalMove = {
+					moveX: moveX - client.x,
+					moveY: moveY - client.y
+				}, finalResultMove;
+
+
+				var concatMoveObj = this.concatMoveObj;
+				if(this.state.isMouseDown && !this.state.isMouseUp){
+					finalResultMove = this.getResultMove(finalMove);
+
+					//如果存在关联项，每项分别操作，在此操作
+					if(concatMoveObj.length > 0){
+						concatMoveObj.forEach(function(item){
+							item.obj.getResultMove(finalMove, item.concatMoveObjDomStyle);
+						})
+						// concatMoveObj.getResultMove(finalResultMove, this.concatMoveObjDomStyle);
+					}
+				}
+				
+			},
+
+			mouseUp: function(dom, event){
+				this.state.isMouseUp = true;
+				this.state.isMouseDown = false;
+			},
+
+			getResultMove: function(finalMove, concatMoveObjDomStyle){
+				var  dom = this.dom, domStyle = this.domStyle;
+
+				if(concatMoveObjDomStyle){
+					domStyle = concatMoveObjDomStyle;
+				}
+
+				var result = {
+					moveY: finalMove.moveY + parseFloat(domStyle.y || 0),
+					moveX: finalMove.moveX + parseFloat(domStyle.x || 0)
+				}, reusltY, resultX, parensStyle = this.getStyle(dom.parentNode), domStyle = this.getStyle(dom);
+
+				resultY = result.moveY;
+				resultX = result.moveX;
+
+				if(resultY < 0){
+					resultY = 0;
+				}
+
+				if(resultY > parseFloat(parensStyle.height)){
+					resultY = parseFloat(parensStyle.height);
+				}
+
+				if(this.dragState.vertical){
+					dom.style.top = resultY + 'px';
+				}
+
+				if(this.dragState.horizen){
+					dom.style.left = resultX + 'px';
+				}
+				return result;
+			},
+
+			//拖拽绑定
+			concatMove: function(obj){
+				var isHave = false;
+				this.concatMoveObj.forEach(function(item){
+					if(item.obj == obj){
+						isHave = true;
+					}
+				})
+
+				if(!isHave){
+					this.concatMoveObj.push({obj: obj});
+				}
+			},
+
+			//解除对应的拖拽绑定
+			removeConcat: function(obj){
+				this.concatMoveObj.forEach(function(item, index){
+					if(item.obj == obj){
+						this.concatMoveObj.splice(index, 1);
+					}
+				}.bind(this))
+			},
+			contextmenuDom: function(event){
+				var x = event.x, y = event.y;
+				var str = '';
+				str = '<ul>';
+
+				str += '<li id="_drag_menu_notUsed">禁止</li><li id="_drag_menu_used">启用</li>';
+
+				this._all_.forEach(function(item){
+					var isHave;
+					this.concatMoveObj.forEach(function(i){
+						if(i.obj == item.obj){
+							isHave = true;
+						}
+					})
+					if(item.obj == this){
+						return;
+					}
+
+					if(isHave){
+						str += '<li class="_drag-menu-concat" concat-name='+item.name+' concat-state = "true">解除关联' + item.name +'</li>';
+					}else{
+						str += '<li class="_drag-menu-concat" concat-name='+item.name+'>关联' + item.name +'</li>';
+					}
+					
+				}.bind(this))
+
+				str += '</ul>';
+
+				return str;
+			},
+			contextmenu: function(dom, event){
+				event.preventDefault();
+
+				var menuDom = this.contextmenuDom(event);
+
+				var contextDom = document.getElementById(this._drag_menuId);
+				if(!contextDom){ 
+					contextDom = document.createElement('div');
+				}
+				contextDom.id = this._drag_menuId;
+				contextDom.style.cssText = 'position: fixed; left: '+event.x+'px;top:'+event.y+'px;';
+
+				contextDom.innerHTML = menuDom;
+
+				document.body.appendChild(contextDom);
+
+				//右键事件
+				this.menuEventInit();
+			},
+
+			menuEventInit: function(){
+				var _this = this, concatMenu = document.getElementsByClassName('_drag-menu-concat');
+				document.getElementById('_drag_menu_notUsed').addEventListener('click', this.menuEvent.notUseFn.bind(this));
+				document.getElementById('_drag_menu_used').addEventListener('click', this.menuEvent.useFn.bind(this));
+
+				Array.prototype.forEach.call(concatMenu, function(item){
+					item.addEventListener('click', _this.menuEvent.menuConcat.bind(_this, item))
+				});
+
+				document.body.addEventListener('click', function(event){
+					if(!document.getElementById(this._drag_menuId)){
+						return;
+					}
+					if(event.target.id !== '_drag_contextmenu'){
+						document.body.removeChild(document.getElementById(this._drag_menuId));
+					}
+				}.bind(this))
+				
+				// for(var i = 0, len = concatMenu.length; i < len; i++){
+				// 	concatMenu[i].addEventListener('click', this.menuEvent.menuConcat);
+				// }
+			},
+			menuEvent: {
+				notUseFn: function(){
+					this.destory();
+					document.body.removeChild(document.getElementById(this._drag_menuId));
+				},
+				useFn: function(){
+					this.reset();
+					document.body.removeChild(document.getElementById(this._drag_menuId));
+				},
+				menuConcat: function(item,event){
+
+					var name = item.getAttribute('concat-name'),
+						state = item.getAttribute('concat-state');
+					var _this = this;
+					this._all_.forEach(function(item){
+						if(item.name == name){
+							if(state){
+								_this.removeConcat(item.obj);
+							}else{
+								_this.concatMove(item.obj);
+							}
+						}
+					})
+					
+					document.body.removeChild(document.getElementById(this._drag_menuId));
+				}
+			},
+
+			addToAll: function(dom, dragObj, name){
+				var isHave = false;
+
+				this._all_.forEach(function(item){
+					if(item.obj == dragObj){
+						isHave = true;
+					}
+				});
+
+				if(!isHave){
+					this._all_.push({
+						obj: dragObj,
+						dom: dom,
+						name: name
+					})
+				}
+				this.dragObj = dragObj;
+			},
+
+			removeFromAll: function(){
+				
+				this._all_.forEach(function(item, index){
+					if(item.dragObj == this.dragObj){
+						this._all_.splice(index, 1);
+					}
+				}.bind(this))
+			},
+
+			init: function(dom, dragObj, name){
+				this.dom = dom;
+				var mouseDownFn = this.mouseDown.bind(this, dom),
+					mouseMoveFn = this.mouseMove.bind(this, dom),
+					mouseUpFn = this.mouseUp.bind(this, dom);
+				dom.addEventListener('mousedown', mouseDownFn);
+
+				dom.addEventListener('contextmenu', this.contextmenu.bind(this, dom))
+
+				document.addEventListener('mousemove', mouseMoveFn);
+
+				document.addEventListener('mouseup', mouseUpFn);
+
+				this.addToAll(dom, dragObj, name);			
+				this.events = [
+					{
+						dom: dom,
+						type: 'mousedown',
+						fn: mouseDownFn
+					},
+					{
+						dom: document,
+						type: 'mousemove',
+						fn: mouseMoveFn
+					},
+					{
+						dom: document,
+						type: 'mouseup',
+						fn: mouseUpFn
+					}
+				];
+
+
+				return this;
+			},
+
+			destory: function(dom){
+				dom = dom || this.dom;
+				var events = this.events;
+				if( !this.dom  || !this.events){
+					return this;
+				}
+
+				for(var i = 0 ,len = events.length; i < len ; i++){
+					events[i]['dom'].removeEventListener(events[i].type, events[i].fn);
+				};
+
+				this.removeFromAll();
+				return this;
+			},
+
+			reset: function(){
+				if( !this.dom  || !this.events){
+					return this;
+				}
+				var dom = this.dom;
+				var events = this.events;
+
+				for(var i = 0 ,len = events.length; i < len ; i++){
+					events[i]['dom'].addEventListener(events[i].type, events[i].fn);
+				};
+
+				return this
+			}
+		}
+
+
+		function btnClickFn(event){
+			var target = event.target,
+				clickName = target.getAttribute('name'),
+				dataItem = getDataItem(btnCont, clickName, 'name');
+			
+			if(dataItem){
+				for(var i = 0, len = btnChangesD.length; i < len; i++){
+
+					btnChangesD[i].style.cssText = dataItem.style;
+				}
+			}
+
+		}
+
+		btnBox.addEventListener('click', btnClickFn);
+
+		// Array.prototype.forEach.call(document.getElementById('lineBtnBox').getElementsByTagName('button'), function(item){
+		// 	item.addEventListener('click', function(){
+		// 		var type = this.getAttribute('opp-type'),
+		// 			id = this.getAttribute('opp-id'),
+		// 			dom;
+		// 		if(id == 'line'){
+		// 			if(type == 'destory'){
+		// 				drag.destory();
+		// 				this.setAttribute('opp-type', 'start');
+		// 			}else{
+		// 				drag.reset();
+		// 				this.setAttribute('opp-type', 'destory');
+		// 			}
+		// 		}else{
+		// 			if(type == 'destory'){
+
+		// 				drag2.destory();
+		// 				this.setAttribute('opp-type', 'start');
+		// 			}else{
+		// 				drag2.reset();
+		// 				this.setAttribute('opp-type', 'destory');
+		// 			}
+		// 		}
+				
+		// 	});
+		// })
+
+		// document.getElementById('btnTogether').addEventListener('click', function(){
+		// 	drag.concatMove(drag2);
+		// 	drag.concatMove(drag)
+		// 	drag.concatMove(drag3);
+		// });
+
+		// document.getElementById('remove').addEventListener('click', function(){
+		// 	drag.removeConcat(drag2);
+		// });
+		
+		document.getElementById('addLine').addEventListener('click', function(){
+			var lines = document.createElement('div'), id = new Date().getTime(), color = Math.floor(Math.random()*1000000);
+			lines.id = id;
+			lines.className = 'line';
+			lines.innerText = id;
+			lines.style.cssText = 'background: #' + color;
+
+			document.getElementById('dragBox').appendChild(lines);
+
+			var dragsDom = new Drag();
+
+			dragsDom.init(lines, dragsDom, id);
+
+		});
+		var drag = new Drag(),
+			drag2 =  new Drag();
+			drag3 = new Drag();
+
+		drag.init(lineD, drag, 'line1');
+
+		drag2.init(document.getElementById('line2'), drag2, 'line2');
+
+		drag3.init(document.getElementById('line3'), drag3, 'line3');
+
+
+	}
+</script>
+</body>
+</html>
