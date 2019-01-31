@@ -29,11 +29,19 @@
 			position: absolute;
 			left: 0;
 			top: 0;
-			opacity: .6;	
 		}
 		.line:hover, 
 		.line:active{
 			height: 5px;
+		}
+		.drag-concat-obj{
+			width:20px;
+			height:100%;
+			display:inline-block;
+			float: right;
+			background: #000;
+			box-shadow: 3px 0px 2px #fff inset;
+			transition: all .3s;
 		}
 		ul{
 			margin: 0px;
@@ -43,6 +51,7 @@
 			color: #333;
 			border: 1px solid #ccc;
 			font-size: 12px;
+			box-shadow: 2px 2px 2px 0 #999;
 
 		}
 		ul li{
@@ -56,6 +65,11 @@
 		}
 		ul li:first-child{
 			border-top: none;
+		}
+		ul li._drag-notUsed{
+			background: #f5f5f5;
+			color: #999;
+			cursor: normal;
 		}
 		button{
 			margin: 5px;
@@ -86,6 +100,8 @@
 	<div id="btnsToggle">
 		<!-- <button id="btnTogether" opp-type="together">button Together</button>
 		<button id="remove">button remove</button> -->
+		<input type="" name="" id="AddTitle" placeholder="可定义独一的线条名称">
+		<input type="color" name="" id="AddLineColor">
 		<button id="addLine">AddLine</button>
 
 	</div>
@@ -94,12 +110,13 @@
 		<button type="button" opp-type="destory" opp-id="line2">line2</button>
 	</div>
 <div class = "wrap" id="dragBox">
-	<div id = "line" class="line">line1</div>
-	<div id="line2" class= "line" style="background: red;margin-top: 20px;">line2</div>
+	<div id = "line" class="line" title = "line1"></div>
+	<div id="line2" class= "line" style="background: red;margin-top: 20px;" title="line2"></div>
+
 	<span style="font-size: 30px;border:1px solid green;">X<sup style="font-size:12px">X</sup> &nbspX<sub style="font-size:12px">X</sub>&nbspX</span>
 	
 	<div class = "inline-block btnChange">
-		<div class = "normal"></div>
+		<div class = "normal" id="boxTest"></div>
 		<div class = "normal"></div>
 	</div>
 	<div class = "inline-block btnChange">
@@ -115,6 +132,10 @@
 		var btnBox = document.getElementById('btnBox');
 
 		var btnCont = [
+			{
+				name: 'reset',
+				style: ''
+			},
 			{
 				name: 'overflow-hidden',
 				style: 'overflow: hidden;'
@@ -185,27 +206,35 @@
 				x: 0,
 				y: 0
 			};
+			//是否按下，是否放开两个状态
 			this.state = {
 				isMouseDown: false,
 				isMouseUp: false
 			};
-			//拖拽方向， true 开启， false 关闭
+			//拖拽方向， true 开启， false 关闭，---默认开启垂直方向， 关闭水平方向
 			this.dragState = {
 				vertical: params.dragState && params.dragState.vertical || true, //垂直方向
 				horizen: params.dragState && params.dragState.horizen || false // 水平方向
 			};
 
+			//所有拖拽绑定的事件， 不包括右键菜单
 			this.events = [];
-			this.dom;
+			this.dom;//当前拖拽对象
 
-			this.concatMoveObj = [];
-
+			this.concatMoveObj = [];//所有关联的拖拽对象
+			this.useState = false;//当前是否启动拖拽
 			this.dragObj;
+			//拖拽x,y溢出处理， 默认对x, y 溢出处理
+			this.overflowState = {
+				x: params.overflowState && params.overflowState.x || false,
+				y: params.overflowState && params.overflowState.x || false
+			}
 		};
 
 		Drag.prototype = {
-			_all_: [],
-			_drag_menuId: '_drag_contextmenu',
+
+			_all_: [],//所有初始化了的拖拽构造函数
+			_drag_menuId: '_drag_contextmenu',//右键菜单id
 			//获取样式
 			getStyle: function(dom){
 				var style = dom.currentStyle || getComputedStyle(dom);
@@ -225,8 +254,24 @@
 			},
 
 
-			mouseDown: function(dom, event){
+			//获取带有定位信息的父层
+			getParentPositionStyle: function(dom){
+				var parentStyle = this.getStyle(dom.parentNode);
+				
+				if(dom.nodeName == 'BODY'){
+					parentStyle = this.getStyle(dom);
+				}
 
+				if(parentStyle.position === 'static' && dom.nodeName !== 'BODY'){
+					return this.getParentPositionStyle(dom.parentNode);
+				}else{
+					return parentStyle;
+				}
+				
+			},
+
+			//鼠标按下事件
+			mouseDown: function(dom, event){
 				var clientX = event.x,
 					clientY = event.y,
 					domStyle = this.getStyle(dom);
@@ -242,7 +287,8 @@
 				this.domStyle.y = getDomStyleD.y;
 				this.state.isMouseDown = true;
 				this.state.isMouseUp = false;
-
+				dom.style.cssText +=  "position: absolute;left:" + getDomStyleD.x + "px;top:" + getDomStyleD.y + "px;";
+				//如果存在关联对象， 按下的时候，获取所有关联对象当前的位置
 				if(this.concatMoveObj.length > 0){
 					this.concatMoveObj.forEach(function(item){
 						item.concatMoveObjDomStyle = item.obj.getDomStyle();
@@ -251,29 +297,34 @@
 				}
 			},
 
+			//鼠标移动事件
 			mouseMove: function(dom, event){
-				dom._state = dom._state ? dom._state : {};
-				dom._domStyle = dom._domStyle ? dom._domStyle : {};
-
-
-				var moveX = event.x,
-					moveY = event.y;
-
-				var client = this.client, resultX = 0, resultY = 0, parensStyle = this.getStyle(dom.parentNode), domStyle = this.getStyle(dom);
-
-				var finalMove = {
-					moveX: moveX - client.x,
-					moveY: moveY - client.y
-				}, finalResultMove;
-
-
-				var concatMoveObj = this.concatMoveObj;
+				//如果鼠标按下并且未抬起，进行后续操作
 				if(this.state.isMouseDown && !this.state.isMouseUp){
+					dom._state = dom._state ? dom._state : {};
+					dom._domStyle = dom._domStyle ? dom._domStyle : {};
+
+
+					var moveX = event.x,
+						moveY = event.y;
+
+					var client = this.client, resultX = 0, resultY = 0, parensStyle = this.getParentPositionStyle(dom), domStyle = this.getStyle(dom);
+
+					//最终位移距离
+					var finalMove = {
+						moveX: moveX - client.x,
+						moveY: moveY - client.y
+					}, finalResultMove;
+
+
+					var concatMoveObj = this.concatMoveObj;
+
 					finalResultMove = this.getResultMove(finalMove);
 
 					//如果存在关联项，每项分别操作，在此操作
 					if(concatMoveObj.length > 0){
 						concatMoveObj.forEach(function(item){
+							//对关联的每项都调用 getResultMove 函数，处理移动
 							item.obj.getResultMove(finalMove, item.concatMoveObjDomStyle);
 						})
 						// concatMoveObj.getResultMove(finalResultMove, this.concatMoveObjDomStyle);
@@ -282,11 +333,13 @@
 				
 			},
 
+			//鼠标抬起事件
 			mouseUp: function(dom, event){
 				this.state.isMouseUp = true;
 				this.state.isMouseDown = false;
 			},
 
+			//鼠标移动的时候拖拽运动
 			getResultMove: function(finalMove, concatMoveObjDomStyle){
 				var  dom = this.dom, domStyle = this.domStyle;
 
@@ -297,18 +350,33 @@
 				var result = {
 					moveY: finalMove.moveY + parseFloat(domStyle.y || 0),
 					moveX: finalMove.moveX + parseFloat(domStyle.x || 0)
-				}, reusltY, resultX, parensStyle = this.getStyle(dom.parentNode), domStyle = this.getStyle(dom);
+				}, reusltY, resultX, parensStyle = this.getParentPositionStyle(dom), domStyle = this.getStyle(dom);
 
 				resultY = result.moveY;
 				resultX = result.moveX;
 
-				if(resultY < 0){
-					resultY = 0;
-				}
+				//X，Y溢出判定
+				if(this.overflowState.y){
+					if(resultY < 0){
+						resultY = 0;
+					}
 
-				if(resultY > parseFloat(parensStyle.height)){
-					resultY = parseFloat(parensStyle.height);
+					if(resultY > parseFloat(parensStyle.height) - parseFloat(domStyle.height)){
+						resultY = parseFloat(parensStyle.height) - parseFloat(domStyle.height);
+					}
 				}
+				
+
+				if(this.overflowState.x){
+					if(resultX < 0){
+						resultX = 0;
+					}
+
+					if(resultX > parseFloat(parensStyle.width) - parseFloat(domStyle.width)){
+						resultX = parseFloat(parensStyle.width) - parseFloat(domStyle.width);
+					}
+				}
+				
 
 				if(this.dragState.vertical){
 					dom.style.top = resultY + 'px';
@@ -319,10 +387,52 @@
 				}
 				return result;
 			},
+			//生成关联标识
+			createConcatSign: function(concatObj){
+				var concatObjStyle = this.getStyle(concatObj.dom);
+				var sign = document.createElement('span');
 
-			//拖拽绑定
+				var domStyle = this.getStyle(this.dom);
+
+				var signs = this.dom.getElementsByClassName('drag-concat-obj'), signsLen = signs.length + 1;
+
+				var signWidth = parseFloat(domStyle.width) / (2 * signsLen);
+
+				if(signWidth < parseFloat(domStyle.width) / 80){
+					signWidth = parseFloat(domStyle.width) / 80;
+				}
+
+				Array.prototype.forEach.call(signs, function(item){
+					item.style.width = signWidth + 'px';
+				});
+				sign.className = 'drag-concat-obj';
+				sign.style.width = signWidth + 'px';
+				sign.style.background = concatObjStyle.backgroundColor;
+				sign.setAttribute('concatObj', concatObj.dom.id)
+				
+				this.dom.appendChild(sign);
+			},
+
+			//删除关联标识
+			removeConcatSign: function(concatObj){
+				var removeId = concatObj.dom.id;
+
+				var signs = this.dom.getElementsByClassName('drag-concat-obj');
+
+				for(var i = 0, len = signs.length; i < len; i++){
+					if(signs[i].getAttribute('concatObj') == removeId){
+						this.dom.removeChild(signs[i]);
+						break;
+					}
+				}
+			},
+
+			//拖拽绑定关联
 			concatMove: function(obj){
-				var isHave = false;
+
+				var isHave = false;//前关联集合是否已经存在
+
+				//判断当前关联集合是否已经存在
 				this.concatMoveObj.forEach(function(item){
 					if(item.obj == obj){
 						isHave = true;
@@ -331,6 +441,8 @@
 
 				if(!isHave){
 					this.concatMoveObj.push({obj: obj});
+
+					this.createConcatSign(obj);
 				}
 			},
 
@@ -339,18 +451,42 @@
 				this.concatMoveObj.forEach(function(item, index){
 					if(item.obj == obj){
 						this.concatMoveObj.splice(index, 1);
+
+						this.removeConcatSign(obj);
 					}
 				}.bind(this))
 			},
+
+			//生成右键菜单结构
 			contextmenuDom: function(event){
 				var x = event.x, y = event.y;
 				var str = '';
+
+				var liClassName = {
+					use: 'active',
+					notUsed: '_drag-notUsed'
+				}
 				str = '<ul>';
 
-				str += '<li id="_drag_menu_notUsed">禁止</li><li id="_drag_menu_used">启用</li>';
+				str += '<li id="_drag_menu_delected">删除</li><li id="_drag_menu_notUsed" class="'+ (this.useState? liClassName.use: liClassName.notUsed) +'">禁止</li><li id="_drag_menu_used" class="'+ (!this.useState? liClassName.use : liClassName.notUsed) +'">启用</li>';
 
+				if(this.dragState.vertical){
+					str += '<li id="_drag_menu_vertical">禁止垂直方向</li>';
+				}else{
+					str += '<li id="_drag_menu_vertical">开启垂直方向</li>';
+				}
+
+				if(this.dragState.horizen){
+					 str += '<li id="_drag_menu_horizen">禁止水平方向</li>';
+				}else{
+					str += '<li id="_drag_menu_horizen">开启水平方向</li>';
+				}
+
+				//遍历所有 申明的 拖拽对象， 添加入关联操作
 				this._all_.forEach(function(item){
 					var isHave;
+
+					//判断，当前对象是否已经被当前操作对象关联
 					this.concatMoveObj.forEach(function(i){
 						if(i.obj == item.obj){
 							isHave = true;
@@ -372,6 +508,8 @@
 
 				return str;
 			},
+
+			//插入右键菜单
 			contextmenu: function(dom, event){
 				event.preventDefault();
 
@@ -392,10 +530,20 @@
 				this.menuEventInit();
 			},
 
+			//右键菜单事件绑定
 			menuEventInit: function(){
+				var notClosedClass = ['_drag-notUsed'];//当前，点击不关闭右键菜单的 class 集合
 				var _this = this, concatMenu = document.getElementsByClassName('_drag-menu-concat');
+
+				document.getElementById('_drag_menu_delected').addEventListener('click', this.menuEvent.delectedFn.bind(this));
+
 				document.getElementById('_drag_menu_notUsed').addEventListener('click', this.menuEvent.notUseFn.bind(this));
 				document.getElementById('_drag_menu_used').addEventListener('click', this.menuEvent.useFn.bind(this));
+
+				document.getElementById('_drag_menu_vertical').addEventListener('click', this.menuEvent.verticalFn.bind(this));
+				document.getElementById('_drag_menu_horizen').addEventListener('click', this.menuEvent.horizenFn.bind(this));
+
+				
 
 				Array.prototype.forEach.call(concatMenu, function(item){
 					item.addEventListener('click', _this.menuEvent.menuConcat.bind(_this, item))
@@ -405,7 +553,19 @@
 					if(!document.getElementById(this._drag_menuId)){
 						return;
 					}
-					if(event.target.id !== '_drag_contextmenu'){
+					var notClosedState = false;
+					var classNames = event.target.className.split(' ');
+
+					//判断当前点击项是否需要关闭
+					classNames.forEach(function(item){
+						notClosedClass.forEach(function(i){
+							if(item == i){
+								notClosedState = true;
+							}
+						})
+					})
+
+					if(event.target.id !== '_drag_contextmenu' && !notClosedState){
 						document.body.removeChild(document.getElementById(this._drag_menuId));
 					}
 				}.bind(this))
@@ -414,15 +574,41 @@
 				// 	concatMenu[i].addEventListener('click', this.menuEvent.menuConcat);
 				// }
 			},
+
+			//右键菜单事件
 			menuEvent: {
+
+				//删除
+				delectedFn: function(){
+					this.delectedFn();
+				},
+
+				//不可用拖拽
 				notUseFn: function(){
+					if( !this.useState){
+						return;
+					}
 					this.destory();
-					document.body.removeChild(document.getElementById(this._drag_menuId));
+					// document.body.removeChild(document.getElementById(this._drag_menuId));
 				},
+				//启动拖拽
 				useFn: function(){
+					if(this.useState){
+						return;
+					}
 					this.reset();
-					document.body.removeChild(document.getElementById(this._drag_menuId));
+					// document.body.removeChild(document.getElementById(this._drag_menuId));
 				},
+				//水平拖拽
+				verticalFn:　function(){
+					this.dragState.vertical = !this.dragState.vertical;
+				},
+				//垂直拖拽
+				horizenFn: function(){
+					this.dragState.horizen = !this.dragState.horizen;
+				},
+
+				//关联事件
 				menuConcat: function(item,event){
 
 					var name = item.getAttribute('concat-name'),
@@ -438,7 +624,7 @@
 						}
 					})
 					
-					document.body.removeChild(document.getElementById(this._drag_menuId));
+					// document.body.removeChild(document.getElementById(this._drag_menuId));
 				}
 			},
 
@@ -470,6 +656,11 @@
 				}.bind(this))
 			},
 
+			setUsedState: function(state){
+				state = state || false;
+				this.useState = state;
+			},
+
 			init: function(dom, dragObj, name){
 				this.dom = dom;
 				var mouseDownFn = this.mouseDown.bind(this, dom),
@@ -483,7 +674,8 @@
 
 				document.addEventListener('mouseup', mouseUpFn);
 
-				this.addToAll(dom, dragObj, name);			
+				this.addToAll(dom, dragObj, name);	
+				this.setUsedState(true);	
 				this.events = [
 					{
 						dom: dom,
@@ -518,7 +710,17 @@
 				};
 
 				this.removeFromAll();
+				this.setUsedState(false);
 				return this;
+			},
+
+			delectedFn: function(dom){
+				this._all_.forEach(function(item, index){
+					if(item.dom == this.dom){
+						this._all_.splice(index, 1);
+					}
+				}.bind(this));
+				this.dom.parentNode.removeChild(this.dom);
 			},
 
 			reset: function(){
@@ -527,12 +729,12 @@
 				}
 				var dom = this.dom;
 				var events = this.events;
-
+				this.setUsedState(true);
 				for(var i = 0 ,len = events.length; i < len ; i++){
 					events[i]['dom'].addEventListener(events[i].type, events[i].fn);
 				};
 
-				return this
+				return this;
 			}
 		}
 
@@ -591,11 +793,28 @@
 		// });
 		
 		document.getElementById('addLine').addEventListener('click', function(){
-			var lines = document.createElement('div'), id = new Date().getTime(), color = Math.floor(Math.random()*1000000);
+			var lines = document.createElement('div'), id = new Date().getTime(), color = '#' + Math.floor(Math.random()*16777215).toString(16);
+
+			var addTitle = document.getElementById('AddTitle').value,
+				addColor = document.getElementById('AddLineColor').value;
+			var all = Drag.prototype._all_, allisHave = false;
+
+			color = addColor;
+			id = addTitle || id;
+			all.forEach(function(item){
+				if(item.name == id){
+					allisHave = true;
+				}
+			});
+
+			if(allisHave){
+				alert('当前名称已经存在');
+				return;
+			}
 			lines.id = id;
 			lines.className = 'line';
-			lines.innerText = id;
-			lines.style.cssText = 'background: #' + color;
+			lines.title = id;
+			lines.style.cssText = 'background: ' + color;
 
 			document.getElementById('dragBox').appendChild(lines);
 
@@ -612,7 +831,9 @@
 
 		drag2.init(document.getElementById('line2'), drag2, 'line2');
 
-		drag3.init(document.getElementById('line3'), drag3, 'line3');
+		var boxTestD = new Drag();
+
+		boxTestD.init(document.getElementById('boxTest'), boxTestD, 'boxTestD');
 
 
 	}
