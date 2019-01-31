@@ -110,7 +110,7 @@
 		<button type="button" opp-type="destory" opp-id="line2">line2</button>
 	</div>
 <div class = "wrap" id="dragBox">
-	<div id = "line" class="line" title = "line1"></div>
+	<div id = "line" class="line" title = "line"></div>
 	<div id="line2" class= "line" style="background: red;margin-top: 20px;" title="line2"></div>
 
 	<span style="font-size: 30px;border:1px solid green;">X<sup style="font-size:12px">X</sup> &nbspX<sub style="font-size:12px">X</sub>&nbspX</span>
@@ -408,8 +408,8 @@
 				sign.className = 'drag-concat-obj';
 				sign.style.width = signWidth + 'px';
 				sign.style.background = concatObjStyle.backgroundColor;
-				sign.setAttribute('concatObj', concatObj.dom.id)
-				
+				sign.setAttribute('concatObj', concatObj.dom.id);
+				sign.title = this.dom.id + '>'+concatObj.dom.id;
 				this.dom.appendChild(sign);
 			},
 
@@ -827,7 +827,7 @@
 			drag2 =  new Drag();
 			drag3 = new Drag();
 
-		drag.init(lineD, drag, 'line1');
+		drag.init(lineD, drag, 'line');
 
 		drag2.init(document.getElementById('line2'), drag2, 'line2');
 
