@@ -23,7 +23,7 @@
 		}
 		.line{
 			width: 100%;
-			height: 2px;
+			height: 4px;
 			background: blue;
 			cursor: pointer;
 			position: absolute;
@@ -32,7 +32,7 @@
 		}
 		.line:hover, 
 		.line:active{
-			height: 5px;
+			height: 4px;
 		}
 		.drag-concat-obj{
 			width:20px;
@@ -198,6 +198,11 @@
 
 		var Drag = function(params){
 			params = params || {};
+
+			params.overflowState = params.overflowState || {
+				x: true,
+				y: true
+			}
 			this.client = {
 				x: 0, 
 				y: 0
@@ -256,18 +261,27 @@
 
 			//获取带有定位信息的父层
 			getParentPositionStyle: function(dom){
-				var parentStyle = this.getStyle(dom.parentNode);
+				if(dom.id == this.dom.id){
+					dom = dom.parentNode;
+				}
+				
+				var parentStyle = this.getStyle(dom);
+
+				parentStyle.boundingClientRect = dom.getBoundingClientRect();
 				
 				if(dom.nodeName == 'BODY'){
 					parentStyle = this.getStyle(dom);
-				}
 
-				if(parentStyle.position === 'static' && dom.nodeName !== 'BODY'){
-					return this.getParentPositionStyle(dom.parentNode);
-				}else{
+					parentStyle.boundingClientRect = dom.getBoundingClientRect();
+
 					return parentStyle;
 				}
-				
+
+				if(parentStyle.position === 'static'){
+					return this.getParentPositionStyle(dom.parentNode);
+				}
+
+				return parentStyle;
 			},
 
 			//鼠标按下事件
@@ -277,7 +291,6 @@
 					domStyle = this.getStyle(dom);
 
 				var getDomStyleD = this.getDomStyle();
-
 				this.client = {
 					x: clientX,
 					y: clientY
@@ -285,6 +298,7 @@
 
 				this.domStyle.x = getDomStyleD.x;
 				this.domStyle.y = getDomStyleD.y;
+
 				this.state.isMouseDown = true;
 				this.state.isMouseUp = false;
 				dom.style.cssText +=  "position: absolute;left:" + getDomStyleD.x + "px;top:" + getDomStyleD.y + "px;";
@@ -355,29 +369,29 @@
 				resultY = result.moveY;
 				resultX = result.moveX;
 
+				var boundingCalculateY = this.domStyle.boundingClientRect.y;
+				var boundingCalculateX = this.domStyle.boundingClientRect.x;
 				//X，Y溢出判定
 				if(this.overflowState.y){
-					if(resultY < 0){
-						resultY = 0;
+					if(resultY + boundingCalculateY < 0){
+						resultY =  - boundingCalculateY;
 					}
 
-					if(resultY > parseFloat(parensStyle.height) - parseFloat(domStyle.height)){
-						resultY = parseFloat(parensStyle.height) - parseFloat(domStyle.height);
+					if(resultY + boundingCalculateY > parseFloat(parensStyle.height) - parseFloat(domStyle.height)){
+						resultY = parseFloat(parensStyle.height) - parseFloat(domStyle.height) - boundingCalculateY;
 					}
 				}
 				
-
 				if(this.overflowState.x){
-					if(resultX < 0){
-						resultX = 0;
+					if(resultX + boundingCalculateX < 0){
+						resultX = -boundingCalculateX;
 					}
 
-					if(resultX > parseFloat(parensStyle.width) - parseFloat(domStyle.width)){
-						resultX = parseFloat(parensStyle.width) - parseFloat(domStyle.width);
+					if(resultX + boundingCalculateX > parseFloat(parensStyle.width) - parseFloat(domStyle.width)){
+						resultX = parseFloat(parensStyle.width) - parseFloat(domStyle.width) - boundingCalculateX;
 					}
 				}
 				
-
 				if(this.dragState.vertical){
 					dom.style.top = resultY + 'px';
 				}
@@ -430,8 +444,7 @@
 			//拖拽绑定关联
 			concatMove: function(obj){
 
-				var isHave = false;//前关联集合是否已经存在
-
+				var isHave = false;//当前关联集合是否已经存在
 				//判断当前关联集合是否已经存在
 				this.concatMoveObj.forEach(function(item){
 					if(item.obj == obj){
@@ -673,7 +686,10 @@
 				document.addEventListener('mousemove', mouseMoveFn);
 
 				document.addEventListener('mouseup', mouseUpFn);
-
+				this.domStyle.boundingClientRect = {
+					x: parseFloat(this.getStyle(dom).marginLeft) + parseFloat(this.getStyle(dom).paddingLeft),
+					y: parseFloat(this.getStyle(dom).marginTop) + parseFloat(this.getStyle(dom).paddingTop),
+				};
 				this.addToAll(dom, dragObj, name);	
 				this.setUsedState(true);	
 				this.events = [
@@ -693,7 +709,6 @@
 						fn: mouseUpFn
 					}
 				];
-
 
 				return this;
 			},
