@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<input type="text" name="" id="testInput">
+<div id="testShow" style="min-height:100px;"></div>
+
+<script type="text/javascript">
+	
+function TypeMachine(params) {
+	
+		params = params || {};
+		//initValue 直接写入整个字符串， 空格代表删除前一个
+		this.initValue = params.initValue || '';
+		this.id = params.showId || 'typeMachine_show';
+		this.concatInput = params.concatInput || 'typeMachine_input';
+		this.concatInputVa = params.initValue ? params.initValue.split('') : [];
+		this.showIntervalTime = params.showIntervalTime || 100;//显示时间
+
+		this.iconsDom = '';
+		this.iconInterval = '';
+
+		// this.concatInputVa = this.concatInputVa.map(function(item){
+		// 	if(item == " "){
+		// 		return -1;
+		// 	}
+
+		// 	return item;
+		// })
+		this.concatInputVa.forEach(function(item){
+			if(item == " "){
+				item = -1;
+			}
+		})
+
+		// this.init = this.init.bind(this);
+		// this.iconInter = this.iconInter.bind(this);
+		// this.removeIconInter = this.removeIconInter.bind(this);
+		// this.getIconsDom = this.getIconsDom.bind(this);
+		// this.inputFn = this.inputFn.bind(this);
+		// this.concatInputV = this.concatInputV.bind(this);
+		
+	}
+TypeMachine.prototype = {
+	init: function(){
+		this.iconDom = this.getIconsDom();
+		var thisIdDom = document.getElementById(this.id);
+		var findIconDoms = thisIdDom.getElementsByClassName('typeMachine_icondom');
+		if(findIconDoms.length <= 0){
+			thisIdDom.appendChild(this.iconsDom);
+		}else{
+			this.iconsDom = findIconDoms[0];
+		}
+
+		this.iconInter();
+		this.concatInputV();
+		this.createShowDom();
+	},
+
+	createShowDom: function(){
+		var showDom = document.createElement('div');
+		showDom.className = 'typeMachine_contentShow';
+		showDom.style = 'display:inline-block;';
+		document.getElementById(this.id).insertBefore(showDom, document.getElementById(this.id).children[0]);
+	},
+
+	iconInter: function(){
+		this.iconInterval = setInterval(function(){
+			if(!this.iconsDom.getAttribute('show')){
+				this.iconsDom.style.borderBottom = '1px solid #000';
+				this.iconsDom.setAttribute('show', true);
+				return;
+			}
+			this.iconsDom.style.borderBottom = '1px solid transparent';
+			this.iconsDom.removeAttribute('show');
+		}.bind(this), 800)
+	},
+
+	removeIconInter: function(){
+		clearInterval(this.iconInterval);
+
+		this.iconsDom.style.borderBottom = '1px solid #000';
+	},
+	getIconsDom: function(){
+		var domStr = '';
+
+		domStr = document.createElement('div');
+		domStr.className = 'typeMachine_icondom';
+		domStr.style = "width: 10px; height: 100%; border-bottom: 1px solid #000; vertical-align: bottom; font-size: 0px;display:inline-block;";
+
+		this.iconsDom = domStr;
+
+		return domStr;
+	},
+
+	inputDeal: function(e){
+		inputV = e.data ?　e.data.split(''): [];
+
+		//删除按键用 -1区分
+		if(e.inputType === 'deleteContentBackward'){
+			inputV = '-1';
+		}
+
+		// if(e.inputType === 'insertText'){
+		// 	inputV = e.data;
+		// }
+
+		//汉字输入,拼音输入时候，判断
+		if(e.inputType === 'insertCompositionText' && !e.data || e.data == ' '){
+			return;
+		}
+		// this.concatInputVa.push(inputV);
+		this.concatInputVa = this.concatInputVa.concat(inputV);
+	},
+
+	concatInputV: function(){
+
+		var myInput = document.getElementById(this.concatInput);
+		var inputV = '';
+		var contentShowDom;
+		var contentShowDomText;
+		var arrV = '';
+		var intervaler;
+		var isInputZh = false;
+		var compositionState = false;
+
+		myInput.addEventListener('compositionstart', function(e){
+			compositionState = true;
+		})
+		myInput.addEventListener('compositionend', function(e){
+			if(e.data){
+				compositionState = false;
+			}
+			this.inputDeal(e);
+		}.bind(this))
+
+		myInput.addEventListener('input', function(e){
+				clearInterval(intervaler);
+				
+				if(compositionState){
+					return;
+				}
+				this.inputDeal(e);
+		}.bind(this));
+
+		myInput.addEventListener('keydown', function(e){
+			if(e.key === 'Enter'){
+				contentShowDom = document.getElementById(this.id).getElementsByClassName('typeMachine_contentShow')[0];
+				contentShowDomText = contentShowDom.innerText.split('');
+				
+				this.removeIconInter();
+				intervaler = setInterval(function(){
+
+					arrV = this.concatInputVa.splice(0, 1);
+
+					if(arrV == '-1'){
+						contentShowDomText.pop();
+					}else if(arrV == ' '){
+						contentShowDomText.push('&nbsp');
+					}else{
+						contentShowDomText.push(arrV);
+					}
+
+					// contentShowDom.innerText = contentShowDomText.join('');
+					contentShowDom.innerHTML = contentShowDomText.join('');
+
+					if(this.concatInputVa.length <= 0){
+						clearInterval(intervaler);
+						this.iconInter();
+					}
+				}.bind(this), this.showIntervalTime)
+				
+			}
+		}.bind(this))
+	}
+
+}
+
+
+window.addEventListener('load', function(){
+
+	var typeMachine = new TypeMachine({showId: 'testShow', concatInput: 'testInput'});
+
+	typeMachine.init();
+	
+})
+</script>
+</body>
+</html>

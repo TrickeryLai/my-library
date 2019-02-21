@@ -2,8 +2,46 @@
 <html>
 <head>
 	<title>common</title>
+	<meta charset="utf-8">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection"content="telephone=no, email=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" /><!-- 删除苹果默认的工具栏和菜单栏 -->
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" /><!-- 设置苹果工具栏颜色 -->
+	<meta name="format-detection" content="telphone=no, email=no" /><!-- 忽略页面中的数字识别为电话，忽略email识别 -->
+	<!-- 启用360浏览器的极速模式(webkit) -->
+	<meta name="renderer" content="webkit">
+	<!-- 避免IE使用兼容模式 -->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- 针对手持设备优化，主要是针对一些老的不识别viewport的浏览器，比如黑莓 -->
+	<meta name="HandheldFriendly" content="true">
+	<!-- 微软的老式浏览器 -->
+	<meta name="MobileOptimized" content="320">
+	<!-- uc强制竖屏 -->
+	<meta name="screen-orientation" content="portrait">
+	<!-- QQ强制竖屏 -->
+	<meta name="x5-orientation" content="portrait">
+	<!-- UC强制全屏 -->
+	<meta name="full-screen" content="yes">
+	<!-- QQ强制全屏 -->
+	<meta name="x5-fullscreen" content="true">
+	<!-- UC应用模式 -->
+	<meta name="browsermode" content="application">
+	<!-- QQ应用模式 -->
+	<meta name="x5-page-mode" content="app">
+	<!-- windows phone 点击无高光 -->
+	<meta name="msapplication-tap-highlight" content="no">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script type="text/javascript" src="./index.js"></script>
+	<script type="text/javascript" src="./typeMachine.js"></script>
 	<style type="text/css">
+		/**{
+			text-size-adjust: 100%;
+		}*/
 		p:first-line{
 			color: red;
 			background: blue;
@@ -36,11 +74,22 @@
 		<span></span>
 		<span></span>
 	</div>
-	<input type="" name="">
+	<input type="" name="" id="typeMachine_input" placeholder="输入， enter结束">
+	<input type="" name="" id="typeMachine_input2">
+	<label for="time">Time</label>
+	<input type="time" name="time">
+	<label for="date">Date</label>
+	<input type="date" name="date">
+	<input type="date" name="datetime" placeholder="datetime" value="2019-02-11">
+	<input type="datetime-local" name="datetime-local">
 	<span></span>
 	<p>
 		a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为
 	</p>
+
+	<div id="typeMachine_show" style="min-height: 100px;">
+
+	</div>
 
 	<script type="text/javascript">
 		

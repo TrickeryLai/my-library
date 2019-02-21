@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Object.defineProperty</title>
+</head>
+<body>
+<div id="app">
+	<input type="text" name="">
+</div>
+<a  onclick = "cancel()">baidu</a>
+</body>
+<script type="text/javascript">
+	window.onload = function(){
+		var test = {
+			a: {
+				a: ''
+			},
+			b: 123,
+		};
+
+		var test_a = {
+			a: 1
+		};
+
+
+		Object.defineProperty(test, 'a', {
+		 	// value:"hello", //设置属性的值  当使用了get set 之后不能使用 value writable 这两个属性
+    		// writable:false, // 属性的值是否可以被重写  true 可以重写  false 不可以
+    		enumerable:true, //是否可以被枚举 for...in / Object.keys() true 可以被枚举， false 不能被枚举
+    		// configurable:false, //是否可以删除目标属性或是否可以再次修改属性的特性（writable, configurable, enumerable）
+			get: function(val){
+				return this._a;
+			},
+			set: function(newV){
+				this._a = newV;
+				test_a.a = newV;
+				console.log('newV', newV)
+			}
+		})
+
+		for(var i in test){
+			console.log([i])
+		}
+		// test.a = {
+		// 	a: {
+		// 		a: 123
+		// 	}
+		// };
+
+		Object.defineProperty(test_a, 'a', {
+			get: function(){
+				return this._a;
+			},
+			set: function(newV){
+				this._a = newV;
+				console.log('newVaa', newV);
+			}
+		})
+
+
+		test.a = {
+			a: 1254,
+			b:1234
+		}
+
+		function rest(a,...res){
+			console.log(res);
+		}
+
+		rest(123,123124,123)
+	}
+
+	window.onbeforeunload = function(){
+		window.event.returnValue = true;
+	}
+
+	function cancel(){
+		window.onbeforeunload = '';
+	}
+</script>
+</html>

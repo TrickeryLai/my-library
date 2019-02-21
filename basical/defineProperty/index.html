@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>object defineProperty</title>
+</head>
+<body>
+<span id="myapp" my-module="a">
+	qweqw
+</span>
+<span my-module="a"></span>
+<span my-module="test.b">
+	qwe
+</span>
+
+<button type="button" id="add">Add</button>
+
+<input type="number" name="" my-module="a">
+<input type="" name="" my-module="test.b">
+
+<script type="text/javascript">
+	window.onload = function(){
+		// Object.defineProperty(obj, prop, descriptor)
+		var _$_MY = {
+
+		};
+
+		var _$_MY_VALUE = {};
+
+		var _$_allDom = document.getElementsByTagName('*');
+
+		_$_MY_VALUE.test = {
+			b: ''
+		};
+
+		Array.prototype.forEach.call(_$_allDom, function(item){
+			var my_module = item.getAttribute('my-module');
+			
+			if(my_module){
+		
+				if(!_$_MY[my_module]){
+					_$_MY[my_module] = {
+						dom: [],
+						value: ''
+					};	
+				}
+
+				if(!_$_MY_VALUE[my_module]){
+					_$_MY_VALUE[my_module] = '';
+				}
+
+				_$_MY[my_module].dom.push(item);
+
+				Object.defineProperty(_$_MY_VALUE, my_module, {
+					get: function(v){
+						// console.log('get')
+						return this['_'+my_module];
+					},
+					set: function(newValue, oldValue){
+						this['_'+my_module] = newValue;
+						_$_MY[my_module].value = newValue;
+					}
+				})
+
+				//通过value 修改对应绑定的 dom
+				Object.defineProperty(_$_MY[my_module], 'value', {
+					get: function(v){
+						// console.log('get')
+					},
+					set: function(newValue, oldValue){
+						var nodeNameArr = ['INPUT', 'TEXTAREA'];
+						if(_$_MY[my_module].value == newValue){
+							return;
+						}
+						_$_MY[my_module].dom.forEach(function(i){
+							if(nodeNameArr.indexOf(i.nodeName) >= 0){
+								i.value = newValue;
+							}else{
+								i.innerHTML = newValue;
+							}
+						})
+					}
+				})
+				
+			}
+
+			item.addEventListener('input', function(e){
+				e.stopPropagation();
+
+				_$_MY_VALUE[my_module] = this.value;
+			})
+		});
+
+		_$_MY_VALUE.a = 10;
+		_$_MY_VALUE.test = {
+			b:'13'
+		};
+
+		document.getElementById('add').addEventListener('click', function(){
+			_$_MY_VALUE.a++;
+			
+		})
+
+	}
+</script>
+</body>
+</html>

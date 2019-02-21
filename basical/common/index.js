@@ -75,5 +75,24 @@ var _common = {
 			}, time);
 
 		}
+	},
+
+	/**
+	 * [getTxtCursorPosition 获取光标位置]
+	 * @param  {[type]} ele [所需要获取光标所在的元素]
+	 * @return {[type]}     [光标位置]
+	 */
+	getTxtCursorPosition: function(ele){
+		var oTxt1 =	ele;
+        var cursurPosition = -1;
+        var range;
+        if(typeof oTxt1.selectionStart != 'undefined'){//非IE浏览器
+            cursurPosition = oTxt1.selectionStart;
+        }else{//IE
+            range = document.selection.createRange();
+            range.moveStart("character",-oTxt1.value.length);
+            cursurPosition=range.text.length;
+        }
+        return cursurPosition;
 	}
 }

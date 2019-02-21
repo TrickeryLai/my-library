@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Rank</title>
+</head>
+<body>
+<div></div>
+</body>
+
+<script type="text/javascript">
+	
+	window.onload = () =>{
+
+		let arr = [11 ,1, 3, 5, 10, 4, 7, 9, 2];
+
+		let rankOne = (arr) => {
+			console.log(arr.sort( (a, b) => {
+				return b - a
+			}));
+		}
+
+		rankOne(arr);
+
+		let rankTwo = (arr) =>{
+			let newArr = [],
+				len = arr.length;
+
+			let v = arr[0];
+
+			newArr.push(v);
+
+			for(let i = 1; i < len; i++){
+
+			}
+
+			return newArr;
+		}
+
+		console.log(rankTwo(arr));
+
+	}
+</script>
+</html>
