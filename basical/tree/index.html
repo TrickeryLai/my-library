@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>tree</title>
+</head>
+<body>
+<div id="myTree" class="tree">
+	
+</div>
+
+<script type="text/javascript">
+	
+	function MyTree(params){
+		params = params || {};
+
+		this.id = params.id;
+
+		this.data = params.data || [];
+
+		this.rangedArrId = [];//已排序的id集合
+		this.n = 0;
+	}
+
+	MyTree.prototype = {
+		init: function(){
+
+		},
+		
+		rankData: function(){
+			var newArr = [],
+				currentParentId = '',
+				_this = this,
+				data = this.data;
+
+			// console.time('create')
+			data.forEach(function(item){
+				if(item.id && _this.rangedArrId.indexOf(item.id) < 0){
+					currentParentId = _this.findParent(item.pId);//找到当前元素的顶层父元素
+					newArr = newArr.concat(_this.getPidChildren(currentParentId));
+				}
+			})
+			// console.timeEnd('create')
+			
+			console.log('this.n',this.n)
+			return newArr;
+		},
+
+		//通过id 查找所有的子元素
+		getPidChildren: function(pId){
+			var data = this.data;
+			var arr = [];
+			var getArr = this.findPidChild(pId);
+			if(getArr.length > 0){
+				
+				arr = arr.concat(this.findPidChild(pId));
+			}
+			return arr;
+			
+		},
+
+		findPidChild: function(pId, arr){
+			arr = arr || [];
+			var data = this.data;
+			data.forEach(function(item){
+				this.n++;
+				if(item.pId == pId){
+					arr.push(item);
+					this.rangedArrId.push(item.id);//插入找到的id
+					return this.findPidChild(item.id, arr);
+				}
+					
+			}.bind(this));
+
+			
+			return arr;
+		},
+
+		findParent: function(id){
+			data = this.data;
+			var isHave = false;
+			
+			if(id){
+				for(var i = 0; i < data.length; i++){
+					if(data[i].id == id && this.rangedArrId.indexOf(data[i].id) < 0){
+						isHave = true;
+						id = data[i].pId;
+						return this.findParent(id);
+					}
+				}
+
+				if(!isHave){
+					return id;
+				}
+			}else{
+				return id;
+			}
+		}
+	}
+
+	var dataArr = [
+		{
+			id: '10_8_7_1',
+			pId: "10_8_7"
+		},
+		{
+			id:'10_10_9',
+			pId: '10_10'
+		},
+		{
+			id: '10_10',
+			pId: '10'
+		},
+		{
+			id: '10',
+			pId: 0
+		},
+		{
+			id: '10_10_9_1',
+			pId: '10_10_9'
+		},
+		{
+			id: '8',
+			pId: '0'
+		
+		},
+		{
+			id: '10_8_7',
+			pId: '10_8'
+		
+		},
+		{
+			id: '9_10_9_1',
+			pId: '9_10_9'
+		},
+		{
+			id: '3_10_100',
+			pId: '3'
+		},
+		{
+			id: '10_8_6',
+			pId: '10_8'
+		
+		},
+		{
+			id: '10_8',
+			pId: '10'
+		},
+
+		{
+			id: '9_8_7_1',
+			pId: "9_8_7"
+		},
+		{
+			id:'9_10_9',
+			pId: '9_10'
+		},
+		{
+			id: '9_10',
+			pId: '9'
+		},
+		{
+			id: '9',
+			pId: 0
+		},
+		{
+			id: '9_8_7',
+			pId: '10_8'
+		
+		},
+		{
+			id: '9_8_6',
+			pId: '9_8'
+		
+		},
+		{
+			id: '9_8',
+			pId: '9'
+		},
+
+		{
+			id: '3_10_9_1',
+			pId: '3_10_9'
+		},
+		{
+			id: '3_8_7_1',
+			pId: "3_8_7"
+		},
+		{
+			id:'3_10_9',
+			pId: '3_10'
+		},
+		{
+			id: '3_10',
+			pId: '3'
+		},
+		{
+			id: '3',
+			pId: 0
+		},
+		{
+			id: '3_9',
+			pId: '3'
+		},
+		{
+			id: '3_8_7',
+			pId: '3_8'
+		
+		},
+		{
+			id: '3_8_6',
+			pId: '3_8'
+		
+		},
+		{
+			id: '3_8',
+			pId: '3'
+		},	
+
+		{
+			id: '2_10_9_1',
+			pId: '2_10_9'
+		},
+		{
+			id: '2_8_7_1',
+			pId: "2_8_7"
+		},
+		{
+			id:'2_10_9',
+			pId: '2_10'
+		},
+		{
+			id: '2_10',
+			pId: '2'
+		},
+		{
+			id: '2',
+			pId: 0
+		},
+		{
+			id: '2_9',
+			pId: '2'
+		},
+		{
+			id: '2_8_7',
+			pId: '2_8'
+		
+		},
+		{
+			id: '2_8_6',
+			pId: '2_8'
+		
+		},
+		{
+			id: '2_8',
+			pId: '2'
+		},	
+
+		{
+			id: '6_8_6',
+			pId: '6_8'
+		
+		},
+		{
+			id: '6_8',
+			pId: '6'
+		},	
+		{
+			id: '6_10_9_1',
+			pId: '6_10_9'
+		},
+		{
+			id: '6_8_7_1',
+			pId: "6_8_7"
+		},
+		{
+			id:'6_10_9',
+			pId: '6_10'
+		},
+		{
+			id: '6_10',
+			pId: '6'
+		},
+		{
+			id: '6',
+			pId: 0
+		},
+		{
+			id: '6_9',
+			pId: '6'
+		},
+		{
+			id: '6_8_7',
+			pId: '6_8'
+		},
+		{
+			id: '6_8_6',
+			pId: '6_8'
+		
+		},
+
+		{
+			id: '1_8_6',
+			pId: '1_8'
+		
+		},
+		{
+			id: '1_8',
+			pId: '1'
+		},	
+		{
+			id: '1_10_9_1',
+			pId: '1_10_9'
+		},
+		{
+			id: '1_8_7_1',
+			pId: "1_8_7"
+		},
+		{
+			id:'1_10_9',
+			pId: '1_10'
+		},
+		{
+			id: '1_10',
+			pId: '1'
+		},
+		{
+			id: '1',
+			pId: 0
+		},
+		{
+			id: '1_9',
+			pId: '1'
+		},
+		{
+			id: '1_8_7',
+			pId: '1_8'
+		
+		},
+		{
+			id: '1_8_6',
+			pId: '1_8'
+		
+		},
+
+		{
+			id: '4_8_6',
+			pId: '4_8'
+		
+		},
+		{
+			id: '4_8',
+			pId: '4'
+		},	
+		{
+			id: '4_10_9_1',
+			pId: '4_10_9'
+		},
+		{
+			id: '4_8_7_1',
+			pId: "4_8_7"
+		},
+		{
+			id:'4_10_9',
+			pId: '4_10'
+		},
+		{
+			id: '4_10',
+			pId: '4'
+		},
+		{
+			id: '4',
+			pId: 0
+		},
+		{
+			id: '4_9',
+			pId: '4'
+		},
+		{
+			id: '4_8_7',
+			pId: '4_8'
+		
+		},
+		{
+			id: '4_8_6',
+			pId: '4_8'
+		
+		},
+
+		{
+			id: '11_8_6',
+			pId: '11_8'
+		
+		},
+		{
+			id: '11_8',
+			pId: '11'
+		},	
+		{
+			id: '11_10_9_1',
+			pId: '11_10_9'
+		},
+		{
+			id: '11_8_7_1',
+			pId: "11_8_7"
+		},
+		{
+			id:'11_10_9',
+			pId: '11_10'
+		},
+		{
+			id: '11_10',
+			pId: '11'
+		},
+		{
+			id: '11',
+			pId: 0
+		},
+		{
+			id: '11_9',
+			pId: '11'
+		},
+		{
+			id: '11_8_7',
+			pId: '11_8'
+		
+		},
+		{
+			id: '11_8_6',
+			pId: '11_8'
+		
+		},
+
+		{
+			id: '12_8_6',
+			pId: '12_8'
+		
+		},
+		{
+			id: '12_8',
+			pId: '12'
+		},	
+		{
+			id: '12_10_9_1',
+			pId: '12_10_9'
+		},
+		{
+			id: '12_8_7_1',
+			pId: "12_8_7"
+		},
+		{
+			id:'12_10_9',
+			pId: '12_10'
+		},
+		{
+			id: '12_10',
+			pId: '12'
+		},
+		{
+			id: '12',
+			pId: 0
+		},
+		{
+			id: '12_9',
+			pId: '12'
+		},
+		{
+			id: '12_8_7',
+			pId: '12_8'
+		
+		},
+		{
+			id: '12_8_6',
+			pId: '12_8'
+		
+		},
+	]
+
+	console.time('start')
+	var myTree = new MyTree({
+		data: dataArr
+	})
+
+	console.log(myTree.rankData());
+	console.timeEnd('start')
+</script>
+</body>
+</html>
