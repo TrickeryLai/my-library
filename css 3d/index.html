@@ -6,7 +6,10 @@
     <style>
         .stage{
             width:50%;
-            height:300px;
+            height:500px;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: blue;
         }
         .wrap{
             position:absolute;
@@ -53,6 +56,7 @@
             top:100px;
             transform:rotateX(90deg);
             transform-origin:top;
+            background-color:transparent;
         }
         .box5{
             position:absolute;
@@ -60,20 +64,55 @@
             transform:rotateX(90deg);
             transform-origin:top;
         }
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .stageBox{
+            height: 500px;
+            box-sizing:border-box;
+            margin:0;
+            padding: 0;
+            background: red;
+        }
+        .left-box{
+            /*box-sizing: border-box;*/
+            width: 200px;
+            height: 100%;
+            margin-left:0;
+            margin-right: 0;
+            background: yellow;
+            float: left;
+        }
+        .right-box{
+            /*box-sizing: border-box;*/
+            margin-left: -200px;
+            padding-left: 200px;
+            height: 100%;
+            width: 100%;
+            background: green;
+        }
     </style>
 
 </head>
 <body>
-<div class="stage">
+<div class="stage" id="wrapDom">
     <div id="wrap" class="wrap">
         <div class="box">
-            <div class="box box1"></div>
-            <div class="box box2"></div>
-            <div class="box box3"></div>
+            <div class="box box1">box1</div>
+            <div class="box box2">box2</div>
+            <div class="box box3">box3</div>
             <div class="box box4">
-                <div class="box box5"></div>
+                <div class="box box5">box5</div>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="stageBox">
+    <div class="left-box"></div>
+    <div class="right-box">
+        <span>242342344444444444444444444444444444444444444444444523523</span>
     </div>
 </div>
 
@@ -91,6 +130,7 @@
     }
     window.onload = function(){
         var wrapDom = document.getElementById('wrap');
+        var wrapDomBox = document.getElementById('wrapDom');
 
         var lastClient = {
             x: null,
@@ -102,13 +142,13 @@
             y:0,
             z:0
         };
-        wrapDom.onmousedown = function(e){
+        wrapDomBox.onmousedown = function(e){
             var click = {
                 x: e.clientX,
                 Y: e.clientY
             };
             lastClient = click;
-            console.log(getStyle(this).transform);
+            console.log(getStyle(wrapDom).transform);
             document.onmousemove = function(e){
                 var style = '';
                if(lastClient.x < e.clientX){
@@ -133,7 +173,7 @@
                    x: e.clientX,
                    y: e.clientY
                }
-            }.bind(this)
+            }.bind(wrapDom)
         };
         document.onmouseup = function(){
             this.onmousemove = function(){
