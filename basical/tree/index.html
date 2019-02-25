@@ -97,6 +97,94 @@
 		}
 	}
 
+	function getData(data, id){
+		var item;
+		for(var i = 0; i< data.length; i++){
+			item = data[i]
+			if(item.id == id){
+				return item;
+			}
+			if(item.children && item.children.length > 0){
+				item = getData(item.children, id);
+				if(item){
+					return item;
+				};
+			}
+		}
+
+		return null;
+
+		// data.forEach(function(i){
+		// 	if(i.id == id){
+		// 		item =  i;
+		// 		return;
+		// 	}
+
+		// 	if(i.children && i.children.length > 0){
+		// 		item = getData(i.children, id);
+		// 	}
+		// })
+
+		// if(item){
+		// 	return item;
+		// }
+
+	}
+
+	var data = [
+	  {
+	    "id": 1
+	  },
+	  {
+	    "id": 2,
+	    "children": [
+	      {
+	        "id": 3
+	      },
+	      {
+	        "id": 4
+	      },
+	      {
+	        "id": 5,
+	        "children": [
+	          {
+	            "id": 6,
+	            "children": [
+	              {
+	                "id": 113
+	              },
+	              {
+	                "id": 123
+	              }
+	            ]
+	          },
+	          {
+	            "id": 7
+	          },
+	          {
+	            "id": 8
+	          }
+	        ]
+	      },
+	      {
+	        "id": 9
+	      },
+	      {
+	        "id": 10,
+	        
+	      }
+	    ]
+	  },
+	  {
+	    "id": 123
+	  },
+	  {
+	    "id": 11
+	  }
+	];
+
+	console.log(getData(data, 2));
+
 	var dataArr = [
 		{
 			id: '10_8_7_1',
