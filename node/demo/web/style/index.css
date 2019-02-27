@@ -1,0 +1,93 @@
+
+#app{
+	width:80%;
+	max-width: 350px;
+	background: #f5f5f5;
+	position: absolute;
+	/*left:0;
+	top:0;
+	right:0;
+	bottom:0;
+	margin: auto;*/
+	left: 50%;
+	top: 50%;
+	transform:translate(-50%, -60%);
+}
+
+.login-wrap{
+	margin:15px auto;
+	padding:10px 20px 10px;
+	background:#fff;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+}
+
+.login-wrap input, .login-wrap button{
+	width: 100%;
+}
+.login-title{
+	text-align:center;
+	cursor:pointer;
+	margin-bottom:5px;
+}
+.login-copyright{
+	margin-top: 10px;
+	font-size:0.6rem;
+	color: #999;
+	text-align:center;
+}
+.login-password{
+	padding-right:30px;
+}
+.login-wrap-title{
+	text-align: center;
+	background: #f5f5f5;
+}
+.login-password-state{
+	position: absolute;
+	right: 10px;
+	top: 5px;
+	cursor: pointer;
+	background-color: transparent;
+	transition: all .3s;
+	display:inline-block;
+}
+.login-password-state:hover, .login-password-state.active{
+	color:#3385ff;
+}
+.login-others{
+	font-size: 0.8rem;
+}
+.login-forgetPassword, .login-register{
+	cursor:pointer;
+	margin:0 10px;
+}
+.login-register:hover, .login-forgetPassword:hover{
+	color: #3385ff;
+}
+.user-wrap{
+	height: 100%;
+	width: 100%;
+}
+.user-wrap .left{
+	width: 150px;
+	height: 100%;
+	float: left;
+	background: blue;
+	color: #fff;
+}
+.user-wrap .right{
+	width: 100%;
+	height: 100%;
+	padding-left:150px;
+	margin-left: -150px;
+	background: #f5f5f5;
+}
+.user-wrap .right .right-content{
+	padding: 30px 20px 30px 180px;
+}
+
+.user-wrap .right .right-content .top-search{
+	border: 1px solid #ccc;
+	padding: 10px;
+}

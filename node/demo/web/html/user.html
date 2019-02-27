@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>用户管理</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="./../style/main.css">
+	<link rel="stylesheet" type="text/css" href="./../style/index.css">
+	<script type="text/javascript" src="./../js/common.js"></script>
+	<script type="text/javascript" src="./../js/server.js"></script>
+</head>
+<body>
+<div class="user-wrap">
+	<div class="left">
+		目录
+	</div>
+	<div class="right">
+		<div class="right-content">
+			<div class="top-search">
+				<label>账户名：<input type="text" name=""></label>
+				<button type="button" class="primary">搜索</button>
+			</div>
+			<div>
+				<table>
+					<tr>
+						<th>用户名</th>
+						<th>上次登录时间</th>
+						<th>状态</th>
+						<th>操作</th>
+					</tr>
+					<tbody id="data-box">
+						
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	
+	window.onload = function(){
+		(function(){
+			var globalD = {
+				init: function(){
+					this.getData();
+				},
+
+				getData: function(){
+					server_ajax.getUserData(function(data){
+						console.log(data)
+						var str = "";
+						data.forEach(function(item){
+							str += '<tr><td>'+item.name+'</td>'+'<td>'+item.loginTime+'</td><td>'+item.isUsed+'</td><td><button type="button" onclick="this.notUsed(\"'+item.name+'\")">禁用</button></td></tr>';
+						}.bind(this))
+
+						document.getElementById("data-box").innerHTML = str;
+					})
+				},
+
+				notUsed: function(name){
+					console.log(name)
+				}
+			};
+
+			globalD.init();
+		})()
+		
+
+
+	}
+</script>
+</body>
+</html>
