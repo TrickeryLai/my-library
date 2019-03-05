@@ -1,11 +1,12 @@
 
 var common_data = {
-	headUrl: "http://localhost:8890"
+	headUrl: "http://localhost:8890",
+	webFileHeadUrl: window.location.protocol + '//' + window.location.host + "/",
 }
 
 
 var server = {
-	get: function(url, callback){
+	getRource: function(url, callback){
 		var ajax = new XMLHttpRequest(),
 			token = sessionStorage.getItem("token") ? sessionStorage.getItem("token") : "";
 
@@ -19,7 +20,6 @@ var server = {
 		ajax.onreadystatechange = function(){
 			if(ajax.readyState == 4 && ajax.status == 200){
 				var resData = ajax.responseText;
-				resData = JSON.parse(resData);
 				callback(resData);
 			}
 		}
@@ -45,6 +45,19 @@ var server = {
 				callback(data);
 			}
 		}
+	},
+
+	get: function(url, callback){
+		this.getRource(url, function(resData){
+			resData = JSON.parse(resData);
+			callback(resData);
+		})
+	},
+
+	getPage: function(url, callback){
+		this.getRource(url, function(resData){
+			callback(resData);
+		})
 	}
 }
 
@@ -107,5 +120,22 @@ var common_fn = {
 	hide: function(ele){
 		ele.style.display = "none";
 		return this;
+	},
+
+	formatterTime: function(time, formatter){
+		formatter = formatter || "yyyy-MM-dd: hh:mm:ss";
+
+		var times = new Date(time);
+		var yyyy, MM, dd, hh, mm, ss;
+		yyyy = times.getFullYear();
+		MM = times.getMonth() + 1;
+		dd = times.getDay();
+		hh = times.getHours();
+		mm = times.getMinutes();
+		ss = times.getSeconds();
+
+		formatter.replace('yyyy', yyyy);
+
+		
 	}
 }

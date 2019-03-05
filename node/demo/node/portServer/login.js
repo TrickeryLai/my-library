@@ -45,6 +45,7 @@ function login(postData, callback){
 				data.data[postData.name].isLogin = 1;
 				data.data[postData.name].loginToken = loginToken.toString();
 				data.data[postData.name].loginTime = new Date().getTime();
+				data.data[postData.name].vailableStartTime = new Date().getTime();
 
 				data = JSON.stringify(data);
 				fs.writeFile(url, data, function(err){

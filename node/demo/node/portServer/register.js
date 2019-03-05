@@ -33,6 +33,8 @@ function register(postData, callback){
 				postData.isLogin = 0;//未登录
 				postData.loginToken = null;// 登录 token
 				postData.isUsed = 1;//是否可用
+				postData.loginTime = 0;
+				postData.vailableStartTime = 0;
 				data.data[postData.name] = postData;
 			}
 

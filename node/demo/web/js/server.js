@@ -10,8 +10,12 @@ var server_ajax = {
 				alert(res.errmsg);
 				return;
 			}
+			//登录过期
+			if(res.code == 8888){
+				alert(res.data);
+				return;
+			}
 			callback(res.data);
-
 		})
 	}
 }

@@ -1,4 +1,36 @@
-
+	<div id="app">
+		<h1 class="login-wrap-title">title</h1>
+		<div class="login-wrap">
+			<h4 class="login-title" ><span class="active-text">登录</span>|<span id="login_change" >注册</span></h4>
+			<div id="login_box" class="">
+				<input type="text" name="name" id="login_name" placeholder="账户名">
+				<div class="relative login_password_showBox">
+					<input type="password" name="password" id="login_password" class="login-password" placeholder="密码">
+					<span class="login-password-state" id="login_password_state">👁</span>
+				</div>
+				<button type="button" class="primary width-100p" id="login_submit">登录</button>
+				<div class="login-others clear">
+					<span class="login-forgetPassword fl" id="login_forgetPassword">忘记密码？</span>
+					<span class="login-register fr" id="login_register">注册</span>
+				</div>
+			</div>
+			<div id="register_box" class="hide">
+				<input type="text" name="name" id="register_name" placeholder="账户名">
+				<div class="relative login_password_showBox">
+					<input type="password" name="password" id="register_password1" class="login-password" placeholder="密码">
+					<span class="login-password-state">👁</span>
+				</div>
+				<div class="relative login_password_showBox">
+					<input type="password" name="password" id="register_password2" class="login-password" placeholder="再次输入密码">
+					<span class="login-password-state" id="login_password_state">👁</span>
+				</div>
+				<button type="button" class="primary width-100p" id="register_submit">注册</button>
+			</div>
+			
+			<p class="login-copyright">copyright @xxxxxxxxxx 2019-02-27</p>
+		</div>
+	</div>
+	<script type="text/javascript">
 window.onload = function(){
 	
 	//登录
@@ -93,3 +125,4 @@ window.onload = function(){
 	})
 	
 }
+	</script>

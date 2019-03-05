@@ -31,12 +31,12 @@ function getUserData(callback, req){
 					return;
 				}
 				
-				if(new Date().getTime() - data.data[args.user].loginTime > common.overtime){
+				if(new Date().getTime() - data.data[args.user].vailableStartTime > common.overtime){
 					callback({code: 8888, data: "登录已过期！"})
 					return;
 				}
 
-				data.data[args.user].loginTime = new Date().getTime();
+				data.data[args.user].vailableStartTime = new Date().getTime();
 				data = JSON.stringify(data);
 				fs.writeFile(url, data, function(err){
 					if(err){

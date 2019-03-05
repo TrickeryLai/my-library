@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Vue</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+<div id="app">
+	<span v-bind:title="message" v-bind:id="id">{{message}}</span>
+	<button v-bind:disabled="isButtonDisabled" v-bind:[attrs]="attrVal" v-on:click="clickFn">Button</button>
+</div>
+<script type="text/javascript">
+	var app = new Vue({
+		el: "#app",
+		data: {
+			message: "Hellow Vue" + new Date(),
+			id: 'tst',
+			isButtonDisabled: false,
+			attrs: "id",
+			attrVal: "tesId"
+		},
+		methods:{
+			clickFn: function(){
+				this.attrs = 'name';
+			}
+		}
+	})
+</script>
+</body>
+</html>
