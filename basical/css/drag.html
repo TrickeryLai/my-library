@@ -2,6 +2,8 @@
 <html>
 <head>
 	<title>vertical-align</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<style type="text/css">
 		.wrap{
 			width: 100%;
@@ -286,8 +288,8 @@
 
 			//鼠标按下事件
 			mouseDown: function(dom, event){
-				var clientX = event.x,
-					clientY = event.y,
+				var clientX = event.x || event.touches[0].clientX,
+					clientY = event.y || event.touches[0].clientY,
 					domStyle = this.getStyle(dom);
 
 				var getDomStyleD = this.getDomStyle();
@@ -318,9 +320,8 @@
 					dom._state = dom._state ? dom._state : {};
 					dom._domStyle = dom._domStyle ? dom._domStyle : {};
 
-
-					var moveX = event.x,
-						moveY = event.y;
+					var moveX = event.x || event.touches[0].clientX,
+						moveY = event.y || event.touches[0].clientY;
 
 					var client = this.client, resultX = 0, resultY = 0, parensStyle = this.getParentPositionStyle(dom), domStyle = this.getStyle(dom);
 
@@ -680,12 +681,15 @@
 					mouseMoveFn = this.mouseMove.bind(this, dom),
 					mouseUpFn = this.mouseUp.bind(this, dom);
 				dom.addEventListener('mousedown', mouseDownFn);
+				dom.addEventListener('touchstart', mouseDownFn);
 
 				dom.addEventListener('contextmenu', this.contextmenu.bind(this, dom))
 
 				document.addEventListener('mousemove', mouseMoveFn);
+				document.addEventListener('touchmove', mouseMoveFn);
 
 				document.addEventListener('mouseup', mouseUpFn);
+				document.addEventListener('touchend', mouseUpFn);
 				this.domStyle.boundingClientRect = {
 					x: parseFloat(this.getStyle(dom).marginLeft) + parseFloat(this.getStyle(dom).paddingLeft),
 					y: parseFloat(this.getStyle(dom).marginTop) + parseFloat(this.getStyle(dom).paddingTop),
