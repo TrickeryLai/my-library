@@ -70,24 +70,26 @@
         }
         .stageBox{
             height: 500px;
-            box-sizing:border-box;
             margin:0;
             padding: 0;
             background: red;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .left-box{
-            /*box-sizing: border-box;*/
             width: 200px;
             height: 100%;
             margin-left:0;
             margin-right: 0;
             background: yellow;
-            float: left;
+            flex: none;
+            /*float: left;*/
         }
         .right-box{
-            /*box-sizing: border-box;*/
-            margin-left: -200px;
-            padding-left: 200px;
+          
+            /*margin-left: -200px;
+            padding-left: 200px;*/
             height: 100%;
             width: 100%;
             background: green;
@@ -112,7 +114,7 @@
 <div class="stageBox">
     <div class="left-box"></div>
     <div class="right-box">
-        <span>242342344444444444444444444444444444444444444444444523523</span>
+        <span></span>
     </div>
 </div>
 

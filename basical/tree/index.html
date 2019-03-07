@@ -2,11 +2,195 @@
 <html>
 <head>
 	<title>tree</title>
+	<style type="text/css">
+		dl{
+			padding-left: 20px;
+		}
+		.playListFolders:before{
+			content: "文件夹-";
+		}
+		.playListDOList:before{
+			content: "文件-";
+		}
+	</style>
 </head>
 <body>
+The domain name for this document is: 
+
 <div id="myTree" class="tree">
 	
 </div>
+
+<script type="text/javascript">
+	var treedata ={
+	  "success": true,
+	  "message": "展示成功",
+	  "data": [{
+	    "id": 0,
+	    "name": "主目录",
+	    "createTime": 1551347846679,
+	    "modifiedTime": 1551347846679,
+	    "uid": "2416831",
+	    "parentId": -1,
+	    "deleteFlag": 0,
+	    "level": [],
+	    "playListFolders": [
+	      {
+	        "id": 7,
+	        "name": "云门快报",
+	        "createTime": 1551343230000,
+	        "modifiedTime": 1551343230000,
+	        "uid": "2416831",
+	        "parentId": 0,
+	        "deleteFlag": 0,
+	        "level": [],
+	        "playListFolders": [
+	          {
+	            "id": 9,
+	            "name": "风云快报",
+	            "createTime": 1551343261000,
+	            "modifiedTime": 1551343261000,
+	            "uid": "2416831",
+	            "parentId": 7,
+	            "deleteFlag": 0,
+	            "level": [
+	              7
+	            ],
+	            "playListFolders": [],
+	            "playListDOList": [
+	              {
+	                "id": 1353,
+	                "name": "lz",
+	                "createTime": 1548140430000,
+	                "modifiedTime": 1548295202000,
+	                "uid": "2416831",
+	                "programId": "1511f500d2974cb2a20475e14aaa8bb4",
+	                "deleteFlag": 0,
+	                "usageCount": 0,
+	                "folderId": 0,
+	                "dataElements": [],
+	                "engineConfiguration": null,
+	                "allInitDataElementLength": 1,
+	                "initDataElementIndex": 0,
+	                "progress": {
+	                  "path": null,
+	                  "message": "0%"
+	                }
+	              },
+	              {
+	                "id": 1347,
+	                "name": "测试ssss",
+	                "createTime": 1547612268000,
+	                "modifiedTime": 1551237427000,
+	                "uid": "2416831",
+	                "programId": "7d0cc81f5bbc4432a39d0591ce41dd43",
+	                "deleteFlag": 0,
+	                "usageCount": 0,
+	                "folderId": 0,
+	                "dataElements": [],
+	                "engineConfiguration": null,
+	                "allInitDataElementLength": 1,
+	                "initDataElementIndex": 0,
+	                "progress": {
+	                  "path": null,
+	                  "message": "0%"
+	                }
+	              }
+	            ]
+	          }
+	        ],
+	        "playListDOList": [
+	          {
+	            "id": 1353,
+	            "name": "lzlzlz",
+	            "createTime": 1548140430000,
+	            "modifiedTime": 1548295202000,
+	            "uid": "2416831",
+	            "programId": "1511f500d2974cb2a20475e14aaa8bb4",
+	            "deleteFlag": 0,
+	            "usageCount": 0,
+	            "folderId": 0,
+	            "dataElements": [],
+	            "engineConfiguration": null,
+	            "allInitDataElementLength": 1,
+	            "initDataElementIndex": 0,
+	            "progress": {
+	              "path": null,
+	              "message": "0%"
+	            }
+	          }
+	        ]
+	      }
+	    ],
+	    "playListDOList": [
+	      {
+	        "id": 1347,
+	        "name": "David测试",
+	        "createTime": 1547612268000,
+	        "modifiedTime": 1551237427000,
+	        "uid": "2416831",
+	        "programId": "7d0cc81f5bbc4432a39d0591ce41dd43",
+	        "deleteFlag": 0,
+	        "usageCount": 0,
+	        "folderId": 0,
+	        "dataElements": [],
+	        "engineConfiguration": null,
+	        "allInitDataElementLength": 1,
+	        "initDataElementIndex": 0,
+	        "progress": {
+	          "path": null,
+	          "message": "0%"
+	        }
+	      },
+	      {
+	        "id": 1353,
+	        "name": "lz",
+	        "createTime": 1548140430000,
+	        "modifiedTime": 1548295202000,
+	        "uid": "2416831",
+	        "programId": "1511f500d2974cb2a20475e14aaa8bb4",
+	        "deleteFlag": 0,
+	        "usageCount": 0,
+	        "folderId": 0,
+	        "dataElements": [],
+	        "engineConfiguration": null,
+	        "allInitDataElementLength": 1,
+	        "initDataElementIndex": 0,
+	        "progress": {
+	          "path": null,
+	          "message": "0%"
+	        }
+	      }
+	    ]
+	  }],
+	  "errorCode": null
+	}
+	console.log(getData(treedata.data))
+	document.getElementById("myTree").innerHTML = getData(treedata.data);
+	function getData(data){
+		var result = result || "";
+		var level = level || 0;
+
+		return (function getDatas(data, type){
+				result += '<dl>';
+				for(var i = 0; i < data.length; i++){
+					result += "<dd class='" + type + "'>" + data[i].name + "</dd>";
+					if(data[i].playListFolders && data[i].playListFolders.length > 0){
+						getDatas(data[i].playListFolders, "playListFolders");
+					}
+
+					if(data[i].playListDOList && data[i].playListDOList.length > 0){
+						getDatas(data[i].playListDOList, "playListDOList");
+					}
+
+					
+				}
+			
+			result += "</dl>";
+			return result;
+		})(data, 'top')
+	}
+</script>
 
 <script type="text/javascript">
 	
@@ -41,7 +225,7 @@
 			})
 			// console.timeEnd('create')
 			
-			console.log('this.n',this.n)
+			console.log('this.n', this.n)
 			return newArr;
 		},
 

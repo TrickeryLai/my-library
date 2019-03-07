@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<head>
+	<title>iframe</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		iframe{
+			border: 1px solid #ccc;
+		}
+	</style>
+</head>
+<body>
+<div>
+	<button type="button" id="btn">button</button>
+	<div>
+		<iframe id="iframes" src="./iframe.html">
+			
+		</iframe>
+	</div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+	document.domain;
+	//iframe 外层的样式不适用于iframe内，内外传值 sessionStorage localStorage
+	document.getElementById("btn").addEventListener("click", function(){
+		console.log(localStorage.setItem('data','parent'))
+
+		document.getElementById("iframes").setAttribute("src", "./iframe2.html");
+
+	})
+
+	function parentsF(a){
+		console.log(a)
+	}
+</script>
