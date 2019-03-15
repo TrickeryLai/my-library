@@ -33,7 +33,7 @@
 			<div>
 				2
 				<div iscopy = "true">
-					
+					3
 				</div>
 			</div>
 		</div>
@@ -65,8 +65,8 @@
 			this.copyI = null;
 			this.clickDom = null;
 			this.isFocusArea = false; //当前是否聚焦在目的区域
-			this.currentIcon;//当前的点击标识
-			this.copyIcon;//当前区域的复制标识
+			// this.currentIcon;//当前的点击标识
+			// this.copyIcon;//当前区域的复制标识
 			this.isDeep = params.isDeep || true;//是否深拷贝
 			this.isDestory = false;
 		}
@@ -74,7 +74,7 @@
 		CopyV.prototype = {
 			//确定区域
 			//
-			commonData: {},
+			// commonData: {},
 			commonIcon: [],
 			getParents: function(dom){
 				if(dom && dom.getAttribute && dom.getAttribute('iscopy')){
@@ -128,7 +128,7 @@
 						return;
 					}
 
-					this.currentIcon = this.setIcon(e.target);
+					// this.currentIcon = this.setIcon(e.target);
 					this.clickDom = e.target;
 					// if(!this.commonData[this.currentIcon]){
 					// 	this.commonData[this.currentIcon] = {
@@ -156,19 +156,18 @@
 			        	}else{
 			        		console.log('复制成功')
 			        	}
-			        	//将复制的对象存入 commonData.c
 			        	this.copyI = this.currentDom.cloneNode(this.isDeep);
+			        	//将复制的对象存入 commonData.c
 			        	// this.commonData[this.currentIcon].c = this.copyI;
 			        	//copyIcon 只在复制的时候复制当前点击项的 唯一标识，后续在 commonData 中查找
-			        	this.copyIcon = this.currentIcon;
+			        	// this.copyIcon = this.currentIcon;
 			        }
 			        //快捷键粘贴ctrl+v
 			        if(e.ctrlKey && e.keyCode == 86 ){
-			        	if(!this.copyIcon){
+			        	if(!this.copyI){
 			        		console.log('没有可粘贴的内容')
 			        		return;
 			        	}
-			        	console.log(this.copyIcon)
 			        	this.copyI = this.copyI.cloneNode(this.isDeep);
 			        	// this.copyI = this.commonData[this.copyIcon].c.cloneNode(this.isDeep);
 			        	this.clickDom.appendChild(this.copyI);
