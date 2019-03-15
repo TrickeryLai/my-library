@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<meta charset="utf-8">
 <head>
 	<title>cookie</title>
 </head>
@@ -14,22 +15,49 @@
 	var string1 = 'abc', string2 = 'bcd';
 
 	console.log(string1, string1.concat(string2));
-	document.cookie = "username=lll;path=/";
+	document.cookie = "username=111;path=/";
 
 	//判断浏览器是否支持 cookie
 	var dt = new Date(); 
 	dt.setSeconds(dt.getSeconds() + 60); 
+
 	document.cookie = "cookietest=1; expires=" + dt.toGMTString(); 
 	var cookiesEnabled = document.cookie.indexOf("cookietest=") != -1; 
 	if(!cookiesEnabled) { 
 		//没有启用cookie 
-		alert("没有启用cookie ");
+		console.log("没有启用cookie ");
 	} else{
 		//已经启用cookie 
-		alert("已经启用cookie ");
+		console.log("已经启用cookie ");
 	}
 
 	// currentStyle() && window.getComputedStyle();
+
+	function getCookie(name){
+		var result = '';
+		if(document.cookie){
+			document.cookie.split(";").forEach(function(item){
+				var objs = item.split("=");
+				if(name == objs[0]){
+					result = objs[1];
+				}
+			})
+		}
+		return result;
+	}
+
+	function delCookie(name){
+		if(!name){
+			return;
+		}
+
+		var val = getCookie(name);
+		var dt = new Date().getTime() - 1;
+
+		document.cookie = name + '='+ val + ';exppires=' + new Date(dt).toGMTString();
+	}
+
+	delCookie("username")
 
 	function aafn(n){
 		var arr = [];

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>css</title>
+	<style type="text/css">
+		.befo::before{
+			content: attr(data-parent);
+			width: auto;
+			display: inline-block;
+			height: auto;
+		}
+	</style>
+</head>
+<body>
+<div>
+	<div class="befo"></div>
+	<span>abc</span>
+</div>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>jsplumb</title>
+	<script src="https://cdn.bootcss.com/jquery/1.12.1/jquery.min.js"></script>
+	<script src="https://cdn.bootcss.com/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script src="https://cdn.bootcss.com/jsPlumb/2.6.8/js/jsplumb.min.js"></script>
+	<script src="data.js"></script>
+	<style type="text/css">	
+	.item{
+		width: 100px;
+		height: 30px;
+		border-radius: 10px;
+		border: 1px solid #ccc;
+		top: 100px;
+		position: absolute;
+		text-align: center;
+		line-height: 30px;
+		user-select: none;
+		transition: border .3s;
+	}
+	.item.active{
+		border-color: green;
+	}
+	.clear::after{
+		content: "";
+		width: 0;
+		height: 0;
+		font-size: 0;
+		display: block;
+		clear: both;
+	}
+	.sourceBox .item{
+
+	}
+
+	.targetBox .item{
+
+	}
+	.targetBox{
+		width: 70%;
+		float: left;
+	}
+	.settingBox{
+		width: 30%;
+		float: right;
+		box-sizing: border-box;
+		border: 1px solid #ccc;
+		height: 500px;
+	}
+	.radius-wrap{
+		width: 100px;
+		height: 100px;
+		overflow: hidden;
+	}
+	.radius{
+		box-sizing:border-box;
+		width: 100px;
+		height: 100px;
+		border-radius: 50%;
+		position: relative;
+		/*border: 1px solid #ccc;*/
+		background: green;
+	}
+	.radius-inner{
+		display:inline-block;
+		height:90px;
+		width: 90px;
+		border-radius: 50%;
+		background: #fff;
+		left: 0px;
+		top: 0px;
+		position: absolute;
+
+	}
+	.radius-model{
+		/*position: absolute;
+		z-index: 10;
+		background: #fff;
+		width: 120%;
+		height: 120%;
+		border-radius: 50%;
+		left:-5%;
+		top:-5%;
+		transform-origin: 50% 0%;
+		transform: rotate(0deg);*/
+	}
+</style>
+</head>
+<body>
+	<div class="radius-wrap">
+		<div class="radius">
+			<div class="radius-inner"></div>
+			<div class="radius-model"></div>
+		</div>
+	</div>
+	
+	<div id="top" class="sourceBox" style="overflow: hidden;height:200px;border: 1px solid #ccc;">
+		<div class="item" id="pD">D</div>
+	</div>
+	<div class="clear">
+		<div id="wrapBox" class="targetBox" style="height: 500px;position:relative;">
+			<div id="d1" class="item">D1</div>
+			<div id="d2" class="item" style="left: 100px;">D2</div>
+			<div id="d3" class="item" style="left: 200px;">D3</div>
+		</div>
+		<div id="setting" class="settingBox">
+			<h3 class="title">title</h3>
+			<button type="button" id="addInBtn">添加输入</button>
+			<button type="button" id="addOutBtn">添加输出</button>
+		</div>
+	</div>
+	
+	<button type="button" id="btn">获取所有连接数</button>
+</body>
+
+</html>
+<script type="text/javascript">
+	window.onload = function(){
+		
+		let a ='4587784574513177894351321548946554'
+		let b ='12186513278979132156465165789465465465'
+		var radiusI = $(".radius-inner").eq(0);
+		var arrow = 1;
+		var time = 30;
+		
+		console.log(1)
+		function animation(){
+			console.log(2)
+			requestAnimationFrame(function(){
+				console.log(3)
+				var left = parseFloat(radiusI.css('left')),
+				top = parseFloat(radiusI.css('top'));
+				if(arrow == 1){
+					left += 1;
+					if(left >= 10){
+						arrow = 2;
+					}
+				}
+
+				if(arrow == 2){
+					top += 1;
+					if(top >= 10){
+						arrow = 3
+					}
+				}
+
+				if(arrow == 3){
+					left -=1;
+					if(left <= 0){
+						arrow = 4
+					}
+				}
+
+				if(arrow == 4){
+					top -=1;
+					if(top <= 0){
+						arrow = 1
+					}
+				}
+
+				radiusI.css({left: left + 'px', top: top + 'px'});
+				// animation()
+			})
+		}
+
+		animation();
+		console.log(4)
+
+		// 		for(var i = 0; i < 1000000000; i++){
+
+		// }
+		
+		return;
+		console.log(new Date().getTime())
+		document.querySelector('body').style.background='red';
+		console.log(document.querySelector('body').style.background)
+		
+		// alert()
+		// document.querySelector('body').style.background='#fff';
+	 	setTimeout(()=>{
+	 
+	 		document.querySelector('body').style.background='#fff';
+	 		console.log(new Date().getTime())
+	 	})
+
+	 	return;
+
+
+	 	//js垃圾回收机制标记清除算法中，它说从根节点出发进行可达节点遍历标记，那么这个根节点是从什么地方开始呢？是从全局的window或者global出发吗？如果null是一个唯一的空间，那么清除一个对象其实是把对象的值指向这块空间吗？
+	 	//
+	 	////基本数据类型存放于栈空间中，对象存放于堆空间中，堆空间在内存里的存放是以链表的形式吗，物理地址不连续，但是逻辑地址是连续的？
+		//蹦床函数
+		function trampoline(f) {
+			while (f && f instanceof Function) {
+				f = f();
+			}
+			return f;
+		}
+
+
+		function sum(x, y) {
+			if (y > 0) {
+				return sum.bind(null, x + 1, y - 1);
+			} else {
+				return x;
+			}
+		}
+
+		trampoline(sum(1, 100));
+
+		//1、系统中有很多个微服务或者更准确地说有很多Restful API json接口；2、每个微服务有不同的参数；3、每个微服务在画布界面上是一个节点，通过界面有机组装连成一个执行链条；4、每个节点至少有四个功能，包括预览数据、执行当前节点、从链条头开始执行到当前节点、整体执行等
+		jsPlumb.ready(function () {
+
+			var instance = jsPlumb.getInstance({
+				ConnectionsDetachable: false,//取消再次拖拽取消线条
+				ConnectionOverlays:[//连线的叠加组件，如箭头、标签
+					["Arrow", {  //箭头参数设置
+						location: 0.5,
+						visible: true,
+						width: 11,
+						length: 11,
+						id: "ARROW",
+						events: {
+							click: function () {
+							}
+						}
+					}],
+		            ["Label", {  //标签参数设置
+		            	location: 0.1,
+		            	label: 'test',
+		            	id: "label",
+		                cssClass: "aLabel", //hover时label的样式名
+		                events: {
+		                	tap: function () {
+		                	}
+		                },
+		                visible: true
+		            }]
+
+		            ]
+		        })
+		 	// jsPlumb.importDefaults({
+		  //   	ConnectionsDetachable: false
+		  // 	});
+		  var data = ['d1', 'd2', 'd3'];
+
+		  var myJsPlumb = {
+		  	common: {
+		  		// isSource: true,
+		  		// isTarget: true,
+		  		maxConnections: -1,
+		  		endpoint: 'Dot',
+				// connectorStyle: {
+				// 	outlineStroke: 'green',
+				// 	strokeWidth: 1
+				// },
+				// connectorHoverStyle: {
+				// 	strokeWidth: 2
+				// },
+		  	},
+		  	commonIn: {
+		  		isTarget: true,
+		  		paintStyle: {
+					radius: '5',
+					// fill: 'red',
+					outlineStroke: 'blue',
+					strokeWidth: .5
+				},
+				hoverPaintStyle: {
+					outlineStroke: 'lightblue'
+				},
+		  	},
+		  	commonOut: {
+		  		isSource: true,
+		  		paintStyle: {
+					radius: '5',
+					fill: 'red',
+					outlineStroke: 'blue',
+					strokeWidth: .5
+				},
+				hoverPaintStyle: {
+					outlineStroke: 'lightblue'
+				},
+		  	},
+		  	draggable: function(data){
+		  		instance.draggable(data, {
+		  			containment: true
+		  		});
+		  	}, 
+		  	init: function(sourceId, targetId){
+		  		var _this = this;
+
+		  		this.draggable(data);
+
+		  		$(sourceId).children().draggable({
+		  			helper: "clone",
+		  			scope: "ss"
+		  		});
+
+		  		$(targetId).droppable({
+		  			scope: 'ss',
+		  			drop: function (event, ui) {
+		  				var parentPosition = $(targetId).offset()
+		  				var x = event.offsetX, y = event.offsetY;
+
+		  				var newD = document.importNode(ui.draggable[0], true);
+		  				var newId = newD.id + '_' + Math.floor(Math.random()*1000);
+		  				newD.id = newId;
+		  				newD.innerText = newId;
+		  				newD.style.left = x - $(ui.draggable[0]).width()/2 + 'px';
+		  				newD.style.top = y - $(ui.draggable[0]).height()/2 + 'px';
+		  				event.target.appendChild(newD);
+		  				_this.draggable(newId);
+
+		  				_this.addEndPointFn(newId, ['Left', 'Right', 'Top'])
+		  			}
+		  		});
+
+		  		data.forEach(function(item){
+		  			_this.addEndPointFn(item, ['Right', 'Top', 'Left']);
+		  		})
+
+		  		instance.bind('beforeDrop', function(i){
+		  			if(i.sourceId === i.targetId){
+		  				return false;
+		  			} 
+		  			return true;
+		  		})
+
+		  		instance.bind('click', function(e){
+		  			console.log(e)
+		  		})
+
+		  		$(targetId).on("click", function(e){
+		  			var nodeName = e.target.nodeName;
+		  			if(nodeName.toLowerCase() === 'circle'){
+		  				console.log('circle')
+		  			}else if(nodeName.toLowerCase() === 'div' && e.target != this){
+		  				_this.setSettingBox(e.target);
+		  			}
+		  		})
+		  	},
+		  	setSettingBox: function(target){
+		  		var commonIn = Object.assign({}, this.common, this.commonIn);
+		  		var commonOut = Object.assign({}, this.common, this.commonOut);
+		  		$(target).addClass('active').siblings(".item").removeClass('active');
+		  		$("#setting").find(".title").eq(0).text(target.innerText);
+
+		  		$("#addInBtn").on("click", function(e){
+		  			instance.addEndpoint(id, {
+		  				anchors: [0.25,0,0,0],
+		  				uuid: id + '_' + item,
+		  				data: 'data1254'
+		  			}, commonIn)
+		  		})
+		  	},
+
+		  	addEndPointFn: function(id, arrow, common){
+		  		var _this = this;
+		  		var commonIn = Object.assign({}, _this.common, _this.commonIn);
+		  		var commonOut = Object.assign({}, _this.common, _this.commonOut);
+		  		common = common || _this.common;
+		  		arrow.forEach(function(item){
+		  			instance.addEndpoint(id, {
+		  				anchors: [0.25,0,0,0],
+		  				uuid: id + '_' + item,
+		  				data: 'data1254'
+		  			}, commonIn)
+		  			instance.addEndpoint(id, {
+		  				anchors: [0.5,1,0,0],
+		  				uuid: id + '_' + item
+		  			}, commonOut)
+		  		})
+		  	}, 
+
+		  	getAllConnections: function(){
+		  		return instance.getAllConnections()
+		  	},
+
+
+		  }
+
+		  myJsPlumb.init('#top', '#wrapBox');
+
+		})
+
+
+	    //获取所有连线数据
+	    document.getElementById("btn").addEventListener("click", function(){
+	    	myJsPlumb.getAllConnections();
+	    })
+	}
+</script>

@@ -133,6 +133,7 @@
 
 <script type="text/javascript">
 	window.onload = function(){
+		console.log(document.getElementById('btnBox'))
 		var btnBox = document.getElementById('btnBox');
 
 		var btnCont = [
@@ -261,7 +262,6 @@
 				};
 				return result;
 			},
-
 
 			//获取带有定位信息的父层
 			getParentPositionStyle: function(dom){
@@ -559,8 +559,6 @@
 				document.getElementById('_drag_menu_vertical').addEventListener('click', this.menuEvent.verticalFn.bind(this));
 				document.getElementById('_drag_menu_horizen').addEventListener('click', this.menuEvent.horizenFn.bind(this));
 
-				
-
 				Array.prototype.forEach.call(concatMenu, function(item){
 					item.addEventListener('click', _this.menuEvent.menuConcat.bind(_this, item))
 				});
@@ -601,7 +599,7 @@
 
 				//不可用拖拽
 				notUseFn: function(){
-					if( !this.useState){
+					if(!this.useState){
 						return;
 					}
 					this.destory();
@@ -758,7 +756,6 @@
 				return this;
 			}
 		}
-
 
 		function btnClickFn(event){
 			var target = event.target,

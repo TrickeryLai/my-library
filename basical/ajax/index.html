@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ajax</title>
+</head>
+<body>
+<div></div>
+</body>
+</html>
+<script type="text/javascript">
+	
+	class Ajax{
+		construcotr(params){
+			this.params = params || {};
+		}
+
+		basical(type, url){
+			//生成一个 xmlhttprequest 对象，
+			let ajax = new XMLHttpRequest();
+			let data = this.params.data ? JSON.stringify(this.params.data): "";
+
+			//规定请求的类型，地址
+			ajax.open(type, url);
+
+			//设置响应的数据类型
+			ajax.responseType = "json";
+
+			//设置请求头
+			ajax.setRequestHeader("token", "123");
+			ajax.setRequestHeader("Accept", "application/json");
+
+			//发送的数据
+			if(type == 'post' && data){
+				ajax.send(data);
+			}else{
+				ajax.send();
+			}
+
+			// readyState
+			// 0: 请求未初始化
+			// 1: 服务器连接已建立
+			// 2: 请求已接收
+			// 3: 请求处理中
+			// 4: 请求已完成，且响应已就绪
+			ajax.onreadystatechange = () =>{
+
+				if(ajax.readyState === 4 && ajax.status === 200){
+					var resData = ajax.responseText;
+
+					this.params.callback(resData);
+				}
+			}
+		}
+	}
+</script>

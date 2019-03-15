@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>copy</title>
+	<style type="text/css">
+		*{
+			margin:0;
+			padding: 0;
+		}
+		.canvas-wrap{
+			width: 100%;
+			height: 400px;
+			box-sizing: border-box;
+			border: 1px solid #ccc;
+		}
+		.canvas-wrap canvas{
+			border: 1px solid #ccc;
+			
+		}
+		.canvas-wrap div{
+			display: inline-block;
+			width: 80px;
+			height: 80px;
+			border: 1px solid #ccc;
+		}
+	</style>
+</head>
+<body>
+<div>
+	<div class="canvas-wrap" id="area1">
+		<div iscopy="true">
+			1
+			<div>
+				2
+				<div iscopy = "true">
+					
+				</div>
+			</div>
+		</div>
+		<div iscopy = "true">7874</div>
+		<div iscopy = "true">783 <br /><input type="text" name="" style="width: 90%;"></div>
+	</div>
+	<div class="canvas-wrap" id="area2">
+		<div iscopy = "true">134</div>
+		<div iscopy="true">
+			2
+			<div>
+				3
+				<div iscopy = "true">
+					4
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript">
+	window.onload = function(){
+
+		//areaId 可以复制的区域id,必须
+		//iscopy 区分是否可以复制, 在areaId 区域添加到需要复制的对应dom
+		function CopyV(params){
+			this.params = params || {};
+			this.currentDom = null;
+			this.copyI = null;
+			this.clickDom = null;
+			this.isFocusArea = false; //当前是否聚焦在目的区域
+			this.currentIcon;//当前的点击标识
+			this.copyIcon;//当前区域的复制标识
+			this.isDeep = params.isDeep || true;//是否深拷贝
+			this.isDestory = false;
+		}
+
+		CopyV.prototype = {
+			//确定区域
+			//
+			commonData: {},
+			commonIcon: [],
+			getParents: function(dom){
+				if(dom && dom.getAttribute && dom.getAttribute('iscopy')){
+					return dom;
+				}else if(dom.nodeName.toLowerCase() == 'body') {
+					return null;
+				}else{
+					return this.getParents(dom.parentNode);
+				}
+
+				return null;
+			},
+
+			getArea: function(dom){
+				if(dom.id == this.params.areaId){
+					return true;
+				}else if(dom.nodeName.toLowerCase() === 'body'){
+					return false;
+				}else {
+					return this.getArea(dom.parentNode);
+				}
+			},
+
+			createIcon: function(){
+				var icon = Math.floor(Math.random()*1000000);
+				if(this.commonIcon.indexOf(icon) >= 0){
+					return this.createIcon();
+				}else{
+					this.commonIcon.push(icon);
+					return icon;
+				}
+			},
+			//生成标识，方便区分
+			setIcon: function(dom){
+				if(!dom.getAttribute('data_CopyV_clickIcon')){
+					dom.setAttribute('data_CopyV_clickIcon', this.createIcon());
+				}
+
+				return dom.getAttribute('data_CopyV_clickIcon');
+			},
+			init: function(){
+				
+				document.body.addEventListener("click", function(e){
+					//如果禁止
+					if(this.isDestory){
+						return;
+					}
+					//判断当前点击区域
+					this.isFocusArea = this.getArea(e.target);
+					if(!this.isFocusArea){
+						return;
+					}
+
+					this.currentIcon = this.setIcon(e.target);
+					this.clickDom = e.target;
+					if(!this.commonData[this.currentIcon]){
+						this.commonData[this.currentIcon] = {
+							c: null,
+							v: null,
+						};
+					}
+				}.bind(this))
+
+				document.body.addEventListener("keydown", function(e){
+					//如果禁止
+					if(this.isDestory){
+						return;
+					}
+					//通过点击操作，通过isFocusArea 区分开不同区域
+					if(!this.isFocusArea){
+						return;
+					}
+			        //快捷键复制ctrl+c
+			        if(e.ctrlKey && e.keyCode == 67 ){
+			        	this.currentDom = this.getParents(this.clickDom);
+			        	if(!this.currentDom){
+			        		console.log('没有可复制的内容！')
+			        		return;
+			        	}else{
+			        		console.log('复制成功')
+			        	}
+			        	//将复制的对象存入 commonData.c
+			        	this.copyI = this.currentDom.cloneNode(this.isDeep);
+			        	this.commonData[this.currentIcon].c = this.copyI;
+			        	//copyIcon 只在复制的时候复制当前点击项的 唯一标识，后续在 commonData 中查找
+			        	this.copyIcon = this.currentIcon;
+			        }
+			        //快捷键粘贴ctrl+v
+			        if(e.ctrlKey && e.keyCode == 86 ){
+			        	if(!this.copyIcon){
+			        		console.log('没有可粘贴的内容')
+			        		return;
+			        	}
+			        	console.log(this.copyIcon, this.commonData)
+			        	// this.copyI = this.copyI.cloneNode(this.isDeep);
+			        	this.copyI = this.commonData[this.copyIcon].c.cloneNode(this.isDeep);
+			        	this.clickDom.appendChild(this.copyI);
+			        }
+		    	}.bind(this));
+
+		    	return this;
+			},
+			//停止？ 暂时通过状态控制
+			destory: function(){
+				this.isDestory = true;
+				return this;
+			}
+		}
+		
+		new CopyV({areaId: 'area1'}).init();
+		new CopyV({areaId: 'area2'}).init();
+
+	}
+</script>
+</html>

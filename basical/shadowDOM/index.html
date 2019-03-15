@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>shadowDOM</title>
+</head>
+<body>
+<div id="wrap">
+</div>
+	<button type="button" id="button">Click</button>
+<template id="tem">
+	<div>
+		<span>name</span>
+		<input type="text" name="">
+	</div>
+</template>
+</body>
+
+<script type="text/javascript">
+	window.onload = function(){
+		var wrap = document.querySelector("#wrap");
+		// var roots = wrap.createShadowRoot();
+		var roots = wrap.attachShadow({mode: "closed"});
+		var tem = document.querySelector("#tem");
+		var clone = document.importNode(tem.content, true);
+		var btn = document.querySelector("#button");
+		roots.appendChild(clone);
+
+		roots.addEventListener("click", function(e){
+			console.log(e)
+		})
+
+		btn.addEventListener("click", function(){
+
+			console.log(document.getElementById("wrap").getElementsByTagName("input"));
+		})
+
+	}
+</script>
+
+</html>

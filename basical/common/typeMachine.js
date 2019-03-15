@@ -15,7 +15,6 @@ class TypeMachine {
 			if(item == " "){
 				return -1;
 			}
-
 			return item;
 		})
 

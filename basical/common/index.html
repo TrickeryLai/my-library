@@ -7,7 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<meta name="format-detection"content="telephone=no, email=no" />
+	<meta name="format-detection" content="telephone=no, email=no" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<meta name="apple-mobile-web-app-capable" content="yes" /><!-- 删除苹果默认的工具栏和菜单栏 -->
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" /><!-- 设置苹果工具栏颜色 -->
@@ -41,71 +41,71 @@
 	<style type="text/css">
 		/**{
 			text-size-adjust: 100%;
-		}*/
-		p:first-line{
-			color: red;
-			background: blue;
-		}
+			}*/
+			p:first-line{
+				color: red;
+				background: blue;
+			}
 		/**:empty:not(input){
 			width: 20px;
 			height: 20px;
 			background: red;
 			display: inline-block;
-		}*/
-		input + span {
-			background: yellow;
-			width: 20px;
-			height: 20px;
-			display:inline-block;
-		}
-		input ~ span {
-			background: green;
-			width: 20px;
-			height: 20px;
-			display: inline-block;
-		}
-	</style>
-</head>
-<body>
-	<div>
-		<img src="">
-		<input type="text" name="" id="myInput">
-		<span id="inputShow"></span>
+			}*/
+			input + span {
+				background: yellow;
+				width: 20px;
+				height: 20px;
+				display:inline-block;
+			}
+			input ~ span {
+				background: green;
+				width: 20px;
+				height: 20px;
+				display: inline-block;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+			<img src="">
+			<input type="text" name="" id="myInput">
+			<span id="inputShow"></span>
+			<span></span>
+			<span></span>
+		</div>
+		<input type="" name="" id="typeMachine_input" placeholder="输入， enter结束">
+		<input type="" name="" id="typeMachine_input2">
+		<label for="time">Time</label>
+		<input type="time" name="time">
+		<label for="date">Date</label>
+		<input type="date" name="date">
+		<input type="date" name="datetime" placeholder="datetime" value="2019-02-11">
+		<input type="datetime-local" name="datetime-local">
 		<span></span>
-		<span></span>
-	</div>
-	<input type="" name="" id="typeMachine_input" placeholder="输入， enter结束">
-	<input type="" name="" id="typeMachine_input2">
-	<label for="time">Time</label>
-	<input type="time" name="time">
-	<label for="date">Date</label>
-	<input type="date" name="date">
-	<input type="date" name="datetime" placeholder="datetime" value="2019-02-11">
-	<input type="datetime-local" name="datetime-local">
-	<span></span>
-	<p>
-		a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为
-	</p>
+		<p>
+			a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为a去恶趣味恶趣味去围观围观发给对方 微软我认为
+		</p>
 
-	<div id="typeMachine_show" style="min-height: 100px;">
+		<div id="typeMachine_show" style="min-height: 100px;">
 
-	</div>
+		</div>
 
-	<script type="text/javascript">
-		
-		window.onload = function(){
-			var myInput = document.getElementById('myInput'),
+		<script type="text/javascript">
+			
+			window.onload = function(){
+				var myInput = document.getElementById('myInput'),
 				inputShow = document.getElementById('inputShow');
 
 
-			function inputFn(){
-				inputShow.innerHTML = this.value;
+				function inputFn(){
+					inputShow.innerHTML = this.value;
+				}
+
+				myInput.addEventListener('input', _common.shake.bind(null, inputFn.bind(myInput), 500, 400))
+				
 			}
 
-			myInput.addEventListener('input', _common.shake.bind(null, inputFn.bind(myInput), 500, 400))
-			
-		}
-
-	</script>
-</body>
-</html>
+		</script>
+	</body>
+	</html>

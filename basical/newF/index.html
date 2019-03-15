@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>借用</title>
+</head>
+<body>
+<div>
+
+</div>
+</body>
+<script type="text/javascript">
+	//每个构造函数(constructor)都有一个原型对象(prototype),原型对象都包含一个指向构造函数的指针,而实例(instance)都包含一个指向原型对象的内部指针.
+
+	//
+	//https://juejin.im/post/58f94c9bb123db411953691b#heading-3
+	function Fa(){
+		this.color = ["red"];
+	}
+
+	Fa.prototype.add = function(){
+		return this.color;
+	}
+
+	function Son(){
+		Fa.call(this);
+	}
+	var fa = new Fa();
+	console.log(fa)
+	Son.prototype = new Fa();
+
+	Son.prototype.constructor = Son;
+	Son.Fa = Fa.prototype;
+
+	Fa.prototype.constructor = Fa ;
+	// 
+	var son1 = new Son();
+	son1.color.push('11');
+	var son = new Son();
+	son.color.push("red1");
+
+	console.log(son)
+	console.log(son.add())
+
+
+ 	function foo(something) { 
+	 this.a = something;
+	}
+	var obj1 = { 
+	 foo: foo
+	};
+	var obj2 = {};
+	var a = 8;
+	var c = obj1.foo;
+	c(5);
+	window.foo(6)
+	// console.log( obj1.a, a );
+	obj1.foo( 2 ); 
+	// console.log(obj1.a);
+	obj1.foo.call( obj2, 3 ); 
+	obj2 = obj1;
+
+	obj2.foo(123);
+	console.log( obj2.a, obj1.a );
+
+
+
+	function Tes(){
+		this.name = 'aa'
+		this.age = 18;
+	}
+
+	Tes.prototype = function(){
+		var add = function(n){
+			return this.age + n;
+		}
+
+		return {
+			add: add
+		}
+	}()
+
+	// Tes.prototype.add = function(){
+	// 	return 18;
+	// }
+	var tes = new Tes();
+	console.log(tes, tes.add(1))
+
+</script>
+</html>

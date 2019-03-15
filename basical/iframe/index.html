@@ -16,8 +16,12 @@
 <body>
 <div>
 	<button type="button" id="btn">button</button>
+	<a href="mailto:997600810@qq.com?subject=主题&cc=抄送&body=主体">mail</a>
 	<div>
 		<iframe id="iframes" src="./iframe.html">
+			
+		</iframe>
+		<iframe id="iframes1" src="./iframe2.html">
 			
 		</iframe>
 	</div>
@@ -25,16 +29,41 @@
 </body>
 </html>
 <script type="text/javascript">
-	document.domain;
-	//iframe 外层的样式不适用于iframe内，内外传值 sessionStorage localStorage
-	document.getElementById("btn").addEventListener("click", function(){
-		console.log(localStorage.setItem('data','parent'))
+	window.onload = function(){
+		document.domain;
+		//iframe 外层的样式不适用于iframe内，内外传值 sessionStorage localStorage, 在document.domain 一样的情况下， 可以用 parent
+		document.getElementById("btn").addEventListener("click", function(){
+			document.getElementById("iframes").setAttribute("src", "./iframe2.html");
 
-		document.getElementById("iframes").setAttribute("src", "./iframe2.html");
+		})
+		
+		window.frames[1].postMessage({data: 1, data2: 56}, '*');
 
-	})
+		function parentsF(a){
+			console.log(a)
+		}
 
-	function parentsF(a){
-		console.log(a)
+		async function aaa(){
+			console.log(123);
+			await bbb();
+			console.log('await1');
+			console.log('await2');
+			return 'end';
+		}
+
+		function bbb(){
+			console.log('bbbwrap')
+			setTimeout(function(){
+				console.log('bbb')
+			}, 0)
+		}
+		console.log('start 1')
+
+		aaa().then((data) => {
+			console.log(data)
+		})
+
+		console.log('start 2')
 	}
+	
 </script>
