@@ -130,12 +130,12 @@
 
 					this.currentIcon = this.setIcon(e.target);
 					this.clickDom = e.target;
-					if(!this.commonData[this.currentIcon]){
-						this.commonData[this.currentIcon] = {
-							c: null,
-							v: null,
-						};
-					}
+					// if(!this.commonData[this.currentIcon]){
+					// 	this.commonData[this.currentIcon] = {
+					// 		c: null,
+					// 		v: null,
+					// 	};
+					// }
 				}.bind(this))
 
 				document.body.addEventListener("keydown", function(e){
@@ -158,7 +158,7 @@
 			        	}
 			        	//将复制的对象存入 commonData.c
 			        	this.copyI = this.currentDom.cloneNode(this.isDeep);
-			        	this.commonData[this.currentIcon].c = this.copyI;
+			        	// this.commonData[this.currentIcon].c = this.copyI;
 			        	//copyIcon 只在复制的时候复制当前点击项的 唯一标识，后续在 commonData 中查找
 			        	this.copyIcon = this.currentIcon;
 			        }
@@ -168,9 +168,9 @@
 			        		console.log('没有可粘贴的内容')
 			        		return;
 			        	}
-			        	console.log(this.copyIcon, this.commonData)
-			        	// this.copyI = this.copyI.cloneNode(this.isDeep);
-			        	this.copyI = this.commonData[this.copyIcon].c.cloneNode(this.isDeep);
+			        	console.log(this.copyIcon)
+			        	this.copyI = this.copyI.cloneNode(this.isDeep);
+			        	// this.copyI = this.commonData[this.copyIcon].c.cloneNode(this.isDeep);
 			        	this.clickDom.appendChild(this.copyI);
 			        }
 		    	}.bind(this));
