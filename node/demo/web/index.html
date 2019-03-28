@@ -10,7 +10,134 @@
 	<script type="text/javascript" src="./../js/server.js"></script>
 </head>
 <body>
+		<div id="app">
+		<h1 class="login-wrap-title">title</h1>
+		<div class="login-wrap">
+			<h4 class="login-title" ><span class="active-text">登录</span>|<span id="login_change" >注册</span></h4>
+			<div id="login_box" class="">
+				<input type="text" name="name" id="login_name" placeholder="账户名">
+				<div class="relative login_password_showBox">
+					<input type="password" name="password" id="login_password" class="login-password" placeholder="密码">
+					<span class="login-password-state" id="login_password_state">👁</span>
+				</div>
+				<button type="button" class="primary width-100p" id="login_submit">登录</button>
+				<div class="login-others clear">
+					<span class="login-forgetPassword fl" id="login_forgetPassword">忘记密码？</span>
+					<span class="login-register fr" id="login_register">注册</span>
+				</div>
+			</div>
+			<div id="register_box" class="hide">
+				<input type="text" name="name" id="register_name" placeholder="账户名">
+				<div class="relative login_password_showBox">
+					<input type="password" name="password" id="register_password1" class="login-password" placeholder="密码">
+					<span class="login-password-state">👁</span>
+				</div>
+				<div class="relative login_password_showBox">
+					<input type="password" name="password" id="register_password2" class="login-password" placeholder="再次输入密码">
+					<span class="login-password-state" id="login_password_state">👁</span>
+				</div>
+				<button type="button" class="primary width-100p" id="register_submit">注册</button>
+			</div>
+			
+			<p class="login-copyright">copyright @xxxxxxxxxx 2019-02-27</p>
+		</div>
+	</div>
+	<script type="text/javascript">
+window.onload = function(){
+	
+	//登录
+	document.getElementById("login_submit").addEventListener("click", function(e){
+		var data = {};
 
+		data.password = document.getElementById("login_password").value;
+		data.name = document.getElementById("login_name").value;
+
+		if(!data.password){
+			alert('请输入密码')
+			return;
+		}
+
+		if(!data.name){
+			alert('请输入账户名');
+			return;
+		}
+
+		server.post(common_data.headUrl + '/login', data, function(res){
+			if(res.code == 1){
+				alert(res.errmsg);
+				return;
+			}
+			sessionStorage.setItem("token", res.data.token);
+			sessionStorage.setItem("loginData", JSON.stringify(res.data));
+			window.location.hash = "/user";
+		})
+	})
+
+	//密码显示
+	Array.prototype.forEach.call(document.getElementsByClassName("login_password_showBox"), function(item){
+		item.getElementsByClassName("login-password-state")[0].addEventListener("click", function(e){
+		if(this.className.split(" ").indexOf("active") >= 0){
+			common_fn.removeClass(this, 'active');
+			this.parentNode.getElementsByClassName("login-password")[0].setAttribute('type', 'password');
+		}else{
+			common_fn.addClass(this, 'active');
+			this.parentNode.getElementsByClassName("login-password")[0].setAttribute('type', 'text');
+		}
+	})
+	})
+
+	//忘记密码
+	document.getElementById("login_forgetPassword").addEventListener("click", function(e){
+
+	})
+
+	//注册
+	document.getElementById("register_submit").addEventListener("click", function(e){
+		var password1 = document.getElementById("register_password1").value,
+			password2 = document.getElementById("register_password2").value,
+			name = document.getElementById("register_name").value,
+			data = {};
+
+		if(password1 !== password2){
+			alert("两次输入密码不一致！");
+			return;
+		}
+
+		data = {
+			name: name,
+			password: password2,
+		};
+
+		server.post(common_data.headUrl + '/register', data, function(res){
+			if(res.code == 1){
+				alert(res.errmsg);
+				return;
+			}
+
+			//注册成功
+		})
+
+	})
+
+	//登录--注册切换
+	Array.prototype.forEach.call(document.getElementsByClassName("login-title"), function(item){
+		item.addEventListener("click", function(){
+			Array.prototype.forEach.call(item.getElementsByTagName('span'), function(i, index){
+				common_fn.toggleClass(i, "active-text");
+				if(common_fn.hasClass(i, "active-text") && index == 0){
+					common_fn.show(document.getElementById("login_box")).hide(document.getElementById("register_box"));
+
+				}
+
+				if(common_fn.hasClass(i, "active-text") && index == 1){
+					common_fn.show(document.getElementById("register_box")).hide(document.getElementById("login_box"));	
+				}
+			})
+		})
+	})
+	
+}
+	</script>
 </body>
 <!-- <script type="text/javascript" src="./js/index.js"></script> -->
 </html>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>model</title>
+	<link rel="stylesheet" type="text/css" href="./index.css">
+	<script type="text/javascript" src="./index.js"></script>
+	<script type="text/javascript" src="./jQuery-3.3.1.js"></script>
+	<style type="text/css">
+	html, body{
+		width: 100%;
+		height: 100%;
+	}
+	.basical{
+		background: #fff url("./../../food_01.jpg") no-repeat;
+		background-size: contain;
+		position: relative;
+		width: 200px;
+		height: 100%;
+		display: inline-block;
+	}
+	.basical img{
+		display:block;
+	}
+	.haorooms-small {
+		position: absolute;
+		left: 0px;
+		top: 0px;
+		/*-webkit-clip-path: polygon(0% 50%, 25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%);*/
+		/*clip-path: polygon(0% 50%, 25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%);*/
+		clip-path: inset(150px 150px 150px 150px round 10px);
+		z-index: 999;
+	}
+	.bg{
+		position: absolute;
+		left: 0;
+		top: 0;
+		height: 100%;
+		width: 100%;
+		background: #000;
+		opacity: .5;
+	}
+	.left{
+		width:2px;
+		height: 100%;
+		position: absolute;
+		left: -2px;
+		top: 0;
+		background: green;
+	}
+	.right{
+		width:2px;
+		height: 100%;
+		position: absolute;
+		right: -2px;
+		top: 0;
+		background: blue;
+	}
+	.top{
+		width:100%;
+		height: 2px;
+		position: absolute;
+		left: 0;
+		top: -2px;
+		background: red;
+	}
+	.bottom{
+		width:100%;
+		height: 2px;
+		position: absolute;
+		left: 0;
+		bottom: -2px;
+		background: black;
+	}
+	.borderBox{
+		position: absolute;
+		left: 0;
+		top: 0;
+		border-radius: 10px;
+	}
+</style>
+</head>
+<body>
+	<div >
+		<div id="adsCollection_tb">
+			<div class="t">
+				<button class="contentDel" type="button">btn1</button>
+				<button class="contentDel" type="button">btn2</button>
+				<button class="contentDel" type="button">btn3</button>
+			</div>
+		</div>
+		<div>
+			<input type="text" name="" id="inp">
+			<a href="#search">search</a>
+			<a href="#search2">search</a>
+		</div>
+		<div class="basical" style="margin-left: 100px;margin-top: 100px;">
+			<div class="bg"></div>
+			<div class="haorooms-small basical" id="dragBox" style="height: 100%;">
+			</div>
+			<div class="borderBox" id="borderBox">
+				<div class="left"></div>
+				<div class="right"></div>
+				<div class="top"></div>
+				<div class="bottom"></div>
+			</div>
+		</div>
+
+		<button type="button" id="btn">BTN</button>
+	</div>
+</body>
+<script type="text/javascript">
+	//jq 扩展实现 $.fn.extend, $.extend
+	function test(){
+		this.a = {b:1,c:2};
+		
+		return test.prototype.init();
+	}
+	test.getFn =function(a){
+			console.log(a, this);
+		}
+
+	test.prototype = {
+		init: function(){
+			this.t = this;
+			this.getPr = this.getPr.bind(this.a, this);
+			return this;
+		},
+		getPr: function(_this){
+			console.log(this)
+			return _this;
+		},
+		get2: function(_this){
+			console.log('get2')
+		}
+	}
+
+	test.extend = test.prototype.extend = function(obj){
+		var name;
+		for(name in obj){
+			this[name] = obj[name];
+		}
+
+		console.log(this)
+	}
+	test.extend({
+		add: function(){
+			console.log(1,3)
+		}
+	})
+
+	test.prototype.extend({
+		add: function(){
+			console.log(2,4)
+		}
+	})
+	var t = test;
+	console.log(test().add())
+	window.onload = function(){
+		$.extend({
+			_mouseWheel: function(){
+
+	        	if(navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('firefox')>=0){
+	        		return "DOMMouseScroll";
+	        	}else{
+	        		return "mousewheel";
+	        	}
+	        },
+	         //判断滚动方向
+		    getScollDirection: function(e){
+		    	if(!e || !e.originalEvent){
+		    		return ;
+		    	}
+	            var directionV = e.originalEvent.wheelDelta || - e.originalEvent.detail; // 兼容谷歌 火狐，判断依据是相反的
+
+	            if(directionV > 0){
+	            	return true;
+	            }else{
+	            	return false
+	            }
+	        }
+		})
+		
+		$.fn.extend({
+			mouseCaculate: function(setting){
+				var set = setting,
+					globalSetting = {
+		                value: setting.value || 1,//全局设置的改变值
+		                original: setting.original,
+		                valueN: setting.valueN,
+		                maxValue: setting.maxValue,
+		                minValue: setting.minValue,
+		                fn:setting.fn
+	            	};  //全局设置
+
+	            if(!setting || !setting.operation){
+	            //自定义初始化设置
+		            set = {
+		            	'alt':{
+		                    value: 0.01, //每次按键的数值变化
+		                    original: false, //表示方向， 往上滚为 +, 默认向下为 -
+		                },
+		                'ctrl':{
+		                	value: 0.1,
+		                    original: false, //表示方向， 往上滚为 +, 默认向下为 -
+		                },
+		                'default':{
+		                	value: 1,
+		                    original: false, //表示方向， 往上滚为 +, 默认向下为 -
+		                },
+		            }
+		        }else{
+		        	set = setting.operation;
+		        }
+
+		        function getResult (e, set) {
+		            var v = parseFloat($(this).val()),//获取初始值
+		                finalV = null;//最终结果
+
+		                for( var item in set){
+
+		                finalV = getValue(e, set[item], v) - 0;//设置对应的改变的值
+
+		                //值保留位数，未设置，根据变化的值保留默认
+		                if(typeof set[item].valueN === 'undefined' && typeof globalSetting.valueN === 'undefined'){
+		                	finalV = finalV.toFixed(getMaxFixedN(set)) - 0;
+		                }else{
+		                	finalV = finalV.toFixed((typeof set[item].valueN !== 'undefined') ? set[item].valueN : globalSetting.valueN);
+
+		                }
+
+		                if (item.toLowerCase() !== 'default') {
+		                	if (e[item.toLowerCase() + 'Key']) {
+		                		e.stopPropagation();
+		                		$(this).val(finalV);
+
+		                		if(typeof set[item].fn !== 'undefined'){
+
+		                			set[item].fn.call(this);
+
+		                		}else{
+		                			globalSetting.fn.call(this);
+		                		}
+		                	}
+		                } else {
+		                	if( !isPress(e, set)){
+		                		$(this).val(finalV);
+
+		                		if(typeof set[item].fn !== 'undefined'){
+
+		                			set[item].fn.call(this);
+
+		                		}else{
+		                			globalSetting.fn.call(this);
+		                		}
+
+		                	}
+		                }
+		            }
+		        };
+
+		        //滚动计算
+		        function getValue(e, item, v){
+
+		        	var value = globalSetting.value - 0,
+		        	maxValue = item.maxValue || setting.maxValue,
+		        	minValue = item.minValue || setting.minValue;
+
+
+		        	if(typeof item.value !== 'undefined'){
+		        		value = item.value - 0;
+		        	}
+
+		        	if(getDirection(e) > 0){
+
+		        		if(item.original){
+		        			v -= value;
+		        		}else{
+		        			v += value;
+		        		}
+		        	}else{
+		        		if(item.original){
+		        			v += value;
+		        		}else{
+		        			v -= value;
+		        		}
+		        	}
+
+		        	if(typeof maxValue !== 'undefined' && v > maxValue){
+		        		v = maxValue;
+		        	}
+		        	if(typeof minValue !== 'undefined' && v < minValue){
+		        		v = minValue;
+		        	}
+		        	return v;
+		        }
+
+		        //判断滚动的时候是否按键了, true 按键了
+		        function isPress(e, set){
+		        	var n = 0;
+		        	for(var item in set){
+		        		if(e[item.toLowerCase() + 'Key']){
+		        			n++;
+		        		}
+		        	}
+		        	return n;
+		        }
+
+		        //判断滚动方向
+		        function getDirection(e){
+
+		            var directionV = e.originalEvent.wheelDelta || - e.originalEvent.detail; // 兼容谷歌 火狐，判断依据是相反的
+
+		            if(directionV > 0){
+		            	return true;
+		            }else{
+		            	return false
+		            }
+		        }
+
+		        // 根据设置的 value 获取最大保存位数
+		        function getMaxFixedN(set){
+		        	var maxN = 0,
+		                isAllValue = 0;//是否都存在值, 大于0 ，则有未设置value 的子项
+		                for(var item in set){
+		                	if(typeof set[item].value !== 'undefined'){
+		                		if(maxN >= getFixed(set[item].value)){
+		                			maxN = maxN;
+		                		}else{
+		                			maxN = getFixed(set[item].value)
+		                        // console.log(getFixed(set[item].value));
+		                        // console.log(set[item].value);
+		                    }
+		                }else{
+		                	isAllValue ++;
+		                }
+		            }
+
+		            //如果不是全部都 设置了value ,并且 设置有全局默认值， 则会吧全局默认的值，也加入保留位数比较
+		            if(isAllValue && globalSetting.value && (maxN <= getFixed(globalSetting.value))){
+		            	maxN = getFixed(globalSetting.value);
+		            }
+		            //console.log(maxN);
+		            return maxN;
+		        }
+
+		        function getFixed(value){
+		        	if( !value){
+		        		return 0;
+		        	}
+		        	var n = 0;
+
+		        	while(value < 1){
+		        		value = value * 10;
+		        		n ++;
+
+		        	}
+
+		        	return n;
+		        }
+
+		        function _mouseWheel(){
+
+		        	if(navigator.userAgent && navigator.userAgent.toLowerCase().indexOf('firefox')>=0){
+		        		return "DOMMouseScroll";
+		        	}else{
+		        		return "mousewheel";
+		        	}
+		        }
+
+		        var scroll_state=true;
+		        $(this).on("focus",function(){
+		            // console.log("focus");
+		            scroll_state=false;
+		        });
+		        $(this).on("blur",function(){
+		            // console.log("blur");
+		            scroll_state=true;
+		        });
+		        $(this).on(_mouseWheel(), function(e){
+
+		        	if(scroll_state){
+		        		return;
+		        	}
+
+		            //阻止滚动事件
+		            e.preventDefault();
+
+		            if( !$(this).val()){
+		            	$(this).val(0);
+		            }
+		            getResult.call(this, e, set);
+
+
+		        });
+
+	        	return $(this)
+    		},
+
+    		mouseCaculate2: function(params){
+    			var finalV;
+    			params = params || {};
+    			$(this).on($._mouseWheel(), function(e){
+    				if($.getScrollDirection)
+    				$(this).val()
+    			})
+    		}
+		});
+
+		
+	
+		function callbn(e){
+			console.log(this)
+		}
+		$("#inp").mouseCaculate2({fn: callbn})
+
+		// var str = "Is is the cost of of gasoline going up up";
+		// var patt1 = /\b([a-z]+) \1\b/ig;
+		// document.write(str.match(patt1));
+
+		var myDrag = (function(params){
+			var dragBox = document.getElementById(params.dragId),
+			borderBox = document.getElementById("borderBox"),
+			isDrag = false,
+			dragBoxWidth = 0,
+			dragBoxHeight = 0,
+			mouseClick,
+			parentStyle = getComputedStyle(dragBox.parentNode),
+			dragStyle = getComputedStyle(dragBox),
+			parentStop = parseFloat(dragBox.parentNode.offsetTop) - parseFloat(document.documentElement.scrollTop || document.body.scrollTop), 
+			parentSleft = parseFloat(dragBox.parentNode.offsetLeft) - parseFloat(document.documentElement.scrollLeft || document.body.scrollLeft),
+			parentSwidth = parseFloat(parentStyle.width),
+			parentSheight = parseFloat(parentStyle.height),
+			isCreate = false,
+			initWidth = 200,
+			isRate = false,
+			dragArrow = {
+				left: false,
+				right: false,
+				top: false,
+				bottom: false
+			};
+
+			var initStyle = function(){
+				var img = document.createElement('img'),
+				imgUrl = params.imgUrl || './../../food_01.jpg';
+				img.src = imgUrl;
+				img.style.visibility = 'hidden';
+				img.style.width = initWidth + 'px';
+				dragBox.parentNode.appendChild(img);
+
+				//img.complete
+				
+				img.onload = function(e){
+					dragBox.style.backgroundImage = 'url('+ imgUrl +')';
+
+					parentStyle = getComputedStyle(dragBox.parentNode);
+					parentStop = parseFloat(dragBox.parentNode.offsetTop) - parseFloat(document.documentElement.scrollTop || document.body.scrollTop), 
+					parentSleft = parseFloat(dragBox.parentNode.offsetLeft) - parseFloat(document.documentElement.scrollLeft || document.body.scrollLeft),
+					parentSwidth = parseFloat(parentStyle.width);
+					parentSheight = parseFloat(parentStyle.height);
+					dragBox.style.clipPath = "inset("+parentSwidth/2+"px "+parentSheight/2+"px round 10px)";
+
+					dragStyle = getComputedStyle(dragBox);
+				}
+			}
+
+			initStyle();
+
+			var getClipPath = function(clipPathData){
+				var mouseClick = {},
+				clipPathArr = clipPathData.split(/px|inset\(|round[\S\s]*/).join("").split(" ");
+
+				if(clipPathArr.length <= 2){
+					mouseClick.toTop = mouseClick.toLeft = mouseClick.toRight = mouseClick.toBottom = clipPathArr[0];
+				}else if(clipPathArr.length <= 3){
+					mouseClick.toTop = mouseClick.toBottom = clipPathArr[0];
+					mouseClick.toLeft = mouseClick.toRight = clipPathArr[1];
+				}else if(clipPathArr.length <= 4){
+					mouseClick.toTop = clipPathArr[0];
+					mouseClick.toBottom = clipPathArr[2];
+					mouseClick.toLeft = mouseClick.toRight = clipPathArr[1];
+				}else{
+					mouseClick.toTop = clipPathArr[0];
+					mouseClick.toRight = clipPathArr[1];
+					mouseClick.toBottom = clipPathArr[2];
+					mouseClick.toLeft = clipPathArr[3];
+				}
+
+				return mouseClick;
+			}
+
+
+			//边框拖拽
+			document.getElementById("borderBox").addEventListener('mousedown', function(e){
+				var classNArr = e.target.className.split(" ");
+				//left
+				if(classNArr.indexOf('left') >= 0){
+					dragArrow.left = true;
+				}
+			})
+
+			dragBox.parentNode.addEventListener("mousedown", function(e){
+				if(e.target == dragBox){
+					isDrag = true;
+				}
+				var clipPathArr = getClipPath(dragStyle.clipPath);
+
+				mouseClick = Object.assign(e, clipPathArr);
+				borderBox.style.left = mouseClick.toLeft;
+				borderBox.style.top = mouseClick.toTop;
+				if( -mouseClick.toTop - mouseClick.toBottom <= -parseFloat(parentStyle.height) + 5 || -mouseClick.toLeft - mouseClick.toRight <= -parseFloat(parentStyle.width) + 5){
+					isCreate = true;
+				}
+			})
+
+			//移动
+			dragBox.parentNode.addEventListener("mousemove", function(e){
+				var top ,left, right, bottom;
+				if(dragArrow.left){
+					left = parseFloat(mouseClick.toLeft) + e.x - mouseClick.x;
+					dragBoxWidth += (e.x - mouseClick.x);
+					borderBox.style.width = dragBoxWidth + 'px';
+					borderBox.style.left += (e.x - mouseClick.x);
+				}
+
+				if(isCreate){
+					top = mouseClick.y - parseFloat(parentStop);
+					left = mouseClick.x - parseFloat(parentSleft);
+					dragBoxHeight = e.y - mouseClick.y;
+					dragBoxWidth = e.x - mouseClick.x;
+					borderBox.style.width = dragBoxWidth + 'px';
+					borderBox.style.height = dragBoxHeight + 'px';
+				}else{
+					if(!isDrag){
+						return false;
+					}
+
+					top = e.y  - (mouseClick.y - mouseClick.toTop);
+					left = e.x - (mouseClick.x - mouseClick.toLeft);
+				}
+
+				if(top <= 0){
+					top = 0;
+				}else if(top >= parentSheight - dragBoxHeight){
+					top = parentSheight - dragBoxHeight;
+				}
+				if(left <= 0){
+					left = 0
+				}else if(left >= parentSwidth - dragBoxWidth){
+					left = parentSwidth - dragBoxWidth;
+				}
+				bottom = parentSheight - top - dragBoxHeight;
+				right = parentSwidth - left - dragBoxWidth;
+				// top = Math.min(top, bottom);
+				// bottom = Math.max(top, bottom);
+				// left = Math.min(left, right);
+				// right = Math.max(left, right);
+				dragBox.style.clipPath = "inset("+ top + "px " + right + "px " + bottom + "px " + left + "px round 10px)";
+				borderBox.style.left = left + 'px';
+				borderBox.style.top = top + 'px';
+			})
+
+			document.body.addEventListener("mouseup", function(e){
+				var i ;
+				isDrag = false;
+				isCreate = false;
+				for(i in dragArrow){
+					dragArrow[i] = false;
+				}
+
+				console.log(dragStyle.clipPath)
+			})
+		})({dragId: "dragBox"})
+	}
+
+
+
+</script>
+</html>

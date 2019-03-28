@@ -5,7 +5,9 @@
 </template>
 
 <script>
+
 export default{
+
 	name: 'MyInput',
 	props:["type", "placeholder", "value", "refs", "errTipsStatus", "disabled", "name"],
 	data(){
@@ -16,7 +18,7 @@ export default{
 }
 </script>
 
-<style>
+<style scoped>
 	.input-wrap{
 		position: relative;
 		display:inline-block;

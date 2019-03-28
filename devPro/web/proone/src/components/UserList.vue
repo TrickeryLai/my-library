@@ -32,7 +32,11 @@
 			<span>状态：</span>
 			<label>可用<input type="radio" name="state" value="1" v-model="currentItem.isUsed" :disabled="inputDisabled" /></label>
 			<label>不可用<input type="radio" name="state" value="0" v-model="currentItem.isUsed" :disabled="inputDisabled" /></label>
-			{{currentItem.isUsed}}
+		</label>
+		<label>
+			<span>喜好：</span>
+			<label>观点1<input type="checked" name="state" value="checkedV1" v-model="currentItem.checkedV" :disabled="inputDisabled" /></label>
+			<label>观点2<input type="checked" name="state" value="checkedV2" v-model="currentItem.checkedV" :disabled="inputDisabled" /></label>
 		</label>
 	</template>
 </Model>

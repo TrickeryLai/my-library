@@ -42,7 +42,8 @@ Router.prototype = {
 		return data;
 	},
 
-	change: function(){data.replace(jsReg, 'jsCode')
+	change: function(){
+		// data.replace(jsReg, 'jsCode')
 		var hash = window.location.hash.split(/[#?]/)[1];
 		hash = hash ? hash : "";
 		var currentUrlData = this.getCurrentUrlData(hash);

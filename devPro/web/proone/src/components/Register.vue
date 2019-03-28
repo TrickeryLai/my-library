@@ -1,5 +1,6 @@
 <template>
 <div>
+	
 	<h1>{{title}}</h1>
 	<label>
 		<span>用户名：</span>
