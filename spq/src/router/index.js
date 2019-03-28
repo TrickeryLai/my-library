@@ -8,6 +8,7 @@ import Order from '@/components/Order'
 import SelfInfo from '@/components/SelfInfo'
 import Register from '@/components/Register'
 import Login from '@/components/Login'
+import RealName from '@/components/RealName'
 
 
 Vue.use(Router)
@@ -39,7 +40,12 @@ export default new Router({
 	      	path: 'selfInfo',
 	      	name: 'SelfInfo',
 	      	component: SelfInfo
-	      }
+	      },
+        {
+          name: 'RealName',
+          path: '/home/realName',
+          component: RealName
+        }
       ]
     },
     {

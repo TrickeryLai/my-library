@@ -27,7 +27,7 @@ html, body{
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #666;
-  padding-top: 60px;
+  padding-top: 47px;
   max-height: 100%;
   font-size: 16px;
 }

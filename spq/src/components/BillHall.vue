@@ -240,6 +240,18 @@
 </script>
 
 <style scoped>
+.icon-arrowdownb:before {
+  content: "\E6CE";
+  position: absolute;
+  top: -2px;
+  left: 0;
+}
+.icon-arrowup:before {
+  content: "\E6B4";
+  position: absolute;
+  top: -12px;
+  left: 0;
+}
 .relative{
 	position: relative;
 }
@@ -257,11 +269,11 @@
 	z-index: 2;
 }
 .rant-arrow{
-	overflow: hidden;
 	text-align: left;
 	display:inline-block;
 	width: 10px;
 	vertical-align: middle;
+  position:relative;
 }
 .rant-arrow i{
 	font-size: 10px;
@@ -273,4 +285,4 @@
 .rant-active{
 	color: #f44;
 }
-</style>	
+</style>

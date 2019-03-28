@@ -81,7 +81,7 @@
 		},
 		methods:{
 			onClickRight(){
-				
+				      this.$router.push({path: '/home/realName'})
 			},
 			onSearch(){
 

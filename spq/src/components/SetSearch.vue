@@ -71,7 +71,9 @@
 					@click="choseDeal(item)"
 				>{{item.name}}</van-tag>
 			</van-cell-group>
-			<van-checkbox v-model="searchData.onlyShow" name="onlyShow" style="margin-top: 10px;">只显示我的白名单票据</van-checkbox>
+			<van-checkbox v-model="searchData.onlyShow" name="onlyShow" style="margin-top: 10px;">
+        只显示我的白名单票据
+      </van-checkbox>
 
 			<div style="text-align: center;position: absolute;left:0;bottom:0;width: 100%;">
 				<van-button 
