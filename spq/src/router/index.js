@@ -9,6 +9,10 @@ import SelfInfo from '@/components/SelfInfo'
 import Register from '@/components/Register'
 import Login from '@/components/Login'
 import RealName from '@/components/RealName'
+import SafeSetting from '@/components/SafeSetting'
+import Caculate from '@/components/Caculate'
+import ChangePassword from '@/components/ChangePassword'
+import Fbpj from '@/components/Fbpj'
 
 
 Vue.use(Router)
@@ -45,6 +49,26 @@ export default new Router({
           name: 'RealName',
           path: '/home/realName',
           component: RealName
+        },
+        {
+          name: 'SafeSetting',
+          path: '/home/selfInfo/safeSetting',
+          component: SafeSetting
+        },
+        {
+          name: 'Caculate',
+          path: '/home/selfInfo/caculate',
+          component: Caculate
+        },
+        {
+          name: 'ChangePassword',
+          path: '/home/selfInfo/changePassword',
+          component: ChangePassword
+        },
+        {
+          name: 'Fbpj',
+          path: '/home/ticketHolder/fbpj',
+          component: Fbpj
         }
       ]
     },

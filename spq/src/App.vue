@@ -49,7 +49,7 @@ html, body{
   transform: scale(0.8);
   line-height: 0;
 }
-input[type='text'], input[type='number'], input[type='password'], input[type='phone'], input[type='email']{
+input[type='text'], input[type='number'], input[type='password'], input[type='phone'], input[type='email'], textarea{
   background:#eee;
   padding: 5px 8px;
 }

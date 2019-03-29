@@ -1,19 +1,24 @@
 <template>
-	<div>
+	<div class="ticketHolder">
 		<van-nav-bar
 		:title="title"
-		right-text="+发布"
+		right-text="发布"
 		fixed
 		@click-right="onClickRight"
 		class="top-bg"
 		/>
-		<van-search 
+		<div class="ticket-search">
+			<van-search 
+			style="position:absolute;left: 0;top: 0;width: 100%;"
 			placeholder="请输入搜索关键词" 
 			v-model="searchValue" 
 			@search="onSearch"
-		/>
-
-		<van-collapse v-model="activeName" accordion>
+			>
+				<i class="iconfont icon-search" slot="left-icon"></i>
+			</van-search>
+		</div>
+	
+		<van-collapse class="ticket-content-list" v-model="activeName" accordion>
 			<van-collapse-item title="匹配中" name="1">
 				<van-pull-refresh v-model="matchState.isLoading" @refresh="matchOnRefresh">
 
@@ -81,7 +86,7 @@
 		},
 		methods:{
 			onClickRight(){
-				      this.$router.push({path: '/home/realName'})
+				      this.$router.push({path: '/home/ticketHolder/fbpj'})
 			},
 			onSearch(){
 
@@ -115,10 +120,24 @@
 	}
 </script>
 
-<style scoped>
-.van-collapse-item__wrapper .van-collapse-item__content{
+<style>
+.ticketHolder .van-collapse-item__content{
 	background-color: #f5f5f5;
 	padding-left: 0;
 	padding-right: 0;
+	padding-top: 10px;
+}
+.ticketHolder .ticket-search{
+	position: fixed;
+	left: 0;
+	top: 45px;
+	width: 100%;
+	height: 50px;
+	z-index: 5;
 }	
+.ticketHolder .ticket-content-list{
+	margin-top: 60px;
+	padding-bottom: 50px;
+	background: #f5f5f5;
+}
 </style>

@@ -8,88 +8,84 @@
       class="top-bg"
       :z-index = "zIndex"
     />
-    <van-steps
-      :active="active"
-      active-color="#38f"
-      class="text-left"
-    >
-      <van-step>上传相关图片</van-step>
-      <van-step>填写企业信息</van-step>
-      <van-step>认证</van-step>
-
-    </van-steps>
     <div class="realName-content">
       <van-cell-group class="realName-content-box">
-        <h3 class="title van-hairline--bottom">营业执照</h3>
+        <h3 class="title van-hairline--bottom">上传票面</h3>
         <div class="realName-conten-inner">
-         <UploadImg
-            uploadUrl = "test"
-            @removePic='yyzzRemovePic'
-            @uploadPicProgress='yyzzUploadPicFn' /> 
-
-        </div>
-      </van-cell-group>
-      <van-cell-group class="realName-content-box">
-        <h3 class="title van-hairline--bottom">法人身份证</h3>
-        <div class="realName-conten-inner">
-          <div style="display:inline-block;margin-right: 10px;">
+          <div style="display:inline-block;margin-right: 5px;">
             <UploadImg
             uploadUrl = "test"
             @removePic='sfzzRemovePic'
             @uploadPicProgress='sfzzUploadPicFn' />
-            <p class="picTitle">身份证正面 </p>
+            <p class="picTitle" @click="showPjPic(1)"><span style="color: red;">*</span>票据正面<span class="blue-font">示例</span></p>
           </div>
           <div style="display:inline-block;margin-right: 10px;">
             <UploadImg
             uploadUrl = "test"
             @removePic='sfzzRemovePic'
             @uploadPicProgress='sfzzUploadPicFn' /> 
-            <p class="picTitle">身份证正面 </p>
+            <p class="picTitle" @click="showPjPic(2)"><span style="color: red;">*</span>票据背面<span class="blue-font">示例</span></p>
           </div>
         </div>
       </van-cell-group>
 
       <van-cell-group class="realName-content-box">
-        <h3 class="title van-hairline--bottom">企业信息</h3>
+        <h3 class="title van-hairline--bottom">票面信息</h3>
         <div class="realName-conten-inner">
           <van-cell-group>
             <van-field
             v-model="submitData.companyName"
             required
             clearable
-            label="企业名称："
-            placeholder="企业名称"
+            label="票据号码"
+            placeholder="可从网银复制（30位数字）"
             />
             <van-field
             v-model="submitData.companyEmail"
             required
             clearable
-            label="企业邮箱："
-            placeholder="企业邮箱"
+            label="票面金额(元)"
+            placeholder="请输入金额"
             />
-             <van-field
-            v-model="submitData.socialCode"
-            required
-            clearable
-            label="社会信用代码："
-            placeholder="社会信用代码"
-            />
+            
+            <van-row>
+              <van-col span="18">
+                <van-field 
+                label="到期日期"
+                required
+                @click="choseTimeFn2" 
+                v-model="endTimeChoseValue" 
+                readonly 
+                style="padding-top:3px;padding-bottom:3px
+                "/>
+              </van-col>
+              <van-col span="6">
+                <span style="vertical-align: -12px;" class="blue-font">剩余天数 {{lastDay}}</span>
+              </van-col>
+              
+            </van-row>
+            
             <van-field
-            size="large"
             v-model="submitData.address"
             required
-            label="企业注册地址："
-            type="textarea"
-            placeholder="企业注册地址"
-            rows="1"
-            autosize
+            label="承兑人全称"
+            placeholder="请输入承兑人全称"
             />
+
+            <van-row>
+              <van-col span="6">
+                <span style="color: red;">*</span>票据瑕疵
+              </van-col>
+              <van-col span="18" @click="choseXc">
+                无
+              </van-col>
+            </van-row>
           </van-cell-group>
         </div>
       </van-cell-group>
 
       <van-cell-group class="realName-content-box">
-        <h3 class="title van-hairline--bottom">法人信息</h3>
+        <h3 class="title van-hairline--bottom">卖出价格</h3>
         <div class="realName-conten-inner">
           <van-cell-group>
             <van-field
@@ -117,57 +113,44 @@
           </van-cell-group>
         </div>
       </van-cell-group>
-
-      <van-cell-group class="realName-content-box">
-        <h3 class="title van-hairline--bottom">经办人信息</h3>
-        <div class="realName-conten-inner">
-          <van-cell-group>
-            <van-field
-            v-model="submitData.jbrName"
-            required
-            clearable
-            label="姓名："
-            placeholder="经办人姓名"
-            />
-             <van-field
-            v-model="submitData.jbrPhone"
-            type="phone"
-            required
-            clearable
-            label="手机号："
-            placeholder="经办人手机号"
-            />
-          </van-cell-group>
-
-          <div style="padding: 15px 5px;">
-              <van-button 
-              style="width: 100%;"
-              type="info"
-              @click="submitInfo"
-            >认证</van-button>
-          </div>
-        </div>
-      </van-cell-group>
     </div>
+    <van-popup v-model="picShowModel" position="center" @close="picShowModelClose">
+        <img :src="showImg" style="width: 100%;">
+    </van-popup>
+    <van-popup v-model="timeChoseValue" position="bottom" @close="timeModelClose">
+      <van-datetime-picker
+      v-model="currentDate"
+      type="date"
+      :min-date="minDate"
+      :formatter="formatter"
+      @confirm="timeChoseConfirm"
+      @cancel="timeChoseCancel"
+      />
+    </van-popup>
   </div>
 </template>
 
 <script>
+import  img from '@/assets/logo.png'
+import  img1 from '@/assets/logo.png'
+import  img2 from '@/assets/logo.png'
+
   export default{
-      name: 'RealName',
+      name: 'Fbpj',
       data(){
           return{
-              title: '实名认证',
-              active: 0,
+              title: '票据发布',
               zIndex: 99,
+              endTimeChoseValue: '',
+              timeChoseValue: false,//时间选择弹窗
+              picShowModel: false,//图片查看弹窗
+              currentDate: '',
+              lastDay: 0,//剩余天数
+              minDate: new Date(),
               submitData:{
 
               },
-              yyzzPic: '',
-              yyzzPicUState: {
-                state: 0,//上传状态 0未上传， 1正在上传， 2上传成功
-                
-              },
+              showImg: '',//图片查看当前展示的图片
               sfzzPic: '',
               sfzzPicUState: {
                 state: 0,//上传状态 0未上传， 1正在上传， 2上传成功
@@ -177,26 +160,69 @@
               sfzfPicUState: {
                 state: 0,//上传状态 0未上传， 1正在上传， 2上传成功
                 
-              }
-
+              },
+              xc:[
+                {
+                  name: ''
+                }
+              ]
           }
       },
       methods: {
           onClickLeft(){
               window.history.go(-1);
           },
-          yyzzRemovePic(){
-              this.yyzzPicUState.state = 0;
-              this.yyzzPic = '';
+          getTime(t = new Date()){
+            let date ='', time = new Date(t);
+            date += time.getFullYear() + '年';
+            date += (time.getMonth() + 1) + '月';
+            date += time.getDate() + '日';
+            return date;
           },
-          yyzzUploadPicFn(data){
-              //营业执照上传
-              this.yyzzPicUState.state = data.state;
-              console.log('yyzz正在上传')
-              if(data.state == 3){
-                  console.log('yyzz上传成功')
-                  this.yyzzPic = data.imgData
+          getLastDay(t){
+            let nowT = new Date(), toT = new Date(t), lastT = 0;
+            lastT = Math.ceil((toT - nowT)/(24*60*60*1000));
+            return lastT
+          },
+          showPjPic(type){
+              this.picShowModel = true;
+              if(type == 1){
+                this.showImg = img;
               }
+              if(type == 2){
+                this.showImg = img1;
+              }
+              if(type == 3){
+                this.showImg = img2;
+              }
+          },
+          picShowModelClose(){
+            this.picShowModel = false;
+          },
+          choseTimeFn2(type){
+            this.timeChoseValue = true;
+          },
+          timeModelClose(){
+              this.timeChoseValue = false;
+          },
+          timeChoseConfirm(v){
+            this.endTimeChoseValue = this.getTime(v);
+            this.lastDay = this.getLastDay(v);
+            this.timeModelClose();
+          },
+          timeChoseCancel(){
+            this.timeModelClose();
+          },
+          formatter(type, value) {
+            if (type === 'year') {
+              return `${value}年`;
+            } else if (type === 'month') {
+              return `${value}月`
+            }
+            return value;
+          },
+          choseXc(){
+            //瑕疵
           },
           //身份证正面
           sfzzRemovePic(){
@@ -229,7 +255,7 @@
           submitInfo(){
             //提交信息
           }
-      }
+      },
   }
 </script>
 
