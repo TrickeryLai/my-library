@@ -60,7 +60,7 @@
                 "/>
               </van-col>
               <van-col span="6">
-                <span style="vertical-align: -12px;" class="blue-font">剩余天数 {{lastDay}}</span>
+                <span style="vertical-align: -12px;font-size:12px;" class="blue-font">剩余天数 {{lastDay}}</span>
               </van-col>
               
             </van-row>
@@ -72,12 +72,27 @@
             placeholder="请输入承兑人全称"
             />
 
-            <van-row>
-              <van-col span="6">
-                <span style="color: red;">*</span>票据瑕疵
+            <van-row class="van-hairline--bottom" style="padding-bottom:5px;padding-top:5px;overflow:hidden;">
+              <van-col span="7" style="font-size:14px;padding-left:5px;">
+                <span style="color: red;margin-right:4px;">*</span>票据瑕疵
               </van-col>
-              <van-col span="18" @click="choseXc">
-                无
+              <van-col span="17">
+                <div @click="choseXc">
+                  <span v-if="xcChoseList.length <= 0">无</span>
+                  <div v-if="xcChoseList.length > 0">
+                    <van-tag type="primary" style="margin: 5px;" v-for="(item, index) in xcChoseList" >{{item.name}}</van-tag>
+
+                  </div>
+                </div>
+              </van-col>
+            </van-row>
+            
+            <van-row>
+              <van-col span="7" style="font-size:14px;padding-left:5px;">
+                背书次数
+              </van-col>
+              <van-col span="17">
+                <van-stepper v-model="bsValue" />
               </van-col>
             </van-row>
           </van-cell-group>
@@ -87,30 +102,47 @@
       <van-cell-group class="realName-content-box">
         <h3 class="title van-hairline--bottom">卖出价格</h3>
         <div class="realName-conten-inner">
+
           <van-cell-group>
-            <van-field
-            v-model="submitData.frName"
-            required
-            clearable
-            label="姓名："
-            placeholder="法人姓名"
-            />
-            <van-field
-            v-model="submitData.frIdCard"
-            required
-            clearable
-            label="身份证号："
-            placeholder="法人身份证号"
-            />
-             <van-field
-            v-model="submitData.frPhone"
-            type="phone"
-            required
-            clearable
-            label="手机号："
-            placeholder="法人手机号"
-            />
+            <van-row>
+              <van-col span="8">
+                每十万扣款(元)
+              </van-col>
+              <van-col span="8">
+                年化利率(%)
+              </van-col>
+              <van-col span="8">
+                成交金额(元)
+              </van-col>
+            </van-row>
+            <van-row>
+              <van-col span="8">
+                <van-field
+                  v-model="sell.kq"
+                  clearable
+                  placeholder="每十万扣款(元)"
+                />
+              </van-col>
+
+              <van-col span="8">
+                <van-field
+                  v-model="sell.yearRate"
+                  clearable
+                  placeholder="年化利率(%)"
+                />
+              </van-col>
+              <van-col span="8">
+                <van-field
+                  v-model="sell.amount"
+                  clearable
+                  placeholder="成交金额(元)"
+                />
+              </van-col>
+            </van-row>
           </van-cell-group>
+          <div>
+            <van-button @click="submit" type="info" style="width:100%;">立即发布</van-button>
+          </div>
         </div>
       </van-cell-group>
     </div>
@@ -127,6 +159,11 @@
       @cancel="timeChoseCancel"
       />
     </van-popup>
+    <van-popup v-model="xcModelState" position="bottom" @close="xcModelClose" style="padding:10px;">
+      <van-tag :plain="xcChoseList.length>0" type="primary" style="padding:5px;margin: 5px;" @click="choseNoXc">无</van-tag>
+      <van-tag style="padding:5px;margin: 5px;" :plain="isXcItemChosed(item)" type="primary" v-for="(item, index) in xcList" @click="choseXcItem(item)">{{item.name}}</van-tag>
+    </van-popup>
+
   </div>
 </template>
 
@@ -147,6 +184,10 @@ import  img2 from '@/assets/logo.png'
               currentDate: '',
               lastDay: 0,//剩余天数
               minDate: new Date(),
+              bsValue: 0,//背书次数
+              sell:{
+                
+              },
               submitData:{
 
               },
@@ -161,9 +202,56 @@ import  img2 from '@/assets/logo.png'
                 state: 0,//上传状态 0未上传， 1正在上传， 2上传成功
                 
               },
-              xc:[
+              xcModelState: false,//瑕疵弹窗状态
+              xcChoseList: [],
+              xcList:[
                 {
-                  name: ''
+                  name: '同名',
+                  value: 'tm'
+                },
+                {
+                  name: '回头',
+                  value: 'ht'
+                },
+                {
+                  name: '保理',
+                  value: 'bl'
+                },
+                {
+                  name: '质押',
+                  value: 'zy'
+                },
+                {
+                  name: '担保',
+                  value: 'db',
+                },
+                {
+                  name: '租赁',
+                  value:'zl'
+                },
+                {
+                  name: '小贷',
+                  value: 'xd'
+                },
+                {
+                  name: '供应链',
+                  value: 'gyl'
+                },
+                {
+                  name: '投资',
+                  value: 'tz'
+                },
+                {
+                  name:'金融',
+                  value:'jr'
+                },
+                {
+                  name: '上下不一致',
+                  value: 'sxbyz'
+                },
+                {
+                  name: '不可转让',
+                  value: 'bkzr'
                 }
               ]
           }
@@ -171,6 +259,41 @@ import  img2 from '@/assets/logo.png'
       methods: {
           onClickLeft(){
               window.history.go(-1);
+          },
+          isXcItemChosed(item){
+              let len = this.xcChoseList.length, i = 0;
+              for(; i < len; i++){
+                if(this.xcChoseList[i].value === item.value){
+                  return false;
+                }
+              }
+              return true;
+          },
+          xcModelClose(){
+              this.xcModelState = false;
+          },
+          choseXc(){
+            //瑕疵
+            this.xcModelState = true;
+          },
+          choseNoXc(){
+            this.xcChoseList = [];
+          },
+          choseXcItem(item){
+              let len = this.xcChoseList.length, i = 0, isHave = false, newArr= [];
+              for(; i < len; i++){
+                if(this.xcChoseList[i].value === item.value){
+                    isHave = true;
+                }else{
+                    newArr.push(this.xcChoseList[i]);
+                }
+              }
+              if(!isHave){
+                newArr.push(item);
+              }
+
+              this.xcChoseList = newArr;
+
           },
           getTime(t = new Date()){
             let date ='', time = new Date(t);
@@ -221,9 +344,6 @@ import  img2 from '@/assets/logo.png'
             }
             return value;
           },
-          choseXc(){
-            //瑕疵
-          },
           //身份证正面
           sfzzRemovePic(){
               this.frPicUState.state = 0;
@@ -251,6 +371,10 @@ import  img2 from '@/assets/logo.png'
                   console.log('fryyzz上传成功')
                   this.frPic = data.imgData
               }
+          },
+          submit(){
+            //立即发布
+            
           },
           submitInfo(){
             //提交信息

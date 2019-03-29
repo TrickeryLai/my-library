@@ -200,30 +200,30 @@
           },
           //身份证正面
           sfzzRemovePic(){
-              this.frPicUState.state = 0;
-              this.frPic = '';
+              this.sfzzPicUState.state = 0;
+              this.sfzzPic = '';
           },
           sfzzUploadPicFn(data){
-              //营业执照上传
-              this.frPicUState.state = data.state;
+            console.log(data)
+              this.sfzzPicUState.state = data.state;
               console.log('fr正在上传')
               if(data.state == 3){
                   console.log('fryyzz上传成功')
-                  this.frPic = data.imgData
+                  this.sfzzPic = data.imgData
               }
           },
           //身份证反面
           sfzfRemovePic(){
-              this.frPicUState.state = 0;
-              this.frPic = '';
+              this.sfzfPicUState.state = 0;
+              this.sfzfPic = '';
           },
           sfzfUploadPicFn(data){
               //营业执照上传
-              this.frPicUState.state = data.state;
+              this.sfzfPicUState.state = data.state;
               console.log('fr正在上传')
               if(data.state == 3){
                   console.log('fryyzz上传成功')
-                  this.frPic = data.imgData
+                  this.sfzfPic = data.imgData
               }
           },
           submitInfo(){

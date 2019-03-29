@@ -14,7 +14,7 @@
 					<span class="point"></span>已认证
 				</div>
 				<div class="selfInfo-center">
-					<div class="selfInfo-header"><i class="iconfont icon-mine"></i></div>
+					<div class="selfInfo-header" @click="gotoBaseInfo"><i class="iconfont icon-mine"></i></div>
 					<p><i class="iconfont icon-mobile-alt"></i>18745125487</p>
 				</div>
 			</div>
@@ -85,7 +85,10 @@
 			},
 			gotoCaculate(){
 				this.$router.push({path:'/home/selfInfo/caculate'})
-			}
+			},
+      gotoBaseInfo(){
+			  this.$router.push({path:'/home/selfInfo/baseInfo'})
+      }
 		}
 	}
 </script>

@@ -13,6 +13,7 @@ import SafeSetting from '@/components/SafeSetting'
 import Caculate from '@/components/Caculate'
 import ChangePassword from '@/components/ChangePassword'
 import Fbpj from '@/components/Fbpj'
+import BaseInfo from '@/components/BaseInfo'
 
 
 Vue.use(Router)
@@ -69,6 +70,11 @@ export default new Router({
           name: 'Fbpj',
           path: '/home/ticketHolder/fbpj',
           component: Fbpj
+        },
+        {
+          name: 'BaseInfo',
+          path: '/home/selfInfo/baseInfo',
+          component: BaseInfo
         }
       ]
     },

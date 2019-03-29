@@ -176,7 +176,7 @@ export default{
 			// if(this.register.password !== this.register.password2){
 			// 	return;
 			// }
-			let url = 'open-cp/v1/register'
+			let url = 'open-cp/v1/register';
 			if(!this.checkLoginMessage()){
 				return;
 			}
@@ -216,8 +216,8 @@ export default{
 				// 	// 'Content-type': 'application/json;charse=UTF-8'
 				// },
                 url: 'open-cp/v1/captcha',
-                success(){
-                	console.log(response)       //请求成功返回的数据
+                success(response){
+                	       //请求成功返回的数据
 
                 	this.captchaKey = response.captchaKey;
                 	this.img = "data:image/jpg;base64," + response.captchaImage;

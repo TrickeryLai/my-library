@@ -32,7 +32,7 @@
 			}
 		},
 		methods:{
-          uploadPic(url, state){
+          uploadPic(url){
               //通知正在上传
               this.$emit('uploadPicProgress', {state: 1, imgData: {}})
               this.yyzzPicUState.isUpload = 1;
@@ -58,7 +58,8 @@
             reader.onload=(e) => {
                 // alert('文件读取完成');
                 this.yyzzPicUrl  = e.target.result;
-                this.uploadPic()
+                this.uploadPic();
+                this.upload(file);
               };
           },
           yyzzPicChange(e,pic){
@@ -74,6 +75,46 @@
                 	progress: 0
               	};
               	this.$emit('removePic')
+          },
+
+          upload1(file){
+            let param = new FormData(); //创建form对象
+            param.append('file',file,file.name);//通过append向form对象添加数据
+            param.append('chunk','0');//添加form表单中其他数据
+            console.log('1313',param.get('file'),'-----------------'); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+            let config = {
+              headers:{'Content-Type':'multipart/form-data'}
+            };  //添加请求头
+            this.$axios.post({url:'http://upload.qiniu.com/',data:param,headers:config,success(res){
+              
+              }})
+
+
+          },
+          upload(file){
+            let reader = new FileReader();
+            reader.readAsArrayBuffer(file);//安字节读取文件并存储至二进制缓存区
+            reader.onload = function (e) {
+              let result = e.target.result;
+              let blob = new Blob([result]);//存储二进制数据
+              let url = URL.createObjectURL(blob);//生成本地图片地址用于图片预览
+              let request = new XMLHttpRequest();
+              console.log(url, '-------------')
+              request.onreadystatechange = function () {
+                if (request.readyState === 4) {
+                  if (request.status === 200) {
+
+                  } else {
+
+                  }
+                } else {
+                  console.log('others')
+                }
+              };
+              request.open('PUT', '123124');//host是阿里云返回的图片存储地址，即你要请求的地址
+              request.setRequestHeader('Content-Type', 'application/octet-stream');
+              request.send(result);
+            }
           }
 		}
 	}
