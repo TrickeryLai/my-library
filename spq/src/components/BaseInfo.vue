@@ -66,7 +66,10 @@
         window.history.go(-1);
       },
       loginOut(){
-        
+        localStorage.clear();
+        // localStorage.setItem('token', '');
+        // localStorage.setItem('user', '');
+        this.$router.push({path:'/login'})
       }
     }
   }

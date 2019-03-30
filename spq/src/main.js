@@ -3,62 +3,57 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import { NavBar, Icon, List, Cell, CellGroup, PullRefresh, Row, Col, Tag, Dialog,  Popup, Field, Panel, Checkbox, CheckboxGroup, Button, NumberKeyboard, Search, Collapse, CollapseItem, Step, Steps, Toast, DatetimePicker, Stepper   } from 'vant'
+import { NavBar, Icon, List, Cell, CellGroup, PullRefresh, Row, Col, Tag, Dialog,  Popup, Field, Panel, Checkbox, CheckboxGroup, Button, NumberKeyboard, Search, Collapse, CollapseItem, Step, Steps, Toast, DatetimePicker, Stepper, Loading    } from 'vant'
 
-import axios from 'axios'
-import Qs from 'qs'
 
 import server from '@/server/index.js'
+import routerData from '@/router/routerData.js'
+import Axios from '@/server/axios'
 import UploadImg from '@/components/UploadImg';
 
 import '@/assets/font/iconfont.css'
 
-// Vue.prototype.$axios = axios    //全局注册，使用方法为:this.$axios
-Vue.prototype.Qs = Qs;           //全局注册，使用方法为:this.qs
-
 // //全局注册组件
 Vue.component('UploadImg', UploadImg);
 // Vue.component('PasswordInput', PasswordInput);
-// 
-Vue.prototype.$axios = {
-  get(params = {}){
 
-    axios({
-      method: 'get',
-      params: params.data,
-      header: params.header,
-      url: server.headUrl + params.url
-    }).then((res)=>{
-        params.success(res);
-    }).then((error) =>{
+Vue.use(Cell).use(CellGroup).use(List).use(Icon).use(NavBar).use(PullRefresh).use(Row).use(Col).use(Tag).use(Dialog).use(Popup).use(Field).use(Panel).use(Checkbox).use(CheckboxGroup).use(Button).use(NumberKeyboard).use(Search).use(Collapse).use(CollapseItem).use(Step).use(Steps).use(Toast).use(DatetimePicker).use(Stepper).use(Loading);
 
-    })
-  },
-  post(params = {}){
-    let _this = this;
-    axios({
-        method: "post",
-        url: server.headUrl + params.url,
-        header: params.header,
-        transformRequest: [function (data) {
-              // 对 data 进行任意转换处理
-              return Qs.stringify(data)
-          }],
-        data: params.data
-      }).then((res) =>{
-        params.success(res);
-      })
+Vue.config.productionTip = false;
+
+Toast.setDefaultOptions({
+   position: 'bottom',
+})
+//允许多个 toast 存在, axios 请求 loading 效果弹窗
+Toast.allowMultiple();
+
+//路由跳转拦截
+//
+
+router.beforeEach( (to, from, next) => {
+  let localItem = localStorage.getItem('token');
+
+   //路由跳转清空所有提示框
+  Toast.clear();
+
+  //判断是否需要登录, 通过本地是否存在 token, 未登录跳转至登录页面，同时将该页面地址传入 redirect
+  if(to.meta.isLogin && !localItem){
+      next({path: '/login', query:{redirect: to.fullPath}});
+      return;
   }
-}
-
-Vue.use(Cell).use(CellGroup).use(List).use(Icon).use(NavBar).use(PullRefresh).use(Row).use(Col).use(Tag).use(Dialog).use(Popup).use(Field).use(Panel).use(Checkbox).use(CheckboxGroup).use(Button).use(NumberKeyboard).use(Search).use(Collapse).use(CollapseItem).use(Step).use(Steps).use(Toast).use(DatetimePicker).use(Stepper);
-
-Vue.config.productionTip = false
+  //判断是否认证，否则跳出
+  
+  //默认操作跳转下个页面
+  next()
+});
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  data:{
+      globalModelState: true,
+  },
   components: { App },
-  template: '<App/>'
+  template: '<App />'
 })

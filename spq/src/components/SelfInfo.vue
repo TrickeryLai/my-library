@@ -7,15 +7,16 @@
 		/>
 		<div class="selfInfo-top">
 			<div style="position: absolute;left:0;top:0;width: 100%;height: 100%;">
-				<div class="checked-icon" v-if="!isChecked" @click="goChecked">
+				<div class="checked-icon" v-if="(this.baseInfo.status==0)" @click="goChecked">
 					<span class="point"></span>未认证
 				</div>
-				<div class="checked-icon active-c" v-if="isChecked" >
+				<div class="checked-icon active-c" v-if="(this.baseInfo.status!=0)" >
 					<span class="point"></span>已认证
 				</div>
 				<div class="selfInfo-center">
 					<div class="selfInfo-header" @click="gotoBaseInfo"><i class="iconfont icon-mine"></i></div>
-					<p><i class="iconfont icon-mobile-alt"></i>18745125487</p>
+					<p class="baseInfo-row" style="font-size: 18px;color: #333;">{{this.baseInfo.loginName}}</p>
+					<p v-if="this.baseInfo.phonenumber" class="baseInfo-row"><i class="iconfont icon-mobile-alt"></i>{{this.baseInfo.phonenumber}}</p>
 				</div>
 			</div>
 		</div>
@@ -73,8 +74,11 @@
 		data(){
 			return {
 				title: '个人中心',
-				isChecked: false,//是否认证
+				baseInfo:{}
 			}
+		},
+		created(){
+			this.getBaseInfo();
 		},
 		methods: {
 			goChecked(){
@@ -86,9 +90,18 @@
 			gotoCaculate(){
 				this.$router.push({path:'/home/selfInfo/caculate'})
 			},
-      gotoBaseInfo(){
-			  this.$router.push({path:'/home/selfInfo/baseInfo'})
-      }
+			gotoBaseInfo(){
+				this.$router.push({path:'/home/selfInfo/baseInfo'})
+			},
+			getBaseInfo(){
+				let baseInfo = localStorage.getItem('user');
+				if(baseInfo){
+					this.baseInfo = JSON.parse(baseInfo);
+					console.log(this.baseInfo)
+				}else{
+					this.$router.push({path:'/login'});
+				}
+			}
 		}
 	}
 </script>
@@ -111,7 +124,7 @@
 	position: absolute;
 	left: 8px;
 	top: 8px;
-	padding: 5px;
+	padding: 8px;
 	border-radius: 10px;
 	border: 1px solid #fff;
 	color: #fff;
@@ -175,5 +188,8 @@
 	font-weight: normal;
 	font-size: 12px;
 	padding-left: 10px;
+}
+.baseInfo-row{
+	padding-bottom: 5px;
 }
 </style>

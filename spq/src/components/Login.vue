@@ -45,12 +45,13 @@
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model="register.code" placeholder="请输入验证码"
 				type="text"
-				@click="changeCodePic"
 				/>
 		</van-col>
 		<van-col span="8">
-			<img style="height: 32px;" 
-					:src="img">
+			<img style="height: 33px;width:100%" 
+			:src="img"
+			@click="changeCodePic"
+			>
 		</van-col>
 		
 	</van-row>
@@ -59,38 +60,98 @@
 			type="info"
 			@click="loginFn"
 			style="width: 100%;border-radius: 100px;"
-		>确认</van-button>
+		>登录</van-button>
 		<p style="padding: 5px;">没有已有账号，<span class="blue-font" @click="gotoRegister">立即注册</span></p>
 	</div>
 </div>
 </template>
 
 <script>
-import img from '@/assets/logo.png'
+import _server from '@/server/server'
 
 export default{
 	name: "Login",
 	data(){
 		return {
-			img: img,
+			img: '',
 			title: '登录',
+			isLogining: false,
 			register: {
 				password: ""
 			}
 		}
 	},
+	created(){
+		this.changeCodePic();
+	},
 	methods: {
 		onClickLeft(){
 			window.history.go(-1);
 		},
+		loginInfoCheck(){
+			if(!this.register.username){
+				this.$toast('请输入用户名!');
+				return false;
+			}
+
+			if(!this.register.password){
+				this.$toast('请输入密码!');
+				return false;
+			}
+
+			if(!this.register.code){
+				this.$toast('请输入验证码!');
+				return false;
+			}
+
+			return true;
+		},
 		loginFn(){
+			let _this = this, data;
+			if(!this.loginInfoCheck()){
+				return;
+			}
+			data = {
+					loginName: this.register.username,
+					password: this.register.password,  
+					captchaCode: this.register.code, 
+					captchaKey: this.captchaKey
+			};
+
+			_server.login(data, (response) =>{
+				if(response.code == 0){
+					// _this.$toast('登录成功');
+					let loginData = {
+						loginName: _this.register.username,
+						password: _this.register.password
+					};
+					//登录之后跳转的路由， 默认大厅， 通过redirect 设置
+					let path = decodeURIComponent(this.$route.query.redirect) || '/home/billHall';
+
+					localStorage.setItem('loginData', JSON.stringify(loginData));
+					localStorage.setItem('token', response.token);
+					localStorage.setItem('user', JSON.stringify(response.user));
+					_this.$router.replace({path});
+            	//注册成功
+                }else if(response.code == 110008){
+                	//验证码已失效
+                	_this.$toast(response.errMsg);
+                	//重新获取验证码
+                	_this.changeCodePic();
+                }
+			})
 
 		},
 		gotoRegister(){
 			this.$router.push({path: 'register'})
 		},
 		changeCodePic(){
+			let _this = this;
 			//更换验证码图片
+			_server.getCaptchaPic((response)=>{
+				_this.captchaKey = response.captchaKey;
+        		_this.img = "data:image/jpg;base64," + response.captchaImage;
+			})		
 		}
 	}
 }

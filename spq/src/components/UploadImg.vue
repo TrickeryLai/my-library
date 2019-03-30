@@ -31,6 +31,9 @@
               	intervaler: '',//上传计时器
 			}
 		},
+    beforeDestoy(){
+        clearInterval(this.intervaler);
+    },
 		methods:{
           uploadPic(url){
               //通知正在上传

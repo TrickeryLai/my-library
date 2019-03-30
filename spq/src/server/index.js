@@ -1,5 +1,12 @@
+
+let protocol = location.protocol || 'http';
+let common = {
+	ip: '114.55.255.160',
+	port: '8891'
+}
+
 let commonUrl = {
-	headUrl: 'http://127.0.0.1:8890/'
+	headUrl: protocol + '//' + common.ip + ':' + common.port +'/'
 }
 
 

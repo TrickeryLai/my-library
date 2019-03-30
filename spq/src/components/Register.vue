@@ -76,7 +76,7 @@
 			<van-col 
 			span="8" 
 			>
-			<img style="height: 32px;" 
+			<img style="height: 32px;width: 100%;" 
 			:src="img"
 			@click="changeCodePic"
 			>
@@ -98,7 +98,7 @@
 	<div class="login-bottom">
 		<van-button 
 		type="info"
-		@click="loginFn"
+		@click="registerFn"
 		style="width: 100%;border-radius: 100px;"
 		>确认</van-button>
 		<p style="padding: 5px;">已有账号，<span class="blue-font" @click="gotoLogin">立即登录</span></p>
@@ -107,13 +107,13 @@
 </template>
 
 <script>
-import img from '@/assets/logo.png'
+import _server from '@/server/server';
 
 export default{
 	name: "Register",
 	data(){
 		return {
-			img: img,
+			img: '',
 			title: '注册',
 			captchaKey: '', 
 			register: {
@@ -172,57 +172,45 @@ export default{
 		    } 
 			return true;
 		},
-		loginFn(){
-			// if(this.register.password !== this.register.password2){
-			// 	return;
-			// }
-			let url = 'open-cp/v1/register';
+		registerFn(){
+			let _this = this, data;
 			if(!this.checkLoginMessage()){
 				return;
 			}
-
-			this.$axios.post({
-				url,
-				data:{
+			data = {
 					loginName: this.register.loginName,
 					password: this.register.password, 
 					phoneNumber: this.register.phoneNumber, 
 					email: this.register.email, 
 					captchaCode: this.register.code, 
 					captchaKey: this.captchaKey
-				},
-				success(){
-					if(response.code == 0){
+				};
+			_server.register(data, (response) =>{
+				if(response.code == 0){
+						_this.$toast('注册成功');
+						// _this.$router.push('login');
                 	//注册成功
-	                }
-	                if(response.code == 110008){
+	                }else if(response.code == 110008){
 	                	//验证码已失效
+	                	_this.$toast(response.errMsg);
+	                	//重新获取验证码
+	                	_this.changeCodePic();
 	                }
-				}
-			})
+			})	
 		},
 		gotoLogin(){
 			this.$router.push({path: 'login'});
 		},
 		changeCodePic(){
-			
-			let data = {captchaKey: "13f65279-42bb-418b-9569-8537f2438ac2", captchaImage: "iVBORw0KGgoAAAANSUhEUgAAAHgAAAAoCAIAAAC6iKlyAAAE9UlEQVR42u3ab2hXVRgH8JsoKm6GlgzLGhqiCA5ERGQuWwglCv115tQlvvhtoqLMdKkh+CIb4Yi2MsiVIhgZKjZhw3ey5dThSkQUER2bMHX6RmcWodNHnvF0POfcc59z7rn393vh4ev22/23nx8fn3vO3YLHz0cyY+i8IvHLAP701dQ/d0naOsBPaVq3rz0MiXOFFXfuY6Tt79fOwqTwt8iUV4qJtA5oU8p1jdwovvOTI5Exi0v0JJ4C+jfju1V3kR6tA/GclK3burokcRpfLGqFxCl2FT1R61G7F+Lr7r4FYsg6cLv0sZNveHmLP9W+TFHFkZvEy+a03sr0QXKwHYM1lrY0SDxwvrQva04TF8WJG1PxdYF45IdXtsHHj9a8lC1uKm1pBHGuC9Zh3CUDOyFhJ9aMdaxKqcC16LlpHcS/tKG0kVuLDtbO3NIYPWw3ZnJ9Pgas4WNy1pM6N1K2Ha0zxw/04h86MU3lm6VEotO58HrTvAwn2vfw18UxnEhnTVyyxS1mkGtVZRBNRZfsLfYCjV7iUOlR/5ff94C1eCKUNhO68tVONTkFHcb9tKJ9WbudBe5MZW1FM5U9QtdOq8BYcScLXZe3ISx0FrwmR0DH0BV6t35l/u6q4+GHn0vRnmhVodpB4mZ05A683Bxsi1o63tyCzdYEfaG9jyIesGV+I8Y7tNUIhR459yBE3FLdMZcSCb16dSElJrTZOqwzqIPEMbkC7bGiRXR0t4U2WPOhwyparPdVLQMYLyzFLR2eoTndo/TMAYyDcvxyNkB33DsHkfaS+MkF6yDxrdODVo9E96xAf3vjvNQ6kFsVxxGHG639Q0NaM1f5824JWp3Snf61i2KGjpzScW6GIveSmvFi3LhZ0P2VgzO/g3UPwqItarDWcquFz5xBd+Q/nUuI6BC3GTRn1qGtbsn99ea/+dYWFV3wxx5MnO7hDI3W46bUQxA9zmpFhIY2AoEteUUzbKsVrJncLq2DxCV0w3I8sm+I3WNMWzlEe8CyRz0Q5I6kTGJl6Mb946I2bz06sqhfrP/ZXM7S8WQdNjNh9mK/0O8WfhYWM3fi0EP2/avd2zy7ITLautZ+X6zxyGd7CVU0p7qTgpasl/fujWws5mE7Cxz5cbW5qJ1Xhr/lVUGyszLkdA/aDuhSkoMuXdgMIWj8EhNzCW7LrYc+f7YEkhA0NGtpFwc9dypa5eaImyoauR3EVes4TSOhlbrfh0rIvbnqLUgo9NszIt69rTgfms+nHslff3uEnrmyRYp6DHJLGazoSGurliLe94benGC4DZqhp2yfhMkdaA796BdapfzfOjLdbzKtHYpaRMdw5tHafw9E9zuPTuFhNFinCk17SRxiBe3w9C4XoJ+paH4DsZ1Qm++E5h+/Wv1klrlUySa0NArHDg+LszWnYG1/o4P5XOlUf4UBOub68J+tH8RdsExd/5o24jHDjy6NDx1pzbzXGZ7bgTUlPvSIgotqpHc1/9KnYqJXhqX779r+N7k2sREiQeNGCpPbYbLMnI34qmhmXQ9CX/7vOqaht8GLdY6ME++chjic+GfTdxjt3tvf9ztC0yDxNKF3HX8vBW43dBKX0MFa4jZbh7YOKG2xuhOyfuVQEUXl3lXdA8kK+pcTlkMiryZx9+wrlmL99C6d7gHWSVe3Fl2uvrJlYWls30HBgwem56udRB1PAEIWrUUZIpNEAAAAAElFTkSuQmCC"}
+			let _this = this;
+			// let data = {captchaKey: "13f65279-42bb-418b-9569-8537f2438ac2", captchaImage: "iVBORw0KGgoAAAANSUhEUgAAAHgAAAAoCAIAAAC6iKlyAAAE9UlEQVR42u3ab2hXVRgH8JsoKm6GlgzLGhqiCA5ERGQuWwglCv115tQlvvhtoqLMdKkh+CIb4Yi2MsiVIhgZKjZhw3ey5dThSkQUER2bMHX6RmcWodNHnvF0POfcc59z7rn393vh4ev22/23nx8fn3vO3YLHz0cyY+i8IvHLAP701dQ/d0naOsBPaVq3rz0MiXOFFXfuY6Tt79fOwqTwt8iUV4qJtA5oU8p1jdwovvOTI5Exi0v0JJ4C+jfju1V3kR6tA/GclK3burokcRpfLGqFxCl2FT1R61G7F+Lr7r4FYsg6cLv0sZNveHmLP9W+TFHFkZvEy+a03sr0QXKwHYM1lrY0SDxwvrQva04TF8WJG1PxdYF45IdXtsHHj9a8lC1uKm1pBHGuC9Zh3CUDOyFhJ9aMdaxKqcC16LlpHcS/tKG0kVuLDtbO3NIYPWw3ZnJ9Pgas4WNy1pM6N1K2Ha0zxw/04h86MU3lm6VEotO58HrTvAwn2vfw18UxnEhnTVyyxS1mkGtVZRBNRZfsLfYCjV7iUOlR/5ff94C1eCKUNhO68tVONTkFHcb9tKJ9WbudBe5MZW1FM5U9QtdOq8BYcScLXZe3ISx0FrwmR0DH0BV6t35l/u6q4+GHn0vRnmhVodpB4mZ05A683Bxsi1o63tyCzdYEfaG9jyIesGV+I8Y7tNUIhR459yBE3FLdMZcSCb16dSElJrTZOqwzqIPEMbkC7bGiRXR0t4U2WPOhwyparPdVLQMYLyzFLR2eoTndo/TMAYyDcvxyNkB33DsHkfaS+MkF6yDxrdODVo9E96xAf3vjvNQ6kFsVxxGHG639Q0NaM1f5824JWp3Snf61i2KGjpzScW6GIveSmvFi3LhZ0P2VgzO/g3UPwqItarDWcquFz5xBd+Q/nUuI6BC3GTRn1qGtbsn99ea/+dYWFV3wxx5MnO7hDI3W46bUQxA9zmpFhIY2AoEteUUzbKsVrJncLq2DxCV0w3I8sm+I3WNMWzlEe8CyRz0Q5I6kTGJl6Mb946I2bz06sqhfrP/ZXM7S8WQdNjNh9mK/0O8WfhYWM3fi0EP2/avd2zy7ITLautZ+X6zxyGd7CVU0p7qTgpasl/fujWws5mE7Cxz5cbW5qJ1Xhr/lVUGyszLkdA/aDuhSkoMuXdgMIWj8EhNzCW7LrYc+f7YEkhA0NGtpFwc9dypa5eaImyoauR3EVes4TSOhlbrfh0rIvbnqLUgo9NszIt69rTgfms+nHslff3uEnrmyRYp6DHJLGazoSGurliLe94benGC4DZqhp2yfhMkdaA796BdapfzfOjLdbzKtHYpaRMdw5tHafw9E9zuPTuFhNFinCk17SRxiBe3w9C4XoJ+paH4DsZ1Qm++E5h+/Wv1klrlUySa0NArHDg+LszWnYG1/o4P5XOlUf4UBOub68J+tH8RdsExd/5o24jHDjy6NDx1pzbzXGZ7bgTUlPvSIgotqpHc1/9KnYqJXhqX779r+N7k2sREiQeNGCpPbYbLMnI34qmhmXQ9CX/7vOqaht8GLdY6ME++chjic+GfTdxjt3tvf9ztC0yDxNKF3HX8vBW43dBKX0MFa4jZbh7YOKG2xuhOyfuVQEUXl3lXdA8kK+pcTlkMiryZx9+wrlmL99C6d7gHWSVe3Fl2uvrJlYWls30HBgwem56udRB1PAEIWrUUZIpNEAAAAAElFTkSuQmCC"}
 
-			this.img = "data:image/jpg;base64," + data.captchaImage;
+			// this.img = "data:image/jpg;base64," + data.captchaImage;
 			//更换验证码图片
-			this.$axios.get({
-				// headers: {
-				// 	'Content-type': 'application/x-www-form-urlencoded'
-				// 	// 'Content-type': 'application/json;charse=UTF-8'
-				// },
-                url: 'open-cp/v1/captcha',
-                success(response){
-                	       //请求成功返回的数据
-
-                	this.captchaKey = response.captchaKey;
-                	this.img = "data:image/jpg;base64," + response.captchaImage;
-                }
-            })
+			_server.getCaptchaPic((response)=>{
+				_this.captchaKey = response.captchaKey;
+        		_this.img = "data:image/jpg;base64," + response.captchaImage;
+			})
 		
 		}
 	}
