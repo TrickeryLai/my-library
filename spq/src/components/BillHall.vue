@@ -15,8 +15,8 @@
 						<div @click="sortAmount">
 								票面金额
 							<span class="rant-arrow" >
-								<i class="iconfont icon-arrowup" :class="{'rant-active': sortState.amount === 0}" name="arrow-up" />
-								<i class="iconfont icon-arrowdownb" :class="{'rant-active': (sortState.amount === 1)}" name="arrow-down" />
+								<i class="iconfont icon-arrowup" :class="{'rant-active': sortState.amountSort === 0}" name="arrow-up" />
+								<i class="iconfont icon-arrowdownb" :class="{'rant-active': (sortState.amountSort === 1)}" name="arrow-down" />
 							</span>
 						</div>
 					</van-col>
@@ -24,8 +24,8 @@
 						<div @click="sortPublish">
 							发布时间
 							<span class="rant-arrow">
-								<i class="iconfont icon-arrowup" :class="{'rant-active': sortState.publish === 0}" name="arrow-up" />
-								<i class="iconfont icon-arrowdownb" :class="{'rant-active': sortState.publish === 1}" name="arrow-down" />
+								<i class="iconfont icon-arrowup" :class="{'rant-active': sortState.createTimeSort === 0}" name="arrow-up" />
+								<i class="iconfont icon-arrowdownb" :class="{'rant-active': sortState.createTimeSort === 1}" name="arrow-down" />
 							</span>
 						</div>
 					</van-col>
@@ -33,8 +33,8 @@
 						<div @click="sortEndTime">
 							到期日
 							<span class="rant-arrow" >
-								<i class="iconfont icon-arrowup" :class="{'rant-active': sortState.endTime === 0}" name="arrow-up" />
-								<i class="iconfont icon-arrowdownb" :class="{'rant-active': sortState.endTime === 1}" name="arrow-down" />
+								<i class="iconfont icon-arrowup" :class="{'rant-active': sortState.dueDateSort === 0}" name="arrow-up" />
+								<i class="iconfont icon-arrowdownb" :class="{'rant-active': sortState.dueDateSort === 1}" name="arrow-down" />
 							</span>
 						</div>
 					</van-col>
@@ -52,28 +52,27 @@
 					@load="onLoad"
 					>
 					<van-cell
-					v-for="item in list"
-					:key="item"
-					:title="item"
+					v-for="(item,index) in list"
+					:key="index"
+					:title="index"
 					style="margin-bottom: 5px;"
 					@click="showDetail(item)"
 					>
 						<template slot="title">
 						    <van-row gutter="3" class="van-hairline--bottom">
-								<van-col span="14" class="van-ellipsis text-left">承兑人：美的集团财务有限公司</van-col>
-								<van-col span="6" style="text-align:right;" class="blue-font">(剩365天)</van-col>
+								<van-col span="14" class="van-ellipsis text-left">承兑人：{{item.acceptor}}</van-col>
+								<van-col span="6" style="text-align:right;" class="blue-font">(剩{{getLastTime(item.createTime, item.dueDate)}}天)</van-col>
 								<van-col span="4">
-									<van-tag type="success">优秀</van-tag>
-									<van-tag mark type="success" v-if="item.type == 0">优秀</van-tag>
-									<van-tag mark type="primary" v-else-if="item.type == 1">良好</van-tag>
-									<van-tag mark type="danger" v-else-if="item.type == 2">一般</van-tag>
+									<van-tag mark type="success" v-if="item.creditRating == 1">优秀</van-tag>
+									<van-tag mark type="primary" v-else-if="item.creditRating == 2">良好</van-tag>
+									<van-tag mark type="danger" v-else-if="item.creditRating == 3">一般</van-tag>
 								</van-col>
 								
 							</van-row>
 							<van-row>
-								<van-col span="8" class="black-font">1.512845 <span class="small-font">万元</span></van-col>
-								<van-col span="8" class="black-font">2019-03-27</van-col>
-								<van-col span="8" class="black-font">2019-07-22 </van-col>
+								<van-col span="8" class="black-font">{{item.cpAmount/10000}} <span class="small-font">万元</span></van-col>
+								<van-col span="8" class="black-font">{{spliceTime(item.createTime)}}</van-col>
+								<van-col span="8" class="black-font">{{item.dueDate}}</van-col>
 							</van-row>
 					  	</template>
 					</van-cell>
@@ -102,6 +101,30 @@
 	import DetailList from '@/components/DetailList'
 	import _server from '@/server/server'
 
+
+ //  Field Type Comment
+ //  cp_id bigint(20) NOT NULL 序号
+ //  cp_no varchar(30) NOT NULL 票据号码
+ //  acceptor varchar(20) NOT NULL 承兑人
+ //  cp_amount decimal(18,2) NOT NULL 票面金额
+ //  endorse_times int(11) NOT NULL 背书次数
+ //  due_date date NOT NULL 到期日
+ //  is_defect char(1) NULL 有无瑕疵:0-无瑕疵,1-有瑕疵
+ //  cp_defect varchar(255) NOT NULL 票据瑕疵
+ //  approval_apr decimal(18,8) NULL 年利率
+ //  deduct_amount decimal(18,2) NULL 每十万扣款
+ //  turn_volume decimal(18,2) NOT NULL 成交金额（发布金额）
+ // cp_status char(2) NOT NULL 票据状态：01-发布；02-成交；03-注销
+ //  actual_company_id bigint(20) NULL 实际成交企业信息表序号
+ //  actual_amount decimal(18,2) NULL 实际成交金额
+ //  actual_time datetime NULL 实际成交时间
+ //  front_bill_img varchar(60) NULL 正面票据
+ //  back_bill_img varchar(60) NULL 反面票据
+ //  create_time datetime NULL 创建时间
+ //  create_by varchar(64) NULL 创建人员
+ //  update_time datetime NOT NULL 最后更新时间
+ //  update_by varchar(64) NULL 最后更新人员
+ //  update_platform char(2) NULL 最后更新平台：01-管理台；02-企业端
 	export default {
 		name: 'BillHall',
 		components: {
@@ -119,37 +142,51 @@
 				detailItem: {},//详情项
 				searchModelState: false,//筛选弹出框状态
 				searchData: '',//搜索条件
+        // 0是asc   1是desc
 				sortState: {
-					endTime: 999,//到期时间排序
-					amount: 999,//金额排序
-					publish: 999,//发布时间排序
+          dueDateSort: '',//到期时间排序
+          amountSort: '',//金额排序
+          createTimeSort: '',//发布时间排序
 				},
 				pageData: {
-					num: 1,
-					size: 10
+					pageNum: -1,
+					pageSize: 10,
+          total: 0,
 				},
 				list: [
-					1,2,3,4,5,6,7
 				]
 			}
 		},
-		computed:{
-		},
+
 		created(){
-			this.getData();
+			// this.getData();
 		},
 		methods: {
 			onClickRight(){
 				this.searchModelState = true;
 			},
+      spliceTime(item){
+			  if(!item){
+			    return;
+        }
+			  return item.substr(0,10);
+      },
+      getLastTime(startTime, endTime){
+			  let startT = new Date(startTime).getTime(),
+            endT = new Date(endTime).getTime(),
+            last;
+
+        last = Math.ceil((endT - startT)/(24*60*60*1000));
+        return last;
+      },
 			searchModelClose(data){
 				this.searchModelState = false;
 			},
 			detailModelClose(){
 				this.detailModelState = false;
 			},
-			getData(data){
-
+			getData(data, callback){
+        this.loading = true;
 				let initData = {
 					faceValue_id: '',//票据金额 underThound 10万以下  thoundToOneMillion 10-100万  moreOneMillion  100万以上   moreFiveMillion  500万以上 
 					faceValueMin: '',
@@ -159,92 +196,132 @@
 					daysMax: '',
 					flaw_id:'',//瑕疵  Y 有   N 无
 					credit_id: '',//excellent 优秀   well 良好 ordinary 一般
-					pageSize: this.pageData.size,
-					pageNum:this.pageData.num,
-				};
-
+					pageSize: this.pageData.pageSize,
+					pageNum:this.pageData.pageNum,
+          dueDateSort: this.sortState.dueDateSort,
+          createTimeSort: this.sortState.createTimeSort,
+          amountSort: this.sortState.amountSort
+        };
+				let _this = this;
 				data = Object.assign({}, initData, data);
 				//获取列表数据
 				_server.getBusinessTickets(data, (response) =>{
-
+           
+				    if(response.code === 0){
+              _this.list = response.list;
+              _this.pageData = response.pageInfo;
+				        if(callback){
+				          callback(response);
+                }
+            }
+          _this.loading = false;
 				})
 			},
 			onRefresh(){
-				//获取列表数据
-				setTimeout(() => {
-					this.isLoading = false;
-				}, 500);
-				this.getData();
+				//获取列表
+        this.pageData.pageNum = 1;
+				this.getData(this.searchData, () =>{
+          this.isLoading = false;
+        });
 				
 			},
 			onLoad() {
 					this.loading = true;//处于加载状态，不触发onLoad
-			      // 异步更新数据
-			      setTimeout(() => {
-			      	for (let i = 0; i < 10; i++) {
-			      		this.list.push(this.list.length + 1);
-			      	}
-			        // 加载状态结束
-			        this.loading = false;
-
-			        // 数据全部加载完成
-			        if (this.list.length >= 40) {
-			        	this.finished = true;
-			        }
-			    }, 1000);
-			},
-
-			triggleValue(value){
-				if(value === 0){
-					return 1;
-				}
-				return 0;
+			      //异步更新数据
+			    //   setTimeout(() => {
+			    //   	for (let i = 0; i < 10; i++) {
+			    //   		this.list.push(this.list.length + 1);
+			    //   	}
+			    //     // 加载状态结束
+			    //     this.loading = false;
+          //
+			    //     // 数据全部加载完成
+			    //     if (this.list.length >= 40) {
+			    //     	this.finished = true;
+			    //     }
+			    // }, 1000);
+          this.pageData.pageNum += 1;
+          this.getData(this.searchData, (res) =>{
+            res.list.forEach((item) => {
+              this.list.push(item);
+            });
+            //数据全部加载完成
+            if (this.list.length >= res.pageInfo.total) {
+                this.finished = true;
+                this.loading = false;
+            }
+          })
 			},
 			sortAmount(){
-				let amount = this.sortState.amount;
-				if(amount == 999){
-					this.sortState.amount = 0;
+				let amount = this.sortState.amountSort;
+				this.sortState = {
+          dueDateSort: '',//到期时间排序
+          amountSort: '',//金额排序
+          createTimeSort: '',//发布时间排序
+        };
+				if(amount){
+					this.sortState.amountSort = 0;
 				}else{
-					this.sortState.amount = this.triggleValue(amount);
+					this.sortState.amountSort = 1;
 				}
-
+        this.pageData = {
+          pageNum: 1,
+          pageSize: 10,
+          total: 0,
+        };
 				this.getData(this.searchData);
 			},
 			sortPublish(){
-				let publish = this.sortState.publish;
-				if(publish == 999){
-					this.sortState.publish = 0;
+				let publish = this.sortState.createTimeSort;
+        this.sortState = {
+          dueDateSort: '',//到期时间排序
+          amountSort: '',//金额排序
+          createTimeSort: '',//发布时间排序
+        };
+				if(publish){
+					this.sortState.createTimeSort = 0;
 				}else{
-					this.sortState.publish = this.triggleValue(publish);
+					this.sortState.createTimeSort = 1;
 				}
 
+        this.pageData = {
+          pageNum: 1,
+          pageSize: 10,
+          total: 0,
+        };
 				this.getData(this.searchData);
 			},
 			sortEndTime(){
-				let endTime = this.sortState.endTime;
-				if(endTime == 999){
-					this.sortState.endTime = 0
+				let endTime = this.sortState.dueDateSort;
+        this.sortState = {
+          dueDateSort: '',//到期时间排序
+          amountSort: '',//金额排序
+          createTimeSort: '',//发布时间排序
+        };
+				if(endTime){
+					this.sortState.dueDateSort = 0
 				}else{
-					this.sortState.endTime = this.triggleValue(endTime);
+					this.sortState.dueDateSort = 1;
 				}
 
+        this.pageData = {
+          pageNum: 1,
+          pageSize: 10,
+          total: 0,
+        };
 				this.getData(this.searchData);
 			},
 			//点击列表详情
 			showDetail(item){
-				let test = Object.create({});
-				item = Object.assign(test, {
-					user: '美的集团美的集团美的集',
-					number: '14514784544148521447112',
-					amount: '10万元',
-					endTime: '2019-03-21(剩余117天)',
-					item: item,
-					type: 1,
-					isPerfect: 0,
-					imgs: ['https://img.yzcdn.cn/1.jpg', 'https://img.yzcdn.cn/1.jpg']
-				})
-				this.detailItem = item;
-				this.detailModelState = true;
+        let _this = this;
+        _server.getBusinessTicketDetail({
+          _id: item.cpId,
+          success(res){
+            _this.detailItem = res;
+            _this.detailModelState = true;
+          }
+        });
+
 			},
 			detailModelOk(){
 				//详情框确认，从新请求数据
@@ -252,8 +329,8 @@
 			modelOk(data){
 				let searchData = {
 					faceValue_id: data.amountChosed.val?data.amountChosed.val: '',
-					faceValueMin: data.amountChosed.min ? parseFloat(data.amountChosed.min) : '',
-					faceValueMax: data.amountChosed.max ? parseFloat(data.amountChosed.max) : '',
+					faceValueMin: data.amountChosed.min ? parseFloat(data.amountChosed.min*10000) : '',
+					faceValueMax: data.amountChosed.max ? parseFloat(data.amountChosed.max*10000) : '',
 					remainingDays_id: data.dayChoose.val?data.dayChoose.val: '',
 					daysMax: data.dayChoose.max ? parseFloat(data.dayChoose.max) : '',
 					daysMin: data.dayChoose.min ? parseFloat(data.dayChoose.min) : '',
@@ -315,6 +392,6 @@
 	width: 100%;
 }
 .rant-active{
-	color: #f44;
+	color: #1989fa;
 }
 </style>

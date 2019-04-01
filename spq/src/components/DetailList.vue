@@ -12,41 +12,41 @@
 				<van-cell-group>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">承兑人</van-col>
-						<van-col class="detail-row-right" span="18">{{initData.user}}</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.acceptor}}</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据号码</van-col>
-						<van-col class="detail-row-right" span="18">{{initData.number}}</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.cpNo}}</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据金额</van-col>
-						<van-col class="detail-row-right" span="18">{{initData.amount}}</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.cpAmount}}</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">到期时间</van-col>
-						<van-col class="detail-row-right" span="18">{{initData.endTime}}</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.dueDate}}</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">成交信用</van-col>
 						<van-col class="detail-row-left" span="18">
-							<van-tag mark type="success" v-if="initData.type == 0">优秀</van-tag>
-							<van-tag mark type="primary" v-else-if="initData.type == 1">良好</van-tag>
-							<van-tag mark type="danger" v-else-if="initData.type == 2">一般</van-tag>
+							<van-tag mark type="success" v-if="initData.creditRating == 1">优秀</van-tag>
+							<van-tag mark type="primary" v-else-if="initData.creditRating == 3">良好</van-tag>
+							<van-tag mark type="danger" v-else-if="initData.creditRating == 3">一般</van-tag>
 						</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据瑕疵</van-col>
 						<van-col class="detail-row-left" span="18">
-							<van-tag mark type="success" v-if="initData.isPerfect == 0">有瑕疵</van-tag>
-							<van-tag mark type="danger" v-else-if="initData.isPerfect == 1">无瑕疵</van-tag>
+							<van-tag mark type="success" v-if="initData.cpDefect == 1">有瑕疵</van-tag>
+							<van-tag mark type="danger" v-else-if="initData.cpDefect == 0">无瑕疵</van-tag>
 						</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据图片</van-col>
 						<van-col class="detail-row-left" span="18">
-							<img style="width:20vw; " 
-								v-for = "(item, index) in initData.imgs" 
-								:src="img"
+							<img style="width:20vw; "
+								v-for = "(item, index) in initData._imgs"
+								:src="item"
 								@click="previewPic(index)" />
 						</van-col>
 					</van-row>
@@ -99,7 +99,7 @@
 			<div style="text-align: center;width: 100%;">
 				<van-button
 					type="info"
-					style="width: 100%;"
+					style="width: 100%;position: absolute; left: 0; bottom: 0;"
 					@click="ok">我要买</van-button>
 			</div>	
 			</div>
@@ -135,7 +135,7 @@
 		methods: {
 			previewPic(index){
 				ImagePreview({
-					images: this.initData.imgs,
+					images: [this.showState.frontBillImg, this.showState.backBillImg],
 					startPosition: index,
 					onClose() {
 				    // do something
@@ -179,9 +179,12 @@
 }
 .model-content{
 	text-align: left;
+  height: 100%;
+  position: relative;
 }
 .van-popup{
 	width: 80%;
+  height: 100%
 }
 .detail-row{
 	padding: 10px 15px;

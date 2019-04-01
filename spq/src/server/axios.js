@@ -6,6 +6,7 @@ import server from '@/server/index.js'
 import router from '@/router/index'
 import {Toast} from 'vant'
 
+
 // Vue.prototype.$axios = axios    //全局注册，使用方法为:this.$axios
 Vue.prototype.Qs = Qs;           //全局注册，使用方法为:this.qs
 //设置post 请求头
@@ -31,7 +32,7 @@ Axios.interceptors.request.use((config) => {
 }, (err)=> {
   // 错误处理
   return Promise.reject(err)
-})
+});
 
 // 响应拦截（配置请求回来的信息）
 Axios.interceptors.response.use((response) => {
@@ -67,7 +68,7 @@ let model = {
   hide(){
     modelToast.clear();
   }
-}
+};
 
 let _Axios = {
   get(params = {}){
@@ -86,7 +87,7 @@ let _Axios = {
         setTimeout(()=>{
           model.hide();
           params.success(res.data);
-        }, model.time)
+        }, model.time);
         return;
       } 
       params.success(res.data);
@@ -94,7 +95,7 @@ let _Axios = {
       if(params.isLoading){
         setTimeout(()=>{
           model.hide();
-        }, model.time)
+        }, model.time);
         return;
       } 
     })
@@ -104,27 +105,31 @@ let _Axios = {
     if(params.isLoading){
         model.show();
     }
+    params.header = params.header || {};
+    header = Object.assign({}, header, params.header);
     let header = {
       'content-type': 'application/json;charset=UTF-8'
     };
-    params.header = params.header || {};
-    header = Object.assign({}, header, params.header)
-    Axios({
-      method: "post",
+    let option = {
+      method: 'post',
       url: params.url,
       header: header,
-      // data: params.data
-            transformRequest: [function (data) {
-                    // 对 data 进行任意转换处理
-                    return Qs.stringify(data)
-                  }],
-                  data: params.data
-          }).then((res) =>{
+      data: params.data
+    };
+
+    if(params.isdeal){
+      option.transformRequest = [function (data) {
+        // 对 data 进行任意转换处理
+        return Qs.stringify(data)
+      }];
+    }
+
+    Axios(option).then((res) =>{
             if(params.isLoading){
               setTimeout(()=>{
                 model.hide();
                 params.success(res.data);
-              }, model.time)
+              }, model.time);
               return;
             } 
             params.success(res.data);
@@ -132,7 +137,7 @@ let _Axios = {
             if(params.isLoading){
               setTimeout(()=>{
                 model.hide();
-              }, model.time)
+              }, model.time);
               return;
             } 
           })

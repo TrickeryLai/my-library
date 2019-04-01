@@ -10,21 +10,18 @@ let server = {
 	 * @return {[type]} [description]
 	 */
 	getCaptchaPic(callback){
+    alert(1314)
 		Axios.get({
-				// headers: {
-				// 	'Content-type': 'application/x-www-form-urlencoded'
-				// 	// 'Content-type': 'application/json;charse=UTF-8'
-				// },
-                url: 'open-cp/v1/captcha',
-                success(response){
-                	//请求成功返回的数据
-                	if(response.captchaKey){
-                		callback && callback(response);
-                	}else{
-                		Toast(response.errMsg);
-                	}
-                }
-            });
+      url: 'open-cp/v1/captcha',
+      success(response){
+            //请求成功返回的数据
+            if(response.captchaKey){
+              callback && callback(response);
+            }else{
+              Toast(response.errMsg);
+            }
+          }
+      });
 
 		return this;
 	},
@@ -69,16 +66,18 @@ let server = {
 	                	Toast(response.errMsg);
 	                }
 				}
-			})
+			});
 		return this;
 	},
-	getBusinessTickets(data, callback){
+	getBusinessTickets(data, callback, dealState){
 		let url = 'open-cp/v1/businessTickets';
 		Axios.post({
 				isLoading: false,
 				url,
+        isdeal: true,
 				data: data,
 				success(response){
+          dealState && dealState();
 					if(response.code == 110025){
 						
 					}
@@ -91,6 +90,21 @@ let server = {
 			})
 		return this;
 	},
+  getBusinessTicketDetail(params){
+    let url = 'open-cp/v1/businessTickets/' + params._id;
+    Axios.get({
+      url,
+      success(response){
+        params.success &&  params.success(response)
+        // if(response.code == 0 || response.code == 110008){
+        //   params.success &&  params.success(response)
+        // }else{
+        //   Toast(response.errMsg);
+        // }
+      }
+    });
+    return this;
+  },
 	//http://127.0.0.1:8890/open-cp/v1/businessTickets
 }
 
