@@ -5,11 +5,11 @@
 	position="right"
 	@close="modelClose"
 	>
-		<div class="model-content">
-			<van-cell-group class="van-hairline--bottom">
+		<div class="model-content setSearch-model">
+			<!-- <van-cell-group class="van-hairline--bottom">
 				<h3 class="title">承兑人</h3>
 				<van-field v-model="searchData.user" placeholder="请输入承兑人" />
-			</van-cell-group>
+			</van-cell-group> -->
 			<van-cell-group class="van-hairline--bottom">
 				<h3 class="title">票面金额</h3>
 				<van-tag 
@@ -71,18 +71,34 @@
 					@click="choseDeal(item)"
 				>{{item.name}}</van-tag>
 			</van-cell-group>
-			<van-checkbox v-model="searchData.onlyShow" name="onlyShow" style="margin-top: 10px;">
-        只显示我的白名单票据
-      </van-checkbox>
-
+			<!-- <van-checkbox v-model="searchData.onlyShow" name="onlyShow" style="margin-top: 10px;">
+				<i
+				class="iconfont icon-selection"
+				style="font-size: 24px;"
+				slot="icon"
+				slot-scope="props"
+				:class="{'icon-active': props.checked}"></i>
+        		只显示我的白名单票据
+      		</van-checkbox>
+ -->
 			<div style="text-align: center;position: absolute;left:0;bottom:0;width: 100%;">
-				<van-button 
-					type="default"
-					@click="reset"
-					>重置</van-button>
-				<van-button
-					type="info"
-					@click="ok">确认</van-button>
+				<van-row>
+					<van-col span="12">
+						<van-button 
+						type="default"
+						@click="reset"
+						style="width:100%;"
+						>重置</van-button>
+					</van-col>
+					<van-col span="12">
+						<van-button
+						type="info"
+						style="width:100%;"
+						@click="ok">确认</van-button>
+					</van-col>
+				</van-row>
+				
+				
 			</div>
 		</div>
 	</van-popup>
@@ -101,43 +117,49 @@
 					dayChoose: {},//剩余天数选择
 					isPerfect: {},//瑕疵
 					dealChoose: {},//成交信用
-					onlyShow: true,//只显示我的白名单票据
+					// onlyShow: false,//只显示我的白名单票据
 				},
 				amountType:[
 					{
-						val: 1,
+						val: 'underThound',
 						name: '10万以下',
 						max: 10,
 						min: ''
 					},
 					{
-						val: 2,
+						val: 'thoundToOneMillion',
 						name: '10-100万',
 						max: 100,
 						min: 10
 					},
 					{
-						val: 3,
+						val: 'moreOneMillion',
 						name: '100万以上',
 						max: '',
 						min: 100
+					},
+					{
+						val: 'moreFiveMillion',
+						name: '500万以上',
+						max: '',
+						min: 500
 					}
 				],
 				dayType:[
 					{
-						val: 1,
+						val: 'lessThanNinety',
 						name: '90天以内',
 						max: 90,
 						min: ''
 					},
 					{
-						val: 2,
+						val: 'ninetyToHundredEighty',
 						name: '91-180天',
 						max: 91,
 						min: 180
 					},
 					{
-						val: 3,
+						val: 'hundredEightyToThreeHundredsixty',
 						name: '181-360天',
 						max: 360,
 						min: 181
@@ -146,25 +168,25 @@
 				perfectType:[
 					{
 						name: '有瑕疵',
-						val: 0
+						val: 1
 					},
 					{
 						name: '没瑕疵',
-						val: 1
+						val: 0
 					}
 				],
 				dealType:[
 					{
 						name: '优秀',
-						val: 0
-					},
-					{
-						name: '良好',
 						val: 1
 					},
 					{
-						name: '一般',
+						name: '良好',
 						val: 2
+					},
+					{
+						name: '一般',
+						val: 3
 					}
 				]
 			}
@@ -217,12 +239,12 @@
 
 <style scoped>
 
-.title{
+.setSearch-model .title{
 	text-align: left;
 	color: #000;
 	font-weight: normal;
 }
-.title::before{
+.setSearch-model .title::before{
 	content: '';
 	display: inline-block;
 	width: 8px;
@@ -232,7 +254,7 @@
 	vertical-align: 5px;
 	margin-right: 7px;
 }
-.model-content{
+.setSearch-model.model-content{
 	padding: 10px;
 	text-align: left;
 	overflow-scrolling: touch;
@@ -241,4 +263,18 @@
 .van-popup{
 	width: 80%;
 }
+.my-checked-icon{
+	font-weight: bold;
+	font-style: normal;
+	border: 1px solid #ccc;
+	border-radius: 50%;
+	width: 10px;
+	height: 10px;
+	text-align: center;
+	line-height: 10px;
+}
+.icon-active{
+	color: #0079f3;
+}
+
 </style>

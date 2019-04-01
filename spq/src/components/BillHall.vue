@@ -47,6 +47,8 @@
 					v-model="loading"
 					:finished="finished"
 					finished-text="没有更多了"
+					:error.sync="error"
+				 	error-text="请求失败，点击重新加载"
 					@load="onLoad"
 					>
 					<van-cell
@@ -98,6 +100,7 @@
 <script>
 	import SetSearch from '@/components/SetSearch'
 	import DetailList from '@/components/DetailList'
+	import _server from '@/server/server'
 
 	export default {
 		name: 'BillHall',
@@ -109,18 +112,20 @@
 			return {
 				title: '票据大厅',
 				finished: false,//是否已经加载完成
+				error: false,
 				isLoading: false,
 				loading: false,
 				detailModelState: false,//详情框状态
 				detailItem: {},//详情项
 				searchModelState: false,//筛选弹出框状态
+				searchData: '',//搜索条件
 				sortState: {
 					endTime: 999,//到期时间排序
 					amount: 999,//金额排序
 					publish: 999,//发布时间排序
 				},
 				pageData: {
-					page: 0,
+					num: 1,
 					size: 10
 				},
 				list: [
@@ -129,11 +134,9 @@
 			}
 		},
 		computed:{
-			sortActiveFn(type, value){
-				return{
-					'rant-active': this.sortState[type] === value
-				}
-			}
+		},
+		created(){
+			this.getData();
 		},
 		methods: {
 			onClickRight(){
@@ -145,14 +148,33 @@
 			detailModelClose(){
 				this.detailModelState = false;
 			},
-			getData(){
+			getData(data){
+
+				let initData = {
+					faceValue_id: '',//票据金额 underThound 10万以下  thoundToOneMillion 10-100万  moreOneMillion  100万以上   moreFiveMillion  500万以上 
+					faceValueMin: '',
+					faceValueMax: '',
+					remainingDays_id: '',//剩余天数 lessThanNinety 90天内   ninetyToHundredEighty 90-180天   hundredEightyToThreeHundredsixty 180-360天
+					daysMin:'',
+					daysMax: '',
+					flaw_id:'',//瑕疵  Y 有   N 无
+					credit_id: '',//excellent 优秀   well 良好 ordinary 一般
+					pageSize: [this.pageData.size],
+					pageNum: [this.pageData.num],
+				};
+
+				data = Object.assign({}, initData, data);
 				//获取列表数据
+				_server.getBusinessTickets(data, (response) =>{
+
+				})
 			},
 			onRefresh(){
 				//获取列表数据
 				setTimeout(() => {
 					this.isLoading = false;
 				}, 500);
+				this.getData();
 				
 			},
 			onLoad() {
@@ -186,7 +208,7 @@
 					this.sortState.amount = this.triggleValue(amount);
 				}
 
-				this.getData();
+				this.getData(this.searchData);
 			},
 			sortPublish(){
 				let publish = this.sortState.publish;
@@ -196,7 +218,7 @@
 					this.sortState.publish = this.triggleValue(publish);
 				}
 
-				this.getData();
+				this.getData(this.searchData);
 			},
 			sortEndTime(){
 				let endTime = this.sortState.endTime;
@@ -206,7 +228,7 @@
 					this.sortState.endTime = this.triggleValue(endTime);
 				}
 
-				this.getData();
+				this.getData(this.searchData);
 			},
 			//点击列表详情
 			showDetail(item){
@@ -221,7 +243,6 @@
 					isPerfect: 0,
 					imgs: ['https://img.yzcdn.cn/1.jpg', 'https://img.yzcdn.cn/1.jpg']
 				})
-				console.log(item)
 				this.detailItem = item;
 				this.detailModelState = true;
 			},
@@ -229,8 +250,19 @@
 				//详情框确认，从新请求数据
 			},
 			modelOk(data){
-				console.log(data);
+				let searchData = {
+					faceValue_id: data.amountChosed.val?data.amountChosed.val: '',
+					faceValueMin: data.amountChosed.min ? parseFloat(data.amountChosed.min) : '',
+					faceValueMax: data.amountChosed.max ? parseFloat(data.amountChosed.max) : '',
+					remainingDays_id: data.dayChoose.val?data.dayChoose.val: '',
+					daysMax: data.dayChoose.max ? parseFloat(data.dayChoose.max) : '',
+					daysMin: data.dayChoose.min ? parseFloat(data.dayChoose.min) : '',
+					flaw_id: data.isPerfect.val,
+					credit_id: data.dealChoose.val
+				};
+				this.searchData = searchData;
 				//重新获取数据，清除状态
+				this.getData(searchData);
 			},
 			modelClose(){
 				this.searchModelState = false;

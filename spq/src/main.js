@@ -37,10 +37,10 @@ router.beforeEach( (to, from, next) => {
   Toast.clear();
 
   //判断是否需要登录, 通过本地是否存在 token, 未登录跳转至登录页面，同时将该页面地址传入 redirect
-  if(to.meta.isLogin && !localItem){
-      next({path: '/login', query:{redirect: to.fullPath}});
-      return;
-  }
+  // if(to.meta.isLogin && !localItem){
+  //     next({path: '/login', query:{redirect: to.fullPath}});
+  //     return;
+  // }
   //判断是否认证，否则跳出
   
   //默认操作跳转下个页面

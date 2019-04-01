@@ -25,7 +25,11 @@
 				<van-row>
 					<van-col span="8" ><span style="vertical-align:-12px;">到期日期</span></van-col>
 					<van-col span="16" >
-						<van-field @click="choseTimeFn2" v-model="endTimeChoseValue" readonly style="padding-top:3px;padding-bottom:3px"/>
+						<van-field @click="choseTimeFn2" 
+									v-model="endTimeChoseValue" 
+									readonly 
+									style="padding-top:3px;padding-bottom:3px"
+									/>
 					</van-col>
 				</van-row>
 				<van-row>
@@ -54,7 +58,7 @@
 				</van-row>
 				<van-row style="margin: 5px;">
 					<van-col span="12">
-						<van-button plain type="info" style="width:100%;">清空</van-button>
+						<van-button plain type="info" style="width:100%;" @click="reset">清空</van-button>
 					</van-col>
 					<van-col span="12">
 						<van-button type="info" style="width:100%;">计算</van-button>
@@ -146,6 +150,18 @@
 			onClickLeft(){
 				window.history.go(-1);
 			},
+
+			reset(){
+				this.value = '';
+				this.currentDate = new Date();
+				this.timeChoseValue = this.getTime(this.currentDate);
+				this.endCurrentDate = '';
+				this.endTimeChoseValue = '';
+				this.changeDay = ''; //调整天数
+				this.monthRate = '';//月利率
+				this.yearRate = '';//年利率
+				this.shouxufei = '';//手续费
+			},
 			getTime(t = new Date()){
 				let date ='', time = new Date(t);
 				date += time.getFullYear() + '年';
@@ -171,21 +187,37 @@
 				this.timeChoseShow = false;
 			},
 			timeChoseConfirm(){
+				//贴票时间--确认
 				this.timeChoseValue = this.getTime(this.currentDate);
 				this.timeModelClose();
+				this.getLastTime();
 			},
 			timeChoseCancel(){
 				this.timeModelClose();
 			},
 			endTimeModelClose(){
+				
 				this.endTimeChoseShow = false;
 			},
 			endTimeChoseConfirm(){
+				//到期时间--确认
 				this.endTimeChoseValue = this.getTime(this.endCurrentDate);
 				this.endTimeModelClose();
+				this.getLastTime();
 			},
 			endTimeChoseCancel(){
 				this.endTimeModelClose();
+			},
+			getLastTime(){
+				//计算剩余时间
+				if(!this.endCurrentDate || !this.currentDate){
+					return;
+				}
+
+				let lastTime = new Date(this.endCurrentDate).getTime() - new Date(this.currentDate).getTime();
+				lastTime = Math.ceil(lastTime/(24*60*60*1000));
+
+				this.changeDay = lastTime;
 			}
 
 		}

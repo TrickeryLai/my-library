@@ -1,5 +1,6 @@
 
-let protocol = location.protocol || 'http';
+// let protocol = location.protocol || 'http';
+let protocol = 'http:';
 let common = {
 	ip: '114.55.255.160',
 	port: '8891'

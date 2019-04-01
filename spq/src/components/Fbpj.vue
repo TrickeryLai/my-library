@@ -104,7 +104,7 @@
         <div class="realName-conten-inner">
 
           <van-cell-group>
-            <van-row>
+            <van-row style="font-size: 14px;text-align: center;">
               <van-col span="8">
                 每十万扣款(元)
               </van-col>

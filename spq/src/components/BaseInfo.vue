@@ -69,7 +69,7 @@
         localStorage.clear();
         // localStorage.setItem('token', '');
         // localStorage.setItem('user', '');
-        this.$router.push({path:'/login'})
+        this.$router.replace({path:'/login'})
       }
     }
   }

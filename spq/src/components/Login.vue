@@ -50,6 +50,7 @@
 		<van-col span="8">
 			<img style="height: 33px;width:100%" 
 			:src="img"
+			v-if="img"
 			@click="changeCodePic"
 			>
 		</van-col>
@@ -126,7 +127,7 @@ export default{
 						password: _this.register.password
 					};
 					//登录之后跳转的路由， 默认大厅， 通过redirect 设置
-					let path = decodeURIComponent(this.$route.query.redirect) || '/home/billHall';
+					let path = this.$route.query.redirect? decodeURIComponent(this.$route.query.redirect) : '/home/billHall';
 
 					localStorage.setItem('loginData', JSON.stringify(loginData));
 					localStorage.setItem('token', response.token);

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="realName-page">
     <van-nav-bar
       :title="title"
       left-arrow
@@ -26,7 +26,6 @@
             uploadUrl = "test"
             @removePic='yyzzRemovePic'
             @uploadPicProgress='yyzzUploadPicFn' /> 
-
         </div>
       </van-cell-group>
       <van-cell-group class="realName-content-box">
@@ -233,18 +232,18 @@
   }
 </script>
 
-<style scoped>
-.text-left{
+<style>
+.realName-page .text-left{
   text-align: left;
 }
-.title{
+.realName-page .title{
   text-align: left;
   color: #000;
   font-weight: normal;
   padding: 5px;
   font-size: 16px;
 }
-.title::before{
+.realName-page .title::before{
   content: '';
   display: inline-block;
   width: 8px;
@@ -254,21 +253,24 @@
   vertical-align: 2px;
   margin-right: 7px;
 }
-.realName-conten-inner{
+.realName-page .realName-conten-inner{
   padding: 5px;
   position: relative;
   text-align: left;
 }
-.picTitle{
+.realName-page .picTitle{
   font-size: 12px;
   color:#000;
   padding: 5px;
   text-align: center;
 }
-.realName-content{
+.realName-page .realName-content{
   padding-bottom: 50px;
 }
-.realName-content-box{
+.realName-page .realName-content-box{
   margin-top:5px;
+}
+.realName-page .van-cell__title span{
+  font-size: 12px;
 }
 </style>

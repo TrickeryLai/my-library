@@ -3,10 +3,8 @@
 	v-model="show"
 	position="right"
 	@close="modelClose"
+
 	>
-		<van-list
-		:finished="finished"
-		>
 		<div class="model-content">
 			<div>
 				<van-cell-group class="van-hairline--bottom">
@@ -59,7 +57,7 @@
 				<van-cell-group>
 					<van-row>
 						<van-col span="24" @click="getbuyPrice">
-							<span class="detail-row-special" style="padding-top: 5px;padding-bottom: 5px;">
+							<span class="detail-row-special detail-row-left" style="padding-top: 5px;padding-bottom: 5px;">
 								买家报价
 							</span>
 							<!-- <van-icon name="replay" class="float:right;" /> -->
@@ -73,7 +71,7 @@
 					<van-row class="detail-row-special">
 
 						<van-col class="detail-row-left" span="12">年化利率</van-col>
-						<van-col class="detail-row-right" span="12">每十万扣款</van-col>
+						<van-col class="detail-row-left" span="12">每十万扣款</van-col>
 						<van-col class="detail-row-left" span="24">
 							<van-field 
 							style="width:35%;display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
@@ -88,7 +86,7 @@
 							<span>元/十万</span>
 						</van-col>
 						<van-col span="24">
-							<span>成交金额（元）</span>
+							<span class="detail-row-left">成交金额（元）</span>
 							<van-field 
 							style="display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
 							v-model="submit.reduceAmount" 
@@ -101,12 +99,11 @@
 			<div style="text-align: center;width: 100%;">
 				<van-button
 					type="info"
+					style="width: 100%;"
 					@click="ok">我要买</van-button>
 			</div>	
 			</div>
 		</div>
-		</van-list>
-		
 	</van-popup>
 </template>
 
@@ -198,6 +195,7 @@
 	background-color:#f5f5f5;
 }
 .detail-row-left{
+	font-size: 14px;
 }
 .buy-price{
 	color: #000;

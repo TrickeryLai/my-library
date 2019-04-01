@@ -20,23 +20,24 @@
 	
 		<van-collapse class="ticket-content-list" v-model="activeName" accordion>
 			<van-collapse-item title="匹配中" name="1">
-				<van-pull-refresh v-model="matchState.isLoading" @refresh="matchOnRefresh">
+				<div style="max-height: 350px;overflow:auto">
+					<van-pull-refresh v-model="matchState.isLoading" @refresh="matchOnRefresh">
 
-					<van-list
-					v-model="matchState.loading"
-					:finished="matchState.finished"
-					finished-text="没有了"
-					@load="matchOnLoad"
-					>
-					<van-cell
-					v-for="(item, index) in matchList"
-					:key="index"
-					:title="item.title"
-					style="margin-bottom: 5px;"
-					@click="matchShowDetail(item)"
-					>
+						<van-list
+						v-model="matchState.loading"
+						:finished="matchState.finished"
+						finished-text="没有了"
+						@load="matchOnLoad"
+						>
+						<van-cell
+						v-for="(item, index) in matchList"
+						:key="index"
+						:title="item.title"
+						style="margin-bottom: 5px;"
+						@click="matchShowDetail(item)"
+						>
 						<template slot="title">
-						    <van-row gutter="3" class="van-hairline--bottom">
+							<van-row gutter="3" class="van-hairline--bottom">
 								<van-col span="14" class="van-ellipsis text-left">承兑人：美的集团财务有限公司</van-col>
 								<van-col span="6" style="text-align:right;" class="blue-font">(剩365天)</van-col>
 								<van-col span="4">
@@ -52,12 +53,14 @@
 								<van-col span="8" class="black-font">2019-03-27</van-col>
 								<van-col span="8" class="black-font">2019-07-22 </van-col>
 							</van-row>
-					  	</template>
+						</template>
 					</van-cell>
 
-					</van-list>
+				</van-list>
 
-				</van-pull-refresh>
+			</van-pull-refresh>
+				</div>
+				
 			</van-collapse-item>
 			<van-collapse-item title="暂存中" name="2" style="background: #f5f5f5;">
 				
