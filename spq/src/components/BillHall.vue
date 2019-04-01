@@ -159,8 +159,8 @@
 					daysMax: '',
 					flaw_id:'',//瑕疵  Y 有   N 无
 					credit_id: '',//excellent 优秀   well 良好 ordinary 一般
-					pageSize: [this.pageData.size],
-					pageNum: [this.pageData.num],
+					pageSize: this.pageData.size,
+					pageNum:this.pageData.num,
 				};
 
 				data = Object.assign({}, initData, data);

@@ -113,12 +113,12 @@ let _Axios = {
       method: "post",
       url: params.url,
       header: header,
-      data: params.data
-            // transformRequest: [function (data) {
-            //         // 对 data 进行任意转换处理
-            //         return Qs.stringify(data)
-            //       }],
-            //       data: params.data
+      // data: params.data
+            transformRequest: [function (data) {
+                    // 对 data 进行任意转换处理
+                    return Qs.stringify(data)
+                  }],
+                  data: params.data
           }).then((res) =>{
             if(params.isLoading){
               setTimeout(()=>{
