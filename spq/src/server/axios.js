@@ -35,21 +35,21 @@ Axios.interceptors.request.use((config) => {
 });
 
 // 响应拦截（配置请求回来的信息）
-Axios.interceptors.response.use((response) => {
-  // 处理响应数据
- 
-  //统一拦截 验证是否登录
-  // if(response.data && response.data.code == 110025){
-  //     router.replace({path: '/login'});
-  //     Toast(response.data.errMsg);
-  //     return false;
-  // }
-
-  return response;
- }, (error) => {
- // 处理响应失败
-    return Promise.reject(error);
- });
+// Axios.interceptors.response.use((response) => {
+//   // 处理响应数据
+//
+//   //统一拦截 验证是否登录
+//   // if(response.data && response.data.code == 110025){
+//   //     router.replace({path: '/login'});
+//   //     Toast(response.data.errMsg);
+//   //     return false;
+//   // }
+//
+//   return response;
+//  }, (error) => {
+//  // 处理响应失败
+//     return Promise.reject(error);
+//  });
 
 let modelToast;
 let model = {
