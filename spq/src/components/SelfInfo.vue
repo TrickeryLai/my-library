@@ -7,16 +7,16 @@
 		/>
 		<div class="selfInfo-top">
 			<div style="position: absolute;left:0;top:0;width: 100%;height: 100%;">
-				<div class="checked-icon" v-if="(this.baseInfo.status==0)" @click="goChecked">
+				<div class="checked-icon" v-if="(!this.baseInfo.orgId)" @click="goChecked">
 					<span class="point"></span>未认证
 				</div>
-				<div class="checked-icon active-c" v-if="(this.baseInfo.status!=0)" >
+				<div class="checked-icon active-c" v-if="(this.baseInfo.orgId)" >
 					<span class="point"></span>已认证
 				</div>
 				<div class="selfInfo-center">
 					<div class="selfInfo-header" @click="gotoBaseInfo"><i class="iconfont icon-mine"></i></div>
 					<p class="baseInfo-row" style="font-size: 18px;color: #333;">{{this.baseInfo.loginName}}</p>
-					<p v-if="this.baseInfo.phonenumber" class="baseInfo-row"><i class="iconfont icon-mobile-alt"></i>{{this.baseInfo.phonenumber}}</p>
+					<p v-if="baseInfo.phonenumber" class="baseInfo-row"><i class="iconfont icon-mobile-alt"></i>{{this.baseInfo.phonenumber}}</p>
 				</div>
 			</div>
 		</div>
@@ -94,11 +94,11 @@
 			return {
 				title: '个人中心',
 				show: false,
-				baseInfo:{}
+				baseInfo:{},
 			}
 		},
 		created(){
-			// this.getBaseInfo();
+			this.getBaseInfo();
 		},
 		methods: {
 			goChecked(){
@@ -167,7 +167,7 @@
 	background-color: rgba(255, 255, 255);
 }
 .checked-icon.active-c{
-	color: #1989fa;
+	color: #fff;
 	border-color: #1989fa;
 }
 .checked-icon.active-c .point{

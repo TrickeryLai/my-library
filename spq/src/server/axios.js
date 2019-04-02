@@ -34,22 +34,22 @@ Axios.interceptors.request.use((config) => {
   return Promise.reject(err)
 });
 
-// 响应拦截（配置请求回来的信息）
-// Axios.interceptors.response.use((response) => {
-//   // 处理响应数据
-//
-//   //统一拦截 验证是否登录
-//   // if(response.data && response.data.code == 110025){
-//   //     router.replace({path: '/login'});
-//   //     Toast(response.data.errMsg);
-//   //     return false;
-//   // }
-//
-//   return response;
-//  }, (error) => {
-//  // 处理响应失败
-//     return Promise.reject(error);
-//  });
+//响应拦截（配置请求回来的信息）
+Axios.interceptors.response.use((response) => {
+  // 处理响应数据
+
+  //统一拦截 验证是否登录
+  if(response.data && response.data.code == 110025){
+      router.replace({path: '/login'});
+      Toast(response.data.errMsg);
+      return false;
+  }
+
+  return response;
+ }, (error) => {
+ // 处理响应失败
+    return Promise.reject(error);
+ });
 
 let modelToast;
 let model = {
@@ -89,7 +89,13 @@ let _Axios = {
           params.success(res.data);
         }, model.time);
         return;
-      } 
+      }else{
+        setTimeout(()=>{
+
+          params.success(res.data);
+        }, model.time);
+        return;
+      }
       params.success(res.data);
     }).then((error) =>{
       if(params.isLoading){
@@ -98,6 +104,75 @@ let _Axios = {
         }, model.time);
         return;
       } 
+    })
+  },
+  delete(params = {}){
+
+    if(params.isLoading){
+      model.show();
+    }
+    Vue.prototype.__globalModelState = true;
+    Axios({
+      method: 'delete',
+      params: params.data,
+      header: params.header,
+      url: params.url
+    }).then((res)=>{
+      if(params.isLoading){
+        setTimeout(()=>{
+          model.hide();
+          params.success(res.data);
+        }, model.time);
+        return;
+      }else{
+        setTimeout(()=>{
+
+          params.success(res.data);
+        }, model.time);
+        return;
+      }
+      params.success(res.data);
+    }).then((error) =>{
+      if(params.isLoading){
+        setTimeout(()=>{
+          model.hide();
+        }, model.time);
+        return;
+      }
+    })
+  },
+  patch(params = {}){
+
+    if(params.isLoading){
+      model.show();
+    }
+    Vue.prototype.__globalModelState = true;
+    Axios({
+      method: 'patch',
+      data: params.data,
+      header: params.header,
+      url: params.url
+    }).then((res)=>{
+      if(params.isLoading){
+        setTimeout(()=>{
+          model.hide();
+          params.success(res.data);
+        }, model.time);
+        return;
+      }else{
+        setTimeout(()=>{
+          params.success(res.data);
+        }, model.time);
+        return;
+      }
+      params.success(res.data);
+    }).then((error) =>{
+      if(params.isLoading){
+        setTimeout(()=>{
+          model.hide();
+        }, model.time);
+        return;
+      }
     })
   },
   post(params = {}){
@@ -132,7 +207,12 @@ let _Axios = {
               params.success(data);
             }, model.time);
             return;
-          } 
+          }else{
+            setTimeout(()=>{
+              params.success(data);
+            }, model.time);
+            return;
+          }
           params.success(data);
         }).then((error) =>{
           // params.error && params.error(error); 

@@ -49,6 +49,7 @@
 					finished-text="没有更多了"
 					:error.sync="error"
 					error-text="请求失败，点击重新加载"
+          :offset=20
 					@load="onLoad"
 					>
 					<van-cell
@@ -148,14 +149,13 @@ import _server from '@/server/server'
 	          	createTimeSort: '',//发布时间排序
 	      	},
 	      	pageData: {
-  				pageNum: -1,
+  				  pageNum: 0,
 		      	pageSize: 10,
 		      	total: 0,
 	      	},
 	      	list: []
 		}
 	},
-
 	methods: {
 		onClickRight(){
 			this.searchModelState = true;
@@ -202,36 +202,47 @@ import _server from '@/server/server'
 			//获取列表数据
 			_server.getBusinessTickets(data, (response) =>{
 				if(response.code === 0){
-					_this.error = false;
-					_this.list = response.list;
-					_this.pageData = response.pageInfo;
-					if(callback){
-						callback(response);
-					}
+          if(_this.pageData.pageNum > 1){
+            response.list.forEach((item) => {
+              _this.list.push(item);
+            });
+          }else{
+            _this.list = response.list;
+            // _this.pageData = response.pageInfo;
+          }
+          //数据全部加载完成
+          if (_this.list.length >= response.pageInfo.total) {
+            _this.finished = true;
+          }else{
+            _this.finished = false;
+          }
 				}
 				_this.loading = false;
+				_this.isLoading = false;
 			})
 		},
 		onRefresh(){
 			//获取列表
 			this.pageData.pageNum = 1;
-			this.getData(this.searchData, () =>{
-				this.isLoading = false;
-			});
+			this.getData(this.searchData);
 			
 		},
 		onLoad() {
-			this.loading = true;//处于加载状态，不触发onLoad
+			  this.loading = true;//处于加载状态，不触发onLoad
 		    this.pageData.pageNum += 1;
+		    let _this = this;
 		    this.getData(this.searchData, (res) =>{
-		    	res.list.forEach((item) => {
-		    		this.list.push(item);
-		    	});
-		        //数据全部加载完成
-		        if (this.list.length >= res.pageInfo.total) {
-		        	this.finished = true;
-		        	this.loading = false;
-		        }
+          // if(this.pageData.pageNum > 1){
+          //   res.list.forEach((item) => {
+          //     this.list.push(item);
+          //   });
+          // }
+          //数据全部加载完成
+          // console.log(_this.list, res);
+          // if (this.list.length >= res.pageInfo.total) {
+          //   this.finished = true;
+          //   this.loading = false;
+          // }
     		})
 		},
 		sortTotal(type){
@@ -247,7 +258,7 @@ import _server from '@/server/server'
 				case 3:
 				value = 'dueDateSort';
 				break;
-			};
+			}
 			this.sortState = {
 		      dueDateSort: '',//到期时间排序
 		      amountSort: '',//金额排序
@@ -259,12 +270,12 @@ import _server from '@/server/server'
 				this.sortState[value] = 1;
 			}
 
-			this.pageData = {
-		      	pageNum: 1,
-		      	pageSize: 10,
-		      	total: 0,
-	      	};
-	      	this.getData(this.searchData);
+      this.pageData = {
+        pageNum: 1,
+        pageSize: 10,
+        total: 0,
+      };
+      this.getData(this.searchData);
 		},
 		sortAmount(){
 			this.sortTotal(1);

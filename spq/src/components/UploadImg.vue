@@ -143,7 +143,6 @@
               };
           },
           uploadBase64str(base64Str) {
-            console.log(base64Str)
               //var blob = dataURItoBlob(base64Str);
               //console.log("压缩后的文件大小", blob.size);
               //core.uploadFile(blob);
@@ -158,9 +157,9 @@
                   var percentComplete = Math.round(e.loaded * 100 / e.total);
                   _this.yyzzPicUState.progress = percentComplete;
               });
-              xhr.addEventListener("load", function (e) {
+              xhr.addEventListener("load", function (e, data) {
                   // para.uploadComplete(xhr.responseText);
-                  _this.$emit('uploadPicProgress', {state: 3, imgData: {}});
+                  _this.$emit('uploadPicProgress', {state: 3, imgData: JSON.parse(this.responseText)});
                   _this.yyzzPicUState.isUpload = 3;
               });
               xhr.addEventListener("error", function (e) {
@@ -206,16 +205,16 @@
                   _this.yyzzPicUState.progress = percentComplete;
                   // para.onProgress(percentComplete.toString() + '%');
               });
-              xhr.addEventListener("load", function (e) {
+              xhr.addEventListener("load", function (e, data) {
                   // para.uploadComplete(xhr.responseText);
-                  _this.$emit('uploadPicProgress', {state: 3, imgData: e});
+                  _this.$emit('uploadPicProgress', {state: 3, imgData: JSON.parse(this.responseText)});
                   _this.yyzzPicUState.isUpload = 3;
               });
               xhr.addEventListener("error", function (e) {
                   // para.uploadError(e);
                   _this.$emit('uploadPicProgress', {state: 4, imgData: {}});
               });
-              console.log(this.fileName)
+
               xhr.open("post", _common.headUrl + this.uploadUrl, true);
               xhr.setRequestHeader('Authorization', 'Bearer ' + token);
               xhr.setRequestHeader('lang', 'zh_cn');
@@ -226,8 +225,7 @@
           },
           yyzzPicChange(e,pic){
               let yyzzPic = this.$refs.yyzzPicInput.files;
-              console.error(1)
-              console.log(this.$refs)
+
               this.yyzzPic = yyzzPic;
               this.getObjectURL(yyzzPic);
           },
@@ -249,7 +247,7 @@
                 param = new FormData(); //创建form对象
             param.append('file',file, file.name);//通过append向form对象添加数据
             // param.append('chunk','0');//添加form表单中其他数据
-            console.log('1313',param.get('file'),'-----------------'); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
+            // console.log('1313',param.get('file'),'-----------------'); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
             // let config = {
             //   headers:{'Content-Type':'multipart/form-data'}
             // };  //添加请求头
@@ -280,7 +278,6 @@
               let blob = new Blob([result]);//存储二进制数据
               let url = URL.createObjectURL(blob);//生成本地图片地址用于图片预览
               let request = new XMLHttpRequest();
-              console.log(url, '-------------')
               request.onreadystatechange = function () {
                 if (request.readyState === 4) {
                   if (request.status === 200) {
@@ -289,7 +286,7 @@
 
                   }
                 } else {
-                  console.log('others')
+
                 }
               };
               request.open('PUT', this.uploadUrl);//

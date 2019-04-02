@@ -56,6 +56,8 @@
 </template>
 
 <script>
+   import _server from '@/server/server';
+
   export default{
     name: 'BaseInfo',
     data(){
@@ -68,10 +70,17 @@
         window.history.go(-1);
       },
       loginOut(){
-        localStorage.clear();
-        // localStorage.setItem('token', '');
-        // localStorage.setItem('user', '');
-        this.$router.replace({path:'/login'})
+
+        _server.logout({}, (res) => {
+          if(res.code == 0){
+            localStorage.clear();
+            // localStorage.setItem('token', '');
+            // localStorage.setItem('user', '');
+            this.$router.replace({path:'/login'})
+          }
+        });
+
+
       }
     }
   }

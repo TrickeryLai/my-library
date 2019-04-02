@@ -34,7 +34,7 @@
         <div class="realName-conten-inner">
           <van-cell-group>
             <van-field
-            v-model="submitData.companyName"
+            v-model="submitData.cpNo"
             required
             clearable
             label="票据号码"
@@ -101,7 +101,19 @@
           </van-cell-group>
         </div>
       </van-cell-group>
+      <van-cell-group class="realName-content-box">
+        <h3 class="title van-hairline--bottom">可指定买家</h3>
+        <div class="realName-conten-inner">
+          <van-cell-group>
 
+            <van-field
+              v-model="submitData.sellId"
+              clearable
+              placeholder="可输入买家id"
+            />
+          </van-cell-group>
+        </div>
+      </van-cell-group>
       <van-cell-group class="realName-content-box">
         <h3 class="title van-hairline--bottom">卖出价格</h3>
         <div class="realName-conten-inner">
@@ -121,7 +133,7 @@
             <van-row>
               <van-col span="8">
                 <van-field
-                  v-model="sell.kq"
+                  v-model="sell.deductAmount"
                   clearable
                   placeholder="每十万扣款(元)"
                 />
@@ -136,7 +148,7 @@
               </van-col>
               <van-col span="8">
                 <van-field
-                  v-model="sell.amount"
+                  v-model="sell.turnVolume"
                   clearable
                   placeholder="成交金额(元)"
                 />
@@ -144,7 +156,12 @@
             </van-row>
           </van-cell-group>
           <div>
-            <van-button @click="submit" type="info" style="width:100%;">立即发布</van-button>
+            <van-row>
+              <van-col span="24">
+                <van-button @click="submit" type="info" style="width:100%;">立即发布</van-button>
+              </van-col>
+            </van-row>
+
           </div>
         </div>
       </van-cell-group>
@@ -384,7 +401,7 @@ import _server from '@/server/server'
               console.log('fr正在上传')
               if(data.state == 3){
                   console.log('fryyzz上传成功')
-                  this.pjzPic = data.data
+                  this.pjzPic = data.imgData.data
               }
           },
           pjfUploadPicFn(data){
@@ -393,8 +410,11 @@ import _server from '@/server/server'
               console.log('fr正在上传')
               if(data.state == 3){
                   console.log('fryyzz上传成功')
-                  this.pjfPic = data.data
+                  this.pjfPic = data.imgData.data
               }
+          },
+          choseSell(){
+
           },
           submit(){
             //立即发布
@@ -432,11 +452,20 @@ import _server from '@/server/server'
             let data = {
               channel: 2,
               acceptor: this.submitData.acceptor,
-              approvalApr: this.sell.approvalApr,
-              backBillImg: this.pjfPic, 
+              approvalApr: this.sell.approvalApr, 
               buyerId: '',
-              cpAmount: this.submitData.cpAmount
-            }
+              cpAmount: this.submitData.cpAmount,
+              cpDefect: this.xcChoseList.join(','),
+              cpNo: this.submitData.cpNo,
+              dueDate: this.endTimeChoseValue,
+              endorseTimes: this.bsValue,
+              deductAmount: this.sell.deductAmount,
+              frontBillImg: this.pjzPic,
+              backBillImg: this.pjfPic,
+              isDefect: this.isDefect,
+              turnVolume: this.sell.turnVolume
+
+            };
             _server.getCommercialPaper(data, () =>{
 
             })

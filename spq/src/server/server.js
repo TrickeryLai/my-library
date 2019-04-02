@@ -46,6 +46,45 @@ let server = {
 			})
 		return this;
 	},
+  logout(data, callback){
+    let url = 'open-cp/v1/login';
+    Axios.delete({
+      isLoading: true,
+      url,
+      data: data,
+      success(response){
+        if(response.code == 0 || response.code == 110008){
+          callback && callback(response);
+        }else{
+          Toast(response.errMsg);
+        }
+      }
+    });
+    return this;
+  },
+  changePassword(data, callback){
+    let user = localStorage.getItem('user') ?  JSON.parse(localStorage.getItem('user')): '';
+    let url = 'open-cp/v1/users/';
+    if(!user){
+      return;
+    }
+    url += user.userId;
+    Axios.patch({
+      isLoading: true,
+      url,
+      isdeal: true,
+      data: data,
+      success(response){
+        if(response.code == 0 || response.code == 110008){
+          callback && callback(response);
+        }else{
+          Toast(response.errMsg);
+        }
+      }
+    });
+    return this;
+  }
+  ,
 	/**
 	 * [注册]
 	 * @param  {[type]}   data     [description]
@@ -73,7 +112,7 @@ let server = {
 		Axios.post({
 				isLoading: false,
 				url,
-        		isdeal: true,
+        isdeal: true,
 				data: data,
 				success(response){
 					if(response.code == 0 || response.code == 110008){
@@ -104,22 +143,39 @@ let server = {
 	    return this;
   	},
   	getCommercialPaper(data, callback){
-		let url = 'open-cp/v1/commercialPaper';
-		Axios.post({
-				isLoading: false,
-				url,
-        		isdeal: true,
-				data: data,
-				success(response){
-					if(response.code == 0 || response.code == 110008){
-	                	callback && callback(response);
-	                }else{
-	                	Toast(response.errMsg);
-	                }
-				}
-			})
-		return this;
-  	}
+        let url = 'open-cp/v1/commercialPaper';
+        Axios.post({
+          isLoading: false,
+          url,
+          isdeal: true,
+          data: data,
+          success(response){
+            if(response.code == 0 || response.code == 110008){
+              callback && callback(response);
+            }else{
+              Toast(response.errMsg);
+            }
+          }
+        })
+        return this;
+  	},
+    getAuthentication(data, callback){
+      let url = 'open-cp/v1/company/authentication';
+      Axios.post({
+        isLoading: false,
+        url,
+        isdeal: false,
+        data: data,
+        success(response){
+          if(response.code == 0 || response.code == 110008){
+            callback && callback(response);
+          }else{
+            Toast(response.errMsg);
+          }
+        }
+      })
+      return this;
+    }
   	
 }
 
