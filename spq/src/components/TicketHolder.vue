@@ -62,7 +62,7 @@
 				</div>
 				
 			</van-collapse-item>
-			<van-collapse-item title="暂存中" name="2" style="background: #f5f5f5;">
+			<van-collapse-item title="暂存中" name="2">
 				
 			</van-collapse-item>
 		</van-collapse>
@@ -92,6 +92,9 @@
 				      this.$router.push({path: '/home/ticketHolder/fbpj'})
 			},
 			onSearch(){
+
+			},
+			matchGetData(){
 
 			},
 			matchShowDetail(){

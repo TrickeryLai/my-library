@@ -6,7 +6,9 @@
       fixed
       @click-left="onClickLeft"
       class="top-bg"
-    />
+    >
+      <i class="iconfont icon-previous_step" slot="left"></i>
+    </van-nav-bar>
     <van-cell-group class="baseInfo-box">
         <van-row class="baseInfo-box-row">
             <van-col span="8">统一社会信息代码:</van-col>

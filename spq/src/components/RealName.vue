@@ -7,7 +7,9 @@
       @click-left="onClickLeft"
       class="top-bg"
       :z-index = "zIndex"
-    />
+    >
+      <i class="iconfont icon-previous_step" slot="left"></i>
+    </van-nav-bar>
     <van-steps
       :active="active"
       active-color="#38f"

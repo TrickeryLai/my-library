@@ -6,7 +6,9 @@
 		fixed
 		@click-left="onClickLeft"
 		class="top-bg"
-		/>
+		>
+			<i class="iconfont icon-previous_step" slot="left"></i>
+		</van-nav-bar>
 		<div style="padding-top: 0px;text-align: left;">
 			<van-cell @click="gotoChange" title="修改登录密码" value=">" />
 		</div>

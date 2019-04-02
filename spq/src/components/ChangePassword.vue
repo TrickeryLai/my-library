@@ -6,7 +6,9 @@
 		fixed
 		@click-left="onClickLeft"
 		class="top-bg"
-		/>
+		>
+			<i class="iconfont icon-previous_step" slot="left"></i>
+		</van-nav-bar>
 		<div>
 			<van-cell-group>
 				<van-field

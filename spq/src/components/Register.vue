@@ -6,7 +6,9 @@
 		fixed
 		@click-left="onClickLeft"
 		class="top-bg"
-		/>
+		>
+			<i class="iconfont icon-previous_step" slot="left"></i>
+		</van-nav-bar>
 		<h1 class="top-title">票据融资，多、块、好、省</h1>
 		<h1 class="title">欢迎注册</h1>
 		<van-row >

@@ -39,7 +39,8 @@
 					
 				</van-col>
 				<van-col span="12">
-					<div>
+					<div
+					@click="xyFn">
 						<van-col offset="2" span="2">
 							<i class="iconfont icon-gongdan" style="color:#0079f3;vertical-align: -8px;"></i>
 						</van-col>
@@ -65,6 +66,24 @@
 				</van-col>
 			</van-row>
 		</div>
+		<van-dialog
+		v-model="show"
+		title="相关协议"
+		:close-on-click-overlay="true"
+		@before-close="beforeClose"
+		>
+			<div>
+				<van-row>
+					<van-col span="12" offset="6">平台规则1</van-col>
+				</van-row>
+				<van-row>
+					<van-col span="12" offset="6">平台规则1</van-col>
+				</van-row>
+				<van-row>
+					<van-col span="12" offset="6">平台规则1</van-col>
+				</van-row>
+			</div>
+		</van-dialog>
 	</div>
 </template>
 
@@ -74,11 +93,12 @@
 		data(){
 			return {
 				title: '个人中心',
+				show: false,
 				baseInfo:{}
 			}
 		},
 		created(){
-			this.getBaseInfo();
+			// this.getBaseInfo();
 		},
 		methods: {
 			goChecked(){
@@ -101,6 +121,12 @@
 				}else{
 					this.$router.push({path:'/login'});
 				}
+			},
+			xyFn(){
+				this.show = true;
+			},
+			beforeClose(){
+				this.show = false;
 			}
 		}
 	}
