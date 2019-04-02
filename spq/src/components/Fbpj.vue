@@ -14,16 +14,16 @@
         <div class="realName-conten-inner">
           <div style="display:inline-block;margin-right: 5px;">
             <UploadImg
-            uploadUrl = "test"
-            @removePic='sfzzRemovePic'
-            @uploadPicProgress='sfzzUploadPicFn' />
+            uploadUrl = "open-cp/v1/upload"
+            @removePic='pjzRemovePic'
+            @uploadPicProgress='pjzUploadPicFn' />
             <p class="picTitle" @click="showPjPic(1)"><span style="color: red;">*</span>票据正面<span class="blue-font">示例</span></p>
           </div>
           <div style="display:inline-block;margin-right: 10px;">
             <UploadImg
-            uploadUrl = "test"
-            @removePic='sfzzRemovePic'
-            @uploadPicProgress='sfzzUploadPicFn' /> 
+            uploadUrl = "open-cp/v1/upload"
+            @removePic='pjfRemovePic'
+            @uploadPicProgress='pjfUploadPicFn' /> 
             <p class="picTitle" @click="showPjPic(2)"><span style="color: red;">*</span>票据背面<span class="blue-font">示例</span></p>
           </div>
         </div>
@@ -41,12 +41,15 @@
             placeholder="可从网银复制（30位数字）"
             />
             <van-field
-            v-model="submitData.companyEmail"
+            v-model="submitData.cpAmount"
             required
             clearable
             label="票面金额(元)"
             placeholder="请输入金额"
             />
+            <van-row>
+              <van-col span="23" offset="1" style="font-size: 12px;color :#232333;">{{changeNumToTex(submitData.companyEmail)}}</van-col>
+            </van-row>
             
             <van-row>
               <van-col span="18">
@@ -66,7 +69,7 @@
             </van-row>
             
             <van-field
-            v-model="submitData.address"
+            v-model="submitData.acceptor"
             required
             label="承兑人全称"
             placeholder="请输入承兑人全称"
@@ -126,7 +129,7 @@
 
               <van-col span="8">
                 <van-field
-                  v-model="sell.yearRate"
+                  v-model="sell.approvalApr"
                   clearable
                   placeholder="年化利率(%)"
                 />
@@ -172,6 +175,8 @@ import  img from '@/assets/logo.png'
 import  img1 from '@/assets/logo.png'
 import  img2 from '@/assets/logo.png'
 
+import _server from '@/server/server'
+
   export default{
       name: 'Fbpj',
       data(){
@@ -183,7 +188,7 @@ import  img2 from '@/assets/logo.png'
               picShowModel: false,//图片查看弹窗
               currentDate: '',
               lastDay: 0,//剩余天数
-              minDate: new Date(),
+              minDate: new Date(new Date().getTime() + 24*60*60*1000),
               bsValue: 0,//背书次数
               sell:{
                 
@@ -192,14 +197,14 @@ import  img2 from '@/assets/logo.png'
 
               },
               showImg: '',//图片查看当前展示的图片
-              sfzzPic: '',
-              sfzzPicUState: {
-                state: 0,//上传状态 0未上传， 1正在上传， 2上传成功
+              pjzPic: '',
+              pjzPicUState: {
+                state: 0,//上传状态 0未上传， 1正在上传， 3上传成功
                 
               },
-              sfzfPic: '',
-              sfzfPicUState: {
-                state: 0,//上传状态 0未上传， 1正在上传， 2上传成功
+              pjfPic: '',
+              pjfPicUState: {
+                state: 0,//上传状态 0未上传， 1正在上传， 3上传成功
                 
               },
               xcModelState: false,//瑕疵弹窗状态
@@ -259,6 +264,25 @@ import  img2 from '@/assets/logo.png'
       methods: {
           onClickLeft(){
               window.history.go(-1);
+          },
+          changeNumToTex(n) {
+            if(!n){
+              return '';
+            }
+            if (!/^(0|[1-9]\d*)(\.\d+)?$/.test(n)){
+              return "无效的金额";
+            }
+            var unit = "千百拾万千百拾亿千百拾万千百拾元角分", str = "";
+            n += "00";
+            var p = n.indexOf('.');
+            if (p >= 0){
+              n = n.substring(0, p) + n.substr(p+1, 2);
+            }
+            unit = unit.substr(unit.length - n.length);
+            for (var i=0; i < n.length; i++){
+              str += '零壹贰叁肆伍陆柒捌玖'.charAt(n.charAt(i)) + unit.charAt(i);
+            }
+            return str.replace(/零(千|百|拾|角)/g, "零").replace(/(零)+/g, "零").replace(/零(万|亿|元)/g, "$1").replace(/(亿)万|壹(拾)/g, "$1$2").replace(/^元零?|零分/g, "").replace(/元$/g, "元整");
           },
           isXcItemChosed(item){
               let len = this.xcChoseList.length, i = 0;
@@ -344,40 +368,78 @@ import  img2 from '@/assets/logo.png'
             }
             return value;
           },
-          //身份证正面
-          sfzzRemovePic(){
-              this.frPicUState.state = 0;
-              this.frPic = '';
+          pjzRemovePic(){
+              //移除图片操作,票据正面
+              this.pjzPicUState.state = 0;
+              this.pjzPic = '';
           },
-          sfzzUploadPicFn(data){
+          pjfRemovePic(){
+              //移除图片操作，票据反面
+              this.pjfPicUState.state = 0;
+              this.pjfPic = '';
+          },
+          pjzUploadPicFn(data){
               //营业执照上传
-              this.frPicUState.state = data.state;
+              this.pjzPicUState.state = data.state;
               console.log('fr正在上传')
               if(data.state == 3){
                   console.log('fryyzz上传成功')
-                  this.frPic = data.imgData
+                  this.pjzPic = data.data
               }
           },
-          //身份证反面
-          sfzfRemovePic(){
-              this.frPicUState.state = 0;
-              this.frPic = '';
-          },
-          sfzfUploadPicFn(data){
+          pjfUploadPicFn(data){
               //营业执照上传
-              this.frPicUState.state = data.state;
+              this.pjfPicUState.state = data.state;
               console.log('fr正在上传')
               if(data.state == 3){
                   console.log('fryyzz上传成功')
-                  this.frPic = data.imgData
+                  this.pjfPic = data.data
               }
           },
           submit(){
             //立即发布
-            
-          },
-          submitInfo(){
-            //提交信息
+            //
+            //商票录入 {channel (string): 渠道：01-WEB；02-公众号
+          // cpCommercialPaperInfos (Array[商票信息表]): 商票列表
+          // }
+          // 商票信息表 {acceptor (string): 承兑人
+          //  ,
+          // approvalApr (number, optional): 年利率
+          //  ,
+          // backBillImg (string): 反面票据
+          //  ,
+          // buyerId (string, optional): 买家id
+          //  ,
+          // cpAmount (number): 票面金额
+          //  ,
+          // cpDefect (string, optional): 票据瑕疵
+          //  ,
+          // cpNo (string): 票据号码
+          //  ,
+          // deductAmount (number, optional): 每十万扣款
+          //  ,
+          // dueDate (string): 到期日
+          //  ,
+          // endorseTimes (integer): 背书次数
+          //  ,
+          // frontBillImg (string): 正面票据
+          //  ,
+          // isDefect (string, optional): 有无瑕疵
+          //  ,
+          // turnVolume (number): 成交金额（发布金额）
+          // }
+            //
+            let data = {
+              channel: 2,
+              acceptor: this.submitData.acceptor,
+              approvalApr: this.sell.approvalApr,
+              backBillImg: this.pjfPic, 
+              buyerId: '',
+              cpAmount: this.submitData.cpAmount
+            }
+            _server.getCommercialPaper(data, () =>{
+
+            })
           }
       },
   }

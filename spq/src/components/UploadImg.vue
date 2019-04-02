@@ -18,6 +18,22 @@
 
 <script>
   import MegaPixImage from '@/server/uploadImg'
+  import _common from '@/server/index'
+
+  //将base64转化为流
+  function convertBase64UrlToBlob(urlData){  
+        
+      var bytes=window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte  
+        
+      //处理异常,将ascii码小于0的转换为大于0  
+      var ab = new ArrayBuffer(bytes.length);  
+      var ia = new Uint8Array(ab);  
+      for (var i = 0; i < bytes.length; i++) {  
+          ia[i] = bytes.charCodeAt(i);  
+      }  
+    
+      return new Blob( [ab] , {type : 'image/png'});  
+  } 
 
   function getBase64Image(img) {
       var canvas = document.createElement("canvas");
@@ -66,44 +82,46 @@
       }
       return new Blob([ab], { type: 'image/jpeg' });
   }
-
+//open-cp/v1/upload
 	export default{
 		name: 'UploadImg',
 		props: ['uploadUrl'],
 		data(){
 			return {
 				yyzzPic: '',
-              	yyzzPicUrl: '',
-              	yyzzPicUState: {
-                	isUpload: 0,//上传状态 0未上传， 1正在上传， 2上传成功
-                	progress: 0
-              	},
-              	intervaler: '',//上传计时器
-                uploadXhr: '',
+      	yyzzPicUrl: '',
+      	yyzzPicUState: {
+        	isUpload: 0,//上传状态 0未上传， 1正在上传， 3上传成功, 4 上传失败
+        	progress: 0,//上传百分比
+      	},
+      	intervaler: '',//上传计时器
+        uploadXhr: '',
+        fileName: ''
 			}
 		},
     beforeDestoy(){
         clearInterval(this.intervaler);
     },
 		methods:{
-           uploadPic(file){
-              //通知正在上传
-              this.$emit('uploadPicProgress', {state: 1, imgData: {}})
-              this.yyzzPicUState.isUpload = 1;
-              // this.upload1(file);
-              this.intervaler = setInterval(()=>{
-                this.yyzzPicUState.progress ++;
-                if(this.yyzzPicUState.progress >= 100){
-                    this.yyzzPicUState.isUpload = 3;
-                    //通知上传完毕，传递上传图片信息
-              		this.$emit('uploadPicProgress', {state: 3, imgData: {}})
-                    clearInterval(this.intervaler);
-                }
-              },300)
+          uploadPic(file){
+            //通知正在上传
+            this.$emit('uploadPicProgress', {state: 1, imgData: {}})
+            this.yyzzPicUState.isUpload = 1;
+            // this.upload1(file);
+            // this.intervaler = setInterval(()=>{
+            //   this.yyzzPicUState.progress ++;
+            //   if(this.yyzzPicUState.progress >= 100){
+            //       this.yyzzPicUState.isUpload = 3;
+            //       //通知上传完毕，传递上传图片信息
+            // 		this.$emit('uploadPicProgress', {state: 3, imgData: {}})
+            //       clearInterval(this.intervaler);
+            //   }
+            // },300)
           },
           getObjectURL(file){
             
             var file = file[file.length - 1];
+            this.fileName = file.name;
             this.preViewPic(file);
             //大于 2M 压缩图片
             if(file.size){
@@ -117,25 +135,24 @@
             //预览图片
             //创建读取文件的对象
             var reader = new FileReader();
-
-            reader.readAsDataURL(file);         
-            //创建文件读取相关的变量       
+            reader.readAsDataURL(file);             
             //为文件读取成功设置事件
             reader.onload=(e) => {
-                // alert('文件读取完成');
                 this.yyzzPicUrl  = e.target.result;
-
                 this.uploadPic(file);//模拟效果
               };
           },
           uploadBase64str(base64Str) {
-
+            console.log(base64Str)
               //var blob = dataURItoBlob(base64Str);
               //console.log("压缩后的文件大小", blob.size);
               //core.uploadFile(blob);
+              
+              var token = localStorage.getItem('token') ? localStorage.getItem('token'): '';
               var _this = this;
               var formdata = new FormData();
-              formdata.append("base64str", base64Str);
+              formdata.append("file", base64Str);
+              
               var xhr = new XMLHttpRequest();
               xhr.upload.addEventListener("progress", function (e) {
                   var percentComplete = Math.round(e.loaded * 100 / e.total);
@@ -143,12 +160,18 @@
               });
               xhr.addEventListener("load", function (e) {
                   // para.uploadComplete(xhr.responseText);
+                  _this.$emit('uploadPicProgress', {state: 3, imgData: {}});
+                  _this.yyzzPicUState.isUpload = 3;
               });
               xhr.addEventListener("error", function (e) {
                   // para.uploadError(e);
+                  _this.$emit('uploadPicProgress', {state: 4, imgData: e});
               });
-
-              xhr.open("post", this.uploadUrl, true);
+              xhr.open("post", _common.headUrl + this.uploadUrl, true);
+              xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+              xhr.setRequestHeader('lang', 'zh_cn');
+              // xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+              xhr.setRequestHeader('Content-Disposition', 'form-data; name="file";');
               xhr.send(formdata);
               this.uploadXhr = xhr;
           },
@@ -161,16 +184,20 @@
                   var base64 = getBase64Image(resImg);
                   var base641 = resImg.src;
                   console.log("base64", base64.length, simpleSize(base64.length), base641.length, simpleSize(base641.length));
+                  console.log(base64)
+                  base64 = convertBase64UrlToBlob(base64);
                   _this.uploadBase64str(base64);
               });              
           },
           uploadFile(file) {
-              console.log("开始上传");
+            console.log(file)
               var formdata = new FormData();
               var _this = this;
+              var token = localStorage.getItem('token') ? localStorage.getItem('token'): '';
 
               // formdata.append(para.filebase, file);//这个名字要和mvc后台配合
-              formdata.append('', file);//这个名字要和mvc后台配合
+              // formdata.append('file', file);
+              formdata.append("file", file);
 
               var xhr = new XMLHttpRequest();
               xhr.upload.addEventListener("progress", function (e) {
@@ -181,30 +208,39 @@
               });
               xhr.addEventListener("load", function (e) {
                   // para.uploadComplete(xhr.responseText);
+                  _this.$emit('uploadPicProgress', {state: 3, imgData: e});
+                  _this.yyzzPicUState.isUpload = 3;
               });
               xhr.addEventListener("error", function (e) {
                   // para.uploadError(e);
+                  _this.$emit('uploadPicProgress', {state: 4, imgData: {}});
               });
-
-              xhr.open("post", this.uploadUrl, true);
+              console.log(this.fileName)
+              xhr.open("post", _common.headUrl + this.uploadUrl, true);
+              xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+              xhr.setRequestHeader('lang', 'zh_cn');
+              // xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+              xhr.setRequestHeader('Content-Disposition', 'form-data; name="file"');
               xhr.send(formdata);
               this.uploadXhr = xhr;
           },
           yyzzPicChange(e,pic){
               let yyzzPic = this.$refs.yyzzPicInput.files;
+              console.error(1)
+              console.log(this.$refs)
               this.yyzzPic = yyzzPic;
               this.getObjectURL(yyzzPic);
           },
           removePic(){
           		clearInterval(this.intervaler);
               //停止上传
-                this.uploadXhr.abort();
-              	this.yyzzPicUrl = '';
-              	this.yyzzPicUState ={
-                	isUpload: 0,
-                	progress: 0
-              	};
-              	this.$emit('removePic')
+              this.uploadXhr.abort();
+            	this.yyzzPicUrl = '';
+            	this.yyzzPicUState ={
+              	isUpload: 0,
+              	progress: 0
+            	};
+            	this.$emit('removePic')
           },
 
           upload1(file){
@@ -256,7 +292,7 @@
                   console.log('others')
                 }
               };
-              request.open('PUT', '123124');//host是阿里云返回的图片存储地址，即你要请求的地址
+              request.open('PUT', this.uploadUrl);//
               request.setRequestHeader('Content-Type', 'application/octet-stream');
               request.send(result);
             }
@@ -298,7 +334,7 @@
 	}
 </script>
 
-<style scoped>
+<style>
 .picAdd-box{
   width: 80px;
   height: 80px;

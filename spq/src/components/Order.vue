@@ -6,9 +6,8 @@
 		@click-right="onClickRight"
 		class="top-bg"
 		>
-			<van-icon name="search" slot="right" />
-		</van-nav-bar>
-		
+			<i class="iconfont icon-search" slot="right"></i>
+		</van-nav-bar>		
 	</div>
 </template>
 

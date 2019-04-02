@@ -12,9 +12,9 @@ Vue.prototype.Qs = Qs;           //全局注册，使用方法为:this.qs
 //设置post 请求头
 // axios.defaults.headers.post['content-type'] = 'application/json;charset=UTF-8';
 
-//初始化设置axios
+//初始化设置axios 全局的请求次数，请求的间隙
 let Axios =  axios.create({
-  timeout: 10000  //请求延时时间
+  timeout: 8000  //请求延时时间
 });
 
 
@@ -125,24 +125,28 @@ let _Axios = {
     }
 
     Axios(option).then((res) =>{
-            if(params.isLoading){
-              setTimeout(()=>{
-                model.hide();
-                params.success(res.data);
-              }, model.time);
-              return;
-            } 
-            params.success(res.data);
-          }).then((error) =>{
-            if(params.isLoading){
-              setTimeout(()=>{
-                model.hide();
-              }, model.time);
-              return;
-            } 
-          })
-        }
+          let data = res.data ? res.data : res;
+          if(params.isLoading){
+            setTimeout(()=>{
+              model.hide();
+              params.success(data);
+            }, model.time);
+            return;
+          } 
+          params.success(data);
+        }).then((error) =>{
+          // params.error && params.error(error); 
+          if(params.isLoading){
+            setTimeout(()=>{
+              model.hide();
+
+            }, model.time);
+            return;
+          }
+
+        })
       }
+    }
 
 Vue.prototype.$axios = _Axios
 
