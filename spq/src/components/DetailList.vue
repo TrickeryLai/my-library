@@ -152,6 +152,15 @@
 				this.$emit("close")
 			},
 			ok(){
+				let currentPath = this.$router.history.current.fullPath;
+				//判断是否验证
+				let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '';
+				if(!(user.orgId || user._checked)){
+
+					this.$router.push({path: '/home/realName', query:{redirect: currentPath}});
+					this.$toast('请先实名认证！');
+					return;
+				}
 				this.$emit("ok");
 				this.modelClose();
 			},

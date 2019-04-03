@@ -9,7 +9,7 @@
       :z-index = "zIndex"
     />
     <div class="realName-content">
-      <van-cell-group class="realName-content-box">
+      <van-cell-group class="">
         <h3 class="title van-hairline--bottom">上传票面</h3>
         <div class="realName-conten-inner">
           <div style="display:inline-block;margin-right: 5px;">
@@ -32,93 +32,95 @@
       <van-cell-group class="realName-content-box">
         <h3 class="title van-hairline--bottom">票面信息</h3>
         <div class="realName-conten-inner">
-          <van-cell-group>
-            <van-field
-            v-model="submitData.cpNo"
-            required
-            clearable
-            label="票据号码"
-            placeholder="可从网银复制（30位数字）"
-            />
-            <van-field
-            v-model="submitData.cpAmount"
-            required
-            clearable
-            label="票面金额(元)"
-            placeholder="请输入金额"
-            />
+            <van-row class="realName-box-row">
+              <van-col span="7" class="realName-content-box-left"><i class="required">*</i>票据号码</van-col>
+              <van-col span="17" class="realName-content-box-right">
+                 <van-field
+                 v-model="submitData.cpNo"
+                 clearable
+                 placeholder="可从网银复制（30位数字）"
+                 />
+              </van-col>
+            </van-row>
+            <van-row class="realName-box-row">
+              <van-col span="7" class="realName-content-box-left"><i class="required">*</i>票面金额(元)</van-col>
+              <van-col span="17" class="realName-content-box-right">
+                 <van-field
+                 v-model="submitData.cpAmount"
+                 clearable
+                 placeholder="请输入金额(元)"
+                 />
+              </van-col>
+            </van-row>
             <van-row>
-              <van-col span="23" offset="1" style="font-size: 12px;color :#232333;">{{changeNumToTex(submitData.companyEmail)}}</van-col>
+              <van-col span="24" style="font-size: 12px;color :#232333;text-align:center;">{{changeNumToTex(submitData.cpAmount)}}</van-col>
             </van-row>
             
-            <van-row>
-              <van-col span="18">
-                <van-field 
-                label="到期日期"
-                required
-                @click="choseTimeFn2" 
-                v-model="endTimeChoseValue" 
-                readonly 
-                style="padding-top:3px;padding-bottom:3px
-                "/>
+            <van-row class="realName-box-row">
+              <van-col span="7" class="realName-content-box-left"><i class="required">*</i>到期日期</van-col>
+              <van-col span="11" class="realName-content-box-right">
+                 <van-field
+                 v-model="endTimeChoseValue"
+                 clearable
+                 placeholder="请输入金额(元)"
+                 />
               </van-col>
               <van-col span="6">
-                <span style="vertical-align: -12px;font-size:12px;" class="blue-font">剩余天数 {{lastDay}}</span>
+                <span class="blue-font" style="font-size:12px;">剩余天数 {{lastDay}}</span>
               </van-col>
-              
             </van-row>
             
-            <van-field
-            v-model="submitData.acceptor"
-            required
-            label="承兑人全称"
-            placeholder="请输入承兑人全称"
-            />
-
-            <van-row class="van-hairline--bottom" style="padding-bottom:5px;padding-top:5px;overflow:hidden;">
-              <van-col span="7" style="font-size:14px;padding-left:5px;">
-                <span style="color: red;margin-right:4px;">*</span>票据瑕疵
+             <van-row class="realName-box-row">
+              <van-col span="7" class="realName-content-box-left"><i class="required">*</i>承兑人全称</van-col>
+              <van-col span="17" class="realName-content-box-right">
+                 <van-field
+                 v-model="submitData.acceptor"
+                 clearable
+                 placeholder="请输入承兑人全称"
+                 />
+              </van-col>
+            </van-row>
+            <van-row class="realName-box-row">
+              <van-col span="7" class="realName-content-box-left">
+                背书次数
+              </van-col>
+              <van-col span="17">
+                <van-stepper 
+                v-model="bsValue"
+                min="0"
+                 />
+              </van-col>
+            </van-row>
+            <van-row class="realName-box-row" style="padding-top: 8px;padding-bottom: 5px;">
+              <van-col span="7" class="realName-content-box-left">
+                票据瑕疵
               </van-col>
               <van-col span="17">
                 <div @click="choseXc">
                   <span v-if="xcChoseList.length <= 0">无</span>
                   <div v-if="xcChoseList.length > 0">
-                    <van-tag type="primary" style="margin: 5px;" v-for="(item, index) in xcChoseList" >{{item.name}}</van-tag>
+                    <van-tag type="primary" style="margin: 5px;padding:6px;" v-for="(item, index) in xcChoseList" >{{item.name}}</van-tag>
 
                   </div>
                 </div>
               </van-col>
             </van-row>
-            
-            <van-row>
-              <van-col span="7" style="font-size:14px;padding-left:5px;">
-                背书次数
-              </van-col>
-              <van-col span="17">
-                <van-stepper v-model="bsValue" />
-              </van-col>
-            </van-row>
-          </van-cell-group>
         </div>
       </van-cell-group>
-      <van-cell-group class="realName-content-box">
-        <h3 class="title van-hairline--bottom">可指定买家</h3>
-        <div class="realName-conten-inner">
-          <van-cell-group>
 
-            <van-field
-              v-model="submitData.sellId"
-              clearable
-              placeholder="可输入买家id"
-            />
-          </van-cell-group>
+      <van-cell-group class="realName-content-box">
+        <h3 class="title van-hairline--bottom">可指定用户买家</h3>
+        <div class="realName-conten-inner">
+          <van-field
+            v-model="submitData.buyerId"
+            clearable
+            placeholder="可输入买家id"
+          /> 
         </div>
       </van-cell-group>
       <van-cell-group class="realName-content-box">
         <h3 class="title van-hairline--bottom">卖出价格</h3>
         <div class="realName-conten-inner">
-
-          <van-cell-group>
             <van-row style="font-size: 14px;text-align: center;">
               <van-col span="8">
                 每十万扣款(元)
@@ -154,17 +156,16 @@
                 />
               </van-col>
             </van-row>
-          </van-cell-group>
-          <div>
-            <van-row>
-              <van-col span="24">
-                <van-button @click="submit" type="info" style="width:100%;">立即发布</van-button>
-              </van-col>
-            </van-row>
-
-          </div>
         </div>
       </van-cell-group>
+
+      <div>
+        <van-row>
+          <van-col span="24">
+            <van-button @click="submit" type="info" style="width:100%;">立即发布</van-button>
+          </van-col>
+        </van-row>
+      </div>
     </div>
     <van-popup v-model="picShowModel" position="center" @close="picShowModelClose">
         <img :src="showImg" style="width: 100%;">
@@ -180,8 +181,8 @@
       />
     </van-popup>
     <van-popup v-model="xcModelState" position="bottom" @close="xcModelClose" style="padding:10px;">
-      <van-tag :plain="xcChoseList.length>0" type="primary" style="padding:5px;margin: 5px;" @click="choseNoXc">无</van-tag>
-      <van-tag style="padding:5px;margin: 5px;" :plain="isXcItemChosed(item)" type="primary" v-for="(item, index) in xcList" @click="choseXcItem(item)">{{item.name}}</van-tag>
+      <van-tag :plain="xcChoseList.length>0" type="primary" style="padding:10px;margin: 5px;" @click="choseNoXc">无</van-tag>
+      <van-tag style="padding:10px;margin: 5px;" :plain="isXcItemChosed(item)" type="primary" v-for="(item, index) in xcList" @click="choseXcItem(item)">{{item.name}}</van-tag>
     </van-popup>
 
   </div>
@@ -199,7 +200,7 @@ import _server from '@/server/server'
       data(){
           return{
               title: '票据发布',
-              zIndex: 99,
+              zIndex: 999,
               endTimeChoseValue: '',
               timeChoseValue: false,//时间选择弹窗
               picShowModel: false,//图片查看弹窗
@@ -370,6 +371,7 @@ import _server from '@/server/server'
               this.timeChoseValue = false;
           },
           timeChoseConfirm(v){
+            this.endTimeTrue = v; 
             this.endTimeChoseValue = this.getTime(v);
             this.lastDay = this.getLastDay(v);
             this.timeModelClose();
@@ -385,6 +387,18 @@ import _server from '@/server/server'
             }
             return value;
           },
+          addZero(v, n = 2){
+            let value = '0000' + v;
+            return value.substr(value.length - n, n);
+          },
+          formatterTime(v){
+            let value = new Date(v),
+                result = '',
+                year = value.getFullYear(),
+                month = this.addZero(value.getMonth() + 1),
+                date = this.addZero(value.getDate());
+            return `${year}-${month}-${date}`;
+          },
           pjzRemovePic(){
               //移除图片操作,票据正面
               this.pjzPicUState.state = 0;
@@ -398,23 +412,87 @@ import _server from '@/server/server'
           pjzUploadPicFn(data){
               //营业执照上传
               this.pjzPicUState.state = data.state;
-              console.log('fr正在上传')
               if(data.state == 3){
-                  console.log('fryyzz上传成功')
                   this.pjzPic = data.imgData.data
               }
           },
           pjfUploadPicFn(data){
               //营业执照上传
               this.pjfPicUState.state = data.state;
-              console.log('fr正在上传')
               if(data.state == 3){
-                  console.log('fryyzz上传成功')
                   this.pjfPic = data.imgData.data
               }
           },
           choseSell(){
 
+          },
+          getXcList(){
+            let result = '';
+            this.xcChoseList.forEach((item) => {
+              result += ','+item.name;
+            })
+            return result;
+          },
+          checkSubmitData(){
+            if(this.pjzPicUState.state == 0 || this.pjzPicUState.state == 4){
+              this.$toast('请上传票据正面图片！')
+              return false;
+            }
+            if(this.pjzPicUState.state == 1){
+              this.$toast('票据正面图片正在上传！')
+              return false;
+            }
+            if(this.pjfPicUState.state == 0 || this.pjfPicUState.state == 4){
+              this.$toast('请上传票据反面图片！')
+              return false;
+            }
+            if(this.pjfPicUState.state == 1){
+              this.$toast('票据反面图片正在上传！')
+              return false;
+            }
+            if(!this.submitData.cpNo || this.submitData.cpNo.toString().length != 30){
+              this.$toast('请填写正确的30位票据号！')
+              return false;
+            }
+            if(!this.submitData.cpAmount || !/^(0|[1-9]\d*)(\.\d+)?$/.test(this.submitData.cpAmount)){
+              this.$toast('请输入正确的票据金额！')
+              return false;
+            }
+            if(!this.endTimeChoseValue){
+              this.$toast('请选择到期日期！')
+              return false;
+            }
+            if(!this.submitData.acceptor){
+              this.$toast('请输入承兑人！')
+              return false;
+            }
+            return true;
+          },
+          submitDataFn(){
+            let data = {
+              channel: '02',
+              cpCommercialPaperInfos: [
+                {
+                  acceptor: this.submitData.acceptor,
+                  approvalApr: this.sell.approvalApr, 
+                  buyerId: this.submitData.buyerId,
+                  cpAmount: this.submitData.cpAmount,
+                  cpDefect: this.getXcList(),
+                  cpNo: this.submitData.cpNo,
+                  dueDate: this.formatterTime(this.endTimeTrue),
+                  endorseTimes: this.bsValue,
+                  deductAmount: this.sell.deductAmount,
+                  frontBillImg: this.pjzPic,
+                  backBillImg: this.pjfPic,
+                  turnVolume: this.sell.turnVolume
+                }
+              ]
+            };
+            _server.getCommercialPaper(data, (res) =>{
+                if(res.code == 0){
+                  this.$toast('发布成功!')
+                }
+            })
           },
           submit(){
             //立即发布
@@ -448,27 +526,24 @@ import _server from '@/server/server'
           //  ,
           // turnVolume (number): 成交金额（发布金额）
           // }
-            //
-            let data = {
-              channel: 2,
-              acceptor: this.submitData.acceptor,
-              approvalApr: this.sell.approvalApr, 
-              buyerId: '',
-              cpAmount: this.submitData.cpAmount,
-              cpDefect: this.xcChoseList.join(','),
-              cpNo: this.submitData.cpNo,
-              dueDate: this.endTimeChoseValue,
-              endorseTimes: this.bsValue,
-              deductAmount: this.sell.deductAmount,
-              frontBillImg: this.pjzPic,
-              backBillImg: this.pjfPic,
-              isDefect: this.isDefect,
-              turnVolume: this.sell.turnVolume
-
-            };
-            _server.getCommercialPaper(data, () =>{
-
-            })
+            
+            if(!this.checkSubmitData()){
+              return;
+            }
+            //如果输入了买家id， 则需要先验证买家id是否正确
+            if(this.submitData.buyerId){
+                _server.checkCommercialPaper({
+                  _id: this.submitData.buyerId,
+                  success(res){
+                      if(res.code == 0){
+                        //验证成功，提交
+                        this.submitDataFn();
+                      }
+                  }
+                })
+            }else{
+              this.submitDataFn();
+            }  
           }
       },
   }
@@ -503,7 +578,7 @@ import _server from '@/server/server'
 .picTitle{
   font-size: 12px;
   color:#000;
-  padding: 5px;
+  padding: 7px;
   text-align: center;
 }
 .realName-content{
@@ -511,5 +586,24 @@ import _server from '@/server/server'
 }
 .realName-content-box{
   margin-top:5px;
+}
+.realName-content-box-left{
+  display: inline-block;
+  font-size: 14px;
+  color: #232333;
+  padding-left: 8px;
+}
+.realName-content-box-left .required{
+  color: red;
+  margin-right: 3px;
+}
+.realName-content-box-right .van-field{
+  padding-left: 0;
+}
+.realName-box-row{
+  display: flex;
+  justify-content:center;
+  align-items:Center;
+
 }
 </style>

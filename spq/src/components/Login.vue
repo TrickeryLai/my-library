@@ -79,16 +79,22 @@ export default{
 			title: '登录',
 			isLogining: false,
 			register: {
+				username: "",
 				password: ""
 			}
 		}
 	},
 	created(){
 		this.changeCodePic();
+		this.initData()
 	},
 	methods: {
 		onClickLeft(){
 			window.history.go(-1);
+		},
+		initData(){
+			let params = this.$route.params;
+			this.register = Object.assign({}, this.register, params)
 		},
 		loginInfoCheck(){
 			if(!this.register.username){

@@ -190,7 +190,10 @@ export default{
 			_server.register(data, (response) =>{
 				if(response.code == 0){
 						_this.$toast('注册成功');
-						// _this.$router.push('login');
+						_this.$router.replace({name: 'Login', params:{
+							username: this.register.loginName,
+							password: this.register.password 
+						}});
                 	//注册成功
 	                }else if(response.code == 110008){
 	                	//验证码已失效

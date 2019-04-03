@@ -107,12 +107,18 @@ let server = {
 			});
 		return this;
 	},
+	/**
+	 * [getBusinessTickets 大厅获取票据列表]
+	 * @param  {[type]}   data     [description]
+	 * @param  {Function} callback [description]
+	 * @return {[type]}            [description]
+	 */
 	getBusinessTickets(data, callback){
 		let url = 'open-cp/v1/businessTickets';
 		Axios.post({
-				isLoading: false,
+				isLoading: true,
 				url,
-        isdeal: true,
+    			isdeal: true,
 				data: data,
 				success(response){
 					if(response.code == 0 || response.code == 110008){
@@ -127,6 +133,11 @@ let server = {
 			})
 		return this;
 	},
+	/**
+	 * [getBusinessTicketDetail 获取票据详情]
+	 * @param  {[type]} params [description]
+	 * @return {[type]}        [description]
+	 */
   	getBusinessTicketDetail(params){
 	    let url = 'open-cp/v1/businessTickets/' + params._id;
 	    Axios.get({
@@ -142,12 +153,18 @@ let server = {
 	    });
 	    return this;
   	},
+  	/**
+  	 * [发布票据 description]
+  	 * @param  {[type]}   data     [description]
+  	 * @param  {Function} callback [description]
+  	 * @return {[type]}            [description]
+  	 */
   	getCommercialPaper(data, callback){
         let url = 'open-cp/v1/commercialPaper';
         Axios.post({
-          isLoading: false,
+          isLoading: true,
           url,
-          isdeal: true,
+          isdeal: false,
           data: data,
           success(response){
             if(response.code == 0 || response.code == 110008){
@@ -159,6 +176,32 @@ let server = {
         })
         return this;
   	},
+  	/**
+  	 * [checkCommercialPaper 验证买家id]
+  	 * @param  {[type]} params [description]
+  	 * @return {[type]}        [description]
+  	 */
+  	checkCommercialPaper(params){
+	    let url = 'open-cp/v1/commercialPaper/' + params._id;
+	    Axios.get({
+	      url,
+	      isLoading: true,
+	      success(response){
+	        if(response.code == 0 || response.code == 110008){
+	          params.success &&  params.success(response)
+	        }else{
+	          Toast(response.errMsg);
+	        }
+	      }
+	    });
+	    return this;
+  	},
+  	/**
+  	 * [getAuthentication 实名认证]
+  	 * @param  {[type]}   data     [description]
+  	 * @param  {Function} callback [description]
+  	 * @return {[type]}            [description]
+  	 */
     getAuthentication(data, callback){
       let url = 'open-cp/v1/company/authentication';
       Axios.post({
@@ -175,7 +218,27 @@ let server = {
         }
       })
       return this;
-    }
+    },
+    /**
+     * [getCompanyData 查询认证信息]
+     * @param  {[type]} params [description]
+     * @return {[type]}        [description]
+     */
+    getCompanyData(params){
+	    let url = 'open-cp/v1/company/' + params._id;
+	    Axios.get({
+	      url,
+	      isLoading: true,
+	      success(response){
+	          params.success &&  params.success(response)
+	        // if(response.code == 0 || response.code == 110008){
+	        // }else{
+	        //   Toast(response.errMsg);
+	        // }
+	      }
+	    });
+	    return this;
+  	},
   	
 }
 

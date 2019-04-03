@@ -1,6 +1,6 @@
 <template>
 	<div class="picAdd-box">
-		<div v-if="yyzzPicUrl">
+		<div v-if="yyzzPicUrl" style="width: 100%;height:100%;">
 			<div class="pic-upload-progress" v-if="yyzzPicUState.isUpload == 1">
 				{{yyzzPicUState.progress + '%'}}
 			</div>
@@ -103,20 +103,10 @@
         clearInterval(this.intervaler);
     },
 		methods:{
-          uploadPic(file){
+          uploadPic(){
             //通知正在上传
             this.$emit('uploadPicProgress', {state: 1, imgData: {}})
             this.yyzzPicUState.isUpload = 1;
-            // this.upload1(file);
-            // this.intervaler = setInterval(()=>{
-            //   this.yyzzPicUState.progress ++;
-            //   if(this.yyzzPicUState.progress >= 100){
-            //       this.yyzzPicUState.isUpload = 3;
-            //       //通知上传完毕，传递上传图片信息
-            // 		this.$emit('uploadPicProgress', {state: 3, imgData: {}})
-            //       clearInterval(this.intervaler);
-            //   }
-            // },300)
           },
           getObjectURL(file){
             
@@ -139,7 +129,6 @@
             //为文件读取成功设置事件
             reader.onload=(e) => {
                 this.yyzzPicUrl  = e.target.result;
-                this.uploadPic(file);//模拟效果
               };
           },
           uploadBase64str(base64Str) {
@@ -150,8 +139,8 @@
               var token = localStorage.getItem('token') ? localStorage.getItem('token'): '';
               var _this = this;
               var formdata = new FormData();
-              formdata.append("file", base64Str);
               
+              formdata.append("file", base64Str); 
               var xhr = new XMLHttpRequest();
               xhr.upload.addEventListener("progress", function (e) {
                   var percentComplete = Math.round(e.loaded * 100 / e.total);
@@ -172,6 +161,8 @@
               // xhr.setRequestHeader('Content-Type', 'multipart/form-data');
               xhr.setRequestHeader('Content-Disposition', 'form-data; name="file";');
               xhr.send(formdata);
+              //通知开始上传
+              this.uploadPic();
               this.uploadXhr = xhr;
           },
           ystu(img){
@@ -182,14 +173,12 @@
               mpImg.render(img, { maxWidth: 500, maxHeight: 500, quality: 1 }, function() {
                   var base64 = getBase64Image(resImg);
                   var base641 = resImg.src;
-                  console.log("base64", base64.length, simpleSize(base64.length), base641.length, simpleSize(base641.length));
-                  console.log(base64)
+                  // console.log("base64", base64.length, simpleSize(base64.length), base641.length, simpleSize(base641.length));
                   base64 = convertBase64UrlToBlob(base64);
                   _this.uploadBase64str(base64);
               });              
           },
           uploadFile(file) {
-            console.log(file)
               var formdata = new FormData();
               var _this = this;
               var token = localStorage.getItem('token') ? localStorage.getItem('token'): '';
@@ -221,9 +210,11 @@
               // xhr.setRequestHeader('Content-Type', 'multipart/form-data');
               xhr.setRequestHeader('Content-Disposition', 'form-data; name="file"');
               xhr.send(formdata);
+               //通知开始上传
+              this.uploadPic();
               this.uploadXhr = xhr;
           },
-          yyzzPicChange(e,pic){
+          yyzzPicChange(e, pic){
               let yyzzPic = this.$refs.yyzzPicInput.files;
 
               this.yyzzPic = yyzzPic;
@@ -240,109 +231,22 @@
             	};
             	this.$emit('removePic')
           },
-
-          upload1(file){
-            let xhr = new XMLHttpRequest(),
-                _this = this,
-                param = new FormData(); //创建form对象
-            param.append('file',file, file.name);//通过append向form对象添加数据
-            // param.append('chunk','0');//添加form表单中其他数据
-            // console.log('1313',param.get('file'),'-----------------'); //FormData私有类对象，访问不到，可以通过get判断值是否传进去
-            // let config = {
-            //   headers:{'Content-Type':'multipart/form-data'}
-            // };  //添加请求头
-            // this.$axios.post({url:'http://upload.qiniu.com/',data:param,headers:config,success(res){
-              
-            //   }})
-            xhr.open('POST', this.uploadUrl);
-            xhr.send(param);
-            xhr.onprogress = (e) => {
-              if (event.lengthComputable) {
-                let percentComplete = event.loaded / event.total;
-                _this.yyzzPicUState.progress = Math.floor(percentComplete);
-              }
-            };
-            xhr.upload.onprogress = (e) => {
-              // _this.yyzzPicUState.isUpload = 3;
-              // _this.$emit('uploadPicProgress', {state: 3, imgData: {}})
-              // clearInterval(_this.intervaler);
-            };
-
-          },
-          upload(file){
-            let reader = new FileReader();
-            reader.readAsArrayBuffer(file);
-            //安字节读取文件并存储至二进制缓存区
-            reader.onload = function (e) {
-              let result = e.target.result;
-              let blob = new Blob([result]);//存储二进制数据
-              let url = URL.createObjectURL(blob);//生成本地图片地址用于图片预览
-              let request = new XMLHttpRequest();
-              request.onreadystatechange = function () {
-                if (request.readyState === 4) {
-                  if (request.status === 200) {
-
-                  } else {
-
-                  }
-                } else {
-
-                }
-              };
-              request.open('PUT', this.uploadUrl);//
-              request.setRequestHeader('Content-Type', 'application/octet-stream');
-              request.send(result);
-            }
-          },
-          upload3(file){
-            var formdata = new FormData(),
-                xhr = new XMLHttpRequest(),
-                _this = this;
-            formdata.append("base64str", file);
-            xhr.upload.addEventListener("progress", function (e) {
-
-              var percentComplete = Math.round(e.loaded * 100 / e.total);
-              // para.onProgress(percentComplete.toString() + '%');
-              _this.yyzzPicUState.progress = Math.floor(percentComplete);
-            });
-
-            if(this.yyzzPicUState.progress >= 100){
-                  this.yyzzPicUState.isUpload = 3;
-                  //通知上传完毕，传递上传图片信息
-                  this.$emit('uploadPicProgress', {state: 3, imgData: {}})
-                    clearInterval(this.intervaler);
-                }
-
-            xhr.addEventListener("load", function (e) {
-              _this.yyzzPicUState.isUpload = 3;
-              _this.$emit('uploadPicProgress', {state: 3, imgData: {}})
-              clearInterval(_this.intervaler);
-              // para.uploadComplete(xhr.responseText);
-            });
-            xhr.addEventListener("error", function (e) {
-              // para.uploadError(e);
-              console.log(e)
-            });
-
-            xhr.open("post", this.uploadUrl, true);
-            xhr.send(formdata);
-          }
 		}
 	}
 </script>
 
-<style>
+<style scoped>
 .picAdd-box{
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   text-align: center;
-  line-height: 80px;
+  line-height: 100px;
   background: #f5f5f5;
   position: relative;
 }
 .picAdd-box img{
-  width: 80px;
-  max-height: 80px;
+  width: 100%;
+  max-height: 100%;
   vertical-align: middle;
 }
 .picAdd-box .pic-remove{
@@ -353,8 +257,10 @@
   height: 12px;
   line-height: 12px;
   border-radius: 50%;
-  border: 1px solid #666;
+  border: 1px solid #232333;
+  color: #232333;
   font-style: normal;
+  font-size:12px;
   text-align: center;
   z-index: 99
 }

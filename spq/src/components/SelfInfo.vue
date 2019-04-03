@@ -7,16 +7,17 @@
 		/>
 		<div class="selfInfo-top">
 			<div style="position: absolute;left:0;top:0;width: 100%;height: 100%;">
-				<div class="checked-icon" v-if="(!this.baseInfo.orgId)" @click="goChecked">
+				<div class="checked-icon" v-if="(!this.baseInfo.orgId && !this.baseInfo._checked)" @click="goChecked">
 					<span class="point"></span>未认证
 				</div>
-				<div class="checked-icon active-c" v-if="(this.baseInfo.orgId)" >
+				<div class="checked-icon active-c" v-if="(this.baseInfo.orgId || this.baseInfo._checked)" >
 					<span class="point"></span>已认证
 				</div>
 				<div class="selfInfo-center">
 					<div class="selfInfo-header" @click="gotoBaseInfo"><i class="iconfont icon-mine"></i></div>
-					<p class="baseInfo-row" style="font-size: 18px;color: #333;">{{this.baseInfo.loginName}}</p>
-					<p v-if="baseInfo.phonenumber" class="baseInfo-row"><i class="iconfont icon-mobile-alt"></i>{{this.baseInfo.phonenumber}}</p>
+					<p class="baseInfo-row">{{this.baseInfo.loginName}}</p>
+					<!-- <p v-if="baseInfo.phonenumber" class="baseInfo-row"><i class="iconfont icon-mobile-alt"></i>{{this.baseInfo.phonenumber}}</p> -->
+					<p v-if="baseInfo.orgName" class="baseInfo-row baseInfo-org">{{this.baseInfo.orgName}}</p>
 				</div>
 			</div>
 		</div>
@@ -24,7 +25,6 @@
 			<van-row class="selfInfo-box">
 				<van-col 
 					span="12"
-					
 					>
 					<div
 					@click="safeFn">
@@ -56,7 +56,7 @@
 				<van-col span="12">
 					<div @click="gotoCaculate">
 						<van-col offset="2" span="2">
-							<i class="iconfont icon-shiyongwendang" style="color:#0079f3;vertical-align: -8px;"></i>
+							<i class="iconfont icon-caculater" style="color:#0079f3;vertical-align: -8px;"></i>
 						</van-col>
 						<van-col span="20">
 							<h3 class="selfInfo-box-title">计算器</h3>
@@ -68,19 +68,25 @@
 		</div>
 		<van-dialog
 		v-model="show"
-		title="相关协议"
+		title="平台规则"
 		:close-on-click-overlay="true"
 		@before-close="beforeClose"
 		>
-			<div>
-				<van-row>
-					<van-col span="12" offset="6">平台规则1</van-col>
+			<div class="gz-model-content">
+				<van-row >
+					<div @click="previewPdfFn(1, '《平台规则1》')">
+						<van-col span="24"><i class="iconfont icon-pdf1 blue-font"></i>《平台规则1》</van-col>
+					</div>
 				</van-row>
 				<van-row>
-					<van-col span="12" offset="6">平台规则1</van-col>
+					<div @click="previewPdfFn(2, '《平台规则2》')">
+						<van-col span="24"><i class="iconfont icon-pdf1 blue-font"></i>《平台规则2》</van-col>
+					</div>
 				</van-row>
 				<van-row>
-					<van-col span="12" offset="6">平台规则1</van-col>
+					<div @click="previewPdfFn(3, '《平台规则3》')">
+						<van-col span="24"><i class="iconfont icon-pdf1 blue-font"></i>《平台规则3》</van-col>
+					</div>
 				</van-row>
 			</div>
 		</van-dialog>
@@ -117,7 +123,6 @@
 				let baseInfo = localStorage.getItem('user');
 				if(baseInfo){
 					this.baseInfo = JSON.parse(baseInfo);
-					console.log(this.baseInfo)
 				}else{
 					this.$router.push({path:'/login'});
 				}
@@ -127,6 +132,12 @@
 			},
 			beforeClose(){
 				this.show = false;
+			},
+			previewPdfFn(type, title){
+				//http://file.dakawengu.com/file/2018-05-29/20180527-tianfeng.pdf
+				let pdfUrl = encodeURI('http://file.dakawengu.com/file/2018-05-29/20180527-tianfeng.pdf');
+				
+				this.$router.push({name: 'PreviewPdf', params: {pdfUrl, title}});
 			}
 		}
 	}
@@ -195,7 +206,9 @@
 	font-size: 28px;
 }
 .selfInfo-center p{
+	letter-spacing: 1px;
 	color: #fff;
+	text-shadow: 1px 1px 1px #000;
 }
 .selfInfo-box{
 	background: #fff;
@@ -217,5 +230,18 @@
 }
 .baseInfo-row{
 	padding-bottom: 5px;
+}
+.gz-model-content{
+	font-size: 14px;
+	color: #232333;
+	padding-top: 10px;
+}
+.gz-model-content .van-row{
+	padding-top:5px;
+	padding-bottom: 5px;
+}
+p.baseInfo-org{
+	font-size:18px;
+	letter-spacing: 2px;
 }
 </style>

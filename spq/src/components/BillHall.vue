@@ -42,7 +42,6 @@
 			</van-row>
 			<div style="margin-top: 5px;padding-bottom:50px;">
 				<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-
 					<van-list
 					v-model="loading"
 					:finished="finished"
@@ -141,6 +140,7 @@ import _server from '@/server/server'
 			detailModelState: false,//详情框状态
 			detailItem: {},//详情项
 			searchModelState: false,//筛选弹出框状态
+			isGetingData: false,//是否正在请求数据
 			searchData: '',//搜索条件
 	        // 0是asc   1是desc
 	        sortState: {

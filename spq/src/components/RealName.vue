@@ -53,7 +53,6 @@
       <van-cell-group class="realName-content-box">
         <h3 class="title van-hairline--bottom">企业信息</h3>
         <div class="realName-conten-inner">
-          <van-cell-group>
             <van-field
             v-model="submitData.orgName"
             required
@@ -85,14 +84,12 @@
             rows="1"
             autosize
             />
-          </van-cell-group>
         </div>
       </van-cell-group>
 
       <van-cell-group class="realName-content-box">
         <h3 class="title van-hairline--bottom">法人信息</h3>
         <div class="realName-conten-inner">
-          <van-cell-group>
             <van-field
             v-model="submitData.leader"
             required
@@ -114,14 +111,12 @@
               label="身份证号："
               placeholder="法人身份证号"
             />
-          </van-cell-group>
         </div>
       </van-cell-group>
 
       <van-cell-group class="realName-content-box">
         <h3 class="title van-hairline--bottom">经办人信息</h3>
         <div class="realName-conten-inner">
-          <van-cell-group>
             <van-field
             v-model="submitData.jbrName"
             clearable
@@ -135,17 +130,16 @@
             label="手机号："
             placeholder="经办人手机号"
             />
-          </van-cell-group>
-
-          <div style="padding: 15px 5px;">
-              <van-button 
-              style="width: 100%;"
-              type="info"
-              @click="submitInfo"
-            >认证</van-button>
-          </div>
         </div>
       </van-cell-group>
+
+      <div style="padding: 5px 5px;">
+          <van-button 
+          style="width: 100%;"
+          type="info"
+          @click="submitInfo"
+        >认证</van-button>
+      </div>
     </div>
   </div>
 </template>
@@ -181,9 +175,18 @@
 
           }
       },
+      created(){
+        // this.init();
+      },
       methods: {
           onClickLeft(){
               window.history.go(-1);
+          },
+          init(){
+            let path = this.$route.query.redirect? decodeURIComponent(this.$route.query.redirect) : '';
+            if(path){
+              this.$toast('请先实名认证！');
+            }
           },
           yyzzRemovePic(){
               this.yyzzPicUState.state = 0;
@@ -192,9 +195,7 @@
           yyzzUploadPicFn(data){
               //营业执照上传
               this.yyzzPicUState.state = data.state;
-              console.log('yyzz正在上传')
               if(data.state == 3){
-                  console.log('yyzz上传成功')
                   this.yyzzPic = data.imgData.data
               }
           },
@@ -324,9 +325,20 @@
             };
 
             _server.getAuthentication(data, (res) =>{
-                  if(res){
-                    this.$toast(res.errMsg)
-                  }
+                this.$toast(res.errMsg);
+                if(res.code == 0){
+                    //登录之后跳转的路由， 默认大厅， 通过redirect 设置
+                  let path = this.$route.query.redirect? decodeURIComponent(this.$route.query.redirect) : '/home/selfInfo';
+
+                  //手动更改缓存的认证判定？
+                  let user = JSON.parse(localStorage.getItem('user'));
+
+                  user._checked = true;
+
+                  localStorage.setItem('user', JSON.stringify(user));
+
+                  this.$router.replace({path});
+                } 
             })
           }
       }
@@ -373,5 +385,10 @@
 }
 .realName-page .van-cell__title span{
   font-size: 12px;
+}
+.van-field{
+  display: flex;
+  justify-content:center;
+  align-items:center;
 }
 </style>

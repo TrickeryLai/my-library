@@ -17,40 +17,6 @@ let Axios =  axios.create({
   timeout: 8000  //请求延时时间
 });
 
-
-Axios.interceptors.request.use((config) => {
-  let token = localStorage.getItem('token') ? localStorage.getItem('token'): '';
-  // 为所有接口加上前缀 例 https://www.kancloud.cn/yunye/axios/234845 前缀为 https://www.kancloud.cn
-  config.url = server.headUrl + config.url;
-  if (token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
-    
-    config.headers.Authorization = 'Bearer ' + token;
-  }
-  config.headers.lang = 'zh_cn';
-  
-  return config;
-}, (err)=> {
-  // 错误处理
-  return Promise.reject(err)
-});
-
-//响应拦截（配置请求回来的信息）
-Axios.interceptors.response.use((response) => {
-  // 处理响应数据
-
-  //统一拦截 验证是否登录
-  if(response.data && response.data.code == 110025){
-      router.replace({path: '/login'});
-      Toast(response.data.errMsg);
-      return false;
-  }
-
-  return response;
- }, (error) => {
- // 处理响应失败
-    return Promise.reject(error);
- });
-
 let modelToast;
 let model = {
   modelI: '',
@@ -69,6 +35,38 @@ let model = {
     modelToast.clear();
   }
 };
+
+
+Axios.interceptors.request.use((config) => {
+  let token = localStorage.getItem('token') ? localStorage.getItem('token'): '';
+  if (token) {  
+    // 判断是否存在token，如果存在的话，则每个http header都加上token
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+   // 为所有接口加上前缀
+  config.url = server.headUrl + config.url;
+  config.headers.lang = 'zh_cn';
+  return config;
+}, (err)=> {
+  // 错误处理
+  console.log('err',err)
+  return Promise.reject(err)
+});
+
+//响应拦截（配置请求回来的信息）
+Axios.interceptors.response.use((response) => {
+  //统一拦截 验证是否登录
+  if(response.data && response.data.code == 110025){
+      router.replace({path: '/login'});
+      Toast(response.data.errMsg);
+      return false;
+  }
+
+  return response;
+ }, (error) => {
+ // 处理响应失败
+  return Promise.reject(error);
+ });
 
 let _Axios = {
   get(params = {}){
@@ -90,11 +88,7 @@ let _Axios = {
         }, model.time);
         return;
       }else{
-        setTimeout(()=>{
-
-          params.success(res.data);
-        }, model.time);
-        return;
+        params.success(res.data);
       }
       params.success(res.data);
     }).then((error) =>{
@@ -125,11 +119,7 @@ let _Axios = {
         }, model.time);
         return;
       }else{
-        setTimeout(()=>{
-
-          params.success(res.data);
-        }, model.time);
-        return;
+        params.success(res.data);
       }
       params.success(res.data);
     }).then((error) =>{
@@ -160,10 +150,7 @@ let _Axios = {
         }, model.time);
         return;
       }else{
-        setTimeout(()=>{
-          params.success(res.data);
-        }, model.time);
-        return;
+        params.success(res.data);
       }
       params.success(res.data);
     }).then((error) =>{
@@ -208,18 +195,13 @@ let _Axios = {
             }, model.time);
             return;
           }else{
-            setTimeout(()=>{
-              params.success(data);
-            }, model.time);
-            return;
+            params.success(data);
           }
-          params.success(data);
         }).then((error) =>{
           // params.error && params.error(error); 
           if(params.isLoading){
             setTimeout(()=>{
               model.hide();
-
             }, model.time);
             return;
           }

@@ -12,6 +12,7 @@ import Caculate from '@/components/Caculate'
 import ChangePassword from '@/components/ChangePassword'
 import Fbpj from '@/components/Fbpj'
 import BaseInfo from '@/components/BaseInfo'
+import PreviewPdf from '@/components/PreviewPdf'
 
 let routerData = {
   routes: [
@@ -134,6 +135,15 @@ let routerData = {
       isNChecked: false,
     },
     component: Login
+  },
+  {
+    path: '/previewPdf',
+    name: 'PreviewPdf',
+    meta:{
+      isLogin: false,
+      isNChecked: false,
+    },
+    component: PreviewPdf
   }
   ]
 }
