@@ -93,6 +93,7 @@ export default{
 			window.history.go(-1);
 		},
 		initData(){
+		  localStorage.clear();
 			let params = this.$route.params;
 			this.register = Object.assign({}, this.register, params)
 		},

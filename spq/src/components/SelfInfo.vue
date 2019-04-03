@@ -73,19 +73,9 @@
 		@before-close="beforeClose"
 		>
 			<div class="gz-model-content">
-				<van-row >
-					<div @click="previewPdfFn(1, '《平台规则1》')">
-						<van-col span="24"><i class="iconfont icon-pdf1 blue-font"></i>《平台规则1》</van-col>
-					</div>
-				</van-row>
-				<van-row>
-					<div @click="previewPdfFn(2, '《平台规则2》')">
-						<van-col span="24"><i class="iconfont icon-pdf1 blue-font"></i>《平台规则2》</van-col>
-					</div>
-				</van-row>
-				<van-row>
-					<div @click="previewPdfFn(3, '《平台规则3》')">
-						<van-col span="24"><i class="iconfont icon-pdf1 blue-font"></i>《平台规则3》</van-col>
+				<van-row v-for="(item,index) in xyData">
+					<div @click="previewPdfFn(item)">
+						<van-col span="24"><i class="iconfont icon-pdf1 blue-font"></i>《{{item.name}}》</van-col>
 					</div>
 				</van-row>
 			</div>
@@ -94,22 +84,30 @@
 </template>
 
 <script>
+
+  import _server from '@/server/index';
+
 	export default{
 		name: 'Order',
 		data(){
 			return {
 				title: '个人中心',
 				show: false,
+        xyData: [],//协议数据
 				baseInfo:{},
 			}
 		},
 		created(){
+		  this.initData();
 			this.getBaseInfo();
 		},
 		methods: {
 			goChecked(){
 				this.$router.push({path:'/home/realName'})
 			},
+      initData(){
+			  this.xyData = _server.xyData;
+      },
 			safeFn(){
 				this.$router.push({path:'/home/selfInfo/safeSetting'})
 			},
@@ -133,11 +131,11 @@
 			beforeClose(){
 				this.show = false;
 			},
-			previewPdfFn(type, title){
+			previewPdfFn(item){
 				//http://file.dakawengu.com/file/2018-05-29/20180527-tianfeng.pdf
 				let pdfUrl = encodeURI('http://file.dakawengu.com/file/2018-05-29/20180527-tianfeng.pdf');
 				
-				this.$router.push({name: 'PreviewPdf', params: {pdfUrl, title}});
+				this.$router.push({name: 'PreviewPdf', params: {pdfUrl: item.url, title: item.name}});
 			}
 		}
 	}
@@ -241,7 +239,7 @@
 	padding-bottom: 5px;
 }
 p.baseInfo-org{
-	font-size:18px;
+	font-size:26px;
 	letter-spacing: 2px;
 }
 </style>
