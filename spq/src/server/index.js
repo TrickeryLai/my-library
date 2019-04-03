@@ -10,6 +10,7 @@ let xyHeadUrl = protocol + '//' + common.ip + ':' + common.xyPort +'/';
 
 let commonUrl = {
 	headUrl: protocol + '//' + common.ip + ':' + common.port +'/',
+  picUrl: protocol + '//' + common.ip + ':' + common.xyPort +'/images/',
   xyData: [
     {
        name: '平台撮合规则',
