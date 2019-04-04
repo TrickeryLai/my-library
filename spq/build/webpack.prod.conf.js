@@ -39,6 +39,7 @@ const webpackConfig = merge(baseWebpackConfig, {
           drop_console: true,  //删除所有console语句，可以兼容IE
           collapse_vars: true,  //内嵌已定义但只使用一次的变量
           reduce_vars: true,  //提取使用多次但没定义的静态值到变量
+          pure_funcs: ['console.log']
         },
         output: {
             beautify: false, //最紧凑的输出，不保留空格和制表符
