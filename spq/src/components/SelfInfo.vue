@@ -122,7 +122,7 @@
 				if(baseInfo){
 					this.baseInfo = JSON.parse(baseInfo);
 				}else{
-					this.$router.push({path:'/login'});
+					// this.$router.replace({path:'/login'});
 				}
 			},
 			xyFn(){
@@ -135,7 +135,7 @@
 				//http://file.dakawengu.com/file/2018-05-29/20180527-tianfeng.pdf
 				let pdfUrl = encodeURI('http://file.dakawengu.com/file/2018-05-29/20180527-tianfeng.pdf');
 				
-				this.$router.push({name: 'PreviewPdf', params: {pdfUrl: item.url, title: item.name}});
+				this.$router.push({path: '/previewPdf', query: {pdfUrl: item.url, title: item.name}});
 			}
 		}
 	}

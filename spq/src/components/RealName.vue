@@ -205,11 +205,8 @@
               this.sfzzPic = '';
           },
           sfzzUploadPicFn(data){
-            console.log(data)
               this.sfzzPicUState.state = data.state;
-              console.log('fr正在上传')
               if(data.state == 3){
-                  console.log('fryyzz上传成功')
                   this.sfzzPic = data.imgData.data
               }
           },
@@ -219,14 +216,9 @@
               this.sfzfPic = '';
           },
           sfzfUploadPicFn(data){
-
-              //营业执照上传
               this.sfzfPicUState.state = data.state;
-              console.log('fr正在上传');
               if(data.state == 3){
-                  console.log('fryyzz上传成功');
                   this.sfzfPic = data.imgData.data;
-
               }
           },
           submitDataCheck(){
@@ -328,7 +320,9 @@
                 this.$toast(res.errMsg);
                 if(res.code == 0){
                     //登录之后跳转的路由， 默认大厅， 通过redirect 设置
-                  let path = this.$route.query.redirect? decodeURIComponent(this.$route.query.redirect) : '/home/selfInfo';
+                  // let path = this.$route.query.redirect? decodeURIComponent(this.$route.query.redirect) : '/home/selfInfo';
+                  //认证之后重新登录更新个人信息？？
+                  let path = '/login';
 
                   //手动更改缓存的认证判定？
                   let user = JSON.parse(localStorage.getItem('user'));

@@ -155,6 +155,20 @@
                   // para.uploadError(e);
                   _this.$emit('uploadPicProgress', {state: 4, imgData: e});
               });
+              xhr.addEventListener('readystatechange', function(e){
+                var res;
+                if(e.target.status == 200 && e.target.readyState == 4){
+                  res = JSON.parse(e.target.response);
+                  if(res.code == '110025'){
+                    _this.$router.replace({name: 'Login'});
+                    _this.$toast(res.errMsg);
+                    return;
+                  }else if(res.code != 0){
+                    _this.$toast(res.errMsg);
+                  }
+                }
+                
+              });
               xhr.open("post", _common.headUrl + this.uploadUrl, true);
               xhr.setRequestHeader('Authorization', 'Bearer ' + token);
               xhr.setRequestHeader('lang', 'zh_cn');
@@ -182,11 +196,7 @@
               var formdata = new FormData();
               var _this = this;
               var token = localStorage.getItem('token') ? localStorage.getItem('token'): '';
-
-              // formdata.append(para.filebase, file);//这个名字要和mvc后台配合
-              // formdata.append('file', file);
               formdata.append("file", file);
-
               var xhr = new XMLHttpRequest();
               xhr.upload.addEventListener("progress", function (e) {
 
@@ -202,6 +212,21 @@
               xhr.addEventListener("error", function (e) {
                   // para.uploadError(e);
                   _this.$emit('uploadPicProgress', {state: 4, imgData: {}});
+              });
+
+              xhr.addEventListener('readystatechange', function(e){
+                var res;
+                if(e.target.status == 200 && e.target.readyState == 4){
+                  res = JSON.parse(e.target.response);
+                  if(res.code == '110025'){
+                    _this.$router.replace({name: 'Login'});
+                    _this.$toast(res.errMsg);
+                    return;
+                  }else if(res.code != 0){
+                    _this.$toast(res.errMsg);
+                  }
+                }
+
               });
 
               xhr.open("post", _common.headUrl + this.uploadUrl, true);

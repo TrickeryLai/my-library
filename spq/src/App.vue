@@ -63,4 +63,13 @@
     background-color: #666;
     background-color: transparent;
   }
+  .border-1{
+    border: 1px solid #ccc;
+  }
+  .text-left{
+    text-align: left;
+  }
+  .text-right{
+    text-align: right;
+  }
   </style>

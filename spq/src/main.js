@@ -43,17 +43,17 @@ router.beforeEach( (to, from, next) => {
   }
 
   //判断是否需要登录, 通过本地是否存在 token, 未登录跳转至登录页面，同时将该页面地址传入 redirect
-  if(to.meta.isLogin && !localItem){
-      next({path: '/login', query:{redirect: to.fullPath}});
-      Toast('请先登录！');
-      return;
-  }
+  // if(to.meta.isLogin && !localItem){
+  //     next({path: '/login', query:{redirect: to.fullPath}});
+  //     Toast('请先登录！');
+  //     return;
+  // }
   //判断是否认证，否则跳出
-  if(to.meta.isNChecked && !orgId && !_checked){
-      next({path: '/home/realName', query:{redirect: to.fullPath}});
-      Toast('请先实名认证！');
-      return;
-  }
+  // if(to.meta.isNChecked && !orgId && !_checked){
+  //     next({path: '/home/realName', query:{redirect: to.fullPath}});
+  //     Toast('请先实名认证！');
+  //     return;
+  // }
   
   //默认操作跳转下个页面
   next()

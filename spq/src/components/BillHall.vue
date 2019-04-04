@@ -48,7 +48,7 @@
 					finished-text="没有更多了"
 					:error.sync="error"
 					error-text="请求失败，点击重新加载"
-          :offset=20
+          			:offset=20
 					@load="onLoad"
 					>
 					<van-cell
@@ -149,7 +149,7 @@ import _server from '@/server/server'
 	          	createTimeSort: '',//发布时间排序
 	      	},
 	      	pageData: {
-  				  pageNum: 0,
+			  	pageNum: 0,
 		      	pageSize: 10,
 		      	total: 0,
 	      	},
@@ -300,6 +300,7 @@ import _server from '@/server/server'
 		},
 		detailModelOk(){
 			//详情框--我要买，从新请求数据
+			this.getData(this.searchData);
 		},
 		modelOk(data){
 			let searchData = {

@@ -51,7 +51,6 @@
 		<van-col span="8">
 			<img style="height: 33px;width:100%" 
 			:src="img"
-			v-if="img"
 			@click="changeCodePic"
 			>
 		</van-col>
@@ -187,15 +186,16 @@ export default{
 }
 .register-content .top-title{
 	font-weight: bold;
-	font-size: 20px;
-	color:#000;
-	margin-bottom: 20px;
+	font-size: 24px;
+	color:#232333;
+	margin: 25px 0 15px;
+	text-shadow: 2px 2px 2px #fff;
 }
 .register-content .title{
 	font-weight: normal;
 	font-size: 20px;
 	text-align: left;
-	color: #000;
+	color: #232333;
 	margin: 5px 0;
 }
 .input-box-wrap{

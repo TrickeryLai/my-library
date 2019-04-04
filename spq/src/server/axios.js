@@ -56,11 +56,11 @@ Axios.interceptors.request.use((config) => {
 //响应拦截（配置请求回来的信息）
 Axios.interceptors.response.use((response) => {
   //统一拦截 验证是否登录
-  if(response.data && response.data.code == 110025){
-      router.replace({path: '/login'});
-      Toast(response.data.errMsg);
-      return false;
-  }
+  // if(response.data && response.data.code == 110025){
+  //     router.replace({path: '/login'});
+  //     Toast(response.data.errMsg);
+  //     return false;
+  // }
 
   return response;
  }, (error) => {

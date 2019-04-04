@@ -239,6 +239,30 @@ let server = {
 	    });
 	    return this;
   	},
+  	/**
+  	 * [getAuthentication 我要买]
+  	 * @param  {[type]}   data     [description]
+  	 * @param  {Function} callback [description]
+  	 * @return {[type]}            [description]
+  	 */
+  	buyFn(data, callback){
+      let url = 'open-cp/v1/company/authentication';
+      Axios.post({
+        isLoading: false,
+        url,
+        isdeal: false,
+        data: data,
+        success(response){
+    		callback && callback(response);
+          // if(response.code == 0 || response.code == 110008){
+          //   callback && callback(response);
+          // }else{
+          //   Toast(response.errMsg);
+          // }
+        }
+      })
+      return this;
+    },
   	
 }
 

@@ -52,7 +52,7 @@
         <van-col span="8" class="baseInfo-box-left">图片信息:</van-col>
         <van-col span="16" class="baseInfo-box-right">
           <div style="width: 100px;height: 100px;border: 1px solid #ccc;display: inline-block;">
-            <img :src="baseInfo.businessLicenseImgPath" style="width:100px;max-height: 100px;">
+            <img :src="picUrl + baseInfo.businessLicenseImgPath" style="width:100px;max-height: 100px;">
           </div> 
         </van-col>
       </van-row>
@@ -65,12 +65,14 @@
 
 <script>
    import _server from '@/server/server';
+   import _common from '@/server/index';
 
   export default{
     name: 'BaseInfo',
     data(){
       return{
         title:'基本信息',
+        picUrl: _common.picUrl,
         baseInfo: {
 
         }

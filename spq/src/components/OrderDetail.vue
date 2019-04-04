@@ -71,43 +71,13 @@
 							{{buyPrice}}
 						</van-col>
 					</van-row>
-					<van-row class="detail-row-special">
-
-						<van-col class="detail-row-left" span="12">年化利率</van-col>
-						<van-col class="detail-row-left" span="12">每十万扣款</van-col>
-						<van-col class="detail-row-left" span="24">
-							<van-field 
-							style="width:35%;display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
-							v-model="submit.yearRate"
-							placeholder="年化利率"
-							@input="changeData(1)"
-							type="number" />
-						%
-							<van-field 
-							style="width:35%;display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
-							v-model="submit.reduceAmount"
-							@input="changeData(2)" 
-							placeholder="每十万扣款"
-							type="number" />
-							<span>元/十万</span>
-						</van-col>
-						<van-col span="24">
-							<span class="detail-row-left">成交金额（元）</span>
-							<van-field 
-							style="display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
-							v-model="submit.dealAmount" 
-							@input="changeData(3)"
-							placeholder="成交金额"
-							type="number" />
-						</van-col>
-					</van-row>
 				</van-cell-group>
 			</van-cell-group>
 			<div style="text-align: center;width: 100%;">
 				<van-button
 					type="info"
 					style="width: 100%;position: absolute; left: 0; bottom: 0;"
-					@click="ok">我要买</van-button>
+					@click="ok">确认</van-button>
 			</div>	
 			</div>
 		</div>
@@ -192,34 +162,6 @@
 
 				LastTime = Math.ceil(LastTime / (24*60*60));
 				return LastTime;
-			},
-			changeData(type){
-				let cpAmount = this.initData.cpAmount;//票据金额
-				let calDay = this.getLastTime();//剩余时间
-				let txje;
-
-				cpAmount = 1000000;
-				calDay = 173;
-
-				
-				100*173*1/100/360
-				if(type == 1){
-					txje = (cpAmount*calDay*this.submit.yearRate/100)/3600;
-					// this.submit.yearRate = 0;//年利率
-					this.submit.reduceAmount = txje.toFixed(4);//每十万扣款
-					this.submit.dealAmount = (cpAmount - cpAmount/100000*txje).toFixed(4);//成交金额
-				}
-				if(type == 2){
-					this.submit.dealAmount = (cpAmount - (cpAmount/100000)*this.submit.reduceAmount).toFixed(4);//成交金额
-
-					this.submit.yearRate =((cpAmount -this.submit.dealAmount)*36000/(calDay*cpAmount)).toFixed(8);//年利率
-					// this.submit.reduceAmount = 0;//每十万扣款
-				}
-				if(type == 3){
-					this.submit.reduceAmount = ((cpAmount-this.submit.dealAmount)/10).toFixed(4);//每十万扣款
-					this.submit.yearRate =((cpAmount -this.submit.dealAmount)*36000/(calDay*cpAmount)).toFixed(8);//年利率
-					// this.submit.dealAmount = 0;//成交金额
-				}
 			},
 			refreshPriceFn(){
 				//刷新报价信息

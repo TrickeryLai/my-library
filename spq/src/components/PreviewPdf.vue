@@ -17,7 +17,6 @@
 </template>
 
 <script>
-
 	import pdf from 'vue-pdf';
 
 	export default{
@@ -30,14 +29,14 @@
 			}
 		},
 		created(){
-			if(!this.$route.params.pdfUrl){
+			if(!this.$route.query.pdfUrl){
 				this.$router.replace({path: '/home/selfInfo'});
 				return;
 			}
-			if(this.$route.params.title){
-				this.title =  this.$route.params.title
+			if(this.$route.query.title){
+				this.title =  this.$route.query.title;
 			}
-			this.pdfUrl = decodeURI(this.$route.params.pdfUrl);
+			this.pdfUrl = decodeURI(this.$route.query.pdfUrl);
 		},
 		methods:{
 			onClickLeft(){

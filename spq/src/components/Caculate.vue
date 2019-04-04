@@ -43,19 +43,22 @@
 				<van-row>
 					<van-col span="8" ><span style="vertical-align:-12px;">月利率（%）</span></van-col>
 					<van-col span="16" >
-						<van-field v-model="monthRate" placeholder="月利率（%）"  style="padding-top:3px;padding-bottom:3px"/>
+						<van-field v-model="monthRate" placeholder="月利率（%）"  style="padding-top:3px;padding-bottom:3px"
+						@input="rateChange(1)"/>
 					</van-col>
 				</van-row>
 				<van-row>
 					<van-col span="8" ><span style="vertical-align:-12px;">年利率（%）</span></van-col>
 					<van-col span="16" >
-						<van-field v-model="yearRate" placeholder="年利率（%）" style="padding-top:3px;padding-bottom:3px" />
+						<van-field v-model="yearRate" placeholder="年利率（%）" style="padding-top:3px;padding-bottom:3px"
+						@input="rateChange(2)" />
 					</van-col>
 				</van-row>
 				<van-row>
 					<van-col span="8" ><span style="vertical-align:-12px;">每十万手续费</span></van-col>
 					<van-col span="16" >
-						<van-field v-model="shouxufei" placeholder="每十万手续费" style="padding-top:3px;padding-bottom:3px" />
+						<van-field v-model="shouxufei" placeholder="每十万手续费（元）" style="padding-top:3px;padding-bottom:3px"
+						@input="rateChange(3)" />
 					</van-col>
 				</van-row>
 				<van-row style="margin: 5px;">
@@ -63,42 +66,42 @@
 						<van-button plain type="info" style="width:100%;" @click="reset">清空</van-button>
 					</van-col>
 					<van-col span="12">
-						<van-button type="info" style="width:100%;">计算</van-button>
+						<van-button type="info" style="width:100%;" @click="caculateResultFn">计算</van-button>
 					</van-col>
 				</van-row>
 			</div>
 
 			<div class="result">
 				<van-row>
-					<van-col span="12">
+					<van-col span="8" class="text-right">
 						计算天数：
 					</van-col>
-					<van-col span="12">
-						
+					<van-col span="16" class="text-left">
+						{{caculateResult.day}}天
 					</van-col>
 				</van-row>
 				<van-row>
-					<van-col span="12">
+					<van-col span="8" class="text-right">
 						每十万贴息：
 					</van-col>
-					<van-col span="12">
-						
+					<van-col span="16" class="text-left">
+						{{caculateResult.tx}}元
 					</van-col>
 				</van-row>
 				<van-row>
-					<van-col span="12">
+					<van-col span="8" class="text-right">
 						贴现利息：
 					</van-col>
-					<van-col span="12">
-						
+					<van-col span="16" class="text-left">
+						{{caculateResult.txlx}}元
 					</van-col>
 				</van-row>
 				<van-row>
-					<van-col span="12">
+					<van-col span="8" class="text-right">
 						贴现金额：
 					</van-col>
-					<van-col span="12">
-						
+					<van-col span="16" class="text-left">
+						{{caculateResult.txje}}元
 					</van-col>
 				</van-row>
 			</div>
@@ -118,7 +121,7 @@
 			<van-datetime-picker
 			v-model="endCurrentDate"
 			type="date"
-			:min-date="currentDate"
+			:min-date="new Date(currentDate.getTime() + 24*60*60*1000)"
 			:formatter="formatter"
 			@confirm="endTimeChoseConfirm"
 			@cancel="endTimeChoseCancel"
@@ -146,6 +149,12 @@
 				monthRate: '',//月利率
 				yearRate: '',//年利率
 				shouxufei: '',//手续费
+				caculateResult: {
+					day: 0,
+					tx: 0,
+					txje: 0,
+					txlx: 0
+				}
 			}
 		},
 		methods:{
@@ -191,24 +200,49 @@
 			timeChoseConfirm(){
 				//贴票时间--确认
 				this.timeChoseValue = this.getTime(this.currentDate);
+
+				//如果到期日小于贴现日，重置到期日
+				if(this.endCurrentDate && this.currentDate.getTime() > this.endCurrentDate.getTime()){
+					this.endCurrentDate = '';
+					this.endTimeChoseValue = '';
+				}
+
 				this.timeModelClose();
-				this.getLastTime();
 			},
 			timeChoseCancel(){
 				this.timeModelClose();
 			},
 			endTimeModelClose(){
-				
 				this.endTimeChoseShow = false;
 			},
-			endTimeChoseConfirm(){
+			endTimeChoseConfirm(v){
 				//到期时间--确认
-				this.endTimeChoseValue = this.getTime(this.endCurrentDate);
+				this.endCurrentDate = v;
+				this.endTimeChoseValue = this.getTime(v);
 				this.endTimeModelClose();
-				this.getLastTime();
 			},
 			endTimeChoseCancel(){
 				this.endTimeModelClose();
+			},
+			rateChange(type){
+				if(type == 1){
+					// this.monthRate = '';//月利率
+					this.yearRate = '';//年利率
+					this.shouxufei = '';//手续费
+				}
+
+				if(type == 2){
+					this.monthRate = '';//月利率
+					// this.yearRate = '';//年利率
+					this.shouxufei = '';//手续费
+				}
+
+				if(type == 3){
+					this.monthRate = '';//月利率
+					this.yearRate = '';//年利率
+					// this.shouxufei = '';//手续费
+				}
+				return;
 			},
 			getLastTime(){
 				//计算剩余时间
@@ -218,8 +252,58 @@
 
 				let lastTime = new Date(this.endCurrentDate).getTime() - new Date(this.currentDate).getTime();
 				lastTime = Math.ceil(lastTime/(24*60*60*1000));
+				return lastTime;
+			},
+			checkedData(){
+				if(!this.value){
+					this.$toast('请输入票面金额');
+					return false;
+				}
+				if(!this.endCurrentDate){
+					this.$toast('请选择到期时间');
+					return false;
+				}
+				if(!this.monthRate & !this.yearRate & !this.shouxufei){
+					this.$toast('请输入利率');
+					return false;
+				}
+				return true;
+			},
+			caculateResultFn(){
+				let value, startTime, endTime, changeDay, lastDay, monthRate, yearRate, sxf, calDay, txlx, txje;
+				value = this.value;
+				startTime = this.currentDate;
+				endTime = this.endCurrentDate;
+				lastDay = this.getLastTime();//获取到期时间至贴现时间
+				changeDay = this.changeDay ? this.changeDay : 0; //调整天数
+				monthRate = this.monthRate;//月利率
+				yearRate = this.yearRate;//年利率
+				sxf = this.shouxufei;//手续费
 
-				this.changeDay = lastTime;
+				if(!this.checkedData()){
+					return;
+				}
+				calDay = Math.floor(lastDay) + Math.floor(changeDay);//计算天数
+				if(this.monthRate){
+					txlx = (value*10000*(monthRate/100*12*calDay/360));
+					this.yearRate = (this.monthRate*12);
+					this.shouxufei = (txlx*10/value);
+				}else if(this.yearRate){
+					txlx = ((value*10000*calDay*yearRate/100)/360);
+					this.monthRate = (this.yearRate/12);
+					this.shouxufei = (txlx*10/value);
+				}else{
+					txlx = (sxf*(value/10)).toFixed(2);
+					this.yearRate = (txlx*36000/(calDay*value*10000));
+					this.monthRate = (this.yearRate/12);
+				}
+				
+				this.caculateResult = {
+					day: Math.floor(lastDay) + Math.floor(changeDay),
+					txlx: txlx.toFixed(2),
+					txje: (value*10000 - txlx).toFixed(2)
+				};
+				this.caculateResult.tx = parseFloat(this.shouxufei).toFixed(2);
 			}
 
 		}
@@ -253,5 +337,8 @@
 .result{
 	position: relative;
 	top: -70px;
+}
+.result-show-right{
+	text-align: left;
 }
 </style>

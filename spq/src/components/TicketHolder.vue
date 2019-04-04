@@ -19,7 +19,7 @@
 		</div>
 	
 		<van-collapse class="ticket-content-list" v-model="activeName" accordion>
-			<van-collapse-item title="匹配中" name="1">
+			<van-collapse-item class="text-left" title="匹配中" name="1">
 				<div style="max-height: 350px;overflow:auto">
 					<van-pull-refresh v-model="matchState.isLoading" @refresh="matchOnRefresh">
 
@@ -62,7 +62,7 @@
 				</div>
 				
 			</van-collapse-item>
-			<van-collapse-item title="暂存中" name="2">
+			<van-collapse-item class="text-left" title="暂存中" name="2">
 				
 			</van-collapse-item>
 		</van-collapse>
