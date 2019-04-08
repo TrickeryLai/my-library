@@ -321,7 +321,7 @@
                 if(res.code == 0){
                     //登录之后跳转的路由， 默认大厅， 通过redirect 设置
                   // let path = this.$route.query.redirect? decodeURIComponent(this.$route.query.redirect) : '/home/selfInfo';
-                  //认证之后重新登录更新个人信息？？
+                  //认证之后重新登录更新个人信息 或者 能够刷新本地缓存？？
                   let path = '/login';
 
                   //手动更改缓存的认证判定？

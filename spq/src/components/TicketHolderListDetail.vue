@@ -73,43 +73,13 @@
 							{{buyPrice}}
 						</van-col>
 					</van-row>
-					<van-row class="detail-row-special">
-
-						<van-col class="detail-row-left" span="12">年化利率</van-col>
-						<van-col class="detail-row-left" span="12">每十万扣款</van-col>
-						<van-col class="detail-row-left" span="24">
-							<van-field 
-							style="width:35%;display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
-							v-model="submit.yearRate"
-							placeholder="年化利率"
-							@input="changeData(1)"
-							type="number" />
-						%
-							<van-field 
-							style="width:35%;display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
-							v-model="submit.reduceAmount"
-							@input="changeData(2)" 
-							placeholder="每十万扣款"
-							type="number" />
-							<span>元/十万</span>
-						</van-col>
-						<van-col span="24">
-							<span class="detail-row-left">成交金额（元）</span>
-							<van-field 
-							style="display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
-							v-model="submit.dealAmount" 
-							@input="changeData(3)"
-							placeholder="成交金额"
-							type="number" />
-						</van-col>
-					</van-row>
 				</van-cell-group>
 			</van-cell-group>
 			<div style="text-align: center;width: 100%;">
 				<van-button
 					type="info"
 					style="width: 100%;position: absolute; left: 0; bottom: 0;"
-					@click="ok">我要买</van-button>
+					@click="ok">确认</van-button>
 			</div>	
 			</div>
 		</div>
@@ -124,7 +94,7 @@
 	import _common from '@/server/index';
 
 	export default{
-		name: 'DetailList',
+		name: 'TicketHolderListDetail',
 		props: ['showState', 'initData'],
 		data(){
 			return {
@@ -163,26 +133,26 @@
 				this.$emit("close")
 			},
 			ok(){
-				let currentPath = this.$router.history.current.fullPath;
-				let _this = this;
-				//判断是否验证
-				let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '';
-				if(!(user.orgId || user._checked)){
+				// let currentPath = this.$router.history.current.fullPath;
+				// let _this = this;
+				// //判断是否验证
+				// let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '';
+				// if(!(user.orgId || user._checked)){
 
-					this.$router.push({path: '/home/realName', query:{redirect: currentPath}});
-					this.$toast('请先实名认证！');
-					return;
-				}
+				// 	this.$router.push({path: '/home/realName', query:{redirect: currentPath}});
+				// 	this.$toast('请先实名认证！');
+				// 	return;
+				// }
 
-				_server.buyFn({}, (response) => {
-					if(response.code == 0){
+				// _server.buyFn({}, (response) => {
+				// 	if(response.code == 0){
 
-					}else{
-						_this.$toast(response.errMsg);
-					}
-					// this.$emit("ok");
-					// this.modelClose();
-				})
+				// 	}else{
+				// 		_this.$toast(response.errMsg);
+				// 	}
+				// 	// this.$emit("ok");
+				// 	// this.modelClose();
+				// })
 				this.$emit("ok");
 				this.modelClose();
 			},

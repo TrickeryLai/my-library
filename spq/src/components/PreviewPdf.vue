@@ -36,7 +36,7 @@
 			if(this.$route.query.title){
 				this.title =  this.$route.query.title;
 			}
-			this.pdfUrl = decodeURI(this.$route.query.pdfUrl);
+			this.pdfUrl = pdf.createLoadingTask(decodeURI(this.$route.query.pdfUrl));
 		},
 		methods:{
 			onClickLeft(){

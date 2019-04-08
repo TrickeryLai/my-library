@@ -12,16 +12,17 @@ let server = {
 	getCaptchaPic(callback){
 			Axios.get({
 				url: 'open-cp/v1/captcha',
-				success(response){
+	    	}).then((response) => {
 	            //请求成功返回的数据
 	            if(response.captchaKey){
 	            	callback && callback(response);
 	            }else{
 	            	Toast(response.errMsg);
-	            }
-	        }
-	    });
-
+	            	}
+	        	})
+	    	.catch((error) => {
+	    		console.log(error);
+	    	});
 		return this;
 	},
 	/**
@@ -36,13 +37,14 @@ let server = {
 				isLoading: true,
 				url,
 				data: data,
-				success(response){
-					if(response.code == 0 || response.code == 110008){
-	                	callback && callback(response);
-	                }else{
-	                	Toast(response.errMsg);
-	                }
-				}
+			}).then((response) => {
+				if(response.code == 0 || response.code == 110008){
+                	callback && callback(response);
+                }else{
+                	Toast(response.errMsg);
+                }
+			}).catch(error => {
+				console.log(error)
 			})
 		return this;
 	},
@@ -97,13 +99,14 @@ let server = {
 				isLoading: true,
 				url,
 				data: data,
-				success(response){
+			}).then((response) => {
 					if(response.code == 0 || response.code == 110008){
 	                	callback && callback(response);
 	                }else{
 	                	Toast(response.errMsg);
 	                }
-				}
+			}).catch(error => {
+				console.log(error);
 			});
 		return this;
 	},
@@ -113,23 +116,22 @@ let server = {
 	 * @param  {Function} callback [description]
 	 * @return {[type]}            [description]
 	 */
-	getBusinessTickets(data, callback){
+	getBusinessTickets(data, callback, changeState){
 		let url = 'open-cp/v1/businessTickets';
 		Axios.post({
 				isLoading: true,
 				url,
     			isdeal: true,
 				data: data,
-				success(response){
-					if(response.code == 0 || response.code == 110008){
-	                	callback && callback(response);
-	                }else{
-	                	Toast(response.errMsg);
-	                }
-				},
-				error(){
-					
-				}
+			}).then((response) => {
+				if(response.code == 0 || response.code == 110008){
+                	callback && callback(response);
+                }else{
+                	changeState && changeState();
+                	Toast(response.errMsg);
+                }
+			}).catch(error => {
+				console.log(error);
 			})
 		return this;
 	},
@@ -142,14 +144,16 @@ let server = {
 	    let url = 'open-cp/v1/businessTickets/' + params._id;
 	    Axios.get({
 	      url,
-	      success(response){
+	    }).then((response) => {
 	        params.success &&  params.success(response)
 	        // if(response.code == 0 || response.code == 110008){
 	        //   params.success &&  params.success(response)
 	        // }else{
 	        //   Toast(response.errMsg);
 	        // }
-	      }
+	      })
+	    .catch(error => {
+	    	console.log(error)
 	    });
 	    return this;
   	},
@@ -166,14 +170,15 @@ let server = {
           url,
           isdeal: false,
           data: data,
-          success(response){
+        }).then((response) => {
             if(response.code == 0 || response.code == 110008){
               callback && callback(response);
             }else{
               Toast(response.errMsg);
             }
-          }
-        })
+      	}).catch(error => {
+      		console.log(error);
+      	})
         return this;
   	},
   	/**
@@ -185,14 +190,16 @@ let server = {
 	    let url = 'open-cp/v1/commercialPaper/' + params._id;
 	    Axios.get({
 	      url,
-	      isLoading: true,
-	      success(response){
+	      isLoading: true, 
+	    }).then((response) => {
 	        if(response.code == 0 || response.code == 110008){
 	          params.success &&  params.success(response)
 	        }else{
 	          Toast(response.errMsg);
 	        }
-	      }
+	      })
+	    .catch(error => {
+	    	console.log(error);
 	    });
 	    return this;
   	},
@@ -209,14 +216,15 @@ let server = {
         url,
         isdeal: false,
         data: data,
-        success(response){
+      }).then((response) => {
           if(response.code == 0 || response.code == 110008){
             callback && callback(response);
           }else{
             Toast(response.errMsg);
           }
-        }
-      })
+    	}).catch(error => {
+    		console.log(error);
+    	})
       return this;
     },
     /**
@@ -228,14 +236,16 @@ let server = {
 	    let url = 'open-cp/v1/company/' + params._id;
 	    Axios.get({
 	      url,
-	      isLoading: true,
-	      success(response){
+	      isLoading: true,  
+	    }).then((response) => {
 	          params.success &&  params.success(response)
 	        // if(response.code == 0 || response.code == 110008){
 	        // }else{
 	        //   Toast(response.errMsg);
 	        // }
-	      }
+	      })
+	    .catch(error => {
+	    	console.log(error);
 	    });
 	    return this;
   	},
@@ -252,15 +262,16 @@ let server = {
         url,
         isdeal: false,
         data: data,
-        success(response){
+      }).then((response) => {
     		callback && callback(response);
           // if(response.code == 0 || response.code == 110008){
           //   callback && callback(response);
           // }else{
           //   Toast(response.errMsg);
           // }
-        }
-      })
+        }).catch(error => {
+        	console.log(error)
+        })
       return this;
     },
   	

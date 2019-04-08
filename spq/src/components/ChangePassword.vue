@@ -81,7 +81,7 @@
         };
          _server.changePassword(data, (res) => {
               if(res.code == 0){
-                this.$toast('修改成功！');
+                this.$toast('修改成功，请重新登录！');
                 localStorage.clear();
                 this.$router.replace({path: '/login'});
               }else{

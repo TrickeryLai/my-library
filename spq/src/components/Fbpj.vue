@@ -471,11 +471,11 @@ import _server from '@/server/server'
           submitDataFn(){
             let data = {
               channel: '02',
+              buyerId: this.submitData.buyerId,
               cpCommercialPaperInfos: [
                 {
                   acceptor: this.submitData.acceptor,
                   approvalApr: this.sell.approvalApr, 
-                  buyerId: this.submitData.buyerId,
                   cpAmount: this.submitData.cpAmount,
                   cpDefect: this.getXcList(),
                   cpNo: this.submitData.cpNo,
@@ -490,7 +490,7 @@ import _server from '@/server/server'
             };
             _server.getCommercialPaper(data, (res) =>{
                 if(res.code == 0){
-                  this.$toast('发布成功!')
+                  this.$toast('发布成功!');
                 }
             })
           },

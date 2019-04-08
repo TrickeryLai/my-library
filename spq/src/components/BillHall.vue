@@ -7,7 +7,6 @@
 		@click-right="onClickRight"
 		class="top-bg"
 		/>
-		
 		<div class="list-wrap">
 			<van-row class="nav-top">
 				<div style="position:absolute;left:0;top:0;width: 100%;background:#fff;padding: 10px 0;">
@@ -202,20 +201,20 @@ import _server from '@/server/server'
 			//获取列表数据
 			_server.getBusinessTickets(data, (response) =>{
 				if(response.code === 0){
-          if(_this.pageData.pageNum > 1){
-            response.list.forEach((item) => {
-              _this.list.push(item);
-            });
-          }else{
-            _this.list = response.list;
-            // _this.pageData = response.pageInfo;
-          }
-          //数据全部加载完成
-          if (_this.list.length >= response.pageInfo.total) {
-            _this.finished = true;
-          }else{
-            _this.finished = false;
-          }
+		          if(_this.pageData.pageNum > 1){
+		            response.list.forEach((item) => {
+		              _this.list.push(item);
+		            });
+		          }else{
+		            _this.list = response.list;
+		            // _this.pageData = response.pageInfo;
+		          }
+		          //数据全部加载完成
+		          if (_this.list.length >= response.pageInfo.total) {
+		            _this.finished = true;
+		          }else{
+		            _this.finished = false;
+		          }
 				}
 				_this.loading = false;
 				_this.isLoading = false;
@@ -224,26 +223,13 @@ import _server from '@/server/server'
 		onRefresh(){
 			//获取列表
 			this.pageData.pageNum = 1;
-			this.getData(this.searchData);
-			
+			this.getData(this.searchData);	
 		},
 		onLoad() {
-			  this.loading = true;//处于加载状态，不触发onLoad
-		    this.pageData.pageNum += 1;
 		    let _this = this;
-		    this.getData(this.searchData, (res) =>{
-          // if(this.pageData.pageNum > 1){
-          //   res.list.forEach((item) => {
-          //     this.list.push(item);
-          //   });
-          // }
-          //数据全部加载完成
-          // console.log(_this.list, res);
-          // if (this.list.length >= res.pageInfo.total) {
-          //   this.finished = true;
-          //   this.loading = false;
-          // }
-    		})
+		  	this.loading = true;//处于加载状态，不触发onLoad
+		    this.pageData.pageNum += 1;
+		    this.getData(this.searchData)
 		},
 		sortTotal(type){
 			let value,
@@ -270,12 +256,12 @@ import _server from '@/server/server'
 				this.sortState[value] = 1;
 			}
 
-      this.pageData = {
-        pageNum: 1,
-        pageSize: 10,
-        total: 0,
-      };
-      this.getData(this.searchData);
+	      	this.pageData = {
+		        pageNum: 1,
+		        pageSize: 10,
+		        total: 0,
+	      	};
+      		this.getData(this.searchData);
 		},
 		sortAmount(){
 			this.sortTotal(1);
@@ -296,10 +282,10 @@ import _server from '@/server/server'
 					_this.detailModelState = true;
 				}
 			});
-
 		},
 		detailModelOk(){
-			//详情框--我要买，从新请求数据
+			//详情框--我要买，确认之后，从新请求数据
+			this.pageData.pageNum = 1;//重新从第一页开始
 			this.getData(this.searchData);
 		},
 		modelOk(data){

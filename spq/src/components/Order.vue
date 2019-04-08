@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="orderPage">
 		<van-nav-bar
 		:title="title"
 		fixed
@@ -17,7 +17,7 @@
 		</div>
 	
 		<van-collapse class="ticket-content-list" v-model="activeName" accordion>
-			<van-collapse-item class="text-left" title="待操作" name="1">
+			<van-collapse-item class="text-left" title="我的订单" name="1">
 				<div style="max-height: 350px;overflow:auto">
 					<van-pull-refresh v-model="matchState.isLoading" @refresh="matchOnRefresh">
 
@@ -60,9 +60,9 @@
 				</div>
 				
 			</van-collapse-item>
-			<van-collapse-item class="text-left" title="已完成" name="2">
+			<!-- <van-collapse-item class="text-left" title="已完成" name="2">
 				
-			</van-collapse-item>
+			</van-collapse-item> -->
 		</van-collapse>
 		<OrderDetail 
 		:showState = 'detailModelState'
@@ -88,7 +88,7 @@
 				matchState: {
 					finished: false,//是否已经加载完成
 					isLoading: false,
-					loading: false,
+					loading: false
 				},
 				matchList: [
 					{},{}
@@ -128,7 +128,7 @@
 			      // 异步更新数据
 			      setTimeout(() => {
 			      	for (let i = 0; i < 10; i++) {
-			      		this.matchList.push(this.matchList.length + 1);
+			      		this.matchList.push({});
 			      	}
 			        // 加载状态结束
 			        this.matchState.loading = false;
@@ -143,9 +143,15 @@
 	}
 </script>
 
-<style scoped>
+<style>
+.orderPage .van-collapse-item__content{
+	background-color: #f5f5f5;
+	padding-left: 0;
+	padding-right: 0;
+	padding-top: 0px;
+}
 
-.ticket-search{
+.orderPage .ticket-search{
 	position: fixed;
 	left: 0;
 	top: 45px;
@@ -153,7 +159,7 @@
 	height: 50px;
 	z-index: 5;
 }	
-.ticket-content-list{
+.orderPage .ticket-content-list{
 	margin-top: 60px;
 	padding-bottom: 50px;
 	background: #f5f5f5;

@@ -19,7 +19,7 @@
 		</div>
 	
 		<van-collapse class="ticket-content-list" v-model="activeName" accordion>
-			<van-collapse-item class="text-left" title="匹配中" name="1">
+			<van-collapse-item class="text-left" title="已发布" name="1">
 				<div style="max-height: 350px;overflow:auto">
 					<van-pull-refresh v-model="matchState.isLoading" @refresh="matchOnRefresh">
 
@@ -62,22 +62,32 @@
 				</div>
 				
 			</van-collapse-item>
-			<van-collapse-item class="text-left" title="暂存中" name="2">
+			<!-- <van-collapse-item class="text-left" title="暂存中" name="2">
 				
-			</van-collapse-item>
+			</van-collapse-item> -->
 		</van-collapse>
+		<TicketHolderListDetail 
+			:showState = 'matchState.detailModelState'
+			@ok= 'detailModelOk'
+			@close= 'detailModelClose'
+			:initData = 'matchState.detailItem'
+		/>
 	</div>
 </template>
 
 <script>
+	import TicketHolderListDetail from '@/components/TicketHolderListDetail'
 	export default{
 		name: 'TicketHolder',
+		components:{TicketHolderListDetail},
 		data(){
 			return {
 				title: '票方',
 				searchValue: '',
 				activeName: '1',
 				matchState: {
+					detailItem: {},
+					detailModelState: false,//弹窗显示隐藏状态
 					finished: false,//是否已经加载完成
 					isLoading: false,
 					loading: false,
@@ -97,8 +107,9 @@
 			matchGetData(){
 
 			},
-			matchShowDetail(){
-
+			matchShowDetail(item){
+				this.matchState.detailItem = item;
+				this.matchState.detailModelState = true;
 			},
 			matchOnRefresh(){
 				//获取列表数据
@@ -121,7 +132,14 @@
 			        	this.matchState.finished = true;
 			        }
 			    }, 1000);
+			},
+			detailModelOk(){
+				this.detailModelClose();
+			},
+			detailModelClose(){
+				this.matchState.detailModelState = false;
 			}
+
 		}
 	}
 </script>
@@ -131,7 +149,7 @@
 	background-color: #f5f5f5;
 	padding-left: 0;
 	padding-right: 0;
-	padding-top: 10px;
+	padding-top: 0px;
 }
 .ticketHolder .ticket-search{
 	position: fixed;

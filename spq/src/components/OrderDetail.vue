@@ -3,7 +3,7 @@
 	v-model="show"
 	position="right"
 	@close="modelClose"
-
+	class="orderDetail"
 	>
 		<div class="model-content">
 			<div>
@@ -60,8 +60,10 @@
 							<span 
 							class="detail-row-special detail-row-left" 
 							style="padding-top: 5px;padding-bottom: 5px;"
-							@click="refreshPriceFn">
-								买家报价<i class="blue-font iconfont icon-refresh"></i>
+							
+							>
+								买家报价
+								<!-- <i class="blue-font iconfont icon-refresh"></i> -->
 							</span>
 							<!-- <van-icon name="replay" class="float:right;" /> -->
 						</van-col>
@@ -76,8 +78,14 @@
 			<div style="text-align: center;width: 100%;">
 				<van-button
 					type="info"
-					style="width: 100%;position: absolute; left: 0; bottom: 0;"
-					@click="ok">确认</van-button>
+					plain
+					style="width: 50%; position: absolute; left: 0;bottom: 0;"
+					@click="close"
+					>关闭</van-button>
+				<van-button
+					type="info"
+					style="width: 50%;position: absolute; right: 0; bottom: 0;"
+					@click="okconfirm">确认完成</van-button>
 			</div>	
 			</div>
 		</div>
@@ -90,6 +98,7 @@
 	import {ImagePreview} from 'vant';
 	import _server from '@/server/server';
 	import _common from '@/server/index';
+	import {Dialog} from 'vant';
 
 	export default{
 		name: 'DetailList',
@@ -126,9 +135,20 @@
 
 			},
 			modelClose(){
-				console.log(this.detailData)
 				//关闭的时候改变对应状态，继续观察
 				this.$emit("close")
+			},
+			okconfirm(){
+				//二次弹窗确认
+				Dialog.confirm({
+					title: '确认交易',
+					message: '确认完成交易么？'
+				}).then(() => {
+  					// on confirm
+  					this.ok();
+				}).catch(() => {
+  					// on cancel
+				});
 			},
 			ok(){
 				let currentPath = this.$router.history.current.fullPath;
@@ -154,6 +174,9 @@
 				this.$emit("ok");
 				this.modelClose();
 			},
+			close(){
+				this.modelClose();
+			},
 			getLastTime(){
 				//获取剩余时间
 				let dueDate = this.initData.dueDate;// 到期时间
@@ -172,7 +195,6 @@
 </script>
 
 <style scoped>
-
 .title{
 	padding: 10px;
 	text-align: left;

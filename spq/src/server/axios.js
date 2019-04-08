@@ -14,7 +14,7 @@ Vue.prototype.Qs = Qs;           //全局注册，使用方法为:this.qs
 
 //初始化设置axios 全局的请求次数，请求的间隙
 let Axios =  axios.create({
-  timeout: 8000  //请求延时时间
+  timeout: 8000,  //请求延时时间
 });
 
 let modelToast;
@@ -49,7 +49,7 @@ Axios.interceptors.request.use((config) => {
   return config;
 }, (err)=> {
   // 错误处理
-  console.log('err',err)
+  // console.log('err',err)
   return Promise.reject(err)
 });
 
@@ -74,7 +74,42 @@ let _Axios = {
     if(params.isLoading){
        model.show();
     }
-    Vue.prototype.__globalModelState = true;
+    // Vue.prototype.__globalModelState = true;
+    
+    return new Promise((resolve, reject) => {
+      if(params.isLoading){
+        model.show();
+      }
+      Axios({
+        method: 'get',
+        params: params.data,
+        header: params.header,
+        url: params.url
+      }).then((res)=>{
+        if(params.isLoading){
+          setTimeout(()=>{
+            model.hide();
+            // params.success(res.data);
+            return resolve(res.data);
+          }, model.time);
+          return;
+        }else{
+          return resolve(res.data);
+        }
+      }).catch((error) =>{
+        if(params.isLoading){
+          setTimeout(()=>{
+            model.hide();
+            return reject(error);
+          }, model.time);
+          return;
+        }else{
+          return reject(error);
+        } 
+      })
+    })
+    return;
+    //--------------
     Axios({
       method: 'get',
       params: params.data,
@@ -90,8 +125,8 @@ let _Axios = {
       }else{
         params.success(res.data);
       }
-      params.success(res.data);
-    }).then((error) =>{
+      // params.success(res.data);
+    }).catch((error) =>{
       if(params.isLoading){
         setTimeout(()=>{
           model.hide();
@@ -105,7 +140,7 @@ let _Axios = {
     if(params.isLoading){
       model.show();
     }
-    Vue.prototype.__globalModelState = true;
+    // Vue.prototype.__globalModelState = true;
     Axios({
       method: 'delete',
       params: params.data,
@@ -121,8 +156,8 @@ let _Axios = {
       }else{
         params.success(res.data);
       }
-      params.success(res.data);
-    }).then((error) =>{
+      // params.success(res.data);
+    }).catch((error) =>{
       if(params.isLoading){
         setTimeout(()=>{
           model.hide();
@@ -136,7 +171,7 @@ let _Axios = {
     if(params.isLoading){
       model.show();
     }
-    Vue.prototype.__globalModelState = true;
+    // Vue.prototype.__globalModelState = true;
     Axios({
       method: 'patch',
       data: params.data,
@@ -152,8 +187,8 @@ let _Axios = {
       }else{
         params.success(res.data);
       }
-      params.success(res.data);
-    }).then((error) =>{
+      // params.success(res.data);
+    }).catch((error) =>{
       if(params.isLoading){
         setTimeout(()=>{
           model.hide();
@@ -186,29 +221,57 @@ let _Axios = {
       }];
     }
 
-    Axios(option).then((res) =>{
+    return new Promise((resolve, reject)=>{
+        Axios(option).then((res) =>{
           let data = res.data ? res.data : res;
           if(params.isLoading){
             setTimeout(()=>{
               model.hide();
-              params.success(data);
+              // params.success(data);
+              return resolve(data);
             }, model.time);
             return;
           }else{
-            params.success(data);
+            return resolve(data);
           }
-        }).then((error) =>{
+        }).catch((error) =>{
           // params.error && params.error(error); 
           if(params.isLoading){
             setTimeout(()=>{
               model.hide();
+              return reject(error);
             }, model.time);
             return;
           }
-
+          return reject(error);
         })
+    })
+
+    return;
+    Axios(option).then((res) =>{
+        let data = res.data ? res.data : res;
+        if(params.isLoading){
+          setTimeout(()=>{
+            model.hide();
+            params.success(data);
+          }, model.time);
+          return;
+        }else{
+          params.success(data);
+        }
+      })
+    .catch((error) =>{
+      // params.error && params.error(error); 
+      if(params.isLoading){
+        setTimeout(()=>{
+          model.hide();
+        }, model.time);
+        return;
       }
-    }
+
+    })
+  }
+}
 
 Vue.prototype.$axios = _Axios
 

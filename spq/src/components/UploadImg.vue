@@ -160,8 +160,8 @@
                 if(e.target.status == 200 && e.target.readyState == 4){
                   res = JSON.parse(e.target.response);
                   if(res.code == '110025'){
-                    _this.$router.replace({name: 'Login'});
                     _this.$toast(res.errMsg);
+                    _this.$router.replace({name: 'Login'});
                     return;
                   }else if(res.code != 0){
                     _this.$toast(res.errMsg);
