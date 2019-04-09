@@ -167,7 +167,7 @@ export default{
 				return false;
 			}
 
-			if(this.register.phone && !(/^1[34578]\d{9}$/.test(this.register.phone))){ 
+			if(this.register.phone && !(/^1[345789]\d{9}$/.test(this.register.phone))){ 
 				this.registerError.phone = true;
 		        this.$toast('请输入正确的手机号！');
 		        return false; 

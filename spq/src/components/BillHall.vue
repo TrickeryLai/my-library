@@ -86,6 +86,7 @@
 @ok= 'detailModelOk'
 @close= 'detailModelClose'
 :initData = 'detailItem'
+:item = 'currentItemInfo'
 />	
 <SetSearch 
 :showState = 'searchModelState'
@@ -138,6 +139,7 @@ import _server from '@/server/server'
 			loading: false,
 			detailModelState: false,//详情框状态
 			detailItem: {},//详情项
+			currentItemInfo: '',//当前点击项
 			searchModelState: false,//筛选弹出框状态
 			isGetingData: false,//是否正在请求数据
 			searchData: '',//搜索条件
@@ -275,6 +277,7 @@ import _server from '@/server/server'
 		//点击列表详情
 		showDetail(item){
 			let _this = this;
+			this.currentItemInfo = item;
 			_server.getBusinessTicketDetail({
 				_id: item.cpId,
 				success(res){

@@ -108,32 +108,6 @@ let _Axios = {
         } 
       })
     })
-    return;
-    //--------------
-    Axios({
-      method: 'get',
-      params: params.data,
-      header: params.header,
-      url: params.url
-    }).then((res)=>{
-      if(params.isLoading){
-        setTimeout(()=>{
-          model.hide();
-          params.success(res.data);
-        }, model.time);
-        return;
-      }else{
-        params.success(res.data);
-      }
-      // params.success(res.data);
-    }).catch((error) =>{
-      if(params.isLoading){
-        setTimeout(()=>{
-          model.hide();
-        }, model.time);
-        return;
-      } 
-    })
   },
   delete(params = {}){
 
@@ -248,28 +222,6 @@ let _Axios = {
     })
 
     return;
-    Axios(option).then((res) =>{
-        let data = res.data ? res.data : res;
-        if(params.isLoading){
-          setTimeout(()=>{
-            model.hide();
-            params.success(data);
-          }, model.time);
-          return;
-        }else{
-          params.success(data);
-        }
-      })
-    .catch((error) =>{
-      // params.error && params.error(error); 
-      if(params.isLoading){
-        setTimeout(()=>{
-          model.hide();
-        }, model.time);
-        return;
-      }
-
-    })
   }
 }
 

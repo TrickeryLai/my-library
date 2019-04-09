@@ -13,6 +13,7 @@ import ChangePassword from '@/components/ChangePassword'
 import Fbpj from '@/components/Fbpj'
 import BaseInfo from '@/components/BaseInfo'
 import PreviewPdf from '@/components/PreviewPdf'
+import RealNameChange from '@/components/RealNameChange'
 
 let routerData = {
   routes: [
@@ -115,6 +116,15 @@ let routerData = {
         isNChecked: false,
       },
       component: BaseInfo
+    },
+    {
+      path: '/home/selfInfo/realNameChange',
+      name: 'RealNameChange',
+      meta:{
+        isLogin: true,
+        isNChecked: false,
+      },
+      component: RealNameChange
     }
     ]
   },

@@ -38,17 +38,17 @@ router.beforeEach( (to, from, next) => {
   let orgId = user ? user. orgId : '';
   let _checked = user ? user._checked : '';//手动设置的验证值
    //路由跳转清空所有提示框 -- 登录页面,实名认证不清除
-  if(to.name !== 'Login' || to.name !== 'RealName'){
+  if(to.name !== 'Login' && to.name !== 'RealName'){
       Toast.clear();
   }
 
   //判断是否需要登录, 通过本地是否存在 token, 未登录跳转至登录页面，同时将该页面地址传入 redirect
-  // if(to.meta.isLogin && !localItem){
-  //     next({path: '/login', query:{redirect: to.fullPath}});
-  //     Toast('请先登录！');
-  //     return;
-  // }
-  // //判断是否认证，否则跳出
+  if(to.meta.isLogin && !localItem){
+      next({path: '/login', query:{redirect: to.fullPath}});
+      Toast('请先登录！');
+      return;
+  }
+  //判断是否认证，否则跳出
   // if(to.meta.isNChecked && !orgId && !_checked){
   //     next({path: '/home/realName', query:{redirect: to.fullPath}});
   //     Toast('请先实名认证！');

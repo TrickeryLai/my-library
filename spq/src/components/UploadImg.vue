@@ -22,17 +22,21 @@
 
   //将base64转化为流
   function convertBase64UrlToBlob(urlData){  
-        
-      var bytes=window.atob(urlData.split(',')[1]);        //去掉url的头，并转换为byte  
-        
+      var bytes=window.atob(urlData.split(',')[1]);//去掉url的头，并转换为byte  
       //处理异常,将ascii码小于0的转换为大于0  
       var ab = new ArrayBuffer(bytes.length);  
       var ia = new Uint8Array(ab);  
       for (var i = 0; i < bytes.length; i++) {  
           ia[i] = bytes.charCodeAt(i);  
       }  
-    
-      return new Blob( [ab] , {type : 'image/png'});  
+      return new Blob( [ab] , {type : 'image/png'}); 
+
+      // var arr = urlData.split(','), mime = arr[0].match(/:(.*?);/)[1],
+      // bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+      // while(n--){
+      //   u8arr[n] = bstr.charCodeAt(n);
+      // }
+      // return new File([u8arr], filename, {type:mime}); 
   } 
 
   function getBase64Image(img) {
@@ -85,11 +89,11 @@
 //open-cp/v1/upload
 	export default{
 		name: 'UploadImg',
-		props: ['uploadUrl'],
+		props: ['uploadUrl', 'initPic'],
 		data(){
 			return {
 				yyzzPic: '',
-      	yyzzPicUrl: '',
+      	yyzzPicUrl: this.initPic?this.initPic: '',
       	yyzzPicUState: {
         	isUpload: 0,//上传状态 0未上传， 1正在上传， 3上传成功, 4 上传失败
         	progress: 0,//上传百分比
@@ -114,7 +118,7 @@
             this.fileName = file.name;
             this.preViewPic(file);
             //大于 2M 压缩图片
-            if(file.size){
+            if(!file.size){
                 this.ystu(file);
             }else{
                 //开始上传文件
@@ -248,7 +252,9 @@
           removePic(){
           		clearInterval(this.intervaler);
               //停止上传
-              this.uploadXhr.abort();
+              if(this.uploadXhr){
+                this.uploadXhr.abort();
+              }
             	this.yyzzPicUrl = '';
             	this.yyzzPicUState ={
               	isUpload: 0,

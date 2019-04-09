@@ -4,7 +4,9 @@
       :title="title"
       left-arrow
       fixed
+      right-text="修改"
       @click-left="onClickLeft"
+      @click-right="onClickRight"
       class="top-bg"
     >
       <i class="iconfont icon-previous_step" slot="left"></i>
@@ -16,11 +18,11 @@
         </van-row>
         <van-row class="baseInfo-box-row">
             <van-col span="8" class="baseInfo-box-left">统一社会信息代码:</van-col>
-            <van-col span="16" class="baseInfo-box-right">{{baseInfo.companyName || '-'}}</van-col>
+            <van-col span="16" class="baseInfo-box-right">{{baseInfo.organizationCode || '-'}}</van-col>
         </van-row>
         <van-row class="baseInfo-box-row">
           <van-col span="8" class="baseInfo-box-left">企业邮箱:</van-col>
-          <van-col span="16" class="baseInfo-box-right">{{baseInfo.email || '-'}}</van-col>
+          <van-col span="16" class="baseInfo-box-right">{{baseInfo.contactEmail || '-'}}</van-col>
         </van-row>
         <van-row class="baseInfo-box-row">
           <van-col span="8" class="baseInfo-box-left">注册地址:</van-col>
@@ -30,29 +32,38 @@
     <van-cell-group class="baseInfo-box">
       <van-row class="baseInfo-box-row">
         <van-col span="8" class="baseInfo-box-left">法人姓名:</van-col>
-        <van-col span="16" class="baseInfo-box-right">{{baseInfo.leader || '-'}}</van-col>
+        <van-col span="16" class="baseInfo-box-right">{{baseInfo.legalPerson || '-'}}</van-col>
+      </van-row>
+      <van-row class="baseInfo-box-row">
+        <van-col span="8" class="baseInfo-box-left">法人手机号:</van-col>
+        <van-col span="16" class="baseInfo-box-right">{{baseInfo.legalPersonPhone || '-'}}</van-col>
       </van-row>
       <van-row class="baseInfo-box-row">
         <van-col span="8" class="baseInfo-box-left">法人身份证号码:</van-col>
-        <van-col span="16" class="baseInfo-box-right">{{baseInfo.idcard || '-'}}</van-col>
+        <van-col span="16" class="baseInfo-box-right">{{baseInfo.legalPersonIdNo || '-'}}</van-col>
       </van-row>
+      
     </van-cell-group>
     <van-cell-group class="baseInfo-box">
       <van-row class="baseInfo-box-row">
         <van-col span="8" class="baseInfo-box-left">经办人姓名:</van-col>
-        <van-col span="16" class="baseInfo-box-right">{{baseInfo.xm || '-'}}</van-col>
+        <van-col span="16" class="baseInfo-box-right">{{baseInfo.transactor || '-'}}</van-col>
       </van-row>
       <van-row class="baseInfo-box-row">
         <van-col span="8" class="baseInfo-box-left">经办人手机号:</van-col>
-        <van-col span="16" class="baseInfo-box-right">{{baseInfo.sj || '-'}}</van-col>
+        <van-col span="16" class="baseInfo-box-right">{{baseInfo.transactorPhone || '-'}}</van-col>
+      </van-row>
+      <van-row class="baseInfo-box-row">
+        <van-col span="8" class="baseInfo-box-left">经办人身份证号:</van-col>
+        <van-col span="16" class="baseInfo-box-right">{{baseInfo.transactorIdNo || '-'}}</van-col>
       </van-row>
     </van-cell-group>
     <van-cell-group class="baseInfo-box">
       <van-row class="baseInfo-box-row">
         <van-col span="8" class="baseInfo-box-left">图片信息:</van-col>
         <van-col span="16" class="baseInfo-box-right">
-          <div style="width: 100px;height: 100px;border: 1px solid #ccc;display: inline-block;">
-            <img :src="picUrl + baseInfo.businessLicenseImgPath" style="width:100px;max-height: 100px;">
+          <div v-if="baseInfo.businessLicenseImgPath" style="width: 100px;height: 100px;line-height:100px;border: 1px solid #ccc;display: inline-block;;">
+            <img :src="picUrl + baseInfo.businessLicenseImgPath" style="width:100px;max-height: 100px;vertical-align: middle;">
           </div> 
         </van-col>
       </van-row>
@@ -85,6 +96,9 @@
       onClickLeft(){
         window.history.go(-1);
       },
+      onClickRight(){
+        this.$router.push({path:'/home/selfInfo/realNameChange',query: {data: JSON.stringify(this.baseInfo)}})
+      },
       loginOut(){
         _server.logout({}, (res) => {
           if(res.code == 0){
@@ -109,6 +123,7 @@
           success(res){
             if(res){
               _this.baseInfo = res;
+              localStorage.setItem('baseInfo', JSON.stringify(res));
             }
           }
         })

@@ -121,7 +121,7 @@ let server = {
 		Axios.post({
 				isLoading: true,
 				url,
-    			isdeal: true,
+  			isdeal: true,
 				data: data,
 			}).then((response) => {
 				if(response.code == 0 || response.code == 110008){
@@ -144,16 +144,16 @@ let server = {
 	    let url = 'open-cp/v1/businessTickets/' + params._id;
 	    Axios.get({
 	      url,
-	    }).then((response) => {
-	        params.success &&  params.success(response)
+	    }).then((response) => { 
+          params.success &&  params.success(response)
 	        // if(response.code == 0 || response.code == 110008){
-	        //   params.success &&  params.success(response)
+	          
 	        // }else{
 	        //   Toast(response.errMsg);
 	        // }
 	      })
 	    .catch(error => {
-	    	console.log(error)
+	    	  console.log(error)
 	    });
 	    return this;
   	},
@@ -177,7 +177,7 @@ let server = {
               Toast(response.errMsg);
             }
       	}).catch(error => {
-      		console.log(error);
+      		  console.log(error);
       	})
         return this;
   	},
@@ -236,7 +236,7 @@ let server = {
 	    let url = 'open-cp/v1/company/' + params._id;
 	    Axios.get({
 	      url,
-	      isLoading: true,  
+	      isLoading: false,  
 	    }).then((response) => {
 	          params.success &&  params.success(response)
 	        // if(response.code == 0 || response.code == 110008){
@@ -250,7 +250,7 @@ let server = {
 	    return this;
   	},
   	/**
-  	 * [getAuthentication 我要买]
+  	 * [getAuthentication]
   	 * @param  {[type]}   data     [description]
   	 * @param  {Function} callback [description]
   	 * @return {[type]}            [description]
@@ -274,6 +274,55 @@ let server = {
         })
       return this;
     },
+    /**
+     * [editSave 认证修改]
+     * @return {[type]} [description]
+     */
+    editSave(data, callback){
+      let url = 'open-cp/v1/company/editSave';
+      Axios.post({
+        isLoading: false,
+        url,
+        isdeal: false,
+        data: data,
+      }).then((response) => {
+        callback && callback(response);
+          // if(response.code == 0 || response.code == 110008){
+          //   callback && callback(response);
+          // }else{
+          //   Toast(response.errMsg);
+          // }
+        }).catch(error => {
+          console.log(error)
+        })
+      return this;
+    },
+    /**
+     * [insertQuotedInfo 报价 我要买]
+     * @param  {[type]}   data     [description]
+     * @param  {Function} callback [description]
+     * @return {[type]}            [description]
+     */
+    insertQuotedInfo(data, callback){
+      let url = 'open-cp/v1/businessTickets/insertQuotedInfo';
+      Axios.post({
+        isLoading: false,
+        url,
+        isdeal: true,
+        data: data,
+      }).then((response) => {
+        callback && callback(response);
+          // if(response.code == 0 || response.code == 110008){
+          //   callback && callback(response);
+          // }else{
+          //   Toast(response.errMsg);
+          // }
+        }).catch(error => {
+          console.log(error)
+        })
+      return this;
+    }
+    
   	
 }
 

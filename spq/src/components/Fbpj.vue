@@ -59,11 +59,16 @@
             <van-row class="realName-box-row">
               <van-col span="7" class="realName-content-box-left"><i class="required">*</i>到期日期</van-col>
               <van-col span="11" class="realName-content-box-right">
-                 <van-field
+                <van-field @click="choseTimeFn2" 
+                  v-model="endTimeChoseValue" 
+                  readonly 
+                  style="padding-top:3px;padding-bottom:3px"
+                  />
+                <!--  <van-field
                  v-model="endTimeChoseValue"
                  clearable
                  placeholder="请输入金额(元)"
-                 />
+                 /> -->
               </van-col>
               <van-col span="6">
                 <span class="blue-font" style="font-size:12px;">剩余天数 {{lastDay}}</span>
@@ -119,7 +124,7 @@
         </div>
       </van-cell-group>
       <van-cell-group class="realName-content-box">
-        <h3 class="title van-hairline--bottom">卖出价格</h3>
+        <h3 class="title van-hairline--bottom">卖出价格<span style="font-size:12px;">(可设置其中一项)</span></h3>
         <div class="realName-conten-inner">
             <van-row style="font-size: 14px;text-align: center;">
               <van-col span="8">
@@ -136,6 +141,7 @@
               <van-col span="8">
                 <van-field
                   v-model="sell.deductAmount"
+                  @input="typeChange(1)"
                   clearable
                   placeholder="每十万扣款(元)"
                 />
@@ -144,6 +150,7 @@
               <van-col span="8">
                 <van-field
                   v-model="sell.approvalApr"
+                  @input="typeChange(2)"
                   clearable
                   placeholder="年化利率(%)"
                 />
@@ -151,6 +158,7 @@
               <van-col span="8">
                 <van-field
                   v-model="sell.turnVolume"
+                  @input="typeChange(3)"
                   clearable
                   placeholder="成交金额(元)"
                 />
@@ -209,7 +217,9 @@ import _server from '@/server/server'
               minDate: new Date(new Date().getTime() + 24*60*60*1000),
               bsValue: 0,//背书次数
               sell:{
-                
+                deductAmount: '',
+                approvalApr: '',
+                turnVolume: ''
               },
               submitData:{
 
@@ -282,6 +292,26 @@ import _server from '@/server/server'
       methods: {
           onClickLeft(){
               window.history.go(-1);
+          },
+          typeChange(type){
+            // this.sell.deductAmount = '';
+            // this.sell.approvalApr = '';//年化利率
+            // this.sell.turnVolume = '';//成交金额
+            let cpAmount = parseFloat(this.submitData.cpAmount),
+                calDay = this.lastDay;
+                
+            if(type == 1){
+              this.sell.turnVolume = cpAmount - cpAmount/100000*this.sell.deductAmount;//成交金额
+              this.sell.approvalApr = ((cpAmount -this.sell.turnVolume)*36000/(calDay*cpAmount)).toFixed(8);//年华利率
+            }else if(type == 2){
+              this.sell.deductAmount =  (cpAmount*calDay*this.sell.approvalApr/100)/3600;
+              this.sell.turnVolume = (cpAmount - cpAmount/100000*this.sell.deductAmount);//成交金额
+            }else if(type == 3){
+              
+              this.sell.deductAmount = ((cpAmount-this.sell.turnVolume)/10).toFixed(4);
+              this.sell.approvalApr = ((cpAmount - this.sell.turnVolume)*36000/(calDay*cpAmount)).toFixed(8);//年华利率
+            }
+            console.log(this.sell)
           },
           changeNumToTex(n) {
             if(!n){
@@ -429,7 +459,7 @@ import _server from '@/server/server'
           getXcList(){
             let result = '';
             this.xcChoseList.forEach((item) => {
-              result += ','+item.name;
+              result += item.name + ',';
             })
             return result;
           },
@@ -475,19 +505,20 @@ import _server from '@/server/server'
               cpCommercialPaperInfos: [
                 {
                   acceptor: this.submitData.acceptor,
-                  approvalApr: this.sell.approvalApr, 
+                  approvalApr: this.sell.approvalApr ? parseFloat(this.sell.approvalApr): '', 
                   cpAmount: this.submitData.cpAmount,
                   cpDefect: this.getXcList(),
                   cpNo: this.submitData.cpNo,
                   dueDate: this.formatterTime(this.endTimeTrue),
                   endorseTimes: this.bsValue,
-                  deductAmount: this.sell.deductAmount,
+                  deductAmount: this.sell.deductAmount?parseFloat(this.sell.deductAmount): '',
                   frontBillImg: this.pjzPic,
                   backBillImg: this.pjfPic,
-                  turnVolume: this.sell.turnVolume
+                  turnVolume: this.sell.turnVolume ? parseFloat(this.sell.turnVolume): ''
                 }
               ]
             };
+
             _server.getCommercialPaper(data, (res) =>{
                 if(res.code == 0){
                   this.$toast('发布成功!');

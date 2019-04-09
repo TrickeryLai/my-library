@@ -17,7 +17,7 @@
 					<div class="selfInfo-header" @click="gotoBaseInfo"><i class="iconfont icon-mine"></i></div>
 					<p class="baseInfo-row">{{this.baseInfo.loginName}}</p>
 					<!-- <p v-if="baseInfo.phonenumber" class="baseInfo-row"><i class="iconfont icon-mobile-alt"></i>{{this.baseInfo.phonenumber}}</p> -->
-					<p v-if="baseInfo.orgName" class="baseInfo-row baseInfo-org">{{this.baseInfo.orgName}}</p>
+					<p v-if="baseInfo.orgName || orgName" class="baseInfo-row baseInfo-org">{{orgName || this.baseInfo.orgName}}</p>
 				</div>
 			</div>
 		</div>
@@ -33,7 +33,7 @@
 						</van-col>
 						<van-col span="20">
 							<h3 class="selfInfo-box-title">安全设置</h3>
-							<p class="selfInfo-box-des">密码修改</p>
+							<p class="selfInfo-box-des">密码修改，信息修改</p>
 						</van-col>
 					</div>
 					
@@ -93,21 +93,23 @@
 			return {
 				title: '个人中心',
 				show: false,
-        xyData: [],//协议数据
+    			xyData: [],//协议数据
 				baseInfo:{},
+				orgName: '',
 			}
 		},
 		created(){
-		  this.initData();
+		  	this.initData();
 			this.getBaseInfo();
 		},
 		methods: {
 			goChecked(){
 				this.$router.push({path:'/home/realName'})
 			},
-      initData(){
-			  this.xyData = _server.xyData;
-      },
+	      	initData(){
+			  	this.xyData = _server.xyData;
+			  	this.orgName = localStorage.getItem('baseInfo')?JSON.parse(localStorage.getItem('baseInfo')).companyName: '';
+	      	},
 			safeFn(){
 				this.$router.push({path:'/home/selfInfo/safeSetting'})
 			},

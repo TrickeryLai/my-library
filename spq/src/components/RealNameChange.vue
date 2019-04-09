@@ -10,21 +10,12 @@
     >
       <i class="iconfont icon-previous_step" slot="left"></i>
     </van-nav-bar>
-    <van-steps
-      :active="active"
-      active-color="#38f"
-      class="text-left"
-    >
-      <van-step>上传相关图片</van-step>
-      <van-step>填写企业信息</van-step>
-      <van-step>认证</van-step>
-
-    </van-steps>
     <div class="realName-content">
       <van-cell-group class="realName-content-box">
         <h3 class="title van-hairline--bottom">营业执照</h3>
         <div class="realName-conten-inner">
          <UploadImg
+            :initPic='common.picUrl + yyzzPic'
             uploadUrl = "open-cp/v1/upload"
             @removePic='yyzzRemovePic'
             @uploadPicProgress='yyzzUploadPicFn' /> 
@@ -144,7 +135,7 @@
           style="width: 100%;"
           type="info"
           @click="submitInfo"
-        >认证</van-button>
+        >确认</van-button>
       </div>
     </div>
   </div>
@@ -152,16 +143,26 @@
 
 <script>
   import _server from '@/server/server'
+  import _common from '@/server/index'
 
   export default{
-      name: 'RealName',
+      name: 'RealNameInfo',
       data(){
           return{
-              title: '实名认证',
-              active: 0,
+              title: '修改认证信息',
               zIndex: 999,
+              common: _common,
               submitData:{
-
+                orgName: '',
+                email: '',
+                organizationCode: '',
+                registerAddress: '',
+                leader: '',
+                phone: '',
+                frIdCard:'',
+                jbrName:'',
+                jbrIdCard: '',
+                jbrPhone: ''
               },
               yyzzPic: '',
               yyzzPicUState: {
@@ -182,17 +183,29 @@
           }
       },
       created(){
-        // this.init();
+        this.init();
       },
       methods: {
           onClickLeft(){
               window.history.go(-1);
           },
           init(){
-            let path = this.$route.query.redirect? decodeURIComponent(this.$route.query.redirect) : '';
-            if(path){
-              this.$toast('请先实名认证！');
-            }
+              let data = this.$route.query.data, initData = {};
+              this.baseInfo = Object.assign({}, JSON.parse(data));
+              initData = Object.assign({}, this.baseInfo);
+              this.yyzzPic = initData.businessLicenseImgPath;
+              this.yyzzPicUState.state = 3;
+
+              this.submitData.orgName = initData.companyName;
+              this.submitData.email = initData.contactEmail;
+              this.submitData.organizationCode = initData.organizationCode;
+              this.submitData.registerAddress = initData.registerAddress;
+              this.submitData.leader = initData.legalPerson;
+              this.submitData.phone = initData.legalPersonPhone;
+              this.submitData.frIdCard = initData.legalPersonIdNo;
+              this.submitData.jbrName = initData.transactor;
+              this.submitData.jbrIdCard = initData.transactorIdNo;
+              this.submitData.jbrPhone = initData.transactorPhone;
           },
           yyzzRemovePic(){
               this.yyzzPicUState.state = 0;
@@ -267,62 +280,6 @@
             return true;
           },
           submitInfo(){
-            //提交信息
-
-        //type: "POST", url: "http://127.0.0.1:8890/open-cp/v1/company/authentication", dataType: "json",
-        // data:
-        // businessLicenseImgPath: "ee711a75-50a7-4a3e-9c18-781b3eec5c32.jpg"
-        // businessScope: "aa"
-        // companyName: "t5的公司"
-        // contactEmail: "klflds@163.com"
-        // contactPhone: "15007145555"
-        // enterpriseTypeBank: "100044"
-        // enterpriseTypeCHN: "100035"
-        // incomeSource: "bb"
-        // industry: "100016"
-        // legalPerson: "张三"
-        // legalPersonIdNo: "420124198809235555"
-        // legalPersonPhone: "15007145555"
-        // organizationCode: "98345083240134123"
-        // otherMemo: "cc"
-        // personnelScale: "100050"
-        // registerAddress: "南路一路7号"
-        // registerCapital: "1777"
-        // registerCity: "350300"
-        // registerDate: "2019-04-16"
-        // registerProvince: "350000"
-        // registerRegion: "350303"
-        // transactor: "张三"
-        // transactorIdNo: "420124198809235555"
-        // transactorPhone: "15007145555"
-
-        // 字段含义：
-        // companyId '序号',
-        // companyName '公司名称',
-        // organizationCode '组织机构代码/营业执照号',
-        // legalPerson '公司法人',
-        // legalPersonIdNo '法人身份证号',
-        // legalPersonPhone '法人手机号',
-        // transactor '经办人',
-        // transactorIdNo '经办人身份证号',
-        // transactorPhone '经办人手机号',
-        // registerProvince  '注册省',
-        // registerCity '注册市',
-        // registerRegion '注册区',
-        // registerAddress '注册地址',
-        // registerCapital '公司注册资本',
-        // registerDate '注册日期',
-        // industry '所属行业',
-        // enterpriseTypeCHN '企业类型（国标）',
-        // enterpriseTypeBank '企业类型（银监标准）',
-        // personnelScale '人员规模',
-        // businessScope '主要经营范围',
-        // incomeSource '主要收入来源',
-        // otherMemo '其它情况',
-        // contactPhone '联系人手机',
-        // contactEmail '联系人邮箱',
-        // businessLicenseImgPath '营业执照保存文件名称',
-
             if(!this.submitDataCheck()){
                 return;
             }
@@ -340,22 +297,19 @@
               transactorPhone: this.submitData.jbrPhone
             };
 
-            _server.getAuthentication(data, (res) =>{
+            data = Object.assign({}, this.baseInfo, data);
+            
+            delete data.code;
+            delete data.errMsg;
+
+            _server.editSave(data, (res) =>{
                 this.$toast(res.errMsg);
                 if(res.code == 0){
+                  window.history.go(-1);
                     //登录之后跳转的路由， 默认大厅， 通过redirect 设置
                   // let path = this.$route.query.redirect? decodeURIComponent(this.$route.query.redirect) : '/home/selfInfo';
                   //认证之后重新登录更新个人信息 或者 能够刷新本地缓存？？
-                  let path = '/login';
-
-                  //手动更改缓存的认证判定？
-                  let user = JSON.parse(localStorage.getItem('user'));
-
-                  user._checked = true;
-
-                  localStorage.setItem('user', JSON.stringify(user));
-
-                  this.$router.replace({path});
+                  
                 } 
             })
           }
@@ -399,7 +353,7 @@
   padding-bottom: 50px;
 }
 .realName-page .realName-content-box{
-  margin-top:5px;
+  margin-bottom:5px;
 }
 .realName-page .van-cell__title span{
   font-size: 12px;
