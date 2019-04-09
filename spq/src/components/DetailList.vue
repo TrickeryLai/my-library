@@ -161,7 +161,7 @@
 		methods: {
 			previewPic(index){
 				ImagePreview({
-					images: [_common.picUrl + this.initD.frontBillImg, _common.picUrl + this.initD.backBillImg],
+					images: [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg],
 					startPosition: index,
 					onClose() {
 				    // do something

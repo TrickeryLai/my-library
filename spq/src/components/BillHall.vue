@@ -168,7 +168,7 @@ import _server from '@/server/server'
 			return item.substr(0,10);
 		},
 		getLastTime(startTime, endTime){
-			let startT = new Date(startTime).getTime(),
+			let startT = new Date().getTime(),
 				endT = new Date(endTime).getTime(),
 				last;
 			last = Math.ceil((endT - startT)/(24*60*60*1000));
@@ -281,8 +281,11 @@ import _server from '@/server/server'
 			_server.getBusinessTicketDetail({
 				_id: item.cpId,
 				success(res){
-					_this.detailItem = res;
-					_this.detailModelState = true;
+				  if(res.code == 0){
+            _this.detailItem = res.data;
+            _this.detailModelState = true;
+          }
+
 				}
 			});
 		},
