@@ -70,10 +70,12 @@
 		v-model="show"
 		title="平台规则"
 		:close-on-click-overlay="true"
-		@before-close="beforeClose"
 		>
 			<div class="gz-model-content">
-				<van-row v-for="(item,index) in xyData">
+				<van-row 
+				v-for="(item,index) in xyData"
+				:key="index"
+				>
 					<div @click="previewPdfFn(item)">
 						<van-col span="24"><i class="iconfont icon-pdf1 blue-font"></i>《{{item.name}}》</van-col>
 					</div>
@@ -129,9 +131,6 @@
 			},
 			xyFn(){
 				this.show = true;
-			},
-			beforeClose(){
-				this.show = false;
 			},
 			previewPdfFn(item){
 				//http://file.dakawengu.com/file/2018-05-29/20180527-tianfeng.pdf

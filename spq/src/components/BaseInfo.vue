@@ -21,8 +21,12 @@
             <van-col span="16" class="baseInfo-box-right">{{baseInfo.organizationCode || '-'}}</van-col>
         </van-row>
         <van-row class="baseInfo-box-row">
-          <van-col span="8" class="baseInfo-box-left">企业邮箱:</van-col>
+          <van-col span="8" class="baseInfo-box-left">联系人邮箱:</van-col>
           <van-col span="16" class="baseInfo-box-right">{{baseInfo.contactEmail || '-'}}</van-col>
+        </van-row>
+        <van-row class="baseInfo-box-row">
+          <van-col span="8" class="baseInfo-box-left">联系人手机:</van-col>
+          <van-col span="16" class="baseInfo-box-right">{{baseInfo.contactPhone || '-'}}</van-col>
         </van-row>
         <van-row class="baseInfo-box-row">
           <van-col span="8" class="baseInfo-box-left">注册地址:</van-col>

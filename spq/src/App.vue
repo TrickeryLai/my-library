@@ -22,6 +22,14 @@
     margin: 0;
     padding: 0;
   }
+  input, textarea{
+    -webkit-touch-callout: all; 
+    -webkit-user-select: all;
+  }
+  *:not(input,textarea) { 
+    -webkit-touch-callout: none; 
+    -webkit-user-select: none; 
+  }
   html, body{
     width: 100%;
     height: 100%;

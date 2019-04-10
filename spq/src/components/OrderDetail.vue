@@ -46,6 +46,7 @@
 						<van-col class="detail-row-left" span="18">
 							<img style="width:20vw; "
 								v-for = "(item, index) in initData._imgs"
+								:key="index"
 								:src="item"
 								@click="previewPic(index)" />
 						</van-col>
