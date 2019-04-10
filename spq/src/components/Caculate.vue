@@ -131,6 +131,7 @@
 </template>
 
 <script>
+	import _common from '@/server/index';
 	export default{
 		name: 'Caculate',
 		data(){
@@ -174,11 +175,7 @@
 				this.shouxufei = '';//手续费
 			},
 			getTime(t = new Date()){
-				let date ='', time = new Date(t);
-				date += time.getFullYear() + '年';
-				date += (time.getMonth() + 1) + '月';
-				date += time.getDate() + '日';
-				return date;
+				return _common.common_fn.formatterTime(t);
 			},
 			choseTimeFn(type){
 				this.timeChoseShow = true;
@@ -187,12 +184,7 @@
 				this.endTimeChoseShow = true;
 			},
 			formatter(type, value) {
-				if (type === 'year') {
-					return `${value}年`;
-				} else if (type === 'month') {
-					return `${value}月`
-				}
-				return value;
+				return _common.common_fn.formatter(type, value);
 			},
 			timeModelClose(){
 				this.timeChoseShow = false;

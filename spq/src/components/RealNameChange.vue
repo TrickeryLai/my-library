@@ -55,8 +55,15 @@
             v-model="submitData.email"
             required
             clearable
-            label="企业邮箱："
-            placeholder="企业邮箱"
+            label="联系人邮箱："
+            placeholder="联系人邮箱"
+            />
+            <van-field
+            v-model="submitData.contactPhone"
+            required
+            clearable
+            label="联系人手机："
+            placeholder="联系人手机"
             />
              <van-field
             v-model="submitData.organizationCode"
@@ -206,6 +213,7 @@
               this.submitData.jbrName = initData.transactor;
               this.submitData.jbrIdCard = initData.transactorIdNo;
               this.submitData.jbrPhone = initData.transactorPhone;
+              this.submitData.contactPhone = initData.contactPhone;
           },
           yyzzRemovePic(){
               this.yyzzPicUState.state = 0;
@@ -241,8 +249,6 @@
               }
           },
           submitDataCheck(){
-            let emailReg = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$");
-            let phone = new RegExp("^[1][3,4,5,7,8,9][0-9]{9}$");
             if(this.yyzzPicUState.state == 0 || this.yyzzPicUState.state == 4){
               this.$toast('请上传营业执照');
               return false;
@@ -264,15 +270,19 @@
               return false;
             }
 
-            if(!this.submitData.email || !emailReg.test(this.submitData.email)){
-              this.$toast('请输入正确的企业邮箱！');
+            if(!this.submitData.email || !_common.common_reg.email(this.submitData.email)){
+              this.$toast('请输入正确的联系人邮箱！');
+              return false;
+            }
+            if(!this.submitData.contactPhone || !_common.common_reg.phone(this.submitData.contactPhone)){
+              this.$toast('请输入联系人正确手机号！');
               return false;
             }
             if(!this.submitData.leader){
               this.$toast('请输入法人姓名！');
               return false;
             }
-            if(!this.submitData.phone || !phone.test(this.submitData.phone)){
+            if(!this.submitData.phone || !_common.common_reg.phone(this.submitData.phone)){
               this.$toast('请输入法人正确手机号！');
               return false;
             }
@@ -294,7 +304,9 @@
               legalPersonIdNo: this.submitData.frIdCard,
               transactor: this.submitData.jbrName,
               transactorIdNo: this.submitData.jbrIdCard,
-              transactorPhone: this.submitData.jbrPhone
+              transactorPhone: this.submitData.jbrPhone,
+              contactPhone: this.submitData.contactPhone
+            
             };
 
             data = Object.assign({}, this.baseInfo, data);

@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import { NavBar, Icon, List, Cell, CellGroup, PullRefresh, Row, Col, Tag, Dialog,  Popup, Field, Panel, Checkbox, CheckboxGroup, Button, NumberKeyboard, Search, Collapse, CollapseItem, Step, Steps, Toast, DatetimePicker, Stepper, Loading    } from 'vant'
+import { NavBar, Icon, List, Cell, CellGroup, PullRefresh, Row, Col, Tag, Dialog,  Popup, Field, Panel, Checkbox, CheckboxGroup, Button, NumberKeyboard, Search, Collapse, CollapseItem, Step, Steps, Toast, DatetimePicker, Stepper, Loading, Pagination} from 'vant'
 
 
 import server from '@/server/index.js'
@@ -19,7 +19,7 @@ Vue.component('UploadImg', UploadImg);
 Vue.component('PreviewPdf', PreviewPdf);
 // Vue.component('PasswordInput', PasswordInput);
 
-Vue.use(Cell).use(CellGroup).use(List).use(Icon).use(NavBar).use(PullRefresh).use(Row).use(Col).use(Tag).use(Dialog).use(Popup).use(Field).use(Panel).use(Checkbox).use(CheckboxGroup).use(Button).use(NumberKeyboard).use(Search).use(Collapse).use(CollapseItem).use(Step).use(Steps).use(Toast).use(DatetimePicker).use(Stepper).use(Loading);
+Vue.use(Cell).use(CellGroup).use(List).use(Icon).use(NavBar).use(PullRefresh).use(Row).use(Col).use(Tag).use(Dialog).use(Popup).use(Field).use(Panel).use(Checkbox).use(CheckboxGroup).use(Button).use(NumberKeyboard).use(Search).use(Collapse).use(CollapseItem).use(Step).use(Steps).use(Toast).use(DatetimePicker).use(Stepper).use(Loading).use(Pagination);
 
 Vue.config.productionTip = false;
 
@@ -49,11 +49,11 @@ router.beforeEach( (to, from, next) => {
       return;
   }
   //判断是否认证，否则跳出
-  // if(to.meta.isNChecked && !orgId && !_checked){
-  //     next({path: '/home/realName', query:{redirect: to.fullPath}});
-  //     Toast('请先实名认证！');
-  //     return;
-  // }
+  if(to.meta.isNChecked && !orgId && !_checked){
+      next({path: '/home/realName', query:{redirect: to.fullPath}});
+      Toast('请先实名认证！');
+      return;
+  }
   
   //默认操作跳转下个页面
   next()

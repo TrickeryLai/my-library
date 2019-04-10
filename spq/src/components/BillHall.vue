@@ -60,7 +60,7 @@
 					<template slot="title">
 						<van-row gutter="3" class="van-hairline--bottom">
 							<van-col span="14" class="van-ellipsis text-left">承兑人：{{item.acceptor}}</van-col>
-							<van-col span="6" style="text-align:right;" class="blue-font">(剩{{getLastTime(item.createTime, item.dueDate)}}天)</van-col>
+							<van-col span="6" style="text-align:right;" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)</van-col>
 							<van-col span="4">
 								<van-tag mark type="success" v-if="item.creditRating == 1">优秀</van-tag>
 								<van-tag mark type="primary" v-else-if="item.creditRating == 2">良好</van-tag>
@@ -100,6 +100,7 @@
 import SetSearch from '@/components/SetSearch'
 import DetailList from '@/components/DetailList'
 import _server from '@/server/server'
+import _common from '@/server/index'
 
  //  Field Type Comment
  //  cp_id bigint(20) NOT NULL 序号
@@ -127,8 +128,8 @@ import _server from '@/server/server'
  export default {
  	name: 'BillHall',
  	components: {
- 		'SetSearch': SetSearch,
- 		'DetailList': DetailList,
+ 		SetSearch,
+ 		DetailList,
  	},
  	data() {
  		return {
@@ -167,12 +168,8 @@ import _server from '@/server/server'
 			}
 			return item.substr(0,10);
 		},
-		getLastTime(startTime, endTime){
-			let startT = new Date().getTime(),
-				endT = new Date(endTime).getTime(),
-				last;
-			last = Math.ceil((endT - startT)/(24*60*60*1000));
-			return last;
+		getLastTime(endTime){
+			return _common.common_fn.getLastTime(endTime);
 		},
 		searchModelClose(data){
 			this.searchModelState = false;
@@ -181,7 +178,9 @@ import _server from '@/server/server'
 			this.detailModelState = false;
 		},
 		getData(data, callback){
-			this.loading = true;
+			this.loading = true;//处于加载状态，不触发onLoad
+			let _this = this;
+			let pageData = Object.assign({}, this.pageData);
 			let initData = {
 				faceValue_id: '',//票据金额 underThound 10万以下  thoundToOneMillion 10-100万  moreOneMillion  100万以上   moreFiveMillion  500万以上 
 				faceValueMin: '',
@@ -191,35 +190,37 @@ import _server from '@/server/server'
 				daysMax: '',
 				flaw_id:'',//瑕疵  Y 有   N 无
 				credit_id: '',//excellent 优秀   well 良好 ordinary 一般
-				pageSize: this.pageData.pageSize,
-				pageNum: this.pageData.pageNum,
+				pageSize: pageData.pageSize,
+				pageNum: pageData.pageNum,
 				dueDateSort: this.sortState.dueDateSort,
 				createTimeSort: this.sortState.createTimeSort,
 				amountSort: this.sortState.amountSort
 			};
-			let _this = this;
+			if(this.pageData.pageNum == 1){
+				this.list = [];//不清空，在滚动至多页的时候，重新刷新会一直触发onload
+			}
 			//查询条件
 			data = Object.assign({}, initData, data);
 			//获取列表数据
 			_server.getBusinessTickets(data, (response) =>{
 				if(response.code === 0){
-		          if(_this.pageData.pageNum > 1){
+		          if(this.pageData.pageNum > 1){
 		            response.list.forEach((item) => {
-		              _this.list.push(item);
+		              this.list.push(item);
 		            });
 		          }else{
-		            _this.list = response.list;
-		            // _this.pageData = response.pageInfo;
+		            this.list = response.list;
+		            
 		          }
 		          //数据全部加载完成
-		          if (_this.list.length >= response.pageInfo.total) {
-		            _this.finished = true;
+		          if (this.list.length >= response.pageInfo.total) {
+		            this.finished = true;
 		          }else{
-		            _this.finished = false;
+		            this.finished = false;
 		          }
 				}
-				_this.loading = false;
-				_this.isLoading = false;
+				this.loading = false;
+				this.isLoading = false;
 			})
 		},
 		onRefresh(){
@@ -228,14 +229,14 @@ import _server from '@/server/server'
 			this.getData(this.searchData);	
 		},
 		onLoad() {
-		    let _this = this;
-		  	this.loading = true;//处于加载状态，不触发onLoad
-		    this.pageData.pageNum += 1;
+			this.loading = true;
+		    this.pageData.pageNum = this.pageData.pageNum + 1;
 		    this.getData(this.searchData)
 		},
 		sortTotal(type){
 			let value,
 				obj = Object.assign({}, this.sortState);
+			let searchData = Object.assign({}, this.searchData);
 			switch(type){
 				case 1:
 				value = 'amountSort';
@@ -258,12 +259,8 @@ import _server from '@/server/server'
 				this.sortState[value] = 1;
 			}
 
-	      	this.pageData = {
-		        pageNum: 1,
-		        pageSize: 10,
-		        total: 0,
-	      	};
-      		this.getData(this.searchData);
+	      	this.pageData.pageNum = 1;
+      		this.getData(searchData);
 		},
 		sortAmount(){
 			this.sortTotal(1);
@@ -282,10 +279,9 @@ import _server from '@/server/server'
 				_id: item.cpId,
 				success(res){
 				  if(res.code == 0){
-            _this.detailItem = res.data;
-            _this.detailModelState = true;
-          }
-
+		            _this.detailItem = res.data;
+		            _this.detailModelState = true;
+		          }
 				}
 			});
 		},
@@ -307,6 +303,7 @@ import _server from '@/server/server'
 			};
 			this.searchData = searchData;
 			//重新获取数据，清除状态
+			this.pageData.pageNum = 1;
 			this.getData(searchData);
 		},
 		modelClose(){

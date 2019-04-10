@@ -136,7 +136,7 @@ export default{
 					//登录之后跳转的路由， 默认大厅， 通过redirect 设置
 					let path = this.$route.query.redirect? decodeURIComponent(this.$route.query.redirect) : '/home/billHall';
 
-					localStorage.setItem('loginData', JSON.stringify(loginData));
+					// localStorage.setItem('loginData', JSON.stringify(loginData));
 					localStorage.setItem('token', response.token);
 					localStorage.setItem('user', JSON.stringify(response.user));
 					_this.$router.replace({path});

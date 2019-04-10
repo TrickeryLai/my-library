@@ -304,7 +304,7 @@ let server = {
      * @return {[type]}            [description]
      */
     insertQuotedInfo(data, callback){
-      let url = 'open-cp/v1/businessTickets/insertQuotedInfo';
+      let url = 'open-cp/v1/quotedPrice/insertQuotedInfo';
       Axios.post({
         isLoading: false,
         url,

@@ -1,4 +1,5 @@
 <template>
+	<div>
 	<van-popup  
 	v-model="show"
 	position="right"
@@ -20,7 +21,7 @@
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据金额</van-col>
-						<van-col class="detail-row-right" span="18">{{initData.cpAmount}}</van-col>
+						<van-col class="detail-row-right" span="18">{{dealPrice(initData.cpAmount)}}</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">到期时间</van-col>
@@ -50,7 +51,10 @@
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据图片</van-col>
 						<van-col class="detail-row-left" span="18">
-							<div v-for = "(item, index) in imgs" class="picBox">
+							<div 
+							v-for = "(item, index) in imgs"
+							:key="index" 
+							class="picBox">
 								<img 
 								:src="item"
 								@click="previewPic(index)" />
@@ -67,17 +71,28 @@
 							<span 
 							class="detail-row-special detail-row-left" 
 							style="padding-top: 5px;padding-bottom: 5px;"
-							@click="refreshPriceFn"
 							>
 								买家报价
-								<!-- <i class="blue-font iconfont icon-refresh"></i> -->
+								<span class="blue-font" style="margin-left:3px;"
+									@click="getbuyPrice"
+								>
+									{{time}}秒后自动刷新
+									<i class="iconfont icon-refresh"></i>
+								</span>
+								
 							</span>
-							<!-- <van-icon name="replay" class="float:right;" /> -->
 						</van-col>
 					</van-row>
 					<van-row style="background: #f5f5f5;">
 						<van-col span="24" class="buy-price">
-							{{buyPrice}}
+							<span>
+								{{buyPrice || '等待买家报价'}}
+							</span>
+							<span
+							v-if="buyPrice"
+							class="blue-font"
+							style="font-size:12px;" 
+							@click="showAllPrice">&nbsp查看所有</span>
 						</van-col>
 					</van-row>
 					<van-row class="detail-row-special">
@@ -121,13 +136,18 @@
 			</div>
 				
 			</div>
-		</div>
+		</div>	
 	</van-popup>
+	<PriceList 
+			:show='priceListShow'
+			:baseData='priceListBaseData'
+			@close='priceListClose'
+		/>
+	</div>
 </template>
 
 <script>
-
-	import testImg from '../assets/logo.png';
+	import PriceList from '@/components/PriceList'
 	import {ImagePreview} from 'vant';
 	import _server from '@/server/server';
 	import _common from '@/server/index';
@@ -135,30 +155,60 @@
 	export default{
 		name: 'DetailList',
 		props: ['showState', 'initData', 'item'],
+		components:{PriceList},
 		data(){
 			return {
 				finished:true,
 				show: this.showState,
 				initD: this.initData,
+				priceListShow: false,
+				priceListBaseData: '',
+				timerOut: '',//计时器
+				time: 60,
 				imgs: [],
-				img: testImg,
 				submit: {
 					yearRate:'',//年化利率
 					reduceAmount:'',//每十万扣款
 				},
-				buyPrice: '等待买家报价'
+				buyPrice: '40000'
 			}
-		},
-		mounted(){
-			
 		},
 		watch: {
 			showState(newValue, oldValue){
 				this.show = newValue;
+				if(newValue){
+					this.setTimeoutFn();	
+				}else{
+					clearInterval(this.timerOut);
+					this.time = 60;
+				}
 				this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
 			}
 		},
 		methods: {
+			setTimeoutFn(){
+				this.timerOut = setInterval(() => {
+					this.time --;
+					if(this.time <= 0){
+						this.getbuyPrice();
+					}
+				}, 1000)
+			},
+			dealPrice(price){
+				return _common.common_fn.dealPrice(price);
+			},
+			showAllPrice(){
+				//查看所有报价信息
+				this.priceListShow = true;
+			},
+			priceListClose(){
+				//查看所有报价--关闭
+				this.priceListShow = false;
+			},
+			// 获取买家报价
+			getbuyPrice(){
+				this.time = 60;
+			},
 			previewPic(index){
 				ImagePreview({
 					images: [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg],
@@ -168,12 +218,7 @@
 				}
 				});
 			},
-			// 获取买家报价
-			getbuyPrice(){
-
-			},
 			modelClose(){
-				
 				//关闭的时候改变对应状态，继续观察
 				this.$emit("close")
 			},
@@ -218,11 +263,7 @@
 			getLastTime(){
 				//获取剩余时间
 				let dueDate = this.initData.dueDate;// 到期时间
-
-				let LastTime = new Date(dueDate).getTime() - new Date().getTime();
-
-				LastTime = Math.ceil(LastTime / (24*60*60));
-				return LastTime;
+				return _common.common_fn.getLastTime(dueDate);
 			},
 			changeData(type){
 				let cpAmount = this.initData.cpAmount;//票据金额
@@ -245,11 +286,7 @@
 					this.submit.yearRate =((cpAmount -this.submit.dealAmount)*36000/(calDay*cpAmount)).toFixed(8);//年利率
 					// this.submit.dealAmount = 0;//成交金额
 				}
-			},
-			refreshPriceFn(){
-				//刷新报价信息
-				
-			},
+			}
 		}
 	}
 </script>

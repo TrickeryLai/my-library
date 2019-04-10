@@ -104,7 +104,12 @@
                 <div @click="choseXc">
                   <span v-if="xcChoseList.length <= 0">无</span>
                   <div v-if="xcChoseList.length > 0">
-                    <van-tag type="primary" style="margin: 5px;padding:6px;" v-for="(item, index) in xcChoseList" >{{item.name}}</van-tag>
+                    <van-tag 
+                    type="primary" 
+                    style="margin: 5px;padding:6px;" 
+                    v-for="(item, index) in xcChoseList"
+                    :key="index" 
+                    >{{item.name}}</van-tag>
 
                   </div>
                 </div>
@@ -190,7 +195,14 @@
     </van-popup>
     <van-popup v-model="xcModelState" position="bottom" @close="xcModelClose" style="padding:10px;">
       <van-tag :plain="xcChoseList.length>0" type="primary" style="padding:10px;margin: 5px;" @click="choseNoXc">无</van-tag>
-      <van-tag style="padding:10px;margin: 5px;" :plain="isXcItemChosed(item)" type="primary" v-for="(item, index) in xcList" @click="choseXcItem(item)">{{item.name}}</van-tag>
+      <van-tag 
+      style="padding:10px;margin: 5px;" 
+      :plain="isXcItemChosed(item)" 
+      type="primary" 
+      v-for="(item, index) in xcList"
+      :key="index" 
+      @click="choseXcItem(item)"
+      >{{item.name}}</van-tag>
     </van-popup>
 
   </div>
@@ -202,6 +214,7 @@ import  img1 from '@/assets/logo.png'
 import  img2 from '@/assets/logo.png'
 
 import _server from '@/server/server'
+import _common from '@/server/index'
 
   export default{
       name: 'Fbpj',
@@ -314,23 +327,7 @@ import _server from '@/server/server'
             console.log(this.sell)
           },
           changeNumToTex(n) {
-            if(!n){
-              return '';
-            }
-            if (!/^(0|[1-9]\d*)(\.\d+)?$/.test(n)){
-              return "无效的金额";
-            }
-            var unit = "千百拾万千百拾亿千百拾万千百拾元角分", str = "";
-            n += "00";
-            var p = n.indexOf('.');
-            if (p >= 0){
-              n = n.substring(0, p) + n.substr(p+1, 2);
-            }
-            unit = unit.substr(unit.length - n.length);
-            for (var i=0; i < n.length; i++){
-              str += '零壹贰叁肆伍陆柒捌玖'.charAt(n.charAt(i)) + unit.charAt(i);
-            }
-            return str.replace(/零(千|百|拾|角)/g, "零").replace(/(零)+/g, "零").replace(/零(万|亿|元)/g, "$1").replace(/(亿)万|壹(拾)/g, "$1$2").replace(/^元零?|零分/g, "").replace(/元$/g, "元整");
+            return _common.common_fn.changeNumToTex(n);
           },
           isXcItemChosed(item){
               let len = this.xcChoseList.length, i = 0;
@@ -367,17 +364,11 @@ import _server from '@/server/server'
               this.xcChoseList = newArr;
 
           },
-          getTime(t = new Date()){
-            let date ='', time = new Date(t);
-            date += time.getFullYear() + '年';
-            date += (time.getMonth() + 1) + '月';
-            date += time.getDate() + '日';
-            return date;
+          getTime(t){
+            return _common.common_fn.formatterTime(t);
           },
           getLastDay(t){
-            let nowT = new Date(), toT = new Date(t), lastT = 0;
-            lastT = Math.ceil((toT - nowT)/(24*60*60*1000));
-            return lastT
+            return _common.common_fn.getLastTime(t);
           },
           showPjPic(type){
               this.picShowModel = true;
@@ -410,24 +401,10 @@ import _server from '@/server/server'
             this.timeModelClose();
           },
           formatter(type, value) {
-            if (type === 'year') {
-              return `${value}年`;
-            } else if (type === 'month') {
-              return `${value}月`
-            }
-            return value;
-          },
-          addZero(v, n = 2){
-            let value = '0000' + v;
-            return value.substr(value.length - n, n);
+            return _common.common_fn.formatter(type, value);
           },
           formatterTime(v){
-            let value = new Date(v),
-                result = '',
-                year = value.getFullYear(),
-                month = this.addZero(value.getMonth() + 1),
-                date = this.addZero(value.getDate());
-            return `${year}-${month}-${date}`;
+            return _common.common_fn.formatterTime(v, 'yyyy-MM-dd');
           },
           pjzRemovePic(){
               //移除图片操作,票据正面

@@ -14,7 +14,8 @@
 				<h3 class="title">票面金额</h3>
 				<van-tag 
 					style="margin:10px 0px 0 15px;padding: 5px;"
-					v-for="item in amountType" 
+					v-for="(item, index) in amountType" 
+					:key="index"
 					:type="searchData.amountChosed.val == item.val ? 'primary': ''"
 					@click="choseAmount(item)"
 				>{{item.name}}</van-tag>
@@ -36,8 +37,9 @@
 				<h3 class="title">剩余天数</h3>
 				<van-tag 
 					style="margin:10px 0px 0 15px;padding: 5px;"
-					v-for="item in dayType" 
+					v-for="(item, index) in dayType" 
 					:type="searchData.dayChoose.val == item.val ? 'primary': ''"
+					:key="index"
 					@click="choseLastDay(item)"
 				>{{item.name}}</van-tag>
 				<div>
@@ -57,7 +59,8 @@
 				<h3 class="title">瑕疵</h3>
 				<van-tag 
 					style="margin:10px 0px 5px 15px;padding: 5px;"
-					v-for="item in perfectType" 
+					v-for="(item, index) in perfectType"
+					:key="index" 
 					:type="searchData.isPerfect.val == item.val ? 'primary': ''"
 					@click="chosePerfect(item)"
 				>{{item.name}}</van-tag>
@@ -66,7 +69,8 @@
 				<h3 class="title">成交信用</h3>
 				<van-tag 
 					style="margin:10px 0px 5px 15px;padding: 5px;"
-					v-for="item in dealType" 
+					v-for="(item, index) in dealType" 
+					:key="index"
 					:type="searchData.dealChoose.val == item.val ? 'primary': ''"
 					@click="choseDeal(item)"
 				>{{item.name}}</van-tag>
@@ -225,9 +229,9 @@
 						this.searchData[i] = {};
 					}
 
-					
-
 				}
+				this.$emit("ok", this.searchData);
+				this.modelClose();
 			},
 			ok(){
 				this.$emit("ok", this.searchData);
