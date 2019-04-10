@@ -85,11 +85,14 @@
 					</van-row>
 					<van-row style="background: #f5f5f5;">
 						<van-col span="24" class="buy-price">
-							<span>
-								{{buyPrice || '等待买家报价'}}
+							<span v-if="hasBuyPrice">
+								{{dealPrice(buyPrice)}}
 							</span>
+              <span v-else>
+                等待买家报价
+              </span>
 							<span
-							v-if="buyPrice"
+							v-if="hasBuyPrice"
 							class="blue-font"
 							style="font-size:12px;" 
 							@click="showAllPrice">&nbsp查看所有</span>
@@ -170,14 +173,19 @@
 					yearRate:'',//年化利率
 					reduceAmount:'',//每十万扣款
 				},
-				buyPrice: '40000'
+				buyPrice: '',
+        hasBuyPrice: false
 			}
 		},
 		watch: {
 			showState(newValue, oldValue){
 				this.show = newValue;
 				if(newValue){
-					this.setTimeoutFn();	
+					this.setTimeoutFn();
+					this.getbuyPrice();
+					this.submit.yearRate = '';
+					this.submit.reduceAmount = '';
+					this.submit.dealAmount = '';
 				}else{
 					clearInterval(this.timerOut);
 					this.time = 60;
@@ -200,6 +208,8 @@
 			showAllPrice(){
 				//查看所有报价信息
 				this.priceListShow = true;
+				this.priceListBaseData = this.initData;
+
 			},
 			priceListClose(){
 				//查看所有报价--关闭
@@ -208,6 +218,18 @@
 			// 获取买家报价
 			getbuyPrice(){
 				this.time = 60;
+        let _this = this, _id = this.initData.cpId;
+        _server.getQuotedPrice({
+          _id,
+          success(res){
+            if(res && res.length > 0){
+              _this.hasBuyPrice = true;
+              _this.buyPrice = res[0].turnVolume;
+            }else{
+              _this.hasBuyPrice = false;
+            }
+          }
+        })
 			},
 			previewPic(index){
 				ImagePreview({
@@ -243,9 +265,9 @@
 					channel: "02",
 					cpId: this.item.cpId,
 					cpNo: this.item.cpNo,
-					deductAmount: this.submit.dealAmount,
+					deductAmount: this.submit.reduceAmount,
 					endorseTimes: this.item.endorseTimes,
-					turnVolume: this.submit.reduceAmount
+					turnVolume: this.submit.dealAmount
 				};
 
 				_server.insertQuotedInfo(data, (response) => {
@@ -270,7 +292,7 @@
 				let calDay = this.getLastTime();//剩余时间
 				let txje;
 				if(type == 1){
-					txje = ((cpAmount*calDay*this.submit.yearRate/100)/3600)/100000;
+					txje = ((cpAmount*calDay*(this.submit.yearRate/100))/360);
 					// this.submit.yearRate = 0;//年利率
 					this.submit.reduceAmount = txje.toFixed(4);//每十万扣款
 					this.submit.dealAmount = (cpAmount - cpAmount/100000*txje).toFixed(4);//成交金额
@@ -282,7 +304,7 @@
 					// this.submit.reduceAmount = 0;//每十万扣款
 				}
 				if(type == 3){
-					this.submit.reduceAmount = ((cpAmount-this.submit.dealAmount)/10).toFixed(4);//每十万扣款
+					this.submit.reduceAmount = ((cpAmount-this.submit.dealAmount)).toFixed(4);//每十万扣款
 					this.submit.yearRate =((cpAmount -this.submit.dealAmount)*36000/(calDay*cpAmount)).toFixed(8);//年利率
 					// this.submit.dealAmount = 0;//成交金额
 				}

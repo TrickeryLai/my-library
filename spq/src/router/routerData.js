@@ -31,7 +31,7 @@ let routerData = {
       path: '/home/billHall',
       name: 'BillHall',
       meta:{
-        isLogin: false,//是否需要登录权限
+        isLogin: true,//是否需要登录权限
         isNChecked: false,//是否需要认证权限
       },
       component: BillHall

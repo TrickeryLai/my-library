@@ -321,7 +321,25 @@ let server = {
           console.log(error)
         })
       return this;
-    }
+    },
+    /***/
+    getQuotedPrice(params){
+      let url = 'open-cp/v1/quotedPrice/' + params._id;
+      Axios.get({
+        url,
+      }).then((response) => {
+        params.success &&  params.success(response)
+        // if(response.code == 0 || response.code == 110008){
+
+        // }else{
+        //   Toast(response.errMsg);
+        // }
+      })
+        .catch(error => {
+          console.log(error)
+        });
+      return this;
+    },
     
   	
 }

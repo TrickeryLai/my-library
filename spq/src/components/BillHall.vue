@@ -138,24 +138,25 @@ import _common from '@/server/index'
 			error: false,
 			isLoading: false,
 			loading: false,
+      isGetData: false,
 			detailModelState: false,//详情框状态
 			detailItem: {},//详情项
 			currentItemInfo: '',//当前点击项
 			searchModelState: false,//筛选弹出框状态
 			isGetingData: false,//是否正在请求数据
 			searchData: '',//搜索条件
-	        // 0是asc   1是desc
-	        sortState: {
-	          	dueDateSort: '',//到期时间排序
-	          	amountSort: '',//金额排序
-	          	createTimeSort: '',//发布时间排序
-	      	},
-	      	pageData: {
-			  	pageNum: 0,
-		      	pageSize: 10,
-		      	total: 0,
-	      	},
-	      	list: []
+      // 0是asc   1是desc
+      sortState: {
+          dueDateSort: '',//到期时间排序
+          amountSort: '',//金额排序
+          createTimeSort: '',//发布时间排序
+      },
+      pageData: {
+      pageNum: 0,
+        pageSize: 10,
+        total: 0,
+      },
+      list: []
 		}
 	},
 	methods: {
@@ -178,6 +179,10 @@ import _common from '@/server/index'
 			this.detailModelState = false;
 		},
 		getData(data, callback){
+		  if(this.isGetData){
+		    return;
+      }
+      this.isGetData = true;
 			this.loading = true;//处于加载状态，不触发onLoad
 			let _this = this;
 			let pageData = Object.assign({}, this.pageData);
@@ -203,7 +208,10 @@ import _common from '@/server/index'
 			data = Object.assign({}, initData, data);
 			//获取列表数据
 			_server.getBusinessTickets(data, (response) =>{
-				if(response.code === 0){
+        this.isGetData = false;
+        this.loading = false;
+        this.isLoading = false;
+				if(response.code == 0){
 		          if(this.pageData.pageNum > 1){
 		            response.list.forEach((item) => {
 		              this.list.push(item);
@@ -219,8 +227,6 @@ import _common from '@/server/index'
 		            this.finished = false;
 		          }
 				}
-				this.loading = false;
-				this.isLoading = false;
 			})
 		},
 		onRefresh(){
@@ -229,9 +235,8 @@ import _common from '@/server/index'
 			this.getData(this.searchData);	
 		},
 		onLoad() {
-			this.loading = true;
-		    this.pageData.pageNum = this.pageData.pageNum + 1;
-		    this.getData(this.searchData)
+      this.pageData.pageNum = this.pageData.pageNum + 1;
+      this.getData(this.searchData)
 		},
 		sortTotal(type){
 			let value,

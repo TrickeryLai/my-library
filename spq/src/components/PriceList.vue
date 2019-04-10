@@ -13,17 +13,17 @@
 				v-for="(item, index) in list"
 				:key = "index"
 			>
-				<td>{{item.name}}</td><td>{{dealPrice(item.price)}}</td><td>{{item.time}}</td>
+				<td>{{item.companyName}}</td><td>{{dealPrice(item.turnVolume)}}</td><td>{{item.quoteTime}}</td>
 			</tr>
 		</table>
-		<van-pagination 
-			v-model="pageData.pageNum" 
-			:total-items="pageData.total" 
-			:items-per-page="pageData.pageSize"
-		 	:show-page-size="3" 
-		 	@change="pageChangeFn"
-	  		force-ellipses
-		/>
+		<!--<van-pagination -->
+			<!--v-model="pageData.pageNum" -->
+			<!--:total-items="pageData.total" -->
+			<!--:items-per-page="pageData.pageSize"-->
+		 	<!--:show-page-size="3" -->
+		 	<!--@change="pageChangeFn"-->
+	  		<!--force-ellipses-->
+		<!--/>-->
 	</van-dialog>
 </template>
 
@@ -64,9 +64,14 @@
 		watch:{
 			show(newV){
 				this.isShow = newV;
+				if(this.isShow){
+          this.getData(this.baseData.cpId);
+        }
 			}
 		},
-		
+		mounted(){
+
+    },
 		methods:{
 			beforeClose(){
 				this.$emit('close');
@@ -74,8 +79,16 @@
 			dealPrice(price){
 				return _common.common_fn.dealPrice(price);
 			},
-			getData(){
-
+			getData(_id){
+			  let _this = this;
+        _server.getQuotedPrice({
+            _id,
+            success(res){
+               if(res){
+                 _this.list = res;
+               }
+            }
+          })
 			},
 			pageChangeFn(){
 

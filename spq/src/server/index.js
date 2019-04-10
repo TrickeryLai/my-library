@@ -38,7 +38,7 @@ let commonUrl = {
   common_fn:{
     dealPrice(price, n = 3){
       if(!price){
-        return '';
+        return price;
       }
 
       let value, 
@@ -46,9 +46,9 @@ let commonUrl = {
 
       price = price.toString().split(".");
       value = price[0];
-
+      
       for(let i = value.length; i > 0; i -= n){
-        result.push(value.substr(i-n, n));
+        result.push(value.substr((i-n) < 0 ? 0:(i-n), i < n? i : n));
       }
 
       price[0] = result.reverse().join(',');
