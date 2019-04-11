@@ -65,7 +65,7 @@
 					@click="chosePerfect(item)"
 				>{{item.name}}</van-tag>
 			</van-cell-group>
-			<van-cell-group class="van-hairline--bottom">
+			<van-cell-group>
 				<h3 class="title">成交信用</h3>
 				<van-tag 
 					style="margin:10px 0px 5px 15px;padding: 5px;"

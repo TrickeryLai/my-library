@@ -143,6 +143,7 @@ let server = {
   	getBusinessTicketDetail(params){
 	    let url = 'open-cp/v1/businessTickets/' + params._id;
 	    Axios.get({
+        isLoading: true,
 	      url,
 	    }).then((response) => { 
           params.success &&  params.success(response)
@@ -236,7 +237,7 @@ let server = {
 	    let url = 'open-cp/v1/company/' + params._id;
 	    Axios.get({
 	      url,
-	      isLoading: false,  
+	      isLoading: true,  
 	    }).then((response) => {
 	          params.success &&  params.success(response)
 	        // if(response.code == 0 || response.code == 110008){

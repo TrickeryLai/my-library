@@ -223,7 +223,7 @@
               //营业执照上传
               this.yyzzPicUState.state = data.state;
               if(data.state == 3){
-                  this.yyzzPic = data.imgData.data
+                  this.yyzzPic = data.imgData.data;
               }
           },
           //身份证正面
@@ -358,7 +358,7 @@
 .realName-page .picTitle{
   font-size: 12px;
   color:#000;
-  padding: 5px;
+  padding: 0 5px 5px;
   text-align: center;
 }
 .realName-page .realName-content{

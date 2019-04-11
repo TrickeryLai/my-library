@@ -1,17 +1,19 @@
 <template>
 	<div class="picAdd-box">
-		<div v-if="yyzzPicUrl" style="width: 100%;height:100%;">
+		<div v-show="yyzzPicUrl" style="width: 100%;height:100%;">
 			<div class="pic-upload-progress" v-if="yyzzPicUState.isUpload == 1">
 				{{yyzzPicUState.progress + '%'}}
 			</div>
 			<img :src="yyzzPicUrl" >
-			<i class="pic-remove" @click="removePic">x</i>
+      <img ref="resultImage" style="display:none">
+      <span class="pic-remove" @click="removePic">
+        <i class="iconfont icon-icon_roundclose_fill" ></i>
+      </span>
 		</div>
 		<div v-if="!yyzzPicUrl">
-			+
+			<i class="iconfont icon-add"></i>
 			<input
 			class="picAdd-input" type="file"  accept="image/*" ref="yyzzPicInput" multiple="multiple" @change="yyzzPicChange"/>
-      <img id="resultImage" style="display: none;"/>
 		</div>
 	</div>
 </template>
@@ -19,6 +21,15 @@
 <script>
   import MegaPixImage from '@/server/uploadImg'
   import _common from '@/server/index'
+  function dataURLtoFile(dataurl, filename) {//将base64转换为文件
+    var arr = dataurl.split(','), mime = arr[0].split(':;')[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, {type:mime});
+  }
 
   //将base64转化为流
   function convertBase64UrlToBlob(urlData){  
@@ -29,14 +40,7 @@
       for (var i = 0; i < bytes.length; i++) {  
           ia[i] = bytes.charCodeAt(i);  
       }  
-      return new Blob( [ab] , {type : 'image/png'}); 
-
-      // var arr = urlData.split(','), mime = arr[0].match(/:(.*?);/)[1],
-      // bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-      // while(n--){
-      //   u8arr[n] = bstr.charCodeAt(n);
-      // }
-      // return new File([u8arr], filename, {type:mime}); 
+      return new Blob( [ab] , {type : 'image/png'});  
   } 
 
   function getBase64Image(img) {
@@ -117,13 +121,6 @@
             var file = file[file.length - 1];
             this.fileName = file.name;
             this.preViewPic(file);
-            //大于 2M 压缩图片
-            if(!file.size){
-                this.ystu(file);
-            }else{
-                //开始上传文件
-                this.uploadFile(file)
-            }
           },
           preViewPic(file){
             //预览图片
@@ -132,7 +129,16 @@
             reader.readAsDataURL(file);             
             //为文件读取成功设置事件
             reader.onload=(e) => {
+                //设置状态为开始上传
+                this.uploadPic();
                 this.yyzzPicUrl  = e.target.result;
+                    //大于 1M 压缩图片
+                if(file.size > 1024*1020){
+                    this.ystu(file);
+                }else{
+                    //开始上传文件
+                    this.uploadFile(file)
+                }
               };
           },
           uploadBase64str(base64Str) {
@@ -147,7 +153,7 @@
               formdata.append("file", base64Str); 
               var xhr = new XMLHttpRequest();
               xhr.upload.addEventListener("progress", function (e) {
-                  var percentComplete = Math.round(e.loaded * 100 / e.total);
+                  var percentComplete = Math.floor(e.loaded * 100 / e.total);
                   _this.yyzzPicUState.progress = percentComplete;
               });
               xhr.addEventListener("load", function (e, data) {
@@ -180,20 +186,27 @@
               xhr.setRequestHeader('Content-Disposition', 'form-data; name="file";');
               xhr.send(formdata);
               //通知开始上传
-              this.uploadPic();
               this.uploadXhr = xhr;
           },
           ystu(img){
+              if(!img){
+                return;
+              }
               var _this = this;
               var mpImg = new MegaPixImage(img);
-              var resImg = document.getElementById("resultImage");
+              var resImg = this.$refs.resultImage;
+              // var resImg = document.getElementById("resultImage");
               resImg.file = img;
-              mpImg.render(img, { maxWidth: 500, maxHeight: 500, quality: 1 }, function() {
+              mpImg.render(resImg, { maxWidth: 500, maxHeight: 500, quality: 1 }, function() {
                   var base64 = getBase64Image(resImg);
                   var base641 = resImg.src;
+                  base64 = dataURLtoFile(base64, _this.fileName);
+
                   // console.log("base64", base64.length, simpleSize(base64.length), base641.length, simpleSize(base641.length));
-                  base64 = convertBase64UrlToBlob(base64);
-                  _this.uploadBase64str(base64);
+                  // base64 = convertBase64UrlToBlob(base64);
+                  // _this.uploadBase64str(base64);
+
+                  _this.uploadFile(base64);
               });              
           },
           uploadFile(file) {
@@ -205,12 +218,12 @@
               xhr.upload.addEventListener("progress", function (e) {
 
                   var percentComplete = Math.round(e.loaded * 100 / e.total);
-                  _this.yyzzPicUState.progress = percentComplete;
+                  _this.yyzzPicUState.progress = percentComplete >= 100 ? 99:percentComplete;
                   // para.onProgress(percentComplete.toString() + '%');
               });
               xhr.addEventListener("load", function (e, data) {
                   // para.uploadComplete(xhr.responseText);
-                  _this.$emit('uploadPicProgress', {state: 3, imgData: JSON.parse(this.responseText)});
+                  _this.$emit('uploadPicProgress', {state: 3, imgData: JSON.parse(e.target.responseText)});
                   _this.yyzzPicUState.isUpload = 3;
               });
               xhr.addEventListener("error", function (e) {
@@ -239,8 +252,6 @@
               // xhr.setRequestHeader('Content-Type', 'multipart/form-data');
               xhr.setRequestHeader('Content-Disposition', 'form-data; name="file"');
               xhr.send(formdata);
-               //通知开始上传
-              this.uploadPic();
               this.uploadXhr = xhr;
           },
           yyzzPicChange(e, pic){
@@ -272,7 +283,8 @@
   height: 100px;
   text-align: center;
   line-height: 100px;
-  background: #f5f5f5;
+  color: #232333;
+  background: #ddd;
   position: relative;
 }
 .picAdd-box img{
@@ -284,15 +296,11 @@
   position: absolute;
   right: -3px;
   top: -3px;
-  width: 12px;
-  height: 12px;
-  line-height: 12px;
-  border-radius: 50%;
-  border: 1px solid #232333;
-  color: #232333;
-  font-style: normal;
-  font-size:12px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
   text-align: center;
+  color: #999;
   z-index: 99
 }
 .pic-upload-progress{

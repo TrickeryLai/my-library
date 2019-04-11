@@ -41,7 +41,7 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #666;
-    padding-top: 47px;
+    padding-top: 46px;
     max-height: 100%;
     font-size: 16px;
   }
@@ -79,5 +79,17 @@
   }
   .text-right{
     text-align: right;
+  }
+
+  @keyframes loading{
+    from{
+      transform:rotate(0deg);
+    }
+    to{
+      transform:rotate(360deg);
+    }
+  }
+  ._self-loading{
+    animation: loading 1s infinite;
   }
   </style>

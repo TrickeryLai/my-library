@@ -5,6 +5,7 @@
 	@confirm="beforeClose"
 	style="padding: 0 10px 0;"
 	>
+	<div style="max-height: 50vh;overflow:auto;" @touchmove.stop>
 		<table class="table">
 			<tr>
 				<th>公司名称</th><th>报价金额</th><th>报价时间</th>
@@ -13,9 +14,10 @@
 				v-for="(item, index) in list"
 				:key = "index"
 			>
-				<td>{{item.companyName}}</td><td>{{dealPrice(item.turnVolume)}}</td><td>{{item.quoteTime}}</td>
+				<td>{{item.companyName}}</td><td>{{dealPrice(item.turnVolume)}}元</td><td>{{item.quoteTime}}</td>
 			</tr>
 		</table>
+	</div>
 		<!--<van-pagination -->
 			<!--v-model="pageData.pageNum" -->
 			<!--:total-items="pageData.total" -->
@@ -37,23 +39,7 @@
 			return {
 				title: '报价信息',
 				isShow: this.show,
-				list:[
-					{
-						name:'公司名称111',
-						price: '123456782213139',
-						time: '2019-04-10'
-					},
-					{
-						name:'公司名称112',
-						price: '1234567999',
-						time: '2019-04-11'
-					},
-					{
-						name:'公司名称113',
-						price: 123456789.123,
-						time: '2019-04-11'
-					}
-				],
+				list:[],
 				pageData:{
 					pageSize: 5,
 					pageNum: 1,
@@ -81,14 +67,14 @@
 			},
 			getData(_id){
 			  let _this = this;
-        _server.getQuotedPrice({
-            _id,
-            success(res){
-               if(res){
-                 _this.list = res;
-               }
-            }
-          })
+	        	_server.getQuotedPrice({
+		            _id,
+		            success(res){
+		               if(res){
+		                 _this.list = res;
+		               }
+		            }
+	          	})
 			},
 			pageChangeFn(){
 

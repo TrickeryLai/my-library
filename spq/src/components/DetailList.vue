@@ -3,10 +3,10 @@
 	<van-popup  
 	v-model="show"
 	position="right"
-	:lock-scroll = "false"
 	@close="modelClose"
+	@touchmove.stop
 	>
-		<div class="model-content">
+		<div class="model-content" @touchmove.stop>
 			<div style="height: 100%;overflow:auto;">
 				<van-cell-group class="van-hairline--bottom">
 				<h3 class="title">票据详情</h3>
@@ -21,7 +21,7 @@
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据金额</van-col>
-						<van-col class="detail-row-right" span="18">{{dealPrice(initData.cpAmount)}}</van-col>
+						<van-col class="detail-row-right" span="18">{{dealPrice(initData.cpAmount)}}元</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">到期时间</van-col>
@@ -63,16 +63,16 @@
 					</van-row>
 				</van-cell-group>
 			</van-cell-group>
-			<van-cell-group class="van-hairline--bottom">
+			<van-cell-group class="">
 				<h3 class="title">报价信息</h3>
 				<van-cell-group>
 					<van-row>
 						<van-col span="24" @click="getbuyPrice">
 							<span 
 							class="detail-row-special detail-row-left" 
-							style="padding-top: 5px;padding-bottom: 5px;"
+							style="padding-top: 10px;padding-bottom: 10px;display:inline-block;"
 							>
-								买家报价
+								买家最新报价
 								<span class="blue-font" style="margin-left:3px;"
 									@click="getbuyPrice"
 								>
@@ -86,11 +86,11 @@
 					<van-row style="background: #f5f5f5;">
 						<van-col span="24" class="buy-price">
 							<span v-if="hasBuyPrice">
-								{{dealPrice(buyPrice)}}
+								{{dealPrice(buyPrice)}}元
 							</span>
-              <span v-else>
-                等待买家报价
-              </span>
+			              	<span v-else>
+			                	等待买家报价
+			              	</span>
 							<span
 							v-if="hasBuyPrice"
 							class="blue-font"
@@ -173,8 +173,9 @@
 					yearRate:'',//年化利率
 					reduceAmount:'',//每十万扣款
 				},
+				refreshPriceState: false,//刷新价格开关
 				buyPrice: '',
-        hasBuyPrice: false
+        		hasBuyPrice: false
 			}
 		},
 		watch: {
@@ -186,14 +187,20 @@
 					this.submit.yearRate = '';
 					this.submit.reduceAmount = '';
 					this.submit.dealAmount = '';
+					this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
 				}else{
 					clearInterval(this.timerOut);
 					this.time = 60;
+					this.buyPrice = '';
+        			this.hasBuyPrice = false;
 				}
-				this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
 			}
 		},
 		methods: {
+			touchmove(e){
+				// e.stopPropagation();
+				//阻止 touchmove事件触发组件的touchmove事件，防止拖动报错
+			},
 			setTimeoutFn(){
 				this.timerOut = setInterval(() => {
 					this.time --;
@@ -209,7 +216,6 @@
 				//查看所有报价信息
 				this.priceListShow = true;
 				this.priceListBaseData = this.initData;
-
 			},
 			priceListClose(){
 				//查看所有报价--关闭
@@ -217,19 +223,25 @@
 			},
 			// 获取买家报价
 			getbuyPrice(){
+				if(this.refreshPriceState){
+					return;
+				}
+		        let _this = this, _id = this.initData.cpId;
 				this.time = 60;
-        let _this = this, _id = this.initData.cpId;
-        _server.getQuotedPrice({
-          _id,
-          success(res){
-            if(res && res.length > 0){
-              _this.hasBuyPrice = true;
-              _this.buyPrice = res[0].turnVolume;
-            }else{
-              _this.hasBuyPrice = false;
-            }
-          }
-        })
+				this.refreshPriceState = true;
+		        _server.getQuotedPrice({
+		          _id,
+		          success(res){
+	            	_this.refreshPriceState = false;
+		            if(res && res.length > 0){
+	              		_this.hasBuyPrice = true;
+              			_this.buyPrice = res[0].turnVolume;	
+		            	
+		            }else{
+		              _this.hasBuyPrice = false;
+		            }
+		          }
+		        })
 			},
 			previewPic(index){
 				ImagePreview({
@@ -255,8 +267,12 @@
 					this.$toast('请先实名认证！');
 					return;
 				}
-				if(!this.submit.dealAmount && !this.submit.endorseTimes && !this.submit.turnVolume){
-					this.$toast('请先填写报价信息！');
+				if(!this.submit.dealAmount || !this.submit.yearRate || !this.submit.reduceAmount){
+					this.$toast('请先完整填写报价信息！');
+					return;
+				}
+				if(parseFloat(this.submit.dealAmount) < 0){
+					this.$toast('成交金额不能小于0！');
 					return;
 				}
 
@@ -292,7 +308,7 @@
 				let calDay = this.getLastTime();//剩余时间
 				let txje;
 				if(type == 1){
-					txje = ((cpAmount*calDay*(this.submit.yearRate/100))/360);
+					txje = ((cpAmount*calDay*(this.submit.yearRate/100))/360/(cpAmount/100000));
 					// this.submit.yearRate = 0;//年利率
 					this.submit.reduceAmount = txje.toFixed(4);//每十万扣款
 					this.submit.dealAmount = (cpAmount - cpAmount/100000*txje).toFixed(4);//成交金额
@@ -304,7 +320,7 @@
 					// this.submit.reduceAmount = 0;//每十万扣款
 				}
 				if(type == 3){
-					this.submit.reduceAmount = ((cpAmount-this.submit.dealAmount)).toFixed(4);//每十万扣款
+					this.submit.reduceAmount = ((cpAmount-this.submit.dealAmount)/(cpAmount/100000)).toFixed(4);//每十万扣款
 					this.submit.yearRate =((cpAmount -this.submit.dealAmount)*36000/(calDay*cpAmount)).toFixed(8);//年利率
 					// this.submit.dealAmount = 0;//成交金额
 				}
@@ -334,6 +350,7 @@
 .model-content{
 	text-align: left;
   	height: 100%;
+  	-webkit-overflow-scrolling: touch;
   	position: relative;
 }
 .van-popup{

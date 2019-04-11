@@ -85,7 +85,7 @@
 						每十万贴息：
 					</van-col>
 					<van-col span="16" class="text-left">
-						{{caculateResult.tx}}元
+						{{dealPrice(caculateResult.tx)}}元
 					</van-col>
 				</van-row>
 				<van-row>
@@ -93,7 +93,7 @@
 						贴现利息：
 					</van-col>
 					<van-col span="16" class="text-left">
-						{{caculateResult.txlx}}元
+						{{dealPrice(caculateResult.txlx)}}元
 					</van-col>
 				</van-row>
 				<van-row>
@@ -101,7 +101,7 @@
 						贴现金额：
 					</van-col>
 					<van-col span="16" class="text-left">
-						{{caculateResult.txje}}元
+						{{dealPrice(caculateResult.txje)}}元
 					</van-col>
 				</van-row>
 			</div>
@@ -162,7 +162,9 @@
 			onClickLeft(){
 				window.history.go(-1);
 			},
-
+			dealPrice(v){
+				return _common.common_fn.dealPrice(v);
+			},
 			reset(){
 				this.value = '';
 				this.currentDate = new Date();

@@ -7,7 +7,7 @@
 				<i
 				slot="icon"
 				slot-scope="props"
-				class="iconfont icon-home"
+				class="iconfont icon-home3"
 				>
 				</i>
 			</van-tabbar-item>
@@ -16,7 +16,7 @@
 				<i
 				slot="icon"
 				slot-scope="props"
-				class="iconfont icon-icon_file_fill"
+				class="iconfont icon-ticket"
 				>
 				</i>
 			</van-tabbar-item>
@@ -25,7 +25,7 @@
 				<i
 				slot="icon"
 				slot-scope="props"
-				class="iconfont icon-order1"
+				class="iconfont icon-order2"
 				>
 				</i>
 			</van-tabbar-item>

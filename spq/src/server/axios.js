@@ -14,10 +14,11 @@ Vue.prototype.Qs = Qs;           //全局注册，使用方法为:this.qs
 
 //初始化设置axios 全局的请求次数，请求的间隙
 let Axios =  axios.create({
-  timeout: 8000,  //请求延时时间
+  timeout: 20000,  //请求延时时间
 });
 
 let modelToast;
+
 let model = {
   modelI: '',
   time: 300,
@@ -27,7 +28,7 @@ let model = {
       position: 'middle',
       mask: true,
       duration: 0,       // 持续展示 toast
-        forbidClick: true, // 禁用背景点击
+      forbidClick: true, // 禁用背景点击
       loadingType: 'spinner',
     });
   },
@@ -56,11 +57,12 @@ Axios.interceptors.request.use((config) => {
 //响应拦截（配置请求回来的信息）
 Axios.interceptors.response.use((response) => {
   //统一拦截 验证是否登录
-  // if(response.data && response.data.code == 110025){
-  //     router.replace({path: '/login'});
-  //     Toast(response.data.errMsg);
-  //     return false;
-  // }
+  if(response.data && response.data.code == 110025){
+      localStorage.clear();//需要重新登录则清楚所有本地缓存，跳转至登录
+      router.replace({path: '/login'});
+      Toast(response.data.errMsg);
+      return false;
+  }
 
   return response;
  }, (error) => {
@@ -70,10 +72,6 @@ Axios.interceptors.response.use((response) => {
 
 let _Axios = {
   get(params = {}){
-
-    if(params.isLoading){
-       model.show();
-    }
     // Vue.prototype.__globalModelState = true;
     
     return new Promise((resolve, reject) => {

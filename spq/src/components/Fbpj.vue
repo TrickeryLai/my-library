@@ -171,7 +171,6 @@
             </van-row>
         </div>
       </van-cell-group>
-
       <div>
         <van-row>
           <van-col span="24">
@@ -180,8 +179,10 @@
         </van-row>
       </div>
     </div>
-    <van-popup v-model="picShowModel" position="center" @close="picShowModelClose">
+    <van-popup v-model="picShowModel" position="center" @close="picShowModelClose" style="width: 100%;">
+      <div style="width: 100%;">
         <img :src="showImg" style="width: 100%;">
+      </div>
     </van-popup>
     <van-popup v-model="timeChoseValue" position="bottom" @close="timeModelClose">
       <van-datetime-picker
@@ -204,14 +205,13 @@
       @click="choseXcItem(item)"
       >{{item.name}}</van-tag>
     </van-popup>
-
   </div>
 </template>
 
 <script>
-import  img from '@/assets/logo.png'
-import  img1 from '@/assets/logo.png'
-import  img2 from '@/assets/logo.png'
+import  img from '@/assets/timg.jpg'
+import  img1 from '@/assets/timg.jpg'
+import  img2 from '@/assets/timg.jpg'
 
 import _server from '@/server/server'
 import _common from '@/server/index'
@@ -311,18 +311,19 @@ import _common from '@/server/index'
             // this.sell.approvalApr = '';//年化利率
             // this.sell.turnVolume = '';//成交金额
             let cpAmount = parseFloat(this.submitData.cpAmount),
-                calDay = this.lastDay;
+                calDay = this.lastDay, txje;
                 
             if(type == 1){
-              this.sell.turnVolume = cpAmount - cpAmount/100000*this.sell.deductAmount;//成交金额
-              this.sell.approvalApr = ((cpAmount -this.sell.turnVolume)*36000/(calDay*cpAmount)).toFixed(8);//年华利率
+              this.sell.turnVolume = (cpAmount - (cpAmount/100000)*this.sell.deductAmount).toFixed(4);//成交金额
+              this.sell.approvalApr = ((cpAmount -this.sell.turnVolume)*36000/(calDay*cpAmount)).toFixed(8);
             }else if(type == 2){
-              this.sell.deductAmount =  (cpAmount*calDay*this.sell.approvalApr/100)/3600;
-              this.sell.turnVolume = (cpAmount - cpAmount/100000*this.sell.deductAmount);//成交金额
+
+              txje = ((cpAmount*calDay*(this.sell.approvalApr/100))/360/(cpAmount/100000));
+              this.sell.deductAmount =  txje.toFixed(4);//每十万扣款
+              this.sell.turnVolume = (cpAmount - cpAmount/100000*txje).toFixed(4);//成交金额
             }else if(type == 3){
-              
-              this.sell.deductAmount = ((cpAmount-this.sell.turnVolume)/10).toFixed(4);
-              this.sell.approvalApr = ((cpAmount - this.sell.turnVolume)*36000/(calDay*cpAmount)).toFixed(8);//年华利率
+              this.sell.deductAmount = ((cpAmount-this.sell.turnVolume)/(cpAmount/100000)).toFixed(4);//每十万扣款
+              this.sell.approvalApr = ((cpAmount -this.sell.turnVolume)*36000/(calDay*cpAmount)).toFixed(8);//年华利率
             }
             console.log(this.sell)
           },

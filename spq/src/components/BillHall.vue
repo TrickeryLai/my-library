@@ -57,42 +57,39 @@
 					style="margin-bottom: 5px;"
 					@click="showDetail(item)"
 					>
-					<template slot="title">
-						<van-row gutter="3" class="van-hairline--bottom">
-							<van-col span="14" class="van-ellipsis text-left">承兑人：{{item.acceptor}}</van-col>
-							<van-col span="6" style="text-align:right;" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)</van-col>
-							<van-col span="4">
-								<van-tag mark type="success" v-if="item.creditRating == 1">优秀</van-tag>
-								<van-tag mark type="primary" v-else-if="item.creditRating == 2">良好</van-tag>
-								<van-tag mark type="danger" v-else-if="item.creditRating == 3">一般</van-tag>
-							</van-col>
-
-						</van-row>
-						<van-row>
-							<van-col span="8" class="black-font">{{item.cpAmount/10000}} <span class="small-font">万元</span></van-col>
-							<van-col span="8" class="black-font">{{spliceTime(item.createTime)}}</van-col>
-							<van-col span="8" class="black-font">{{item.dueDate}}</van-col>
-						</van-row>
-					</template>
-				</van-cell>
-
-			</van-list>
-
-		</van-pull-refresh>
+						<template slot="title">
+							<van-row gutter="3" class="van-hairline--bottom">
+								<van-col span="14" class="van-ellipsis text-left">承兑人：{{item.acceptor}}</van-col>
+								<van-col span="6" style="text-align:right;" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)</van-col>
+								<van-col span="4">
+									<van-tag mark type="success" v-if="item.creditRating == 1">优秀</van-tag>
+									<van-tag mark type="primary" v-else-if="item.creditRating == 2">良好</van-tag>
+									<van-tag mark type="danger" v-else-if="item.creditRating == 3">一般</van-tag>
+								</van-col>
+							</van-row>
+							<van-row>
+								<van-col span="8" class="black-font text-left">{{item.cpAmount/10000}} <span class="small-font">万元</span></van-col>
+								<van-col span="8" class="black-font">{{spliceTime(item.createTime)}}</van-col>
+								<van-col span="8" class="black-font">{{item.dueDate}}</van-col>
+							</van-row>
+						</template>
+					</van-cell>
+				</van-list>
+			</van-pull-refresh>
+		</div>
 	</div>
-</div>
-<DetailList 
-:showState = 'detailModelState'
-@ok= 'detailModelOk'
-@close= 'detailModelClose'
-:initData = 'detailItem'
-:item = 'currentItemInfo'
-/>	
-<SetSearch 
-:showState = 'searchModelState'
-@ok= 'modelOk'
-@close= 'modelClose'
-/>	
+	<DetailList 
+	:showState = 'detailModelState'
+	@ok= 'detailModelOk'
+	@close= 'detailModelClose'
+	:initData = 'detailItem'
+	:item = 'currentItemInfo'
+	/>	
+	<SetSearch 
+	:showState = 'searchModelState'
+	@ok= 'modelOk'
+	@close= 'modelClose'
+	/>	
 </div>
 </template>
 
@@ -138,30 +135,31 @@ import _common from '@/server/index'
 			error: false,
 			isLoading: false,
 			loading: false,
-      isGetData: false,
+      		isGetData: false,
 			detailModelState: false,//详情框状态
 			detailItem: {},//详情项
 			currentItemInfo: '',//当前点击项
 			searchModelState: false,//筛选弹出框状态
 			isGetingData: false,//是否正在请求数据
 			searchData: '',//搜索条件
-      // 0是asc   1是desc
-      sortState: {
-          dueDateSort: '',//到期时间排序
-          amountSort: '',//金额排序
-          createTimeSort: '',//发布时间排序
-      },
-      pageData: {
-      pageNum: 0,
-        pageSize: 10,
-        total: 0,
-      },
-      list: []
+	      	// 0是asc   1是desc
+	      	sortState: {
+	          	dueDateSort: '',//到期时间排序
+	          	amountSort: '',//金额排序
+	          	createTimeSort: '',//发布时间排序
+	      	},
+      		pageData: {
+	      	pageNum: 0,
+	        	pageSize: 10,
+		        total: 0,
+	      	},
+  			list: []
 		}
 	},
 	methods: {
 		onClickRight(){
 			this.searchModelState = true;
+			this.loading = true;
 		},
 		spliceTime(item){
 			if(!item){
@@ -174,15 +172,17 @@ import _common from '@/server/index'
 		},
 		searchModelClose(data){
 			this.searchModelState = false;
+			this.loading = false;
 		},
 		detailModelClose(){
 			this.detailModelState = false;
+			this.loading = false;
 		},
 		getData(data, callback){
-		  if(this.isGetData){
-		    return;
-      }
-      this.isGetData = true;
+		  	if(this.isGetData){
+			    return;
+	      	}
+	      	this.isGetData = true;
 			this.loading = true;//处于加载状态，不触发onLoad
 			let _this = this;
 			let pageData = Object.assign({}, this.pageData);
@@ -208,10 +208,10 @@ import _common from '@/server/index'
 			data = Object.assign({}, initData, data);
 			//获取列表数据
 			_server.getBusinessTickets(data, (response) =>{
-        this.isGetData = false;
-        this.loading = false;
-        this.isLoading = false;
-				if(response.code == 0){
+	        this.isGetData = false;
+	        this.loading = false;
+	        this.isLoading = false;
+			if(response.code == 0){
 		          if(this.pageData.pageNum > 1){
 		            response.list.forEach((item) => {
 		              this.list.push(item);
@@ -235,8 +235,8 @@ import _common from '@/server/index'
 			this.getData(this.searchData);	
 		},
 		onLoad() {
-      this.pageData.pageNum = this.pageData.pageNum + 1;
-      this.getData(this.searchData)
+	      	this.pageData.pageNum = this.pageData.pageNum + 1;
+	      	this.getData(this.searchData)
 		},
 		sortTotal(type){
 			let value,
@@ -278,6 +278,7 @@ import _common from '@/server/index'
 		},
 		//点击列表详情
 		showDetail(item){
+			this.loading = true;
 			let _this = this;
 			this.currentItemInfo = item;
 			_server.getBusinessTicketDetail({

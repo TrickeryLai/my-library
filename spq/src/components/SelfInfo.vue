@@ -76,7 +76,7 @@
 				v-for="(item,index) in xyData"
 				:key="index"
 				>
-					<div @click="previewPdfFn(item)">
+					<div @click="previewPdfFn(item)" style="padding: 5px 0;font-size:16px;">
 						<van-col span="24"><i class="iconfont icon-pdf1 blue-font"></i>《{{item.name}}》</van-col>
 					</div>
 				</van-row>

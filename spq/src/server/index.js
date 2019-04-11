@@ -42,17 +42,27 @@ let commonUrl = {
       }
 
       let value, 
-        result = [];
+        result = [], isr = false;
 
       price = price.toString().split(".");
       value = price[0];
+
+      if(value.substr(0,1) == '-'){
+        isr = true;
+        value = value.split('-')[1];
+      }
       
       for(let i = value.length; i > 0; i -= n){
         result.push(value.substr((i-n) < 0 ? 0:(i-n), i < n? i : n));
       }
 
       price[0] = result.reverse().join(',');
-      return price.join('.');
+      price = price.join('.');
+
+      if(isr){
+        price = '-' + price;
+      }
+      return price;
     },
     getLastTime(endTime){
       // 获取到期时间至今的剩余天数
