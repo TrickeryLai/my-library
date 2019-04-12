@@ -15,6 +15,7 @@
           <div style="display:inline-block;margin-right: 5px;">
             <UploadImg
             uploadUrl = "open-cp/v1/upload"
+            :initPic = "pjzPic"
             @removePic='pjzRemovePic'
             @uploadPicProgress='pjzUploadPicFn' />
             <p class="picTitle" @click="showPjPic(1)"><span style="color: red;">*</span>票据正面<span class="blue-font">示例</span></p>
@@ -22,6 +23,7 @@
           <div style="display:inline-block;margin-right: 10px;">
             <UploadImg
             uploadUrl = "open-cp/v1/upload"
+            :initPic = "pjfPic"
             @removePic='pjfRemovePic'
             @uploadPicProgress='pjfUploadPicFn' /> 
             <p class="picTitle" @click="showPjPic(2)"><span style="color: red;">*</span>票据背面<span class="blue-font">示例</span></p>
@@ -118,7 +120,7 @@
         </div>
       </van-cell-group>
 
-      <van-cell-group class="realName-content-box">
+      <van-cell-group class="realName-content-box" v-if="pageType == 0">
         <h3 class="title van-hairline--bottom">可指定用户买家</h3>
         <div class="realName-conten-inner">
           <van-field
@@ -174,7 +176,8 @@
       <div>
         <van-row>
           <van-col span="24">
-            <van-button @click="submit" type="info" style="width:100%;">立即发布</van-button>
+            <van-button v-if="pageType == 0" @click="submit" type="info" style="width:100%;">立即发布</van-button>
+            <van-button v-if="pageType == 1" @click="change" type="info" style="width:100%;">修改</van-button>
           </van-col>
         </van-row>
       </div>
@@ -220,7 +223,8 @@ import _common from '@/server/index'
       name: 'Fbpj',
       data(){
           return{
-              title: '票据发布',
+              pageType: 0, //0 发布票据， 1 修改票据
+              title: this.pageType == 0?'票据发布':'票据修改',
               zIndex: 999,
               endTimeChoseValue: '',
               timeChoseValue: false,//时间选择弹窗
@@ -235,13 +239,14 @@ import _common from '@/server/index'
                 turnVolume: ''
               },
               submitData:{
-
+                acceptor: '',//承兑人
+                cpAmount: '',//票据金额
+                cpNo: ''//票据号码
               },
               showImg: '',//图片查看当前展示的图片
               pjzPic: '',
               pjzPicUState: {
                 state: 0,//上传状态 0未上传， 1正在上传， 3上传成功
-                
               },
               pjfPic: '',
               pjfPicUState: {
@@ -298,13 +303,56 @@ import _common from '@/server/index'
                 {
                   name: '不可转让',
                   value: 'bkzr'
+                },
+                {
+                  name: '其他',
+                  value: 'qt'
                 }
               ]
           }
       },
+      created(){
+          this.initType()
+      },
       methods: {
           onClickLeft(){
               window.history.go(-1);
+          },
+          initType(){
+              let inData;
+              if(this.$route.query.pjData){
+                this.pageType = 1;//修改票据
+                inData = JSON.parse(this.$route.query.pjData);
+                this.initData(inData);
+              }else{
+                this.pageType = 0;
+              }
+          },
+          initData(data){
+              if(!data){
+                return;
+              }
+              this.submitData.acceptor = data.acceptor;
+              this.submitData.cpAmount = data.cpAmount;
+              this.submitData.cpNo = data.cpNo;
+              this.bsValue = data.endorseTimes;
+              this.sell.approvalApr = data.approvalApr;
+              this.sell.deductAmount = data.deductAmount;
+              this.sell.turnVolume = data.turnVolume;
+              this.pjzPic = _common.picUrl + data.frontBillImg;
+              this.pjfPic = _common.picUrl + data.backBillImg;
+              this.currentDate = new Date(data.dueDate);
+              this.endTimeChoseValue = this.getTime(data.dueDate);
+              this.xcChoseList = this.initXcList(data.cpDefect)
+
+              if(data.frontBillImg){
+                this.pjzPicUState.state = 3;
+              }
+
+              if(data.backBillImg){
+                this.pjfPicUState.state = 3;
+              }
+              
           },
           typeChange(type){
             // this.sell.deductAmount = '';
@@ -325,10 +373,21 @@ import _common from '@/server/index'
               this.sell.deductAmount = ((cpAmount-this.sell.turnVolume)/(cpAmount/100000)).toFixed(4);//每十万扣款
               this.sell.approvalApr = ((cpAmount -this.sell.turnVolume)*36000/(calDay*cpAmount)).toFixed(8);//年华利率
             }
-            console.log(this.sell)
           },
           changeNumToTex(n) {
             return _common.common_fn.changeNumToTex(n);
+          },
+          initXcList(data){
+            let result = [];
+            if(!data){
+              return result;
+            }
+            data = data.split(',');
+
+            result = this.xcList.filter((item) => {
+                return data.indexOf(item.name) > -1;
+            })
+            return result;
           },
           isXcItemChosed(item){
               let len = this.xcChoseList.length, i = 0;
@@ -476,6 +535,36 @@ import _common from '@/server/index'
             }
             return true;
           },
+          change(){
+            //修改
+            if(!this.checkSubmitData()){
+              return;
+            }
+            let initData = JSON.parse(this.$route.query.pjData);
+            let data = {
+              acceptor: this.submitData.acceptor,
+              approvalApr: this.sell.approvalApr ? parseFloat(this.sell.approvalApr): '', 
+              cpAmount: this.submitData.cpAmount,
+              cpDefect: this.getXcList(),
+              cpNo: this.submitData.cpNo,
+              dueDate: this.formatterTime(this.endTimeTrue),
+              endorseTimes: this.bsValue,
+              deductAmount: this.sell.deductAmount?parseFloat(this.sell.deductAmount): '',
+              frontBillImg: _common.common_fn.formateUlr(this.pjzPic),
+              backBillImg: _common.common_fn.formateUlr(this.pjfPic),
+              turnVolume: this.sell.turnVolume ? parseFloat(this.sell.turnVolume): '',
+              cpId: initData.cpId,
+            }
+
+            _server.changeCommercialPaper(data, (res) =>{
+              if(res.code == 0){
+                this.$toast('修改成功！');
+                this.$router.go(-1);
+              }else{
+                this.$toast(res.errMsg);
+              }
+            })
+          },
           submitDataFn(){
             let data = {
               channel: '02',
@@ -500,6 +589,7 @@ import _common from '@/server/index'
             _server.getCommercialPaper(data, (res) =>{
                 if(res.code == 0){
                   this.$toast('发布成功!');
+                  this.$router.go(-1);
                 }
             })
           },

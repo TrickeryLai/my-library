@@ -8,13 +8,48 @@
 	<div style="max-height: 50vh;overflow:auto;" @touchmove.stop>
 		<table class="table">
 			<tr>
-				<th>公司名称</th><th>报价金额</th><th>报价时间</th>
+				<th>公司名称</th>
+				<th>竞价金额</th>
+				<th>竞价时间</th>
+				<th width="70">状态</th>
+				<th width="40" v-if="type == 1">操作</th>
 			</tr>
 			<tr
 				v-for="(item, index) in list"
 				:key = "index"
 			>
-				<td>{{item.companyName}}</td><td>{{dealPrice(item.turnVolume)}}元</td><td>{{item.quoteTime}}</td>
+				<td>{{item.companyName}}</td>
+				<td>{{dealPrice(item.turnVolume)}}元</td>
+				<td>{{item.quoteTime}}</td>
+				<td>
+					<van-tag 
+					round
+					v-if="item.quoteStatus == '01'" 
+					type="primary">报价</van-tag>
+					<van-tag 
+					round
+					v-if="item.quoteStatus == '02'" 
+					type="success">撮合成交</van-tag>
+					<van-tag 
+					round
+					v-if="item.quoteStatus == '03'"
+					>撮合失败</van-tag>
+					<van-tag 
+					round
+					color="#f2826a"
+					v-if="item.quoteStatus == '04'"
+					>取消</van-tag>
+				</td>
+				<td 
+				v-if="type == 1"
+				@click="biddingFn(item)"
+				>
+					<van-button 
+						size="mini" 
+						type="info"
+						v-if="item.quoteStatus == '01'"
+					>撮合</van-button>
+				</td>
 			</tr>
 		</table>
 	</div>
@@ -34,11 +69,12 @@
 	import _common from '@/server/index'
 	export default{
 		name: 'PriceList',
-		props:['show', 'baseData'],
+		props: ['show', 'baseData', 'type'],
 		data(){
 			return {
 				title: '报价信息',
 				isShow: this.show,
+				pageType: this.type,
 				list:[],
 				pageData:{
 					pageSize: 5,
@@ -51,13 +87,11 @@
 			show(newV){
 				this.isShow = newV;
 				if(this.isShow){
-          this.getData(this.baseData.cpId);
-        }
+		          this.getData(this.baseData.cpId);
+		          this.pageType = this.type;
+		        }
 			}
 		},
-		mounted(){
-
-    },
 		methods:{
 			beforeClose(){
 				this.$emit('close');
@@ -75,6 +109,23 @@
 		               }
 		            }
 	          	})
+			},
+			biddingFn(item){
+				//撮合
+				let data = {
+					cpId: item.cpId,
+					priceId: item.priceId
+				},
+				_this = this;
+				_server.biddingFn(data, (res) => {
+					if(res.code == 0){
+						_this.$toast('操作成功');
+						_this.isShow = false;
+						_this.$emit('optionSuccess')
+					}else{
+
+					}
+				})
 			},
 			pageChangeFn(){
 

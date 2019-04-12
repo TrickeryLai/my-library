@@ -16,11 +16,10 @@
 			</van-search>
 		</div>
 	
-		<van-collapse class="ticket-content-list" v-model="activeName" accordion>
+		<van-collapse class="ticket-content-list" v-model="activeName" accordion v-if="false">
 			<van-collapse-item class="text-left" title="我的订单" name="1">
 				<div style="max-height: 350px;overflow:auto">
 					<van-pull-refresh v-model="matchState.isLoading" @refresh="matchOnRefresh">
-
 						<van-list
 						v-model="matchState.loading"
 						:finished="matchState.finished"

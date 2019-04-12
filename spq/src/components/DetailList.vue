@@ -73,8 +73,11 @@
 							style="padding-top: 10px;padding-bottom: 10px;display:inline-block;"
 							>
 								买家最新报价
-								<span class="blue-font" style="margin-left:3px;"
+								<span 
+									class="blue-font" 
+									style="margin-left:3px;"
 									@click="getbuyPrice"
+									v-if="initData.cpStatus == '01'"
 								>
 									{{time}}秒后自动刷新
 									<i class="iconfont icon-refresh"></i>
@@ -98,7 +101,7 @@
 							@click="showAllPrice">&nbsp查看所有</span>
 						</van-col>
 					</van-row>
-					<van-row class="detail-row-special">
+					<van-row class="detail-row-special" v-if="initData.cpStatus == '01'">
 
 						<van-col class="detail-row-left" span="12">年化利率</van-col>
 						<van-col class="detail-row-left" span="12">每十万扣款</van-col>
@@ -133,9 +136,20 @@
 			</van-cell-group>
 			<div style="text-align: center;width: 100%;height: 50px;">
 				<van-button
+					v-if="initData.cpStatus == '01'"
 					type="info"
 					style="width: 100%;position: absolute; left: 0; bottom: 0;"
 					@click="ok">我要买</van-button>
+				<van-button
+					v-if="initData.cpStatus == '02'"
+					type="primary"
+					style="width: 100%;position: absolute; left: 0; bottom: 0;"
+					>已成交</van-button>
+				<van-button
+					v-if="initData.cpStatus == '03'"
+					type="danger"
+					style="width: 100%;position: absolute; left: 0; bottom: 0;"
+					>已注销</van-button>
 			</div>
 				
 			</div>
@@ -202,6 +216,10 @@
 				//阻止 touchmove事件触发组件的touchmove事件，防止拖动报错
 			},
 			setTimeoutFn(){
+				//如果不是报价状态，则可用取消查询
+				if(this.initData.cpStatus != '01'){
+					return;
+				}
 				this.timerOut = setInterval(() => {
 					this.time --;
 					if(this.time <= 0){

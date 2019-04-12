@@ -39,20 +39,21 @@
 						@click="fbShowDetail(item)"
 						>
 						<template slot="title">
-						<van-row gutter="3" class="van-hairline--bottom">
-							<van-col span="14" class="van-ellipsis text-left">承兑人：{{item.acceptor}}</van-col>
-							<van-col span="6" style="text-align:right;" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)</van-col>
-							<van-col span="4">
-								<van-tag mark type="success" v-if="item.creditRating == 1">优秀</van-tag>
-								<van-tag mark type="primary" v-else-if="item.creditRating == 2">良好</van-tag>
-								<van-tag mark type="danger" v-else-if="item.creditRating == 3">一般</van-tag>
+						<van-row>
+							<van-col span="18" class="van-ellipsis text-left">承兑人：{{item.acceptor}}</van-col>
+							<van-col span="6">
+								<van-tag round  type="success" v-if="item.cpStatus == 1">发布中</van-tag>
+								<van-tag round type="danger" v-else-if="item.cpStatus == 2">已成交</van-tag>
+								<van-tag round v-else-if="item.cpStatus == 3">已注销</van-tag>
 							</van-col>
-
 						</van-row>
 						<van-row>
-							<van-col span="8" class="black-font">{{item.cpAmount/10000}} <span class="small-font">万元</span></van-col>
-							<van-col span="8" class="black-font">{{spliceTime(item.createTime)}}</van-col>
-							<van-col span="8" class="black-font">{{item.dueDate}}</van-col>
+							<van-col span="18"><span class="text-left">票面金额：</span>{{item.cpAmount/10000}} <span class="small-font">万元</span></van-col>
+							<van-col span="6" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)</van-col>
+						</van-row>
+						<van-row>
+							<van-col span="12">发布日期：{{spliceTime(item.createTime)}}</van-col>
+							<van-col span="12">到期日：{{item.dueDate}}</van-col>
 						</van-row>
 					</template>
 					</van-cell>
@@ -70,6 +71,7 @@
 		<TicketHolderListDetail 
 			:showState = 'fbListState.detailModelState'
 			@ok= 'detailModelOk'
+			@refresh='refreshFn'
 			@close= 'detailModelClose'
 			:initData = 'fbListState.detailItem'
 			:item = 'fbListState.currentItem'
@@ -148,28 +150,32 @@
 					this.fbList = [];//不清空，在滚动至多页的时候，重新刷新会一直触发onload
 				}
 				//查询条件
-				data = Object.assign({}, initData);
+				// data = Object.assign({}, initData);
+				data = pageData;
 				//获取列表数据
-				_server.getBusinessTickets(data, (response) =>{
-					if(response.code === 0){
-						if(this.fbPageInfo.pageNum > 1){
-							response.list.forEach((item) => {
-								this.fbList.push(item);
-							});
-						}else{
-							this.fbList = response.list;
-
+				_server.getCommercialPaperList({
+					data, 
+					success(response){
+						if(response.code === 0){
+							if(_this.fbPageInfo.pageNum > 1){
+								response.list.forEach((item) => {
+									_this.fbList.push(item);
+								});
+							}else{
+								_this.fbList = response.list;
+							}
+				          //数据全部加载完成
+				          if (_this.fbList.length >= response.pageInfo.total) {
+				          	_this.fbListState.finished = true;
+				          }else{
+				          	_this.fbListState.finished = false;
+				          }
+				      	
+					      _this.fbListState.loading = false;
+					      _this.fbListState.isLoading = false;	
 						}
-			          //数据全部加载完成
-			          if (this.fbList.length >= response.pageInfo.total) {
-			          	this.fbListState.finished = true;
-			          }else{
-			          	this.fbListState.finished = false;
-			          }
-			      }
-			      this.fbListState.loading = false;
-			      this.fbListState.isLoading = false;
-			  })
+					}		
+				})
 			},
 			fbOnRefresh(){
 				//获取列表数据
@@ -196,6 +202,11 @@
 			},
 			detailModelOk(){
 				this.detailModelClose();
+			},
+			refreshFn(){
+				this.detailModelClose();
+				this.fbPageInfo.pageNum = 1;
+				this.fbGetData();
 			},
 			detailModelClose(){
 				this.fbListState.detailModelState = false;

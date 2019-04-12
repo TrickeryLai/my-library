@@ -294,7 +294,7 @@
                 return;
             }
             let data = {
-              businessLicenseImgPath: this.yyzzPic,
+              businessLicenseImgPath: _common.common_fn.formateUlr(this.yyzzPic),
               companyName: this.submitData.orgName,
               contactEmail: this.submitData.email,
               organizationCode: this.submitData.organizationCode,

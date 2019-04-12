@@ -323,10 +323,31 @@ let server = {
         })
       return this;
     },
-    /***/
+    /**
+     * [getQuotedPrice 查询竞价]
+     * @param  {[type]} params [description]
+     * @return {[type]}        [description]
+     */
     getQuotedPrice(params){
-      let url = 'open-cp/v1/quotedPrice/' + params._id;
+      let url = 'open-cp/v1/quotedPrice/detail/' + params._id;
       Axios.get({
+        url,
+      }).then((response) => {
+        if(response.code == 0 || response.code == 110008){
+          params.success &&  params.success(response.data)
+        }else{
+          Toast(response.errMsg);
+        }
+      })
+        .catch(error => {
+          console.log(error)
+        });
+      return this;
+    },
+    getCommercialPaperList(params){
+      let url = 'open-cp/v1/commercialPaper';
+      Axios.get({
+        data: params.data,
         url,
       }).then((response) => {
         params.success &&  params.success(response)
@@ -341,7 +362,68 @@ let server = {
         });
       return this;
     },
-    
+    /**
+     * [deleteCommercialPaper 注销]
+     * @param  {[type]}   cpId     [票据cpId]
+     * @param  {Function} callback [description]
+     * @return {[type]}            [description]
+     */
+    deleteCommercialPaper(cpId, callback){
+      let url = 'open-cp/v1/commercialPaper/paper/'+ cpId;
+      Axios.delete({
+        isLoading: true,
+        url,
+        success(response){
+          if(response.code == 0 || response.code == 110008){
+            callback && callback(response);
+          }else{
+            Toast(response.errMsg);
+          }
+        }
+      });
+      return this;
+    },
+    /**
+     * [changeCommercialPaper 票据修改]
+     * @param  {[type]}   data     [description]
+     * @param  {Function} callback [description]
+     * @return {[type]}            [description]
+     */
+    changeCommercialPaper(data, callback){
+      let url = 'open-cp/v1/commercialPaper';
+      Axios.put({
+          isLoading: true,
+          url,
+          data: data,
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+                    callback && callback(response);
+                  }else{
+                    Toast(response.errMsg);
+                  }
+        }).catch(error => {
+          console.log(error)
+        })
+      return this;
+    },
+    biddingFn(data, callback){
+      let url = 'open-cp/v1/commercialPaper/bidding';
+      Axios.put({
+          isLoading: true,
+          url,
+          data: data,
+          isdeal: true,
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            callback && callback(response);
+          }else{
+            Toast(response.errMsg);
+          }
+        }).catch(error => {
+          console.log(error)
+        })
+      return this;
+    },
   	
 }
 

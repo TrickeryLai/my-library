@@ -1,4 +1,5 @@
 <template>
+<div>
 	<van-popup  
 	v-model="show"
 	position="right"
@@ -20,11 +21,19 @@
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据金额</van-col>
-						<van-col class="detail-row-right" span="18">{{dealPrice(initData.cpAmount)}}</van-col>
+						<van-col class="detail-row-right" span="18">{{dealPrice(initData.cpAmount)	}}</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">到期时间</van-col>
 						<van-col class="detail-row-right" span="18">{{initData.dueDate}}</van-col>
+					</van-row>
+					<van-row class="detail-row">
+						<van-col class="detail-row-left" span="6">票据状态</van-col>
+						<van-col class="detail-row-right" span="18">
+							<van-tag round  type="success" v-if="initData.cpStatus == 1">发布中</van-tag>
+							<van-tag round type="danger" v-else-if="initData.cpStatus == 2">已成交</van-tag>
+							<van-tag round v-else-if="initData.cpStatus == 3">已注销</van-tag>
+						</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">成交信用</van-col>
@@ -71,8 +80,11 @@
 							class="detail-row-special detail-row-left" 
 							style="padding-top: 5px;padding-bottom: 5px;"
 							>
-								买家报价
-								<span class="blue-font" style="margin-left:3px;"
+								买家最新报价
+								<span 
+									class="blue-font" 
+									style="margin-left:3px;"
+									v-if="initData.cpStatus == '01'"
 									@click="getbuyPrice"
 								>
 									{{time}}秒后自动刷新
@@ -85,27 +97,62 @@
 					</van-row>
 					<van-row style="background: #f5f5f5;">
 						<van-col span="24" class="buy-price">
-							{{buyPrice}}
+							<span v-if="hasBuyPrice">
+								{{dealPrice(buyPrice)}}元
+							</span>
+			              	<span v-else>
+			                	等待买家报价
+			              	</span>
+							<span
+							v-if="hasBuyPrice"
+							class="blue-font"
+							style="font-size:12px;" 
+							@click="showAllPrice">&nbsp查看所有</span>
 						</van-col>
 					</van-row>
 				</van-cell-group>
 				
 			</van-cell-group>
-			<div style="text-align: center;width: 100%;height: 50px;">
-				<van-button
-					type="info"
-					style="width: 100%;position: absolute; left: 0; bottom: 0;"
-					@click="ok">确认</van-button>
-			</div>
+			<van-row type="flex" justify="center" style="width: 100%;height: 44px;position: absolute;left: 0; bottom: 0;">
+					<van-col span="8" v-if="initData.cpStatus == 1">
+						<van-button
+						type="danger"
+						style="width: 100%;"
+						@click="deleteP">注销</van-button>
+					</van-col>
+					<van-col span="8" v-if="initData.cpStatus == 1">
+						<van-button
+						type="primary"
+						style="width: 100%;"
+						@click="change">修改</van-button>
+					</van-col>
+					<van-col span="24" v-if="initData.cpStatus != 1">
+						<van-button
+						type="info"
+						style="width: 100%;"
+						@click="ok">确认</van-button>
+					</van-col>
+					
+			</van-row>
+			
 				
 			</div>
 		</div>
 	</van-popup>
+	<PriceList 
+			:show='priceListShow'
+			:baseData='priceListBaseData'
+			:type = "priceType"
+			@close='priceListClose'
+			@optionSuccess='biddingSuccess'
+
+		/>
+</div>
 </template>
 
 <script>
 
-	import testImg from '../assets/logo.png';
+	import PriceList from '@/components/PriceList';
 	import {ImagePreview} from 'vant';
 	import _server from '@/server/server';
 	import _common from '@/server/index';
@@ -113,6 +160,7 @@
 	export default{
 		name: 'TicketHolderListDetail',
 		props: ['showState', 'initData', 'item'],
+		components: {PriceList},
 		data(){
 			return {
 				finished:true,
@@ -121,19 +169,25 @@
 				timerOut: '',//计时器
 				time: 60,
 				imgs: [],
-				img: testImg,
+				img: '',
 				submit: {
 					yearRate:'',//年化利率
 					reduceAmount:'',//每十万扣款
 				},
-				buyPrice: '等待买家报价'
+				priceType: 0,//报价列表是否有可撮合按钮， 0，无， 1 有（暂定）
+				priceListShow: false,
+				priceListBaseData: '',
+				refreshPriceState: false,
+				hasBuyPrice: false,
+				buyPrice: ''
 			}
 		},
 		watch: {
 			showState(newValue, oldValue){
 				this.show = newValue;
 				if(newValue){
-					this.setTimeoutFn();	
+					this.setTimeoutFn();
+					this.getbuyPrice();	
 				}else{
 					clearInterval(this.timerOut);
 					this.time = 60;
@@ -143,6 +197,9 @@
 		},
 		methods: {
 			setTimeoutFn(){
+				if(this.initData.cpStatus != '01'){
+					return;
+				}
 				this.timerOut = setInterval(() => {
 					this.time --;
 					if(this.time <= 0){
@@ -150,13 +207,48 @@
 					}
 				}, 1000)
 			},
+			biddingSuccess(){
+				//撮合成功
+				this.$emit("refresh");
+			},
+			showAllPrice(){
+				//查看所有报价信息
+				this.priceListShow = true;
+				this.priceListBaseData = this.initData;
+				if(this.initData.cpStatus == '01'){
+					this.priceType = 1;
+				}else{
+					this.priceType = 0;
+				}
+			},
 			dealPrice(price){
 				return _common.common_fn.dealPrice(price);
 			},
 			// 获取买家报价
 			getbuyPrice(){
+				if(this.refreshPriceState){
+					return;
+				}
+		        let _this = this, _id = this.initData.cpId;
 				this.time = 60;
-				console.log('获取买家报价');
+				this.refreshPriceState = true;
+		        _server.getQuotedPrice({
+		          _id,
+		          success(res){
+	            	_this.refreshPriceState = false;
+		            if(res && res.length > 0){
+	              		_this.hasBuyPrice = true;
+              			_this.buyPrice = res[0].turnVolume;	
+		            	
+		            }else{
+		              _this.hasBuyPrice = false;
+		            }
+		          }
+		        })
+			},
+			priceListClose(){
+				//查看所有报价--关闭
+				this.priceListShow = false;
 			},
 			previewPic(index){
 				ImagePreview({
@@ -175,17 +267,36 @@
 			ok(){
 				let currentPath = this.$router.history.current.fullPath;
 				let _this = this;
-				//判断是否验证
-				let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '';
-				if(!(user.orgId || user._checked)){
-
-					this.$router.push({path: '/home/realName', query:{redirect: currentPath}});
-					this.$toast('请先实名认证！');
-					return;
-				}
-
+				
 				this.$emit("ok");
 				this.modelClose();
+			},
+			deleteP(){
+				//注销
+			 	this.$dialog.confirm({
+					title: '确认注销',
+					message: '确认注销此票据么？'
+				}).then(() => {
+					let cpId = this.initData.cpId, cpStatus = this.initData.cpStatus;
+					if(cpStatus != 1){
+						return;
+					}
+					_server.deleteCommercialPaper(cpId, (res) =>{
+						if(res.code == 0){
+							this.$toast('注销成功！');
+							this.$emit("refresh");
+							this.modelClose();
+						}else{
+							this.$toast(res.errMsg);
+						}
+					})
+				}).catch(() => {
+				  // on cancel
+				});
+				
+			},
+			change(){
+				this.$router.push({path: '/home/ticketHolder/fbpj', query: {pjData: JSON.stringify(this.initData)}});
 			},
 			getLastTime(){
 				//获取剩余时间

@@ -278,6 +278,7 @@ import _common from '@/server/index'
 		},
 		//点击列表详情
 		showDetail(item){
+			console.log(document.getElementsByTagName('body'));
 			this.loading = true;
 			let _this = this;
 			this.currentItemInfo = item;

@@ -220,6 +220,58 @@ let _Axios = {
     })
 
     return;
+  },
+  put(params = {}){
+
+    if(params.isLoading){
+        model.show();
+    }
+    params.header = params.header || {};
+    header = Object.assign({}, header, params.header);
+    let header = {
+      'content-type': 'application/json;charset=UTF-8'
+    };
+    let option = {
+      method: 'put',
+      url: params.url,
+      header: header,
+      data: params.data
+    };
+
+    if(params.isdeal){
+      option.transformRequest = [function (data) {
+        // 对 data 进行任意转换处理
+        return Qs.stringify(data)
+      }];
+    }
+
+    return new Promise((resolve, reject)=>{
+        Axios(option).then((res) =>{
+          let data = res.data ? res.data : res;
+          if(params.isLoading){
+            setTimeout(()=>{
+              model.hide();
+              // params.success(data);
+              return resolve(data);
+            }, model.time);
+            return;
+          }else{
+            return resolve(data);
+          }
+        }).catch((error) =>{
+          // params.error && params.error(error); 
+          if(params.isLoading){
+            setTimeout(()=>{
+              model.hide();
+              return reject(error);
+            }, model.time);
+            return;
+          }
+          return reject(error);
+        })
+    })
+
+    return;
   }
 }
 

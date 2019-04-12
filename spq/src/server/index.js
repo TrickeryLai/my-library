@@ -36,6 +36,14 @@ let commonUrl = {
     }
   },
   common_fn:{
+    formateUlr(url){
+      if(!url){
+        return url;
+      }
+
+      url = url.indexOf('/images/') > -1? (url.split('images/')[1]): url;
+      return url;
+    },
     dealPrice(price, n = 3){
       if(!price){
         return price;

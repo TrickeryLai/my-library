@@ -42,7 +42,6 @@
     text-align: center;
     color: #666;
     padding-top: 46px;
-    max-height: 100%;
     font-size: 16px;
   }
   .top-bg{
