@@ -116,6 +116,7 @@
             />
             <van-field
               v-model="submitData.frIdCard"
+              required
               clearable
               label="身份证号："
               placeholder="法人身份证号"
@@ -273,6 +274,10 @@
             }
             if(!this.submitData.phone || !_common.common_reg.phone(this.submitData.phone)){
               this.$toast('请输入法人正确手机号！');
+              return false;
+            }
+            if(!this.submitData.frIdCard){
+              this.$toast('请输入法人身份证号！');
               return false;
             }
 

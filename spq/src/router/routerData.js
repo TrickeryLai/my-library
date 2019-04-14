@@ -14,6 +14,8 @@ import Fbpj from '@/components/Fbpj'
 import BaseInfo from '@/components/BaseInfo'
 import PreviewPdf from '@/components/PreviewPdf'
 import RealNameChange from '@/components/RealNameChange'
+import MatchBank from '@/components/MatchBank'
+import AddBankCard from '@/components/AddBankCard'
 
 let routerData = {
   routes: [
@@ -125,7 +127,26 @@ let routerData = {
         isNChecked: true,
       },
       component: RealNameChange
-    }
+    },
+    {
+      path: '/home/selfInfo/matchBank',
+      name: 'MatchBank',
+      meta:{
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: MatchBank
+    },
+    {
+      path: '/home/selfInfo/addBankCard',
+      name: 'MatchBank',
+      meta:{
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: AddBankCard
+    },
+
     ]
   },
   {

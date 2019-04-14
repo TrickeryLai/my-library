@@ -38,18 +38,22 @@
 					</div>
 					
 				</van-col>
-				<van-col span="12">
-					<div
-					@click="xyFn">
-						<van-col offset="2" span="2">
-							<i class="iconfont icon-gongdan" style="color:#0079f3;vertical-align: -8px;"></i>
-						</van-col>
-						<van-col span="20">
-							<h3 class="selfInfo-box-title">平台规则</h3>
-							<p class="selfInfo-box-des">流程与协议</p>
-						</van-col>
-					</div>
-				</van-col>
+        <van-col
+          span="12"
+        >
+          <div
+            @click="bankFn">
+            <van-col offset="2" span="2">
+              <i class="iconfont icon-yinhangqia" style="color:#0079f3;vertical-align: -8px;"></i>
+            </van-col>
+            <van-col span="20">
+              <h3 class="selfInfo-box-title">银行账户设置</h3>
+              <p class="selfInfo-box-des">提现银行账户，签收银行账户</p>
+            </van-col>
+          </div>
+
+        </van-col>
+
 			</van-row>
 
 			<van-row class="selfInfo-box">
@@ -64,6 +68,18 @@
 						</van-col>
 					</div>
 				</van-col>
+        <van-col span="12">
+          <div
+            @click="xyFn">
+            <van-col offset="2" span="2">
+              <i class="iconfont icon-gongdan" style="color:#0079f3;vertical-align: -8px;"></i>
+            </van-col>
+            <van-col span="20">
+              <h3 class="selfInfo-box-title">平台规则</h3>
+              <p class="selfInfo-box-des">流程与协议</p>
+            </van-col>
+          </div>
+        </van-col>
 			</van-row>
 		</div>
 		<van-dialog
@@ -115,6 +131,9 @@
 			safeFn(){
 				this.$router.push({path:'/home/selfInfo/safeSetting'})
 			},
+      bankFn(){
+			  this.$router.push({path: '/home/selfInfo/matchBank'})
+      },
 			gotoCaculate(){
 				this.$router.push({path:'/home/selfInfo/caculate'})
 			},

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding-bottom: 50px;">
     <van-nav-bar
       :title="title"
       left-arrow

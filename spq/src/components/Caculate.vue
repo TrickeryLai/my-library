@@ -40,6 +40,9 @@
 						<van-field v-model="changeDay" placeholder="调整天数" type="number" style="padding-top:3px;padding-bottom:3px"/>
 					</van-col>
 				</van-row>
+        <van-row>
+          <van-col offset="2" span="22" class="blue-font text-left" style="padding: 10px 0;"><span>* 填写月利率，年利率，每十万手续费中的一个</span></van-col>
+        </van-row>
 				<van-row>
 					<van-col span="8" ><span style="vertical-align:-12px;">月利率（%）</span></van-col>
 					<van-col span="16" >

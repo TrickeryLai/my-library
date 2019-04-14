@@ -17,7 +17,7 @@ let server = {
 	            if(response.captchaKey){
 	            	callback && callback(response);
 	            }else{
-	            	Toast(response.errMsg);
+                response.errMsg && Toast(response.errMsg);
 	            	}
 	        	})
 	    	.catch((error) => {
@@ -39,10 +39,10 @@ let server = {
 				data: data,
 			}).then((response) => {
 				if(response.code == 0 || response.code == 110008){
-                	callback && callback(response);
-                }else{
-                	Toast(response.errMsg);
-                }
+          callback && callback(response);
+        }else{
+          response.errMsg && Toast(response.errMsg);
+        }
 			}).catch(error => {
 				console.log(error)
 			})
@@ -58,7 +58,7 @@ let server = {
         if(response.code == 0 || response.code == 110008){
           callback && callback(response);
         }else{
-          Toast(response.errMsg);
+          response.errMsg && Toast(response.errMsg);
         }
       }
     });
@@ -80,7 +80,7 @@ let server = {
         if(response.code == 0 || response.code == 110008){
           callback && callback(response);
         }else{
-          Toast(response.errMsg);
+          response.errMsg && Toast(response.errMsg);
         }
       }
     });
@@ -101,10 +101,10 @@ let server = {
 				data: data,
 			}).then((response) => {
 					if(response.code == 0 || response.code == 110008){
-	                	callback && callback(response);
-	                }else{
-	                	Toast(response.errMsg);
-	                }
+            callback && callback(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+          }
 			}).catch(error => {
 				console.log(error);
 			});
@@ -125,14 +125,14 @@ let server = {
 				data: data,
 			}).then((response) => {
 				if(response.code == 0 || response.code == 110008){
-                	callback && callback(response);
-                }else{
-                	changeState && changeState();
-                	Toast(response.errMsg);
-                }
+          callback && callback(response);
+        }else{
+          changeState && changeState();
+          response.errMsg && Toast(response.errMsg);
+        }
 			}).catch(error => {
 				console.log(error);
-			})
+			});
 		return this;
 	},
 	/**
@@ -175,7 +175,7 @@ let server = {
             if(response.code == 0 || response.code == 110008){
               callback && callback(response);
             }else{
-              Toast(response.errMsg);
+              response.errMsg && Toast(response.errMsg);
             }
       	}).catch(error => {
       		  console.log(error);
@@ -196,7 +196,7 @@ let server = {
 	        if(response.code == 0 || response.code == 110008){
 	          params.success &&  params.success(response)
 	        }else{
-	          Toast(response.errMsg);
+            response.errMsg && Toast(response.errMsg);
 	        }
 	      })
 	    .catch(error => {
@@ -221,7 +221,7 @@ let server = {
           if(response.code == 0 || response.code == 110008){
             callback && callback(response);
           }else{
-            Toast(response.errMsg);
+            response.errMsg && Toast(response.errMsg);
           }
     	}).catch(error => {
     		console.log(error);
@@ -336,7 +336,7 @@ let server = {
         if(response.code == 0 || response.code == 110008){
           params.success &&  params.success(response.data)
         }else{
-          Toast(response.errMsg);
+          response.errMsg && Toast(response.errMsg);
         }
       })
         .catch(error => {
@@ -377,7 +377,7 @@ let server = {
           if(response.code == 0 || response.code == 110008){
             callback && callback(response);
           }else{
-            Toast(response.errMsg);
+            response.errMsg && Toast(response.errMsg);
           }
         }
       });
@@ -397,10 +397,10 @@ let server = {
           data: data,
         }).then((response) => {
           if(response.code == 0 || response.code == 110008){
-                    callback && callback(response);
-                  }else{
-                    Toast(response.errMsg);
-                  }
+            callback && callback(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+          }
         }).catch(error => {
           console.log(error)
         })
@@ -417,7 +417,7 @@ let server = {
           if(response.code == 0 || response.code == 110008){
             callback && callback(response);
           }else{
-            Toast(response.errMsg);
+            response.errMsg && Toast(response.errMsg);
           }
         }).catch(error => {
           console.log(error)

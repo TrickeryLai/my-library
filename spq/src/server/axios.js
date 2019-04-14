@@ -57,7 +57,7 @@ Axios.interceptors.request.use((config) => {
 //响应拦截（配置请求回来的信息）
 Axios.interceptors.response.use((response) => {
   //统一拦截 验证是否登录
-  if(response.data && response.data.code == 110025){
+  if(response.data && response.data.code == 110025 || response.data.code == 110026){
       localStorage.clear();//需要重新登录则清楚所有本地缓存，跳转至登录
       router.replace({path: '/login'});
       Toast(response.data.errMsg);
@@ -66,7 +66,11 @@ Axios.interceptors.response.use((response) => {
 
   return response;
  }, (error) => {
- // 处理响应失败
+  let errMsg = error.message;
+  if(errMsg.indexOf('timeout') > -1){
+    Toast('请求超时！');
+  }
+  // 处理响应失败
   return Promise.reject(error);
  });
 

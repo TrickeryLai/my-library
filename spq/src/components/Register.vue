@@ -192,13 +192,13 @@ export default{
 							username: this.register.loginName,
 							password: this.register.password 
 						}});
-                	//注册成功
-	                }else if(response.code == 110008){
-	                	//验证码已失效
-	                	_this.$toast(response.errMsg);
-	                	//重新获取验证码
-	                	_this.changeCodePic();
-	                }
+        //注册成功
+        }else if(response.code == 110008){
+          //验证码已失效
+          _this.$toast(response.errMsg);
+          //重新获取验证码
+          _this.changeCodePic();
+        }
 			})	
 		},
 		gotoLogin(){

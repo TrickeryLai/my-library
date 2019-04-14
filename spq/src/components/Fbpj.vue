@@ -703,6 +703,5 @@ import _common from '@/server/index'
   display: flex;
   justify-content:center;
   align-items:Center;
-
 }
 </style>

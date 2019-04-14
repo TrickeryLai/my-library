@@ -1,110 +1,119 @@
 <template>
-	<van-popup  
-	style="height: 100%;"
+	<van-popup
+	style="height: 100%;overflow: hidden;"
 	v-model="show"
 	position="right"
 	@close="modelClose"
 	>
-		<div class="model-content setSearch-model">
-			<!-- <van-cell-group class="van-hairline--bottom">
-				<h3 class="title">承兑人</h3>
-				<van-field v-model="searchData.user" placeholder="请输入承兑人" />
-			</van-cell-group> -->
-			<van-cell-group class="van-hairline--bottom">
-				<h3 class="title">票面金额</h3>
-				<van-tag 
-					style="margin:10px 0px 0 15px;padding: 5px;"
-					v-for="(item, index) in amountType" 
-					:key="index"
-					:type="searchData.amountChosed.val == item.val ? 'primary': ''"
-					@click="choseAmount(item)"
-				>{{item.name}}</van-tag>
-				<div>
-					<van-field 
-					style="width:45%;display:inline-block;vertical-align:middle;"
-					v-model="searchData.amountChosed.min"
-					placeholder="最低金额(万)"
-					type="number" />
-						<span >-</span>
-					<van-field 
-					style="width:45%;display:inline-block;vertical-align:middle;" 
-					v-model="searchData.amountChosed.max" 
-					placeholder="最高金额(万)"
-					type="number" />
-				</div>
-			</van-cell-group>
-			<van-cell-group class="van-hairline--bottom">
-				<h3 class="title">剩余天数</h3>
-				<van-tag 
-					style="margin:10px 0px 0 15px;padding: 5px;"
-					v-for="(item, index) in dayType" 
-					:type="searchData.dayChoose.val == item.val ? 'primary': ''"
-					:key="index"
-					@click="choseLastDay(item)"
-				>{{item.name}}</van-tag>
-				<div>
-					<van-field 
-					style="width:45%;display:inline-block;vertical-align:middle;" 
-					v-model="searchData.dayChoose.min" placeholder="最少天数"
-					type="number" />
-						<span >-</span>
-					<van-field 
-					style="width:45%;display:inline-block;vertical-align:middle;" 
-					v-model="searchData.dayChoose.max" 
-					placeholder="最多天数"
-					type="number" />
-				</div>
-			</van-cell-group>
-			<van-cell-group class="van-hairline--bottom">
-				<h3 class="title">瑕疵</h3>
-				<van-tag 
-					style="margin:10px 0px 5px 15px;padding: 5px;"
-					v-for="(item, index) in perfectType"
-					:key="index" 
-					:type="searchData.isPerfect.val == item.val ? 'primary': ''"
-					@click="chosePerfect(item)"
-				>{{item.name}}</van-tag>
-			</van-cell-group>
-			<van-cell-group>
-				<h3 class="title">成交信用</h3>
-				<van-tag 
-					style="margin:10px 0px 5px 15px;padding: 5px;"
-					v-for="(item, index) in dealType" 
-					:key="index"
-					:type="searchData.dealChoose.val == item.val ? 'primary': ''"
-					@click="choseDeal(item)"
-				>{{item.name}}</van-tag>
-			</van-cell-group>
-			<!-- <van-checkbox v-model="searchData.onlyShow" name="onlyShow" style="margin-top: 10px;">
-				<i
-				class="iconfont icon-selection"
-				style="font-size: 24px;"
-				slot="icon"
-				slot-scope="props"
-				:class="{'icon-active': props.checked}"></i>
-        		只显示我的白名单票据
-      		</van-checkbox>
- -->
-			<div style="text-align: center;position: absolute;left:0;bottom:0;width: 100%;">
-				<van-row>
-					<van-col span="12">
-						<van-button 
-						type="default"
-						@click="reset"
-						style="width:100%;"
-						>重置</van-button>
-					</van-col>
-					<van-col span="12">
-						<van-button
-						type="info"
-						style="width:100%;"
-						@click="ok">确认</van-button>
-					</van-col>
-				</van-row>
-				
-				
-			</div>
-		</div>
+    <div style="height: 100%;">
+      <div class="model-content setSearch-model" @touchmove.stop >
+        <div style="padding-bottom: 60px;">
+          <van-cell-group class="van-hairline--bottom">
+            <h3 class="title">承兑人</h3>
+            <van-field v-model="searchData.user" placeholder="请输入承兑人" />
+          </van-cell-group>
+          <van-cell-group class="van-hairline--bottom">
+            <h3 class="title">票面金额</h3>
+            <van-tag
+              style="margin:10px 0px 0 15px;padding: 5px;"
+              v-for="(item, index) in amountType"
+              :key="index"
+              :type="searchData.amountChosed.val == item.val ? 'primary': ''"
+              @click="choseAmount(item)"
+            >{{item.name}}
+            </van-tag>
+            <div>
+              <van-field
+                style="width:45%;display:inline-block;vertical-align:middle;"
+                v-model="searchData.amountChosed.min"
+                placeholder="最低金额(万)"
+                type="number" />
+              <span >-</span>
+              <van-field
+                style="width:45%;display:inline-block;vertical-align:middle;"
+                v-model="searchData.amountChosed.max"
+                placeholder="最高金额(万)"
+                type="number" />
+            </div>
+          </van-cell-group>
+          <van-cell-group class="van-hairline--bottom">
+            <h3 class="title">剩余天数</h3>
+            <van-tag
+              style="margin:10px 0px 0 15px;padding: 5px;"
+              v-for="(item, index) in dayType"
+              :type="searchData.dayChoose.val == item.val ? 'primary': ''"
+              :key="index"
+              @click="choseLastDay(item)"
+            >{{item.name}}</van-tag>
+            <div>
+              <van-field
+                style="width:45%;display:inline-block;vertical-align:middle;"
+                v-model="searchData.dayChoose.min" placeholder="最少天数"
+                type="number" />
+              <span >-</span>
+              <van-field
+                style="width:45%;display:inline-block;vertical-align:middle;"
+                v-model="searchData.dayChoose.max"
+                placeholder="最多天数"
+                type="number" />
+            </div>
+          </van-cell-group>
+          <van-cell-group class="van-hairline--bottom">
+            <h3 class="title">瑕疵</h3>
+            <van-tag
+              style="margin:10px 0px 5px 15px;padding: 5px;"
+              v-for="(item, index) in perfectType"
+              :key="index"
+              :type="searchData.isPerfect.val == item.val ? 'primary': ''"
+              @click="chosePerfect(item)"
+            >{{item.name}}</van-tag>
+          </van-cell-group>
+          <van-cell-group>
+            <h3 class="title">成交信用</h3>
+            <van-tag
+              style="margin:10px 0px 5px 15px;padding: 5px;"
+              v-for="(item, index) in dealType"
+              :key="index"
+              :type="searchData.dealChoose.val == item.val ? 'primary': ''"
+              @click="choseDeal(item)"
+            >{{item.name}}</van-tag>
+          </van-cell-group>
+          <van-checkbox v-model="searchData.onlyShow" name="onlyShow" style="margin-top: 10px;">
+            <i
+              class="iconfont icon-gouxuan"
+              style="font-size: 18px;"
+              slot="icon"
+              slot-scope="props"
+              :class="{'icon-active': props.checked}"></i>
+            只显示我的白名单票据
+          </van-checkbox>
+        </div>
+
+
+      </div>
+    </div>
+    </div>
+
+    <div style="text-align: center;width: 100%;position: absolute;left:0; bottom:0;">
+      <van-row>
+        <van-col span="12">
+          <van-button
+            type="default"
+            @click="reset"
+            style="width:100%;"
+          >重置</van-button>
+        </van-col>
+        <van-col span="12">
+          <van-button
+            type="info"
+            style="width:100%;"
+            @click="ok">确认</van-button>
+        </van-col>
+      </van-row>
+
+
+    </div>
+
 	</van-popup>
 </template>
 
@@ -259,10 +268,10 @@
 	margin-right: 7px;
 }
 .setSearch-model.model-content{
-	padding: 10px;
-	text-align: left;
-	overflow-scrolling: touch;
-	touch-action: none;
+  padding: 10px;
+  height: 100%;
+  overflow:auto;
+  text-align: left;
 }
 .van-popup{
 	width: 80%;

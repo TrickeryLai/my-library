@@ -8,10 +8,10 @@
 		class="top-bg"
 		/>
 		<div class="ticket-search">
-			<van-search 
+			<van-search
 			style="position:absolute;left: 0;top: 0;width: 100%;"
-			placeholder="请输入搜索关键词" 
-			v-model="searchValue" 
+			placeholder="请输入搜索关键词"
+			v-model="searchValue"
 			@search="onSearch"
 			>
 				<i class="iconfont icon-search" slot="left-icon"></i>
@@ -35,7 +35,7 @@
 						v-for="(item, index) in fbList"
 						:key="index"
 						:title="item.title"
-						style="margin-bottom: 5px;"
+						style="margin-bottom: 5px;box-shadow: 1px 1px 1px 1px #ccc;"
 						@click="fbShowDetail(item)"
 						>
 						<template slot="title">

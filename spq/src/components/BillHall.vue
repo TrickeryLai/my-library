@@ -54,7 +54,7 @@
 					v-for="(item,index) in list"
 					:key="index"
 					:title="index"
-					style="margin-bottom: 5px;"
+					style="margin-bottom: 5px;box-shadow: 1px 1px 1px 1px #ccc;"
 					@click="showDetail(item)"
 					>
 						<template slot="title">
