@@ -33,7 +33,7 @@
 						</van-col>
 						<van-col span="20">
 							<h3 class="selfInfo-box-title">安全设置</h3>
-							<p class="selfInfo-box-des">密码修改，信息修改</p>
+							<p class="selfInfo-box-des">密码修改</p>
 						</van-col>
 					</div>
 					

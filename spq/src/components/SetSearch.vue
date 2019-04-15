@@ -8,10 +8,10 @@
     <div style="height: 100%;">
       <div class="model-content setSearch-model" @touchmove.stop >
         <div style="padding-bottom: 60px;">
-          <van-cell-group class="van-hairline--bottom">
+          <!-- <van-cell-group class="van-hairline--bottom">
             <h3 class="title">承兑人</h3>
             <van-field v-model="searchData.user" placeholder="请输入承兑人" />
-          </van-cell-group>
+          </van-cell-group> -->
           <van-cell-group class="van-hairline--bottom">
             <h3 class="title">票面金额</h3>
             <van-tag
@@ -80,11 +80,11 @@
           </van-cell-group>
           <van-checkbox v-model="searchData.onlyShow" name="onlyShow" style="margin-top: 10px;">
             <i
-              class="iconfont icon-gouxuan"
-              style="font-size: 18px;"
+              class="iconfont"
               slot="icon"
               slot-scope="props"
-              :class="{'icon-active': props.checked}"></i>
+              :class="{'icon-active icon-gouxuan': props.checked,'icon-mygou': !props.checked}" 
+              ></i>
             只显示我的白名单票据
           </van-checkbox>
         </div>
@@ -130,7 +130,7 @@
 					dayChoose: {},//剩余天数选择
 					isPerfect: {},//瑕疵
 					dealChoose: {},//成交信用
-					// onlyShow: false,//只显示我的白名单票据
+					onlyShow: false,//只显示我的白名单票据
 				},
 				amountType:[
 					{
@@ -286,8 +286,14 @@
 	text-align: center;
 	line-height: 10px;
 }
+.icon-mygou{
+	border: 1px solid #ccc;
+	border-radius: 50%;
+	width: 14px;
+	height: 14px;
+	display:inline-block;
+}
 .icon-active{
 	color: #0079f3;
 }
-
 </style>

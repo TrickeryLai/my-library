@@ -25,6 +25,32 @@ let server = {
 	    	});
 		return this;
 	},
+  /**
+   * [getSmsCaptcha 获取手机验证码]
+   * @param  {Function} callback [description]
+   * @return {[type]}            [description]
+   */
+  getSmsCaptcha(phoneNumber){
+    let url = 'open-cp/v1/smsCaptcha/?phoneNumber=' + phoneNumber;
+
+    return new Promise((resolve, reject) => {
+      Axios.get({
+        url: url,
+        }).then((response) => {
+
+          return resolve(response);
+              //请求成功返回的数据
+              if(response.captchaKey){
+                callback && callback(response);
+              }else{
+                response.errMsg && Toast(response.errMsg);
+                }
+            })
+        .catch((error) => {
+          return reject(error);
+        });
+    })
+  },
 	/**
 	 * [登录]
 	 * @param  {[type]}   data     [axios 传递的数据]
@@ -116,24 +142,26 @@ let server = {
 	 * @param  {Function} callback [description]
 	 * @return {[type]}            [description]
 	 */
-	getBusinessTickets(data, callback, changeState){
+	getBusinessTickets(data, callback){
 		let url = 'open-cp/v1/businessTickets';
-		Axios.post({
-				isLoading: true,
-				url,
-  			isdeal: true,
-				data: data,
-			}).then((response) => {
-				if(response.code == 0 || response.code == 110008){
+    return new Promise((resolve, reject) => {
+      Axios.post({
+        isLoading: true,
+        url,
+        isdeal: true,
+        data: data,
+      }).then((response) => {
+        if(response.code == 0 || response.code == 110008){
+          return resolve(response);
           callback && callback(response);
         }else{
-          changeState && changeState();
           response.errMsg && Toast(response.errMsg);
+          return reject(response);
         }
-			}).catch(error => {
-				console.log(error);
-			});
-		return this;
+      }).catch(error => {
+        return reject(error);
+      });
+    })
 	},
 	/**
 	 * [getBusinessTicketDetail 获取票据详情]
@@ -339,28 +367,36 @@ let server = {
           response.errMsg && Toast(response.errMsg);
         }
       })
-        .catch(error => {
-          console.log(error)
-        });
+      .catch(error => {
+        console.log(error)
+      });
       return this;
     },
+    /**
+     * [getCommercialPaperList 查询发布票据列表]
+     * @param  {[type]} params [description]
+     * @return {[type]}        [description]
+     */
     getCommercialPaperList(params){
       let url = 'open-cp/v1/commercialPaper';
-      Axios.get({
+      return new Promise((resolve, reject) => {
+        Axios.get({
         data: params.data,
         url,
+        isLoading: true,
       }).then((response) => {
-        params.success &&  params.success(response)
-        // if(response.code == 0 || response.code == 110008){
-
-        // }else{
-        //   Toast(response.errMsg);
-        // }
+        if(response.code == 0 || response.code == 110008){
+          return resolve(response)
+        }else{
+          Toast(response.errMsg);
+          return reject(response);
+        }
       })
-        .catch(error => {
-          console.log(error)
-        });
-      return this;
+      .catch(error => {
+        return reject(error)
+        // console.log(error)
+      });
+      })
     },
     /**
      * [deleteCommercialPaper 注销]
@@ -422,6 +458,57 @@ let server = {
         }).catch(error => {
           console.log(error)
         })
+      return this;
+    },
+    /**
+     * [getQuotedPri 我的买入]
+     * @param  {[type]}   data     [description]
+     * @param  {Function} callback [description]
+     * @return {[type]}            [description]
+     */
+    getQuotedPri(data){
+      let url = 'open-cp/v1/quotedPrice';
+      
+      return new Promise((resolve, reject) => {
+        Axios.get({
+          isLoading: true,
+          url,
+          data: data.data
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response)
+          }
+        }).catch(error => {
+          // console.log(error);
+            return reject(error);
+        })
+      })
+      
+    },
+    /**
+     * [cancelQuotedPrice 取消报价]
+     * @param  {[type]}   data     [description]
+     * @param  {Function} callback [description]
+     * @return {[type]}            [description]
+     */
+    cancelQuotedPrice(priceId, callback){
+
+      let url = 'open-cp/v1/quotedPrice/cancle/' + priceId;
+
+      Axios.delete({
+        isLoading: true,
+        url,
+        success(response){
+          if(response.code == 0 || response.code == 110008){
+            callback && callback(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+          }
+        }
+      });
       return this;
     },
   	

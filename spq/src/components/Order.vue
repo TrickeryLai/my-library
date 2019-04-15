@@ -1,56 +1,77 @@
 <template>
-	<div class="orderPage">
+	<div class="ticketHolder">
 		<van-nav-bar
 		:title="title"
 		fixed
 		class="top-bg"
 		/>
 		<div class="ticket-search">
-			<van-search 
+			<!-- <van-search
 			style="position:absolute;left: 0;top: 0;width: 100%;"
-			placeholder="请输入搜索关键词" 
-			v-model="searchValue" 
+			placeholder="请输入承兑人搜索"
+			v-model="searchValue"
 			@search="onSearch"
 			>
 				<i class="iconfont icon-search" slot="left-icon"></i>
-			</van-search>
+			</van-search> -->
+			<van-row>
+				<van-col span="12">
+					<van-field @click="choseTimeFn(1)" v-model="beginTimeData.value" readonly/>
+				</van-col>
+				<van-col span="12">
+					<van-field @click="choseTimeFn(2)" v-model="endTimeData.value" readonly/>
+				</van-col>
+			</van-row>
 		</div>
 	
-		<van-collapse class="ticket-content-list" v-model="activeName" accordion v-if="false">
+		<van-collapse class="ticket-content-list" v-model="activeName" accordion>
 			<van-collapse-item class="text-left" title="我的订单" name="1">
-				<div style="max-height: 350px;overflow:auto">
-					<van-pull-refresh v-model="matchState.isLoading" @refresh="matchOnRefresh">
+				<div style="max-height: 350px;overflow:auto;border: 1px solid #ccc;">
+					<van-pull-refresh 
+						v-model="fbListState.isLoading" 
+						@refresh="fbOnRefresh">
 						<van-list
-						v-model="matchState.loading"
-						:finished="matchState.finished"
-						finished-text="没有了"
-						@load="matchOnLoad"
+							v-model="fbListState.loading"
+							:finished="fbListState.finished"
+							finished-text="没有了"
+							:error.sync="error"
+							error-text="请求失败，点击重新加载"
+							:offset="10"
+							@load="fbOnLoad"
 						>
 						<van-cell
-						v-for="(item, index) in matchList"
-						:key="index"
-						:title="item.title"
-						style="margin-bottom: 5px;"
-						@click="matchShowDetail(item)"
+							v-for="(item, index) in fbList"
+							:key="index"
+							:title="item.title"
+							style="margin-bottom: 5px;box-shadow: 1px 1px 1px 1px #ccc;"
+							@click="fbShowDetail(item)"
 						>
 						<template slot="title">
-							<van-row gutter="3" class="van-hairline--bottom">
-								<van-col span="14" class="van-ellipsis text-left">承兑人：美的集团财务有限公司</van-col>
-								<van-col span="6" style="text-align:right;" class="blue-font">(剩365天)</van-col>
-								<van-col span="4">
-									<van-tag type="success">优秀</van-tag>
-									<van-tag mark type="success" v-if="item.type == 0">优秀</van-tag>
-									<van-tag mark type="primary" v-else-if="item.type == 1">良好</van-tag>
-									<van-tag mark type="danger" v-else-if="item.type == 2">一般</van-tag>
-								</van-col>
-								
-							</van-row>
-							<van-row>
-								<van-col span="8" class="black-font">1.512845 <span class="small-font">万元</span></van-col>
-								<van-col span="8" class="black-font">2019-03-27</van-col>
-								<van-col span="8" class="black-font">2019-07-22 </van-col>
-							</van-row>
-						</template>
+						<van-row>
+							<van-col span="24" class="van-ellipsis text-left">票据号：<span style="font-size:16px;">{{item.cpNo}}</span></van-col>
+						</van-row>
+						<van-row>
+							<van-col span="18">
+								<span class="text-left">我的竞价金额：</span>
+								<span style="font-size: 18px;">{{item.turnVolume/10000}}</span> 
+								<span class="small-font">万元</span>
+							</van-col>
+							<van-col span="6">
+								<div style="text-align: right;">
+									<van-tag round  type="primary" v-if="item.quoteStatus == 1">
+										报价中
+									</van-tag>
+									<van-tag round type="success" v-else-if="item.quoteStatus == 2">撮合成交</van-tag>
+									<van-tag round v-else-if="item.quoteStatus == 3">撮合失败</van-tag>
+									<van-tag round v-else-if="item.quoteStatus == 4">已取消</van-tag>
+								</div>
+							</van-col>
+						</van-row>
+						<van-row>
+							<van-col span="24">我的竞价时间：{{item.quoteTime}}</van-col>
+							<van-col span="24" v-if="item.quoteStatus == 2">撮合时间：{{item.matchTime}}</van-col>
+						</van-row>
+					</template>
 					</van-cell>
 
 				</van-list>
@@ -59,98 +80,223 @@
 				</div>
 				
 			</van-collapse-item>
-			<!-- <van-collapse-item class="text-left" title="已完成" name="2">
+			<!-- <van-collapse-item class="text-left" title="暂存中" name="2">
 				
 			</van-collapse-item> -->
 		</van-collapse>
 		<OrderDetail 
-		:showState = 'detailModelState'
-		@ok= 'detailModelOk'
-		@close= 'detailModelClose'
-		:initData = 'detailItem'
+			:showState = 'fbListState.detailModelState'
+			@ok= 'detailModelOk'
+			@refresh='refreshFn'
+			@close= 'detailModelClose'
+			:initData = 'fbListState.detailItem'
+			:item = 'fbListState.currentItem'
 		/>
+		<van-popup v-model="beginTimeData.show" position="bottom" @close="timeModelClose">
+			<van-datetime-picker
+			v-model="beginTimeData.currentDate"
+			type="date"
+			:min-date="beginTimeData.minDate"
+			:max-date="endTimeData.currentDate"
+			:formatter="formatter"
+			@confirm="timeChoseConfirm(1, beginTimeData.currentDate)"
+			@cancel="timeChoseCancel(1)"
+			/>
+		</van-popup>
+		<van-popup v-model="endTimeData.show" position="bottom" @close="timeModelClose">
+			<van-datetime-picker
+			v-model="endTimeData.currentDate"
+			type="date"
+			:min-date="beginTimeData.currentDate"
+			:max-date="new Date(new Date().getTime() + 24*60*60*1000)"
+			:formatter="formatter"
+			@confirm="timeChoseConfirm(2, endTimeData.currentDate)"
+			@cancel="timeChoseCancel(2)"
+			/>
+		</van-popup>
 	</div>
 </template>
 
 <script>
+	import _server from '@/server/server'
+	import _common from '@/server/index'
 	import OrderDetail from '@/components/OrderDetail'
 	export default{
 		name: 'Order',
-		components: {OrderDetail},
+		components:{OrderDetail},
 		data(){
 			return {
 				title: '订单',
 				searchValue: '',
 				activeName: '1',
-				detailModelState: false,
-				detailItem: '',
-				matchState: {
+				error: false,
+				endTimeData: {
+					value: '',
+					show:　false,
+					minDate: new Date('2019-01-01'),
+					currentDate: new Date()
+				},
+				beginTimeData: {
+					value: '',
+					show: false,
+					minDate: new Date('2019-01-01'),
+					currentDate: new Date('2019-01-01')
+				},
+				fbListState:{
 					finished: false,//是否已经加载完成
 					isLoading: false,
-					loading: false
+					loading: false,
+					currentItem: {},//当前查看详情项
+					detailItem: {},//查询的具体信息
+					detailModelState: false,//弹窗显示隐藏状态
 				},
-				matchList: [
-					{},{}
-				]
+				fbList:[],//已发布的票据列表	
+				fbPageInfo:{
+					pageNum: 0,
+					pageSize: 5,
+					total: 0
+				}
 			}
 		},
+		created(){
+			this.fbOnLoad();
+		},
 		methods:{
-			onClickRight(){
-				      this.$router.push({path: '/home/ticketHolder/fbpj'})
+			spliceTime(item){
+				if(!item){
+					return;
+				}
+				return item.substr(0,10);
+			},
+			getLastTime(endTime){
+				return _common.common_fn.getLastTime(endTime);
+			},
+			getTime(t = new Date()){
+				return _common.common_fn.formatterTime(t);
+			},
+			choseTimeFn(type, state = true){
+				if(type == 1){
+					this.beginTimeData.show = state;
+				}else{
+					this.endTimeData.show = state;
+				}
+			},
+			timeChoseConfirm(type, value){
+				this.timeChoseCancel(type);
+
+				if(type == 1){
+					this.beginTimeData.value = this.getTime(value);
+				}else{
+					this.endTimeData.value = this.getTime(value);
+				}
+				this.fbPageInfo.pageNum = 1;
+				this.fbGetData();
+			},
+			timeChoseCancel(type){
+				this.choseTimeFn(type, false);
+			},
+			timeModelClose(){
+
 			},
 			onSearch(){
-
+				this.fbPageInfo.pageNum = 1;
+				this.fbGetData();
 			},
-			matchGetData(){
-
+			fbGetData(data = {}){
+				//获取订单列表
+				this.fbListState.loading = true;//处于加载状态，不触发onLoad
+				let _this = this;
+				let pageData = Object.assign({}, this.fbPageInfo);
+				if(pageData.pageNum == 1){
+					this.fbList = [];//不清空，在滚动至多页的时候，重新刷新会一直触发onload
+				}
+				//查询条件
+				data = Object.assign({}, pageData, {
+					endTime: this.endTimeData.currentDate,
+					startTime: this.beginTimeData.currentDate
+				});
+				console.log(this.endTimeData.currentDate)
+				delete data.total;
+				//获取列表数据
+				_server.getQuotedPri({
+					data, 	
+				}).then((response) =>{
+					this.error = false;
+					this.fbListState.loading = false;
+			      	this.fbListState.isLoading = false;	
+					if(response.code == 0){
+							if(_this.fbPageInfo.pageNum > 1){
+								response.list.forEach((item) => {
+									this.fbList.push(item);
+								});
+							}else{
+								this.fbList = response.list;
+							}
+				          //数据全部加载完成
+				          	if (this.fbList.length >= response.pageInfo.total) {
+				          		this.fbListState.finished = true;
+				          	}else{
+				          		this.fbListState.finished = false;
+				          	}
+						}
+					})
+					.catch((error) => {
+						this.fbListState.isLoading = false;
+						this.fbListState.loading = false;
+						this.error = true;
+						this.fbPageInfo.pageNum -=1;
+					})
 			},
-			detailModelClose(){
-				//详情关闭
-				this.detailModelState = false;
+			fbOnRefresh(){
+				//获取列表数据
+				this.fbPageInfo.pageNum = 1;
+			    this.fbGetData();
+			},
+			fbOnLoad(){
+				this.fbListState.loading = true;//处于加载状态，不触发onLoad
+			    this.fbPageInfo.pageNum += 1;
+			    this.fbGetData();
+			},
+			fbShowDetail(item){
+				let _this = this;
+				this.fbListState.currentItem = item;
+				_server.getBusinessTicketDetail({
+					_id: item.cpId,
+					success(res){
+					  if(res.code == 0){
+			            _this.fbListState.detailItem = res.data;
+			            _this.fbListState.detailModelState = true;
+			          }
+					}
+				});
 			},
 			detailModelOk(){
-				//详情确认 关闭
-				this.detailModelState = false;
+				this.detailModelClose();
 			},
-			matchShowDetail(item){
-				this.detailItem = item;
-				this.detailModelState = true;
+			refreshFn(){
+				this.detailModelClose();
+				this.fbPageInfo.pageNum = 1;
+				this.fbGetData();
 			},
-			matchOnRefresh(){
-				//获取列表数据
-				setTimeout(() => {
-					this.matchState.isLoading = false;
-				}, 500);
+			detailModelClose(){
+				this.fbListState.detailModelState = false;
 			},
-			matchOnLoad(){
-				this.matchState.loading = true;//处于加载状态，不触发onLoad
-			      // 异步更新数据
-			      setTimeout(() => {
-			      	for (let i = 0; i < 10; i++) {
-			      		this.matchList.push({});
-			      	}
-			        // 加载状态结束
-			        this.matchState.loading = false;
+			formatter(type, value) {
+				return _common.common_fn.formatter(type, value);
+			},
 
-			        // 数据全部加载完成
-			        if (this.matchList.length >= 40) {
-			        	this.matchState.finished = true;
-			        }
-			    }, 1000);
-			}
 		}
 	}
 </script>
 
 <style>
-.orderPage .van-collapse-item__content{
+.ticketHolder .van-collapse-item__content{
 	background-color: #f5f5f5;
 	padding-left: 0;
 	padding-right: 0;
 	padding-top: 0px;
 }
-
-.orderPage .ticket-search{
+.ticketHolder .ticket-search{
 	position: fixed;
 	left: 0;
 	top: 45px;
@@ -158,7 +304,7 @@
 	height: 50px;
 	z-index: 5;
 }	
-.orderPage .ticket-content-list{
+.ticketHolder .ticket-content-list{
 	margin-top: 60px;
 	padding-bottom: 50px;
 	background: #f5f5f5;

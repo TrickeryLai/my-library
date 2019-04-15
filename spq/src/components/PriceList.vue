@@ -12,7 +12,7 @@
 				<th>竞价金额</th>
 				<th>竞价时间</th>
 				<th width="70">状态</th>
-				<th width="40" v-if="type == 1">操作</th>
+				<th width="40" v-if="pageType == 1">操作</th>
 			</tr>
 			<tr
 				v-for="(item, index) in list"
@@ -41,7 +41,7 @@
 					>取消</van-tag>
 				</td>
 				<td 
-				v-if="type == 1"
+				v-if="pageType == 1"
 				@click="biddingFn(item)"
 				>
 					<van-button 
@@ -89,6 +89,7 @@
 				if(this.isShow){
 		          this.getData(this.baseData.cpId);
 		          this.pageType = this.type;
+		          console.log(this.type)
 		        }
 			}
 		},

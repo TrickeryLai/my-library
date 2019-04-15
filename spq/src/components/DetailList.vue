@@ -110,13 +110,13 @@
 							style="width:35%;display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
 							v-model="submit.yearRate"
 							placeholder="年化利率"
-							@input="changeData(1)"
+							@input="changeData(1, submit.yearRate)"
 							type="number" />
 						%
 							<van-field 
 							style="width:35%;display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
 							v-model="submit.reduceAmount"
-							@input="changeData(2)" 
+							@input="changeData(2, submit.reduceAmount)" 
 							placeholder="每十万扣款"
 							type="number" />
 							<span>元/十万</span>
@@ -126,7 +126,7 @@
 							<van-field 
 							style="display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
 							v-model="submit.dealAmount" 
-							@input="changeData(3)"
+							@input="changeData(3, submit.dealAmount)"
 							placeholder="成交金额"
 							type="number" />
 						</van-col>
@@ -321,10 +321,17 @@
 				let dueDate = this.initData.dueDate;// 到期时间
 				return _common.common_fn.getLastTime(dueDate);
 			},
-			changeData(type){
+			changeData(type, value){
 				let cpAmount = this.initData.cpAmount;//票据金额
 				let calDay = this.getLastTime();//剩余时间
 				let txje;
+
+				if(!value){
+					this.submit.reduceAmount = '';
+					this.submit.dealAmount = '';
+					this.submit.yearRate = '';
+					return;
+				}
 				if(type == 1){
 					txje = ((cpAmount*calDay*(this.submit.yearRate/100))/360/(cpAmount/100000));
 					// this.submit.yearRate = 0;//年利率

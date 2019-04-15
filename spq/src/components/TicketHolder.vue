@@ -10,7 +10,7 @@
 		<div class="ticket-search">
 			<van-search
 			style="position:absolute;left: 0;top: 0;width: 100%;"
-			placeholder="请输入搜索关键词"
+			placeholder="请输入承兑人搜索"
 			v-model="searchValue"
 			@search="onSearch"
 			>
@@ -20,7 +20,7 @@
 	
 		<van-collapse class="ticket-content-list" v-model="activeName" accordion>
 			<van-collapse-item class="text-left" title="已发布" name="1">
-				<div style="max-height: 350px;overflow:auto">
+				<div style="max-height: 350px;overflow:auto;border: 1px solid #ccc;">
 					<van-pull-refresh 
 					v-model="fbListState.isLoading" 
 					@refresh="fbOnRefresh">
@@ -28,28 +28,48 @@
 						v-model="fbListState.loading"
 						:finished="fbListState.finished"
 						finished-text="没有了"
+						:error.sync="error"
+						error-text="请求失败，点击重新加载"
 						:offset="10"
 						@load="fbOnLoad"
 						>
 						<van-cell
-						v-for="(item, index) in fbList"
-						:key="index"
-						:title="item.title"
-						style="margin-bottom: 5px;box-shadow: 1px 1px 1px 1px #ccc;"
-						@click="fbShowDetail(item)"
+							v-for="(item, index) in fbList"
+							:key="index"
+							:title="item.title"
+							style="margin-bottom: 5px;box-shadow: 1px 1px 1px 1px #ccc;"
+							@click="fbShowDetail(item)"
 						>
 						<template slot="title">
 						<van-row>
 							<van-col span="18" class="van-ellipsis text-left">承兑人：{{item.acceptor}}</van-col>
 							<van-col span="6">
-								<van-tag round  type="success" v-if="item.cpStatus == 1">发布中</van-tag>
-								<van-tag round type="danger" v-else-if="item.cpStatus == 2">已成交</van-tag>
-								<van-tag round v-else-if="item.cpStatus == 3">已注销</van-tag>
+								<div>
+									<van-tag round  type="success" v-if="item.cpStatus == 1">
+										<span v-if="getLastTime(item.dueDate) < 0">
+											已过期
+										</span>
+										<span v-else>
+											发布中
+										</span>
+									</van-tag>
+									<van-tag round type="danger" v-else-if="item.cpStatus == 2">已成交</van-tag>
+									<van-tag round v-else-if="item.cpStatus == 3">已注销</van-tag>
+								</div>
 							</van-col>
 						</van-row>
 						<van-row>
-							<van-col span="18"><span class="text-left">票面金额：</span>{{item.cpAmount/10000}} <span class="small-font">万元</span></van-col>
-							<van-col span="6" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)</van-col>
+							<van-col span="18">
+								<span class="text-left">票面金额：</span>
+								{{item.cpAmount/10000}} 
+								<span class="small-font">万元</span>
+							</van-col>
+							<van-col span="6" class="blue-font">
+								<span v-if="getLastTime(item.dueDate) < 0">(已过期)</span>
+								<span v-else>
+									(剩{{getLastTime(item.dueDate)}}天)
+								</span>
+							</van-col>
 						</van-row>
 						<van-row>
 							<van-col span="12">发布日期：{{spliceTime(item.createTime)}}</van-col>
@@ -60,11 +80,11 @@
 
 				</van-list>
 
-			</van-pull-refresh>
+					</van-pull-refresh>
 				</div>
 				
 			</van-collapse-item>
-			<!-- <van-collapse-item class="text-left" title="暂存中" name="2">
+			<!-- <van-collapse-item class="text-left" title="已发布" name="2">
 				
 			</van-collapse-item> -->
 		</van-collapse>
@@ -91,6 +111,7 @@
 				title: '票方',
 				searchValue: '',
 				activeName: '1',
+				error: false,
 				fbListState:{
 					finished: false,//是否已经加载完成
 					isLoading: false,
@@ -124,58 +145,48 @@
 				return _common.common_fn.getLastTime(endTime);
 			},
 			onSearch(){
-				console.log('搜索')
+				this.fbPageInfo.pageNum = 1;
+				this.fbGetData();
 			},
 			fbGetData(data = {}){
 				//获取已发布的票据列表
 				this.fbListState.loading = true;//处于加载状态，不触发onLoad
 				let _this = this;
 				let pageData = Object.assign({}, this.fbPageInfo);
-				let initData = {
-					faceValue_id: '',//票据金额 underThound 10万以下  thoundToOneMillion 10-100万  moreOneMillion  100万以上   moreFiveMillion  500万以上 
-					faceValueMin: '',
-					faceValueMax: '',
-					remainingDays_id: '',//剩余天数 lessThanNinety 90天内   ninetyToHundredEighty 90-180天   hundredEightyToThreeHundredsixty 180-360天
-					daysMin:'',
-					daysMax: '',
-					flaw_id:'',//瑕疵  Y 有   N 无
-					credit_id: '',//excellent 优秀   well 良好 ordinary 一般
-					pageSize: pageData.pageSize,
-					pageNum: pageData.pageNum,
-					dueDateSort: '',
-					createTimeSort: '',
-					amountSort: ''
-				};
 				if(pageData.pageNum == 1){
 					this.fbList = [];//不清空，在滚动至多页的时候，重新刷新会一直触发onload
 				}
 				//查询条件
-				// data = Object.assign({}, initData);
-				data = pageData;
+				data = Object.assign({}, pageData, {acceptor: this.searchValue});
+				delete data.total;
 				//获取列表数据
 				_server.getCommercialPaperList({
-					data, 
-					success(response){
-						if(response.code === 0){
+					data, 	
+				}).then((response) =>{
+					this.error = false;
+					this.fbListState.loading = false;
+			      	this.fbListState.isLoading = false;	
+					if(response.code == 0){
 							if(_this.fbPageInfo.pageNum > 1){
 								response.list.forEach((item) => {
-									_this.fbList.push(item);
+									this.fbList.push(item);
 								});
 							}else{
-								_this.fbList = response.list;
+								this.fbList = response.list;
 							}
 				          //数据全部加载完成
-				          if (_this.fbList.length >= response.pageInfo.total) {
-				          	_this.fbListState.finished = true;
-				          }else{
-				          	_this.fbListState.finished = false;
-				          }
-				      	
-					      _this.fbListState.loading = false;
-					      _this.fbListState.isLoading = false;	
+				          	if (this.fbList.length >= response.pageInfo.total) {
+				          		this.fbListState.finished = true;
+				          	}else{
+				          		this.fbListState.finished = false;
+				          	}
 						}
-					}		
-				})
+					})
+					.catch((error) => {
+						this.fbListState.isLoading = false;
+						this.fbListState.loading = false;
+						this.error = true;
+					})
 			},
 			fbOnRefresh(){
 				//获取列表数据
