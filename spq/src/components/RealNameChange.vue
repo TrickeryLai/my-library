@@ -52,6 +52,13 @@
             placeholder="企业名称"
             />
             <van-field
+              v-model="submitData.organizationCode"
+              required
+              clearable
+              label="社会信用代码："
+              placeholder="社会信用代码"
+            />
+            <van-field
             v-model="submitData.email"
             required
             clearable
@@ -64,13 +71,6 @@
             clearable
             label="联系人手机："
             placeholder="联系人手机"
-            />
-             <van-field
-            v-model="submitData.organizationCode"
-            required
-            clearable
-            label="社会信用代码："
-            placeholder="社会信用代码"
             />
             <van-field
             size="large"
@@ -138,6 +138,24 @@
         </div>
       </van-cell-group>
 
+      <van-cell-group class="realName-content-box">
+        <h3 class="title van-hairline--bottom">支付信息</h3>
+        <div class="realName-conten-inner">
+          <van-field
+            v-model="submitData.paymentPassword"
+            clearable
+            label="支付密码："
+            placeholder="支付密码"
+          />
+          <van-field
+            v-model="submitData.paymentPassword2"
+            type="phone"
+            clearable
+            label="确认支付密码："
+            placeholder="确认支付密码"
+          />
+        </div>
+      </van-cell-group>
       <div style="padding: 5px 5px;">
           <van-button 
           style="width: 100%;"
@@ -170,7 +188,9 @@
                 frIdCard:'',
                 jbrName:'',
                 jbrIdCard: '',
-                jbrPhone: ''
+                jbrPhone: '',
+                paymentPassword: '',
+                paymentPassword2: '',
               },
               yyzzPic: '',
               yyzzPicUState: {
@@ -215,6 +235,9 @@
               this.submitData.jbrIdCard = initData.transactorIdNo;
               this.submitData.jbrPhone = initData.transactorPhone;
               this.submitData.contactPhone = initData.contactPhone;
+              this.submitData.paymentPassword = initData.paymentPassword;
+              this.submitData.paymentPassword2 = initData.paymentPassword2;
+
           },
           yyzzRemovePic(){
               this.yyzzPicUState.state = 0;
@@ -291,6 +314,10 @@
               this.$toast('请输入法人身份证号！');
               return false;
             }
+            if(this.submitData.paymentPassword != this.submitData.paymentPassword2){
+              this.$toast('两次支付密码不一致！');
+              return false;
+            }
 
             return true;
           },
@@ -310,7 +337,9 @@
               transactor: this.submitData.jbrName,
               transactorIdNo: this.submitData.jbrIdCard,
               transactorPhone: this.submitData.jbrPhone,
-              contactPhone: this.submitData.contactPhone
+              contactPhone: this.submitData.contactPhone,
+              paymentPassword: this.submitData.paymentPassword,
+              paymentPassword2: this.submitData.paymentPassword2
             
             };
 

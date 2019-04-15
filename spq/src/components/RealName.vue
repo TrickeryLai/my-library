@@ -61,6 +61,13 @@
             placeholder="企业名称"
             />
             <van-field
+              v-model="submitData.organizationCode"
+              required
+              clearable
+              label="社会信用代码："
+              placeholder="社会信用代码"
+            />
+            <van-field
             v-model="submitData.email"
             required
             clearable
@@ -74,13 +81,6 @@
             label="联系人手机："
             type="number"
             placeholder="联系人手机"
-            />
-             <van-field
-            v-model="submitData.organizationCode"
-            required
-            clearable
-            label="社会信用代码："
-            placeholder="社会信用代码"
             />
             
             <van-field
