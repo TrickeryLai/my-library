@@ -42,7 +42,7 @@
     <session id="-947536814">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="5" />
+          <entry key="project.closed" value="6" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.10" value="2" />
           <entry key="project.open.time.11" value="1" />
@@ -61,7 +61,7 @@
           <entry key="css" value="1" />
           <entry key="html" value="1" />
           <entry key="js" value="9" />
-          <entry key="vue" value="25" />
+          <entry key="vue" value="26" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
@@ -69,7 +69,7 @@
           <entry key="CSS" value="1" />
           <entry key="HTML" value="1" />
           <entry key="JavaScript" value="9" />
-          <entry key="Vue.js" value="25" />
+          <entry key="Vue.js" value="26" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
@@ -171,22 +171,23 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/index.html">
+        <entry file="file://$PROJECT_DIR$/spq/src/components/TicketHolder.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="145">
-              <caret line="5" column="15" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
+            <state relative-caret-position="290">
+              <caret line="10" selection-start-line="10" selection-end-line="17" selection-end-column="19" />
+              <folding>
+                <element signature="n#style#0;n#van-search#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#van-cell#0;n#van-list#0;n#van-pull-refresh#0;n#div#0;n#van-collapse-item#0;n#van-collapse#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/spq/src/components/TicketHolder.vue">
+        <entry file="file://$PROJECT_DIR$/spq/src/components/Register.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="443">
-              <caret line="232" column="20" selection-start-line="232" selection-start-column="20" selection-end-line="232" selection-end-column="20" />
-              <folding>
-                <element signature="n#style#0;n#van-cell#0;n#van-list#0;n#van-pull-refresh#0;n#div#0;n#van-collapse-item#0;n#van-collapse#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="532">
+              <caret line="193" column="22" lean-forward="true" selection-start-line="193" selection-start-column="22" selection-end-line="193" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -402,16 +403,15 @@
       <workItem from="1554898146795" duration="4390000" />
       <workItem from="1555170800562" duration="456000" />
       <workItem from="1555171587301" duration="1442000" />
-      <workItem from="1555227746122" duration="10392000" />
+      <workItem from="1555227746122" duration="10796000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17570000" />
+    <option name="totallyTimeSpent" value="17974000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24973656" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -489,13 +489,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/spq/src/components/Login.vue">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/components/Register.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="193" column="22" lean-forward="true" selection-start-line="193" selection-start-column="22" selection-end-line="193" selection-end-column="22" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spq/src/components/DetailList.vue">
       <provider selected="true" editor-type-id="text-editor">
@@ -688,11 +681,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/spq/src/components/TicketHolder.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="443">
-          <caret line="232" column="20" selection-start-line="232" selection-start-column="20" selection-end-line="232" selection-end-column="20" />
+        <state relative-caret-position="290">
+          <caret line="10" selection-start-line="10" selection-end-line="17" selection-end-column="19" />
           <folding>
+            <element signature="n#style#0;n#van-search#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#van-cell#0;n#van-list#0;n#van-pull-refresh#0;n#div#0;n#van-collapse-item#0;n#van-collapse#0;n#div#0;n#template#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/components/Register.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="532">
+          <caret line="193" column="22" lean-forward="true" selection-start-line="193" selection-start-column="22" selection-end-line="193" selection-end-column="22" />
         </state>
       </provider>
     </entry>
