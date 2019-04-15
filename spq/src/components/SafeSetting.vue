@@ -10,7 +10,12 @@
 			<i class="iconfont icon-previous_step" slot="left"></i>
 		</van-nav-bar>
 		<div style="padding-top: 0px;text-align: left;">
-			<van-cell @click="gotoChange" title="修改登录密码">
+			<van-cell class="van-hairline--bottom" @click="gotoChange" title="修改登录密码">
+				<i slot="right-icon" class="iconfont icon-next"></i>
+			</van-cell>
+		</div>
+		<div style="padding-top: 0px;text-align: left;">
+			<van-cell class="van-hairline--bottom" @click="gotoChange" title="修改支付密码">
 				<i slot="right-icon" class="iconfont icon-next"></i>
 			</van-cell>
 		</div>

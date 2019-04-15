@@ -62,13 +62,53 @@
 		</van-row>
 		<van-row >
 			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
+				<i class="iconfont icon-mobile-alt"></i>
+			</van-col>
+			<van-col span="22">
+				<van-field 
+				class="van-hairline--surround register-input"
+				style="display:inline-block;margin:0;padding:0;" 
+				v-model="register.phone" placeholder="请输入手机号"
+				type="phone" />
+			</van-col>
+		</van-row>
+		<van-row >
+			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
 				<i class="iconfont icon-safety-certificate"></i>
 			</van-col>
 			<van-col span="14">
 				<van-field 
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
-				v-model="register.code" placeholder="请输入验证码"
+				v-model="register.smsCaptcha" placeholder="请输入短信验证码"
+				type="text"
+				
+				/>
+			</van-col>
+			<van-col 
+			span="8" 
+			>
+				<van-button
+					type="info"
+					size="small"
+					style="font-size: 12px;width: 100%;height: 34px;"
+					@click="getSmsCaptcha"
+					:disabled="getSmsAgainTime != 61"
+				>
+						{{smsCaptchaTxt}}
+				</van-button>
+			</van-col>
+		
+		</van-row>
+		<van-row >
+			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
+				<i class="iconfont icon-safety-certificate"></i>
+			</van-col>
+			<van-col span="14">
+				<van-field 
+				class="van-hairline--surround register-input"
+				style="display:inline-block;margin:0;padding:0;" 
+				v-model="register.code" placeholder="请输入右侧验证码"
 				type="text"
 				
 				/>
@@ -80,21 +120,9 @@
 			:src="img"
 			@click="changeCodePic"
 			>
-		</van-col>
+			</van-col>
 		
-	</van-row>
-	<van-row >
-		<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
-			<i class="iconfont icon-mobile-alt"></i>
-		</van-col>
-		<van-col span="22">
-			<van-field 
-			class="van-hairline--surround register-input"
-			style="display:inline-block;margin:0;padding:0;" 
-			v-model="register.phone" placeholder="请输入手机号"
-			type="phone" />
-		</van-col>
-	</van-row>
+		</van-row>
 	<div class="login-bottom">
 		<van-button 
 		type="info"
@@ -117,6 +145,9 @@ export default{
 			img: '',
 			title: '注册',
 			captchaKey: '', 
+			smsCaptchaKey: '',
+			getSmsAgainTime: 61,
+			smsCaptchaTxt: '获取验证码',
 			register: {
 				password: ""
 			},
@@ -158,19 +189,55 @@ export default{
 		    if (!_common.common_reg.email(this.register.email)) {
 		     	this.$toast('邮箱格式不正确！');
 				return false;
+		    }
+		    if(!this.register.smsCaptcha){
+		    	this.$toast('请输入短信验证码！');
+		    	return false;
 		    } 
 			if(!this.register.code){
 				this.registerError.code = true;
-				this.$toast('请输入验证码！');
+				this.$toast('请输入图片验证码！');
 				return false;
 			}
 
-			if(this.register.phone && !_common.common_reg.phone(this.register.phone)){ 
+			if(!this.register.phone || !_common.common_reg.phone(this.register.phone)){ 
 				this.registerError.phone = true;
 		        this.$toast('请输入正确的手机号！');
 		        return false; 
 		    } 
 			return true;
+		},
+		getSmsAgain(){
+			let smsCaptchaTxt = '再次获取', intervaler;
+			intervaler = setInterval( () =>{
+				this.getSmsAgainTime -= 1;
+				if(parseInt(this.getSmsAgainTime) <= 0){
+					this.getSmsAgainTime = 61;
+					clearInterval(intervaler);
+					this.smsCaptchaTxt = '获取验证码';
+					return;
+				}
+				
+				this.smsCaptchaTxt = this.getSmsAgainTime + '秒再次获取';
+			}, 1000)
+		},
+		getSmsCaptcha(){
+			if(!this.register.phone){
+				this.$toast('请先输入正确的手机号！');
+				return;
+			}
+			this.getSmsAgainTime -= 1;
+			//获取短信验证码
+			_server.getSmsCaptcha(this.register.phone).then(res => {
+				if(res.errMsg){
+					this.$toast(res.errMsg);
+				}else{
+					this.smsCaptchaKey = res.smsCaptchaKey;
+					this.getSmsAgain();
+				}
+			}).catch(error => {
+
+			})
 		},
 		registerFn(){
 			let _this = this, data;
@@ -180,10 +247,12 @@ export default{
 			data = {
 					loginName: this.register.loginName,
 					password: this.register.password, 
-					phoneNumber: this.register.phoneNumber, 
+					phoneNumber: this.register.phone, 
 					email: this.register.email, 
 					captchaCode: this.register.code, 
-					captchaKey: this.captchaKey
+					smsCaptcha: 1234 || parseInt(this.register.smsCaptcha),//短信验证码
+					smsCaptchaKey: this.smsCaptchaKey,//
+					captchaKey: this.captchaKey,
 				};
 			_server.register(data, (response) =>{
 				if(response.code == 0){
@@ -192,13 +261,13 @@ export default{
 							username: this.register.loginName,
 							password: this.register.password 
 						}});
-        //注册成功
-        }else if(response.code == 110008){
-          //验证码已失效
-          _this.$toast(response.errMsg);
-          //重新获取验证码
-          _this.changeCodePic();
-        }
+		        //注册成功
+		        }else if(response.code == 110008){
+		          //验证码已失效
+		          _this.$toast(response.errMsg);
+		          //重新获取验证码
+		          _this.changeCodePic();
+		        }
 			})	
 		},
 		gotoLogin(){

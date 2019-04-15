@@ -6,11 +6,12 @@
       >
         <div class="card-box">
           <van-row class="card-box-line">
-            <van-col span="18">
+            <van-col span="18" style="font-size:18px;">
               开户行全称
+              <span style="font-size: 12px;">开户所在省市</span>
             </van-col>
             <van-col span="6">
-                  默认账户
+              默认账户
             </van-col>
           </van-row>
           <van-row class="card-box-line">
@@ -21,11 +22,11 @@
               户名
             </van-col>
           </van-row>
-          <van-row class="card-box-line">
-            <van-col span="16">
+          <van-row class="card-box-line" >
+            <van-col span="16" style="font-size: 18px;padding-top:10px;">
               **** **** **** 7145
             </van-col>
-            <van-col span="8">
+            <van-col span="8" style="text-align: center;">
               <van-button
                 style="width: 100%;max-width: 100px;font-size: 12px;color: #1989fa;"
                 type="default"

@@ -33,6 +33,7 @@
 							<van-tag round  type="success" v-if="initData.cpStatus == 1">发布中</van-tag>
 							<van-tag round type="danger" v-else-if="initData.cpStatus == 2">已成交</van-tag>
 							<van-tag round v-else-if="initData.cpStatus == 3">已注销</van-tag>
+							<van-tag round v-if="initData.stringDate < 0">已过期</van-tag>
 						</van-col>
 					</van-row>
 					<van-row class="detail-row">
@@ -84,7 +85,7 @@
 								<span 
 									class="blue-font" 
 									style="margin-left:3px;"
-									v-if="initData.cpStatus == '01'"
+									v-if="initData.cpStatus == '01' && initData.stringDate >= 0"
 									@click="getbuyPrice"
 								>
 									{{time}}秒后自动刷新
@@ -114,19 +115,19 @@
 				
 			</van-cell-group>
 			<van-row type="flex" justify="center" style="width: 100%;height: 44px;position: absolute;left: 0; bottom: 0;">
-					<van-col span="8" v-if="initData.cpStatus == 1">
+					<van-col span="12" v-if="initData.cpStatus == 1 && initData.stringDate >= 0">
 						<van-button
 						type="danger"
 						style="width: 100%;"
 						@click="deleteP">注销</van-button>
 					</van-col>
-					<van-col span="8" v-if="initData.cpStatus == 1">
+					<van-col span="12" v-if="initData.cpStatus == 1 && initData.stringDate >= 0">
 						<van-button
 						type="primary"
 						style="width: 100%;"
 						@click="change">修改</van-button>
 					</van-col>
-					<van-col span="24" v-if="initData.cpStatus != 1">
+					<van-col span="24" v-if="initData.cpStatus != 1 || initData.stringDate < 0">
 						<van-button
 						type="info"
 						style="width: 100%;"
@@ -145,7 +146,6 @@
 			:type = "priceType"
 			@close='priceListClose'
 			@optionSuccess='biddingSuccess'
-
 		/>
 </div>
 </template>
@@ -197,7 +197,7 @@
 		},
 		methods: {
 			setTimeoutFn(){
-				if(this.initData.cpStatus != '01'){
+				if(this.initData.cpStatus != '01' || this.initData.stringDate < 0){
 					return;
 				}
 				this.timerOut = setInterval(() => {

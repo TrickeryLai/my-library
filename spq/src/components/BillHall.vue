@@ -9,7 +9,7 @@
 		/>
 		<div class="list-wrap">
 			<van-row class="nav-top">
-				<div style="position:absolute;left:0;top:0;width: 100%;background:#fff;padding: 10px 0;">
+				<div style="position:absolute;left:0;top:0;width: 100%;background:#fff;padding: 10px 0;border-bottom: 1px solid #ccc;">
 					<van-col span="8">
 						<div @click="sortAmount">
 							票面金额
@@ -54,7 +54,7 @@
 					v-for="(item,index) in list"
 					:key="index"
 					:title="index"
-					style="margin-bottom: 5px;box-shadow: 1px 1px 1px 1px #ccc;"
+					style="margin-bottom: 5px;box-shadow: 1px 1px 0px 1px #ccc;"
 					@click="showDetail(item)"
 					>
 						<template slot="title">
@@ -199,7 +199,8 @@ import _common from '@/server/index'
 				pageNum: pageData.pageNum,
 				dueDateSort: this.sortState.dueDateSort,
 				createTimeSort: this.sortState.createTimeSort,
-				amountSort: this.sortState.amountSort
+				amountSort: this.sortState.amountSort,
+				onlyShow: ''
 			};
 			if(this.pageData.pageNum == 1){
 				this.list = [];//不清空，在滚动至多页的时候，重新刷新会一直触发onload
@@ -207,26 +208,32 @@ import _common from '@/server/index'
 			//查询条件
 			data = Object.assign({}, initData, data);
 			//获取列表数据
-			_server.getBusinessTickets(data, (response) =>{
-	        this.isGetData = false;
-	        this.loading = false;
-	        this.isLoading = false;
-			if(response.code == 0){
-		          if(this.pageData.pageNum > 1){
-		            response.list.forEach((item) => {
-		              this.list.push(item);
-		            });
-		          }else{
-		            this.list = response.list;
-		            
-		          }
-		          //数据全部加载完成
-		          if (this.list.length >= response.pageInfo.total) {
-		            this.finished = true;
-		          }else{
-		            this.finished = false;
-		          }
+			_server.getBusinessTickets(data).then((response) =>{
+		        this.isGetData = false;
+		        this.loading = false;
+		        this.isLoading = false;
+		        this.error = false;
+				if(response.code == 0){
+		          	if(this.pageData.pageNum > 1){
+		            	response.list.forEach((item) => {
+			              this.list.push(item);
+			            });
+		          	}else{
+		            	this.list = response.list;
+			            
+		          	}
+			          //数据全部加载完成
+		          	if (this.list.length >= response.pageInfo.total) {
+			            this.finished = true;
+		          	}else{
+			            this.finished = false;
+		          	}
 				}
+			}).catch((error) => {
+				this.error = true;
+				this.isGetData = false;
+		        this.loading = false;
+		        this.isLoading = false;
 			})
 		},
 		onRefresh(){
@@ -306,7 +313,8 @@ import _common from '@/server/index'
 				daysMax: data.dayChoose.max ? parseFloat(data.dayChoose.max) : '',
 				daysMin: data.dayChoose.min ? parseFloat(data.dayChoose.min) : '',
 				flaw_id: data.isPerfect.val,
-				credit_id: data.dealChoose.val
+				credit_id: data.dealChoose.val,
+				// onlyShow: data.onlyShow
 			};
 			this.searchData = searchData;
 			//重新获取数据，清除状态
