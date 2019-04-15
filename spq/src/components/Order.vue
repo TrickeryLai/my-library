@@ -2,8 +2,10 @@
 	<div class="ticketHolder">
 		<van-nav-bar
 		:title="title"
+    :right-text="rightText"
 		fixed
 		class="top-bg"
+    @click-right="rightClick"
 		/>
 		<div class="ticket-search">
 			<!-- <van-search
@@ -14,17 +16,34 @@
 			>
 				<i class="iconfont icon-search" slot="left-icon"></i>
 			</van-search> -->
-			<van-row>
-				<van-col span="12">
-					<van-field @click="choseTimeFn(1)" v-model="beginTimeData.value" readonly/>
-				</van-col>
-				<van-col span="12">
-					<van-field @click="choseTimeFn(2)" v-model="endTimeData.value" readonly/>
-				</van-col>
-			</van-row>
+
 		</div>
 	
 		<van-collapse class="ticket-content-list" v-model="activeName" accordion>
+      <transition name="van-slide-left">
+        <van-row v-show="showSearch">
+          <van-col span="24">
+
+            <van-field
+              style="vertical-align:middle;"
+              label="起始时间："
+              @click="choseTimeFn(1)"
+              v-model="beginTimeData.value"
+              readonly
+              placeholder="请选择起始时间"
+            />
+          </van-col>
+          <van-col span="24">
+            <van-field
+              label="终止时间："
+              @click="choseTimeFn(2)"
+              v-model="endTimeData.value"
+              readonly
+              placeholder="请选择终止时间"
+            />
+          </van-col>
+        </van-row>
+      </transition>
 			<van-collapse-item class="text-left" title="我的订单" name="1">
 				<div style="max-height: 350px;overflow:auto;border: 1px solid #ccc;">
 					<van-pull-refresh 
@@ -92,6 +111,7 @@
 			:initData = 'fbListState.detailItem'
 			:item = 'fbListState.currentItem'
 		/>
+
 		<van-popup v-model="beginTimeData.show" position="bottom" @close="timeModelClose">
 			<van-datetime-picker
 			v-model="beginTimeData.currentDate"
@@ -130,6 +150,8 @@
 				searchValue: '',
 				activeName: '1',
 				error: false,
+        showSearch: false,
+        rightText: '选择',
 				endTimeData: {
 					value: '',
 					show:　false,
@@ -168,6 +190,14 @@
 				}
 				return item.substr(0,10);
 			},
+      rightClick(){
+			  this.showSearch = !this.showSearch;
+        if(this.showSearch){
+          this.rightText = '收起';
+        }else{
+          this.rightText = '选择';
+        }
+      },
 			getLastTime(endTime){
 				return _common.common_fn.getLastTime(endTime);
 			},
@@ -212,10 +242,9 @@
 				}
 				//查询条件
 				data = Object.assign({}, pageData, {
-					endTime: this.endTimeData.currentDate,
-					startTime: this.beginTimeData.currentDate
+					endTime: this.getTime(this.endTimeData.currentDate, 'yyyy-MM-dd'),
+					startTime: this.getTime(this.beginTimeData.currentDate, 'yyyy-MM-dd')
 				});
-				console.log(this.endTimeData.currentDate)
 				delete data.total;
 				//获取列表数据
 				_server.getQuotedPri({
@@ -301,11 +330,11 @@
 	left: 0;
 	top: 45px;
 	width: 100%;
-	height: 50px;
+	height: 0px;
 	z-index: 5;
 }	
 .ticketHolder .ticket-content-list{
-	margin-top: 60px;
+	margin-top: 0px;
 	padding-bottom: 50px;
 	background: #f5f5f5;
 }
