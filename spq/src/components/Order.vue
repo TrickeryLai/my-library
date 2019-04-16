@@ -1,13 +1,13 @@
 <template>
-	<div class="ticketHolder">
+	<div class="order-page">
 		<van-nav-bar
 		:title="title"
-    :right-text="rightText"
+    	:right-text="rightText"
 		fixed
 		class="top-bg"
-    @click-right="rightClick"
+    	@click-right="rightClick"
 		/>
-		<div class="ticket-search">
+		<div class="">
 			<!-- <van-search
 			style="position:absolute;left: 0;top: 0;width: 100%;"
 			placeholder="请输入承兑人搜索"
@@ -44,7 +44,11 @@
           </van-col>
         </van-row>
       </transition>
-			<van-collapse-item class="text-left" title="我的订单" name="1">
+			<van-collapse-item class="text-left" name="1">
+				<p slot="title">
+					我的买入
+					<span class="blue-font" style="font-size: 12px;" @click.stop="rightClick">({{beginTimeData.value}}&nbsp-&nbsp{{endTimeData.value}})</span>
+				</p>
 				<div style="max-height: 350px;overflow:auto;border: 1px solid #ccc;">
 					<van-pull-refresh 
 						v-model="fbListState.isLoading" 
@@ -72,7 +76,7 @@
 						<van-row>
 							<van-col span="18">
 								<span class="text-left">我的竞价金额：</span>
-								<span style="font-size: 18px;">{{item.turnVolume/10000}}</span> 
+								<span style="font-size: 18px;">{{item.turnVolume && (item.turnVolume/10000).toFixed(6)}}</span> 
 								<span class="small-font">万元</span>
 							</van-col>
 							<van-col span="6">
@@ -150,19 +154,19 @@
 				searchValue: '',
 				activeName: '1',
 				error: false,
-        showSearch: false,
-        rightText: '选择',
+        		showSearch: false,
+    			rightText: '选择',
 				endTimeData: {
-					value: '',
 					show:　false,
 					minDate: new Date('2019-01-01'),
-					currentDate: new Date()
+					currentDate: new Date(),
+					value: this.getTime(new Date()),
 				},
 				beginTimeData: {
-					value: '',
+					value: this.getTime(new Date(new Date().getTime() - 24*60*60*1000*7)),
 					show: false,
 					minDate: new Date('2019-01-01'),
-					currentDate: new Date('2019-01-01')
+					currentDate: new Date(new Date().getTime() - 24*60*60*1000*7)
 				},
 				fbListState:{
 					finished: false,//是否已经加载完成
@@ -201,8 +205,8 @@
 			getLastTime(endTime){
 				return _common.common_fn.getLastTime(endTime);
 			},
-			getTime(t = new Date()){
-				return _common.common_fn.formatterTime(t);
+			getTime(t = new Date(), type){
+				return _common.common_fn.formatterTime(t, type);
 			},
 			choseTimeFn(type, state = true){
 				if(type == 1){
@@ -319,13 +323,13 @@
 </script>
 
 <style>
-.ticketHolder .van-collapse-item__content{
+.order-page .van-collapse-item__content{
 	background-color: #f5f5f5;
 	padding-left: 0;
 	padding-right: 0;
 	padding-top: 0px;
 }
-.ticketHolder .ticket-search{
+.order-page .ticket-search{
 	position: fixed;
 	left: 0;
 	top: 45px;
@@ -333,7 +337,7 @@
 	height: 0px;
 	z-index: 5;
 }	
-.ticketHolder .ticket-content-list{
+.order-page .ticket-content-list{
 	margin-top: 0px;
 	padding-bottom: 50px;
 	background: #f5f5f5;

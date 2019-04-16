@@ -276,16 +276,6 @@
 .van-popup{
 	width: 80%;
 }
-.my-checked-icon{
-	font-weight: bold;
-	font-style: normal;
-	border: 1px solid #ccc;
-	border-radius: 50%;
-	width: 10px;
-	height: 10px;
-	text-align: center;
-	line-height: 10px;
-}
 .icon-mygou{
 	border: 1px solid #ccc;
 	border-radius: 50%;

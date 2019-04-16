@@ -21,7 +21,7 @@
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据金额</van-col>
-						<van-col class="detail-row-right" span="18">{{dealPrice(initData.cpAmount)	}}</van-col>
+						<van-col class="detail-row-right" span="18">{{dealPrice(initData.cpAmount &&　initData.cpAmount.toFixed(2))}}元</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">到期时间</van-col>
@@ -72,7 +72,7 @@
 					</van-row>
 				</van-cell-group>
 			</van-cell-group>
-			<van-cell-group class="van-hairline--bottom">
+			<van-cell-group class="van-hairline--bottom" style="padding-bottom: 60px;">
 				<h3 class="title">报价信息</h3>
 				<van-cell-group>
 					<van-row>
@@ -99,7 +99,7 @@
 					<van-row style="background: #f5f5f5;">
 						<van-col span="24" class="buy-price">
 							<span v-if="hasBuyPrice">
-								{{dealPrice(buyPrice)}}元
+								{{dealPrice(buyPrice && buyPrice.toFixed(2))}}元
 							</span>
 			              	<span v-else>
 			                	等待买家报价
@@ -115,7 +115,7 @@
 				
 			</van-cell-group>
 			<van-row type="flex" justify="center" style="width: 100%;height: 44px;position: absolute;left: 0; bottom: 0;">
-					<van-col span="12" v-if="initData.cpStatus == 1 && initData.stringDate >= 0">
+					<van-col span="12" v-if="initData.cpStatus == 1">
 						<van-button
 						type="danger"
 						style="width: 100%;"
@@ -131,7 +131,7 @@
 						<van-button
 						type="info"
 						style="width: 100%;"
-						@click="ok">确认</van-button>
+						@click="ok">关闭</van-button>
 					</van-col>
 					
 			</van-row>

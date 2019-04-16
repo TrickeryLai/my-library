@@ -68,7 +68,7 @@
 								</van-col>
 							</van-row>
 							<van-row>
-								<van-col span="8" class="black-font text-left">{{item.cpAmount/10000}} <span class="small-font">万元</span></van-col>
+								<van-col span="8" class="black-font text-left">{{item.cpAmount && (item.cpAmount/10000).toFixed(4)}} <span class="small-font">万元</span></van-col>
 								<van-col span="8" class="black-font">{{spliceTime(item.createTime)}}</van-col>
 								<van-col span="8" class="black-font">{{item.dueDate}}</van-col>
 							</van-row>
@@ -146,7 +146,7 @@ import _common from '@/server/index'
 	      	sortState: {
 	          	dueDateSort: '',//到期时间排序
 	          	amountSort: '',//金额排序
-	          	createTimeSort: '',//发布时间排序
+	          	createTimeSort: 0,//发布时间排序
 	      	},
       		pageData: {
 	      	pageNum: 0,
@@ -285,7 +285,6 @@ import _common from '@/server/index'
 		},
 		//点击列表详情
 		showDetail(item){
-			console.log(document.getElementsByTagName('body'));
 			this.loading = true;
 			let _this = this;
 			this.currentItemInfo = item;
@@ -345,7 +344,7 @@ import _common from '@/server/index'
 		position: relative;
 	}
 	.list-wrap{
-		padding-top: 30px;
+		padding-top: 38px;
 		background: #f5f5f5;
 	}
 	.nav-top{

@@ -36,7 +36,10 @@
 </template>
 
 <script>
-  import  BankList from '@/components/BankList.vue'
+  import  BankList from '@/components/BankList.vue';
+
+  import _common from '@/server/index';
+  import _server from '@/server/server';
   export default{
     name: 'MatchBank',
     components:{BankList},
@@ -52,6 +55,11 @@
     created(){
         this.onChangeTabs(this.active);
     },
+    watch: {
+      active(newV){
+        this.onChangeTabs(newV);
+      }
+    },
     methods: {
       onClickLeft(){
         window.history.go(-1);
@@ -60,16 +68,16 @@
         this.$router.push({path:'/home/selfInfo/addBankCard'});
       },
       onChangeTabs(active){
-         if(active == 0){
-           //提现银行账户
-           this.ListData = [{}]
-         }else{
-           //签收银行账户
-           this.ListData = [{},{}]
-         }
+        if(active == 0){
+          //提现银行账户
+          this.ListData = [{},{}];
+        }else{
+          //签收银行账户
+          this.ListData = [{},{},{},{}];
+        }
       },
       gotoChange(){
-        this.$router.push({path:'/home/selfInfo/changePassword'})
+        this.$router.push({path:'/home/selfInfo/changePassword'});
       }
     }
   }

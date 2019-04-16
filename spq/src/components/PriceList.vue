@@ -19,7 +19,7 @@
 				:key = "index"
 			>
 				<td>{{item.companyName}}</td>
-				<td>{{dealPrice(item.turnVolume)}}元</td>
+				<td>{{dealPrice(item.turnVolume.toFixed(2))}}元</td>
 				<td>{{item.quoteTime}}</td>
 				<td>
 					<van-tag 

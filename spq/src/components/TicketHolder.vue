@@ -61,7 +61,7 @@
 						<van-row>
 							<van-col span="18">
 								<span class="text-left">票面金额：</span>
-								{{item.cpAmount/10000}} 
+								{{item.cpAmount　&& (item.cpAmount/10000).toFixed(6)}} 
 								<span class="small-font">万元</span>
 							</van-col>
 							<van-col span="6" class="blue-font">

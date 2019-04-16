@@ -21,7 +21,7 @@
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据金额</van-col>
-						<van-col class="detail-row-right" span="18">{{dealPrice(initData.cpAmount)	}}</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.cpAmount && dealPrice(initData.cpAmount.toFixed(2))	}}元</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">到期时间</van-col>
@@ -72,9 +72,15 @@
 					</van-row>
 				</van-cell-group>
 			</van-cell-group>
-			<van-cell-group class="van-hairline--bottom">
+			<van-cell-group class="van-hairline--bottom" style="padding-bottom: 60px;">
 				<h3 class="title">报价信息</h3>
 				<van-cell-group>
+					<van-row class="detail-row">
+						<van-col class="detail-row-left" span="6"> 我的报价</van-col>
+						<van-col class="detail-row-right" span="18">
+							{{item.turnVolume && dealPrice(item.turnVolume.toFixed(2))}}元
+						</van-col>
+					</van-row>
 					<van-row>
 						<van-col span="24" @click="getbuyPrice">
 							<span 
@@ -99,7 +105,7 @@
 					<van-row style="background: #f5f5f5;">
 						<van-col span="24" class="buy-price">
 							<span v-if="hasBuyPrice">
-								{{dealPrice(buyPrice)}}元
+								{{buyPrice && dealPrice(buyPrice.toFixed(2))}}元
 							</span>
 			              	<span v-else>
 			                	等待买家报价
@@ -111,10 +117,53 @@
 							@click="showAllPrice">&nbsp查看所有</span>
 						</van-col>
 					</van-row>
+					<van-row class="detail-row-special" v-if="item.quoteStatus == '04' && initData.cpStatus == '01'">
+
+						<van-col class="detail-row-left" span="12">年化利率</van-col>
+						<van-col class="detail-row-left" span="12">每十万扣款</van-col>
+						<van-col class="detail-row-left" span="24">
+							<van-field 
+							style="width:35%;display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
+							v-model="submit.yearRate"
+							placeholder="年化利率"
+							@input="changeData(1, submit.yearRate)"
+							type="number" />
+						%
+							<van-field 
+							style="width:35%;display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
+							v-model="submit.reduceAmount"
+							@input="changeData(2, submit.reduceAmount)" 
+							placeholder="每十万扣款"
+							type="number" />
+							<span>元/十万</span>
+						</van-col>
+						<van-col span="24">
+							<span class="detail-row-left">成交金额（元）</span>
+							<van-field 
+							style="display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
+							v-model="submit.dealAmount" 
+							@input="changeData(3, submit.dealAmount)"
+							placeholder="成交金额"
+							type="number" />
+						</van-col>
+					</van-row>
 				</van-cell-group>
 				
 			</van-cell-group>
 			<van-row type="flex" justify="center" style="width: 100%;height: 44px;position: absolute;left: 0; bottom: 0;">
+				<div
+					style="width: 100%;"
+				 	v-if="item.quoteStatus == '04' && initData.cpStatus == '01'">
+					<van-col span="24">
+						<van-button
+						type="primary"
+						style="width: 100%;"
+						@click="buyAgain(item)">再次报价</van-button>
+					</van-col>
+				</div>
+				<div
+					style="width: 100%;" 
+					v-else>
 					<van-col span="12" v-if="item.quoteStatus == 1 && initData.stringDate >= 0 && initData.cpStatus == 1">
 						<van-button
 						type="danger"
@@ -125,14 +174,15 @@
 						<van-button
 						type="info"
 						style="width: 100%;"
-						@click="ok">确认</van-button>
+						@click="ok">关闭</van-button>
 					</van-col>
 					<van-col span="24" v-if="item.quoteStatus != 1 || initData.stringDate < 0 || initData.cpStatus != 1">
 						<van-button
 						type="info"
 						style="width: 100%;"
-						@click="ok">确认</van-button>
+						@click="ok">关闭</van-button>
 					</van-col>
+				</div>
 					
 			</van-row>
 			
@@ -188,6 +238,9 @@
 				if(newValue){
 					this.setTimeoutFn();
 					this.getbuyPrice();	
+					this.submit.yearRate = '';//年化利率
+					this.submit.reduceAmount = '';//每十万扣款
+					this.submit.dealAmount = '';
 				}else{
 					clearInterval(this.timerOut);
 					this.time = 60;
@@ -197,9 +250,14 @@
 		},
 		methods: {
 			setTimeoutFn(){
-				if(this.initData.cpStatus != '01' || this.initData.stringDate < 0){
-					return;
+				if(this.item.quoteStatus == '04' && this.initData.cpStatus == '01'){
+					
+				}else{
+					if(this.initData.cpStatus != '01' || this.initData.stringDate < 0){
+						return;
+					}
 				}
+				
 				this.timerOut = setInterval(() => {
 					this.time --;
 					if(this.time <= 0){
@@ -272,7 +330,6 @@
 					title: '取消报价',
 					message: '确认取消对此票据的报价么？'
 				}).then(() => {
-					console.log(this.initData)
 					let priceId = this.item.priceId, quoteStatus = this.item.quoteStatus;
 					if(quoteStatus != 1){
 						return;
@@ -291,6 +348,51 @@
 				});
 				
 			},
+			buyAgain(item){
+				let currentPath = this.$router.history.current.fullPath;
+				let _this = this;
+				//判断是否验证
+				let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '';
+				if(!(user.orgId || user._checked)){
+
+					this.$router.push({path: '/home/realName', query:{redirect: currentPath}});
+					this.$toast('请先实名认证！');
+					return;
+				}
+				if(this.initData.createBy == user.loginName){
+					this.$toast('不能对自己发布的票据进行竞价！');
+					return;
+				}
+				if(!this.submit.dealAmount || !this.submit.yearRate || !this.submit.reduceAmount){
+					this.$toast('请先完整填写报价信息！');
+					return;
+				}
+				if(parseFloat(this.submit.dealAmount) < 0){
+					this.$toast('成交金额不能小于0！');
+					return;
+				}
+				let data = {
+					approvalApr: this.submit.yearRate,
+					channel: "02",
+					cpId: this.item.cpId,
+					cpNo: this.item.cpNo,
+					deductAmount: this.submit.reduceAmount,
+					endorseTimes: this.initData.endorseTimes,
+					turnVolume: this.submit.dealAmount
+				};
+
+				_server.insertQuotedInfo(data, (response) => {
+					if(response.code == 0){
+						this.$toast('操作成功');
+						this.$emit("ok");
+						this.modelClose();
+					}else{
+						_this.$toast(response.errMsg);
+					}
+					// this.$emit("ok");
+					// this.modelClose();
+				})
+			},
 			change(){
 				this.$router.push({path: '/home/ticketHolder/fbpj', query: {pjData: JSON.stringify(this.initData)}});
 			},
@@ -303,10 +405,18 @@
 				LastTime = Math.ceil(LastTime / (24*60*60));
 				return LastTime;
 			},
-			changeData(type){
+			changeData(type, value){
 				let cpAmount = this.initData.cpAmount;//票据金额
 				let calDay = this.getLastTime();//剩余时间
 				let txje;
+
+				if(!value){
+					this.submit.reduceAmount = '';
+					this.submit.dealAmount = '';
+					this.submit.yearRate = '';
+					return;
+				}
+
 				if(type == 1){
 					txje = ((cpAmount*calDay*this.submit.yearRate/100)/3600)/100000;
 					// this.submit.yearRate = 0;//年利率

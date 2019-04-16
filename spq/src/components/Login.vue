@@ -77,6 +77,7 @@ export default{
 			img: '',
 			title: '登录',
 			isLogining: false,
+			getCaptchaState: false,
 			register: {
 				username: "",
 				password: ""
@@ -125,7 +126,7 @@ export default{
 					captchaKey: this.captchaKey
 			};
 
-			_server.login(data, (response) =>{
+			_server.login(data).then((response) =>{
 				if(response.code == 0){
 					// _this.$toast('登录成功');
 					let loginData = {
@@ -138,26 +139,34 @@ export default{
 					// localStorage.setItem('loginData', JSON.stringify(loginData));
 					localStorage.setItem('token', response.token);
 					localStorage.setItem('user', JSON.stringify(response.user));
-					_this.$router.replace({path});
+					this.$router.replace({path});
             	//注册成功
                 }else if(response.code == 110008){
                 	//验证码已失效
-                	_this.$toast(response.errMsg);
+                	this.$toast(response.errMsg);
                 	//重新获取验证码
-                	_this.changeCodePic();
+                	this.changeCodePic();
                 }
-			})
+			}).catch(error => {
+
+			});
 
 		},
 		gotoRegister(){
-			this.$router.push({path: 'register'})
+			this.$router.replace({path: 'register'})
 		},
 		changeCodePic(){
-			let _this = this;
+			if(this.getCaptchaState){
+				return;
+			}
+			this.getCaptchaState = true;
 			//更换验证码图片
-			_server.getCaptchaPic((response)=>{
-				_this.captchaKey = response.captchaKey;
-        		_this.img = "data:image/jpg;base64," + response.captchaImage;
+			_server.getCaptchaPic().then((response)=>{
+				this.getCaptchaState = false;
+				this.captchaKey = response.captchaKey;
+        		this.img = "data:image/jpg;base64," + response.captchaImage;
+			}).catch(error => {
+				this.getCaptchaState = false;
 			})		
 		}
 	}

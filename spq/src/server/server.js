@@ -10,20 +10,25 @@ let server = {
 	 * @return {[type]} [description]
 	 */
 	getCaptchaPic(callback){
-			Axios.get({
-				url: 'open-cp/v1/captcha',
-	    	}).then((response) => {
-	            //请求成功返回的数据
-	            if(response.captchaKey){
-	            	callback && callback(response);
-	            }else{
+
+    return new Promise((resolve, reject) => {
+      Axios.get({
+        url: 'open-cp/v1/captcha',
+        }).then((response) => {
+              //请求成功返回的数据
+              if(response.captchaKey){
+                callback && callback(response);
+                return resolve(response);
+              }else{
                 response.errMsg && Toast(response.errMsg);
-	            	}
-	        	})
-	    	.catch((error) => {
-	    		console.log(error);
-	    	});
-		return this;
+                return reject(response);
+              }
+            })
+        .catch((error) => {
+          return reject(error);
+        });
+    })
+
 	},
   /**
    * [getSmsCaptcha 获取手机验证码]
@@ -59,21 +64,31 @@ let server = {
 	 */
 	login(data, callback){
 		let url = 'open-cp/v1/login';
-		Axios.post({
-				isLoading: true,
-				url,
-				data: data,
-			}).then((response) => {
-				if(response.code == 0 || response.code == 110008){
-          callback && callback(response);
+
+    return new Promise((resolve, reject) => {
+      Axios.post({
+        isLoading: true,
+        url,
+        data: data,
+      }).then((response) => {
+        if(response.code == 0 || response.code == 110008){
+          // callback && callback(response);
+          return resolve(response);
         }else{
           response.errMsg && Toast(response.errMsg);
+          return reject(response);
         }
-			}).catch(error => {
-				console.log(error)
-			})
-		return this;
+      }).catch(error => {
+        return reject(response);
+      })
+    })
 	},
+  /**
+   * [logout 登出]
+   * @param  {[type]}   data     [description]
+   * @param  {Function} callback [description]
+   * @return {[type]}            [description]
+   */
   logout(data, callback){
     let url = 'open-cp/v1/login';
     Axios.delete({
@@ -90,6 +105,12 @@ let server = {
     });
     return this;
   },
+  /**
+   * [changePassword 修改登录密码]
+   * @param  {[type]}   data     [description]
+   * @param  {Function} callback [description]
+   * @return {[type]}            [description]
+   */
   changePassword(data, callback){
     let user = localStorage.getItem('user') ?  JSON.parse(localStorage.getItem('user')): '';
     let url = 'open-cp/v1/users/';
@@ -340,7 +361,7 @@ let server = {
         isdeal: true,
         data: data,
       }).then((response) => {
-        callback && callback(response);
+          callback && callback(response);
           // if(response.code == 0 || response.code == 110008){
           //   callback && callback(response);
           // }else{
@@ -399,7 +420,7 @@ let server = {
       })
     },
     /**
-     * [deleteCommercialPaper 注销]
+     * [deleteCommercialPaper 注销票据]
      * @param  {[type]}   cpId     [票据cpId]
      * @param  {Function} callback [description]
      * @return {[type]}            [description]
@@ -511,6 +532,33 @@ let server = {
       });
       return this;
     },
+    /**
+     * [resetPassword 重置支付密码]
+     * @param  {[type]}   priceId  [description]
+     * @param  {Function} callback [description]
+     * @return {[type]}            [description]
+     */
+    resetPassword(data){
+
+      let url = 'open-cp/v1/company/resetPassword';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+        isLoading: true,
+        url,
+        data
+        }).then((response) =>{
+          if(response.code == 0 || response.code == 110008){
+            return resolve(response)
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(error);
+          }
+        }).catch(error => {
+            return reject(error)
+        })   
+      })
+    }
   	
 }
 

@@ -44,7 +44,14 @@ let commonUrl = {
       url = url.indexOf('/images/') > -1? (url.split('images/')[1]): url;
       return url;
     },
-    dealPrice(price, n = 3){
+    /**
+     * [dealPrice 处理数字格式，小数点后部分不做处理]
+     * @param  {[type]} price [description]
+     * @param  {Number} n     [以n个字符分割]
+     * @param  {String} tp    [连接方式]
+     * @return {[type]}       [返回处理结果]
+     */
+    dealPrice(price, n = 3, tp=','){
       if(!price){
         return price;
       }
@@ -64,7 +71,7 @@ let commonUrl = {
         result.push(value.substr((i-n) < 0 ? 0:(i-n), i < n? i : n));
       }
 
-      price[0] = result.reverse().join(',');
+      price[0] = result.reverse().join(tp);
       price = price.join('.');
 
       if(isr){

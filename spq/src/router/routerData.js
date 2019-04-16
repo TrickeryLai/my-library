@@ -16,6 +16,7 @@ import PreviewPdf from '@/components/PreviewPdf'
 import RealNameChange from '@/components/RealNameChange'
 import MatchBank from '@/components/MatchBank'
 import AddBankCard from '@/components/AddBankCard'
+import BankDetailInfo from '@/components/BankDetailInfo'
 
 let routerData = {
   routes: [
@@ -146,6 +147,15 @@ let routerData = {
       },
       component: AddBankCard
     },
+    {
+      path: '/home/selfInfo/bankDetailInfo',
+      name: 'BankDetailInfo',
+      meta:{
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: BankDetailInfo
+    }
 
     ]
   },

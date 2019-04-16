@@ -30,6 +30,7 @@
 			</van-col>
 			<van-col span="22">
 				<van-field 
+				autocomplete="new-password"
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model="register.password" placeholder="请输入密码"
@@ -42,6 +43,7 @@
 			</van-col>
 			<van-col span="22">
 				<van-field 
+				autocomplete="new-password"
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model="register.password2" placeholder="请再次输入密码"
@@ -147,6 +149,7 @@ export default{
 			captchaKey: '', 
 			smsCaptchaKey: '',
 			getSmsAgainTime: 61,
+			getCaptchaState: false,
 			smsCaptchaTxt: '获取验证码',
 			register: {
 				password: ""
@@ -271,14 +274,20 @@ export default{
 			})	
 		},
 		gotoLogin(){
-			this.$router.push({path: 'login'});
+			this.$router.replace({path: 'login'});
 		},
 		changeCodePic(){
-			let _this = this;
+			if(this.getCaptchaState){
+				return;
+			}
+			this.getCaptchaState = true;
 			//更换验证码图片
-			_server.getCaptchaPic((response)=>{
-				_this.captchaKey = response.captchaKey;
-        		_this.img = "data:image/jpg;base64," + response.captchaImage;
+			_server.getCaptchaPic().then((response) => {
+				this.getCaptchaState = false;
+				this.captchaKey = response.captchaKey;
+        		this.img = "data:image/jpg;base64," + response.captchaImage;
+			}).catch(error => {
+				this.getCaptchaState = false;
 			})
 		
 		}

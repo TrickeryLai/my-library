@@ -213,7 +213,7 @@
 
 <script>
 import  img from '@/assets/timg.jpg'
-import  img1 from '@/assets/timg.jpg'
+import  img1 from '@/assets/pjb.jpg'
 import  img2 from '@/assets/timg.jpg'
 
 import _server from '@/server/server'
@@ -224,7 +224,7 @@ import _common from '@/server/index'
       data(){
           return{
               pageType: 0, //0 发布票据， 1 修改票据
-              title: this.pageType == 0?'票据发布':'票据修改',
+              title: '票据发布',
               zIndex: 999,
               endTimeChoseValue: '',
               timeChoseValue: false,//时间选择弹窗
@@ -324,14 +324,17 @@ import _common from '@/server/index'
                 this.pageType = 1;//修改票据
                 inData = JSON.parse(this.$route.query.pjData);
                 this.initData(inData);
+                this.title = '票据修改';
               }else{
                 this.pageType = 0;
+                this.title = '票据发布';
               }
           },
           initData(data){
               if(!data){
                 return;
               }
+
               this.submitData.acceptor = data.acceptor;
               this.submitData.cpAmount = data.cpAmount;
               this.submitData.cpNo = data.cpNo;
@@ -345,6 +348,8 @@ import _common from '@/server/index'
               this.endTimeChoseValue = this.getTime(data.dueDate);
               this.xcChoseList = this.initXcList(data.cpDefect)
 
+              this.lastDay = this.getLastDay(this.currentDate);
+              
               if(data.frontBillImg){
                 this.pjzPicUState.state = 3;
               }

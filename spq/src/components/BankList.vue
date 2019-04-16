@@ -1,8 +1,9 @@
 <template>
-    <div style="padding: 10px;">
+    <div style="padding: 10px 10px 70px;">
       <div
         v-for="(item, index) in data"
         @key="index"
+        @click="gotoDetail(item)"
       >
         <div class="card-box">
           <van-row class="card-box-line">
@@ -11,27 +12,27 @@
               <span style="font-size: 12px;">开户所在省市</span>
             </van-col>
             <van-col span="6">
-              默认账户
+              <span class="init-item">默认账户</span>
             </van-col>
           </van-row>
           <van-row class="card-box-line">
-            <van-col span="12">
+            <van-col span="24">
               开户行支行
             </van-col>
-            <van-col span="12">
+            <!-- <van-col span="12">
               户名
-            </van-col>
+            </van-col> -->
           </van-row>
           <van-row class="card-box-line" >
             <van-col span="16" style="font-size: 18px;padding-top:10px;">
-              **** **** **** 7145
+              {{dealNumber(1231231231237451)}}
             </van-col>
             <van-col span="8" style="text-align: center;">
               <van-button
                 style="width: 100%;max-width: 100px;font-size: 12px;color: #1989fa;"
                 type="default"
                 size="small"
-                @click="setBasical(item)"
+                @click.stop="setBasical(item)"
               >设置为默认</van-button>
             </van-col>
           </van-row>
@@ -41,6 +42,8 @@
 </template>
 
 <script>
+  import _common from '@/server/index';
+  import _server from '@/server/server';
   export default{
     name: 'BankList',
     props:['listData'],
@@ -53,6 +56,12 @@
       setBasical(item){
         //设置为默认
         
+      },
+      dealNumber(n){
+        return _common.common_fn.dealPrice(n, 4, ' ');
+      },
+      gotoDetail(item){
+        this.$router.push({path:'/home/selfInfo/bankDetailInfo',query: {item: JSON.stringify(item)}})
       }
     }
   }
@@ -69,5 +78,20 @@
   }
   .card-box-line{
     padding: 3px;
+  }
+  .init-item{
+    float: right;
+    transform: scale(.8);
+  }
+  .init-item::before{
+    content: '';
+    width:8px;
+    height: 8px;
+    margin-right:4px;
+    border-radius: 50%;
+    vertical-align: middle;
+    background: #fff;
+    display:inline-block;
+
   }
 </style>

@@ -41,7 +41,7 @@
 					</van-col>
 				</van-row>
         <van-row>
-          <van-col offset="1" span="23" class="blue-font text-left" style="padding: 10px 0;"><span>* 填写月利率，年利率，每十万手续费中的一个即可</span></van-col>
+          <van-col offset="1" span="23" class="blue-font text-left" style="padding: 10px 0;"><span style="font-size: 12px;">* 填写月利率，年利率，每十万手续费中的一个即可</span></van-col>
         </van-row>
 				<van-row>
 					<van-col span="8" ><span style="vertical-align:-12px;">月利率（%）</span></van-col>

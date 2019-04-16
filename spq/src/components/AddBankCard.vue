@@ -60,7 +60,17 @@
           v-model="submitData.khhzh"
           clearable
           placeholder="开户行支行"
+          list='khhzh'
         />
+        <datalist id="khhzh" style="width: 100%;height: 50px;overflow: auto;">
+          <option>12</option>
+          <option>13</option>
+          <option>14</option>
+          <option>15</option>
+          <option>16</option>
+          <option>17</option>
+          <option>18</option>
+        </datalist>  
       </van-col>
     </van-row>
     <van-row class="realName-box-row">
@@ -73,12 +83,27 @@
         />
       </van-col>
     </van-row>
-    <van-row class="realName-box-row">
+    <van-row class="realName-box-row" style="padding-top:10px;padding-bottom: 10px;">
       <van-col span="7" class="realName-content-box-left"><i class="required">*</i>添加类型</van-col>
       <van-col span="17" class="realName-content-box-right">
         <van-radio-group v-model="type" class="text-left">
-          <van-radio name="1" class="type-choose">提现银行账户</van-radio>
-          <van-radio name="2" class="type-choose">签收银行账户</van-radio>
+          <van-radio name="1" class="type-choose">
+            提现银行账户
+            <i
+              class="iconfont"
+              slot="icon"
+              slot-scope="props"
+              :class="{'icon-active icon-gouxuan': props.checked,'icon-mygou': !props.checked}" ></i>
+          </van-radio>
+          <van-radio name="2" class="type-choose">
+            签收银行账户
+            <i
+              class="iconfont"
+              slot="icon"
+              slot-scope="props"
+              :class="{'icon-active icon-gouxuan': props.checked,'icon-mygou': !props.checked}" 
+              ></i>
+          </van-radio>
         </van-radio-group>
       </van-col>
     </van-row>
@@ -219,6 +244,16 @@
     display:inline-block;
     font-size: 14px;
     margin: 0 5px;
+  }
+  .icon-mygou{
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    display:inline-block;
+  }
+  .icon-active{
+    color: #0079f3;
   }
 </style>
 

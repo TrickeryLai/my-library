@@ -16,12 +16,16 @@
 						<van-col class="detail-row-right" span="18">{{initData.acceptor}}</van-col>
 					</van-row>
 					<van-row class="detail-row">
+						<van-col class="detail-row-left" span="6">发布人</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.createBy}}</van-col>
+					</van-row>
+					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据号码</van-col>
 						<van-col class="detail-row-right" span="18">{{initData.cpNo}}</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据金额</van-col>
-						<van-col class="detail-row-right" span="18">{{dealPrice(initData.cpAmount)}}元</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.cpAmount && dealPrice(initData.cpAmount.toFixed(2))}}元</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">到期时间</van-col>
@@ -89,7 +93,7 @@
 					<van-row style="background: #f5f5f5;">
 						<van-col span="24" class="buy-price">
 							<span v-if="hasBuyPrice">
-								{{dealPrice(buyPrice)}}元
+								{{dealPrice(buyPrice && buyPrice.toFixed(2))}}元
 							</span>
 			              	<span v-else>
 			                	等待买家报价
@@ -144,11 +148,13 @@
 					v-if="initData.cpStatus == '02'"
 					type="primary"
 					style="width: 100%;position: absolute; left: 0; bottom: 0;"
+					@click="modelClose"
 					>已成交</van-button>
 				<van-button
 					v-if="initData.cpStatus == '03'"
 					type="danger"
 					style="width: 100%;position: absolute; left: 0; bottom: 0;"
+					@click="modelClose"
 					>已注销</van-button>
 			</div>
 				
@@ -283,6 +289,10 @@
 
 					this.$router.push({path: '/home/realName', query:{redirect: currentPath}});
 					this.$toast('请先实名认证！');
+					return;
+				}
+				if(this.initData.createBy == user.loginName){
+					this.$toast('不能对自己发布的票据进行竞价！');
 					return;
 				}
 				if(!this.submit.dealAmount || !this.submit.yearRate || !this.submit.reduceAmount){

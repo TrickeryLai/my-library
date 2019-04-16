@@ -149,6 +149,29 @@
         </div>
       </van-cell-group>
 
+      <van-cell-group class="realName-content-box">
+        <h3 class="title van-hairline--bottom">支付信息</h3>
+        <div class="realName-conten-inner">
+          <van-field
+            v-model="submitData.paymentPassword"
+            clearable
+            required
+            autocomplete="new-password"
+            label="支付密码："
+            placeholder="支付密码"
+          />
+          <van-field
+            v-model="submitData.paymentPassword2"
+            type="phone"
+            required
+            clearable
+            autocomplete="new-password"
+            label="确认支付密码："
+            placeholder="确认支付密码"
+          />
+        </div>
+      </van-cell-group>
+
       <div style="padding: 5px 5px;">
           <van-button 
           style="width: 100%;"
@@ -280,6 +303,14 @@
               this.$toast('请输入法人身份证号！');
               return false;
             }
+            if(!this.submitData.paymentPassword){
+              this.$toast('请设置支付密码!');
+              return false;
+            }
+            if(this.submitData.paymentPassword != this.submitData.paymentPassword2){
+              this.$toast('两次支付密码不一致！');
+              return false;
+            }
 
             return true;
           },
@@ -355,7 +386,9 @@
               transactor: this.submitData.jbrName,
               transactorIdNo: this.submitData.jbrIdCard,
               transactorPhone: this.submitData.jbrPhone,
-              contactPhone: this.submitData.contactPhone
+              contactPhone: this.submitData.contactPhone,
+              paymentPassword: this.submitData.paymentPassword,
+              paymentPassword2: this.submitData.paymentPassword2
             };
 
             _server.getAuthentication(data, (res) =>{
@@ -371,7 +404,7 @@
                   user._checked = true;
 
                   localStorage.setItem('user', JSON.stringify(user));
-                  this.$toast('认证成功请重新登录！');
+                  this.$toast('认证成功，请重新登录！');
                   _this.$router.replace({path});
                 }else{
                   this.$toast(res.errMsg);
