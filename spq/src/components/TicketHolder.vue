@@ -45,14 +45,17 @@
 							<van-col span="18" class="van-ellipsis text-left">承兑人：{{item.acceptor}}</van-col>
 							<van-col span="6">
 								<div>
-									<van-tag round  type="success" v-if="item.cpStatus == 1">
-										<span v-if="getLastTime(item.dueDate) < 0">
-											已过期
-										</span>
-										<span v-else>
-											发布中
-										</span>
-									</van-tag>
+                  <div v-if="item.cpStatus == 1 || item.cpStatus == 4">
+                    <van-tag round v-if="getLastTime(item.dueDate) < 0">
+                        已过期
+                    </van-tag>
+                    <van-tag round type="success" v-else-if="item.cpStatus == 1">
+                      发布中
+                    </van-tag>
+                    <van-tag round color="#f2826a" v-else-if="item.cpStatus == 4">
+                      报价中
+                    </van-tag>
+                  </div>
 									<van-tag round type="danger" v-else-if="item.cpStatus == 2">已成交</van-tag>
 									<van-tag round v-else-if="item.cpStatus == 3">已注销</van-tag>
 								</div>

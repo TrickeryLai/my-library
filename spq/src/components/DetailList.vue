@@ -105,7 +105,7 @@
 							@click="showAllPrice">&nbsp查看所有</span>
 						</van-col>
 					</van-row>
-					<van-row class="detail-row-special" v-if="initData.cpStatus == '01'">
+					<van-row class="detail-row-special" v-if="initData.cpStatus == '01' || initData.cpStatus == '04'">
 
 						<van-col class="detail-row-left" span="12">年化利率</van-col>
 						<van-col class="detail-row-left" span="12">每十万扣款</van-col>
@@ -140,7 +140,7 @@
 			</van-cell-group>
 			<div style="text-align: center;width: 100%;height: 50px;">
 				<van-button
-					v-if="initData.cpStatus == '01'"
+					v-if="initData.cpStatus == '01' || initData.cpStatus == '04'"
 					type="info"
 					style="width: 100%;position: absolute; left: 0; bottom: 0;"
 					@click="ok">我要买</van-button>

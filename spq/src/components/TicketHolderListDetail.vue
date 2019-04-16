@@ -33,6 +33,7 @@
 							<van-tag round  type="success" v-if="initData.cpStatus == 1">发布中</van-tag>
 							<van-tag round type="danger" v-else-if="initData.cpStatus == 2">已成交</van-tag>
 							<van-tag round v-else-if="initData.cpStatus == 3">已注销</van-tag>
+              <van-tag round color="#f2826a" v-else-if="initData.cpStatus == 4">报价中</van-tag>
 							<van-tag round v-if="initData.stringDate < 0">已过期</van-tag>
 						</van-col>
 					</van-row>

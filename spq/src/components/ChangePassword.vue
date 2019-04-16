@@ -118,7 +118,8 @@
 				_server.resetPassword(data).then(response => {
 					if(response.code == 0){
 						this.$toast('修改支付密码成功!');
-						window.history.go(-1);
+						this.$router.go(-1);
+
 					}
 				}).catch(error => {
 

@@ -78,6 +78,16 @@
               @click="choseDeal(item)"
             >{{item.name}}</van-tag>
           </van-cell-group>
+          <van-cell-group>
+            <h3 class="title">票据状态</h3>
+            <van-tag
+              style="margin:10px 0px 5px 15px;padding: 5px;"
+              v-for="(item, index) in cpStatus"
+              :key="index"
+              :type="searchData.cpStatus.val == item.val ? 'primary': ''"
+              @click="choseCpStatus(item)"
+            >{{item.name}}</van-tag>
+          </van-cell-group>
           <van-checkbox v-model="searchData.onlyShow" name="onlyShow" style="margin-top: 10px;">
             <i
               class="iconfont"
@@ -131,7 +141,26 @@
 					isPerfect: {},//瑕疵
 					dealChoose: {},//成交信用
 					onlyShow: false,//只显示我的白名单票据
+          cpStatus: {},//票据状态
 				},
+        cpStatus:[
+          {
+            val: '01',
+            name:'发布中'
+          },
+          {
+            val: '02',
+            name: '已成交'
+          },
+          {
+            val: '03',
+            name: '已注销'
+          },
+          {
+            val: '04',
+            name: '报价中'
+          }
+        ],
 				amountType:[
 					{
 						val: 'underThound',
@@ -214,6 +243,10 @@
 				//关闭的时候改变对应状态，继续观察
 				this.$emit("close")
 			},
+      choseCpStatus(item){
+			  //票据状态修改
+			  this.searchData.cpStatus = item;
+      },
 			choseAmount(item){
 				this.searchData.amountChosed = item;
 			},

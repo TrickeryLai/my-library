@@ -155,6 +155,7 @@
           <van-field
             v-model="submitData.paymentPassword"
             clearable
+            type="password"
             required
             autocomplete="new-password"
             label="支付密码："
@@ -162,7 +163,7 @@
           />
           <van-field
             v-model="submitData.paymentPassword2"
-            type="phone"
+            type="password"
             required
             clearable
             autocomplete="new-password"

@@ -3,8 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="b248414f-6fbb-4a89-bf61-4b9e5870e851" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spq/src/components/BillHall.vue" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/components/BillHall.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spq/src/components/ChangePassword.vue" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/components/ChangePassword.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spq/src/components/DetailList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/components/DetailList.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spq/src/components/OrderDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/components/OrderDetail.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spq/src/components/RealName.vue" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/components/RealName.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spq/src/components/RealNameChange.vue" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/components/RealNameChange.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spq/src/components/SetSearch.vue" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/components/SetSearch.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spq/src/components/TicketHolder.vue" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/components/TicketHolder.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spq/src/components/TicketHolderListDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/components/TicketHolderListDetail.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spq/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/main.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -21,17 +28,17 @@
         <counts>
           <entry key="project.closed" value="8" />
           <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.10" value="2" />
+          <entry key="project.open.time.10" value="3" />
           <entry key="project.open.time.11" value="2" />
           <entry key="project.open.time.13" value="1" />
           <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.5" value="1" />
-          <entry key="project.opened" value="8" />
+          <entry key="project.opened" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
         <counts>
-          <entry key="ESLintLanguageService" value="8" />
+          <entry key="ESLintLanguageService" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -39,7 +46,7 @@
           <entry key="css" value="1" />
           <entry key="html" value="1" />
           <entry key="js" value="9" />
-          <entry key="vue" value="28" />
+          <entry key="vue" value="33" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
@@ -47,21 +54,21 @@
           <entry key="CSS" value="1" />
           <entry key="HTML" value="1" />
           <entry key="JavaScript" value="9" />
-          <entry key="Vue.js" value="28" />
+          <entry key="Vue.js" value="33" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="html" value="7" />
           <entry key="js" value="599" />
-          <entry key="vue" value="4957" />
+          <entry key="vue" value="5617" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="7" />
           <entry key="JavaScript" value="599" />
-          <entry key="Vue.js" value="4957" />
+          <entry key="Vue.js" value="5617" />
         </counts>
       </usages-collector>
     </session>
@@ -69,19 +76,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/src/components/Fbpj.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19720">
-              <caret line="685" selection-start-line="685" selection-end-line="705" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spq/src/components/RealName.vue">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="88">
-              <caret line="124" column="25" lean-forward="true" selection-start-line="98" selection-start-column="6" selection-end-line="124" selection-end-column="23" />
+              <caret line="157" column="27" selection-start-line="157" selection-start-column="27" selection-end-line="157" selection-end-column="27" />
               <folding>
                 <element signature="n#van-cell-group#3;n#div#0;n#div#0;n#template#0;n#!!top" />
               </folding>
@@ -89,40 +87,27 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spq/src/components/ChangePassword.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="684">
+              <caret line="120" column="32" selection-start-line="120" selection-start-column="32" selection-end-line="120" selection-end-column="32" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spq/src/components/RealNameChange.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="424">
-              <caret line="318" column="27" selection-start-line="318" selection-start-column="27" selection-end-line="318" selection-end-column="27" />
+            <state relative-caret-position="-301">
+              <caret line="292" selection-start-line="292" selection-end-line="292" />
               <folding>
                 <element signature="n#van-cell-group#2;n#div#0;n#div#0;n#template#0;n#!!top" />
                 <element signature="n#van-cell-group#3;n#div#0;n#div#0;n#template#0;n#!!top" />
                 <element signature="n#van-cell-group#4;n#div#0;n#div#0;n#template#0;n#!!top" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/src/components/BankList.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1566">
-              <caret line="54" column="8" selection-start-line="54" selection-start-column="8" selection-end-line="54" selection-end-column="8" />
-              <folding>
-                <element signature="n#style#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#van-button#0;n#van-col#1;n#van-row#2;n#div#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/src/router/routerData.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3770">
-              <caret line="146" column="28" selection-start-line="146" selection-start-column="28" selection-end-line="146" selection-end-column="28" />
-              <folding>
-                <element signature="e#1#41#0" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#van-button#0;n#div#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+                <element signature="e#4388#4425#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -131,8 +116,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spq/src/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="232">
-              <caret line="21" column="407" selection-start-line="21" selection-start-column="407" selection-end-line="21" selection-end-column="407" />
+            <state relative-caret-position="426">
+              <caret line="41" column="27" lean-forward="true" selection-start-line="41" selection-start-column="27" selection-end-line="41" selection-end-column="27" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
                 <element signature="e#140#161#0" expanded="true" />
@@ -141,11 +126,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/spq/src/components/TicketHolder.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="290">
-              <caret line="10" selection-start-line="10" selection-end-line="12" selection-end-column="22" />
+            <state relative-caret-position="373">
+              <caret line="54" column="50" selection-start-line="54" selection-start-column="50" selection-end-line="54" selection-end-column="50" />
               <folding>
                 <element signature="n#style#0;n#van-search#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
               </folding>
@@ -154,35 +139,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/src/components/Register.vue">
+        <entry file="file://$PROJECT_DIR$/spq/src/components/TicketHolderListDetail.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5626">
-              <caret line="195" column="10" selection-start-line="195" selection-start-column="10" selection-end-line="195" selection-end-column="10" />
-              <folding>
-                <element signature="n#style#0;n#van-field#0;n#van-col#1;n#van-row#4;n#div#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#van-col#0;n#van-row#5;n#div#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#van-field#0;n#van-col#1;n#van-row#5;n#div#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#van-button#0;n#van-col#2;n#van-row#5;n#div#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#van-col#0;n#van-row#6;n#div#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#van-field#0;n#van-col#1;n#van-row#6;n#div#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#img#0;n#van-col#2;n#van-row#6;n#div#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#van-button#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#p#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-                <element signature="e#3777#3815#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/src/components/Order.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="488">
-              <caret line="245" column="79" selection-start-line="245" selection-start-column="79" selection-end-line="245" selection-end-column="79" />
-              <folding>
-                <element signature="n#van-row#0;n#transition#0;n#van-collapse#0;n#div#0;n#template#0;n#!!top" />
-                <element signature="n#style#0;n#van-field#0;n#van-col#0;n#van-row#0;n#transition#0;n#van-collapse#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="521">
+              <caret line="36" column="73" selection-start-line="36" selection-start-column="73" selection-end-line="36" selection-end-column="73" />
             </state>
           </provider>
         </entry>
@@ -190,8 +150,35 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spq/src/components/BillHall.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1624">
-              <caret line="56" column="69" selection-start-line="56" selection-start-column="69" selection-end-line="56" selection-end-column="69" />
+            <state relative-caret-position="555">
+              <caret line="79" column="50" lean-forward="true" selection-start-line="79" selection-start-column="35" selection-end-line="79" selection-end-column="50" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spq/src/components/DetailList.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2676">
+              <caret line="107" column="106" selection-start-line="107" selection-start-column="106" selection-end-line="107" selection-end-column="106" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spq/src/components/OrderDetail.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="379">
+              <caret line="37" column="48" lean-forward="true" selection-start-line="37" selection-start-column="33" selection-end-line="37" selection-end-column="48" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spq/src/components/SetSearch.vue">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-3549">
+              <caret line="143" column="18" selection-start-line="143" selection-start-column="10" selection-end-line="143" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -200,9 +187,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>showDetail</find>
-      <find>priceListBaseData</find>
-      <find>showAllPrice</find>
       <find>getData</find>
       <find>_server</find>
       <find>getbuyPrice</find>
@@ -230,6 +214,9 @@
       <find>rightText</find>
       <find>console</find>
       <find>submitData</find>
+      <find>choseCpStatus</find>
+      <find>ok</find>
+      <find>modelOk</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -240,7 +227,6 @@
       <list>
         <option value="$PROJECT_DIR$/spq/config/index.js" />
         <option value="$PROJECT_DIR$/spq/src/components/PriceList.vue" />
-        <option value="$PROJECT_DIR$/spq/src/components/DetailList.vue" />
         <option value="$PROJECT_DIR$/spq/src/server/index.js" />
         <option value="$PROJECT_DIR$/spq/src/components/BaseInfo.vue" />
         <option value="$PROJECT_DIR$/spq/src/components/Register.vue" />
@@ -248,19 +234,23 @@
         <option value="$PROJECT_DIR$/spq/src/server/server.js" />
         <option value="$PROJECT_DIR$/spq/src/server/axios.js" />
         <option value="$PROJECT_DIR$/spq/src/components/SelfInfo.vue" />
-        <option value="$PROJECT_DIR$/spq/src/components/SetSearch.vue" />
         <option value="$PROJECT_DIR$/spq/index.html" />
-        <option value="$PROJECT_DIR$/spq/src/components/BillHall.vue" />
         <option value="$PROJECT_DIR$/spq/src/router/routerData.js" />
         <option value="$PROJECT_DIR$/spq/src/components/Fbpj.vue" />
-        <option value="$PROJECT_DIR$/spq/src/main.js" />
         <option value="$PROJECT_DIR$/spq/src/components/AddBankCard.vue" />
         <option value="$PROJECT_DIR$/spq/src/components/MatchBank.vue" />
         <option value="$PROJECT_DIR$/spq/src/components/BankList.vue" />
-        <option value="$PROJECT_DIR$/spq/src/components/TicketHolder.vue" />
         <option value="$PROJECT_DIR$/spq/src/components/Order.vue" />
-        <option value="$PROJECT_DIR$/spq/src/components/RealName.vue" />
         <option value="$PROJECT_DIR$/spq/src/components/RealNameChange.vue" />
+        <option value="$PROJECT_DIR$/spq/src/components/RealName.vue" />
+        <option value="$PROJECT_DIR$/spq/src/main.js" />
+        <option value="$PROJECT_DIR$/spq/src/components/ChangePassword.vue" />
+        <option value="$PROJECT_DIR$/spq/src/components/SetSearch.vue" />
+        <option value="$PROJECT_DIR$/spq/src/components/DetailList.vue" />
+        <option value="$PROJECT_DIR$/spq/src/components/TicketHolderListDetail.vue" />
+        <option value="$PROJECT_DIR$/spq/src/components/OrderDetail.vue" />
+        <option value="$PROJECT_DIR$/spq/src/components/BillHall.vue" />
+        <option value="$PROJECT_DIR$/spq/src/components/TicketHolder.vue" />
       </list>
     </option>
   </component>
@@ -294,7 +284,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -359,6 +348,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -400,14 +390,16 @@
       <workItem from="1555227746122" duration="10796000" />
       <workItem from="1555330205154" duration="2284000" />
       <workItem from="1555333364909" duration="1396000" />
+      <workItem from="1555419528377" duration="4086000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="21654000" />
+    <option name="totallyTimeSpent" value="25740000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24973656" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -453,9 +445,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/components/ChangePassword.vue">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/spq/src/components/PriceList.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3654">
@@ -470,9 +459,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/components/TicketHolderListDetail.vue">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/spq/src/components/BaseInfo.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="261">
@@ -482,13 +468,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/spq/src/components/Login.vue">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/components/DetailList.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="367" column="14" selection-start-line="367" selection-start-column="1" selection-end-line="367" selection-end-column="14" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spq/src/components/Caculate.vue">
       <provider selected="true" editor-type-id="text-editor">
@@ -518,13 +497,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="269">
           <caret line="61" column="13" selection-start-line="61" selection-start-column="1" selection-end-line="61" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/components/SetSearch.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="454">
-          <caret line="85" column="33" lean-forward="true" selection-start-line="85" selection-start-column="33" selection-end-line="85" selection-end-column="33" />
         </state>
       </provider>
     </entry>
@@ -566,85 +538,55 @@
     <entry file="file://$PROJECT_DIR$/spq/src/components/Fbpj.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="19720">
-          <caret line="685" selection-start-line="685" selection-end-line="705" selection-end-column="1" />
+          <caret line="690" selection-start-line="690" selection-end-line="710" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spq/src/components/BankList.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1566">
-          <caret line="54" column="8" selection-start-line="54" selection-start-column="8" selection-end-line="54" selection-end-column="8" />
+        <state relative-caret-position="1653">
+          <caret line="57" column="8" selection-start-line="57" selection-start-column="8" selection-end-line="57" selection-end-column="8" />
           <folding>
             <element signature="n#style#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#van-button#0;n#van-col#1;n#van-row#2;n#div#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spq/src/router/routerData.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3770">
-          <caret line="146" column="28" selection-start-line="146" selection-start-column="28" selection-end-line="146" selection-end-column="28" />
+        <state relative-caret-position="3799">
+          <caret line="147" column="28" selection-start-line="147" selection-start-column="28" selection-end-line="147" selection-end-column="28" />
           <folding>
             <element signature="e#1#41#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="21" column="407" selection-start-line="21" selection-start-column="407" selection-end-line="21" selection-end-column="407" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#140#161#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/components/TicketHolder.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="10" selection-start-line="10" selection-end-line="12" selection-end-column="22" />
-          <folding>
-            <element signature="n#style#0;n#van-search#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/spq/src/components/Register.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5626">
-          <caret line="195" column="10" selection-start-line="195" selection-start-column="10" selection-end-line="195" selection-end-column="10" />
-          <folding>
-            <element signature="n#style#0;n#van-field#0;n#van-col#1;n#van-row#4;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#van-col#0;n#van-row#5;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#van-field#0;n#van-col#1;n#van-row#5;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#van-button#0;n#van-col#2;n#van-row#5;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#van-col#0;n#van-row#6;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#van-field#0;n#van-col#1;n#van-row#6;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#van-col#2;n#van-row#6;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#van-button#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#p#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
-            <element signature="e#3777#3815#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/components/BillHall.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1624">
-          <caret line="56" column="69" selection-start-line="56" selection-start-column="69" selection-end-line="56" selection-end-column="69" />
+        <state relative-caret-position="5713">
+          <caret line="198" column="10" selection-start-line="198" selection-start-column="10" selection-end-line="198" selection-end-column="10" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spq/src/components/Order.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="488">
-          <caret line="245" column="79" selection-start-line="245" selection-start-column="79" selection-end-line="245" selection-end-column="79" />
+        <state relative-caret-position="7424">
+          <caret line="256" column="79" selection-start-line="256" selection-start-column="79" selection-end-line="256" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/components/RealNameChange.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-301">
+          <caret line="292" selection-start-line="292" selection-end-line="292" />
           <folding>
-            <element signature="n#van-row#0;n#transition#0;n#van-collapse#0;n#div#0;n#template#0;n#!!top" />
-            <element signature="n#style#0;n#van-field#0;n#van-col#0;n#van-row#0;n#transition#0;n#van-collapse#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#van-cell-group#2;n#div#0;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#van-cell-group#3;n#div#0;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#van-cell-group#4;n#div#0;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#van-button#0;n#div#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
+            <element signature="e#4388#4425#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -652,21 +594,72 @@
     <entry file="file://$PROJECT_DIR$/spq/src/components/RealName.vue">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="88">
-          <caret line="124" column="25" lean-forward="true" selection-start-line="98" selection-start-column="6" selection-end-line="124" selection-end-column="23" />
+          <caret line="157" column="27" selection-start-line="157" selection-start-column="27" selection-end-line="157" selection-end-column="27" />
           <folding>
             <element signature="n#van-cell-group#3;n#div#0;n#div#0;n#template#0;n#!!top" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/components/RealNameChange.vue">
+    <entry file="file://$PROJECT_DIR$/spq/src/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="424">
-          <caret line="318" column="27" selection-start-line="318" selection-start-column="27" selection-end-line="318" selection-end-column="27" />
+        <state relative-caret-position="426">
+          <caret line="41" column="27" lean-forward="true" selection-start-line="41" selection-start-column="27" selection-end-line="41" selection-end-column="27" />
           <folding>
-            <element signature="n#van-cell-group#2;n#div#0;n#div#0;n#template#0;n#!!top" />
-            <element signature="n#van-cell-group#3;n#div#0;n#div#0;n#template#0;n#!!top" />
-            <element signature="n#van-cell-group#4;n#div#0;n#div#0;n#template#0;n#!!top" />
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#140#161#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/components/ChangePassword.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="684">
+          <caret line="120" column="32" selection-start-line="120" selection-start-column="32" selection-end-line="120" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/components/SetSearch.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3549">
+          <caret line="143" column="18" selection-start-line="143" selection-start-column="10" selection-end-line="143" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/components/DetailList.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2676">
+          <caret line="107" column="106" selection-start-line="107" selection-start-column="106" selection-end-line="107" selection-end-column="106" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/components/OrderDetail.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="379">
+          <caret line="37" column="48" lean-forward="true" selection-start-line="37" selection-start-column="33" selection-end-line="37" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/components/BillHall.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="79" column="50" lean-forward="true" selection-start-line="79" selection-start-column="35" selection-end-line="79" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/components/TicketHolderListDetail.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="521">
+          <caret line="36" column="73" selection-start-line="36" selection-start-column="73" selection-end-line="36" selection-end-column="73" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/components/TicketHolder.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="373">
+          <caret line="54" column="50" selection-start-line="54" selection-start-column="50" selection-end-line="54" selection-end-column="50" />
+          <folding>
+            <element signature="n#style#0;n#van-search#0;n#div#0;n#div#0;n#template#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>
