@@ -76,8 +76,15 @@
 						<van-row>
 							<van-col span="18">
 								<span class="text-left">我的竞价金额：</span>
-								<span style="font-size: 18px;">{{item.turnVolume && (item.turnVolume/10000).toFixed(6)}}</span> 
-								<span class="small-font">万元</span>
+								<span v-if="item.turnVolume > 10000">
+									<span  style="font-size: 18px;">{{item.turnVolume && (item.turnVolume/10000).toFixed(2)}}</span> 
+									<span class="small-font">万元</span>
+								</span>
+								<span v-else>
+									<span style="font-size: 18px;">{{item.turnVolume && (item.turnVolume).toFixed(2)}}</span> 
+									<span class="small-font">元</span>	
+								</span>
+								
 							</van-col>
 							<van-col span="6">
 								<div style="text-align: right;">
@@ -150,7 +157,7 @@
 		components:{OrderDetail},
 		data(){
 			return {
-				title: '订单',
+				title: '资方',
 				searchValue: '',
 				activeName: '1',
 				error: false,

@@ -68,7 +68,12 @@
 								</van-col>
 							</van-row>
 							<van-row>
-								<van-col span="8" class="black-font text-left">{{item.cpAmount && (item.cpAmount/10000).toFixed(4)}} <span class="small-font">万元</span></van-col>
+								<van-col v-if="item.cpAmount > 10000" span="8" class="black-font text-left">{{item.cpAmount && (item.cpAmount/10000).toFixed(2)}}
+								 <span class="small-font">万元</span>
+								</van-col>
+								<van-col v-else span="8" class="black-font text-left">{{item.cpAmount && (item.cpAmount).toFixed(2)}}
+								 <span class="small-font">元</span>
+								</van-col>
 								<van-col span="8" class="black-font">{{spliceTime(item.createTime)}}</van-col>
 								<van-col span="8" class="black-font">{{item.dueDate}}</van-col>
 							</van-row>

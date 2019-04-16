@@ -384,7 +384,7 @@
 				_server.insertQuotedInfo(data, (response) => {
 					if(response.code == 0){
 						this.$toast('操作成功');
-						this.$emit("ok");
+						this.$emit("refresh");
 						this.modelClose();
 					}else{
 						_this.$toast(response.errMsg);

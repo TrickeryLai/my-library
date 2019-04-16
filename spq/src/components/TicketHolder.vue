@@ -61,8 +61,15 @@
 						<van-row>
 							<van-col span="18">
 								<span class="text-left">票面金额：</span>
-								{{item.cpAmount　&& (item.cpAmount/10000).toFixed(6)}} 
-								<span class="small-font">万元</span>
+								<span v-if="item.cpAmount > 10000">
+									{{item.cpAmount　&& (item.cpAmount/10000).toFixed(2)}} 
+									<span class="small-font">万元</span>
+								</span>
+								<span v-else>
+									{{item.cpAmount　&& (item.cpAmount).toFixed(2)}} 
+									<span class="small-font">元</span>
+								</span>
+								
 							</van-col>
 							<van-col span="6" class="blue-font">
 								<span v-if="getLastTime(item.dueDate) < 0">(已过期)</span>

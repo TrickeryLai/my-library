@@ -21,7 +21,7 @@
 				</i>
 			</van-tabbar-item>
 			<van-tabbar-item icon="orders-o" to="/home/order">
-				订单
+				资方
 				<i
 				slot="icon"
 				slot-scope="props"
