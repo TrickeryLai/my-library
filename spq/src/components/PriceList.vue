@@ -9,7 +9,7 @@
 		<table class="table">
 			<tr>
 				<th>公司名称</th>
-				<th>竞价金额</th>
+				<th>竞价金额(元)</th>
 				<th>竞价时间</th>
 				<th width="70">状态</th>
 				<th width="40" v-if="pageType == 1">操作</th>
@@ -19,7 +19,7 @@
 				:key = "index"
 			>
 				<td>{{item.companyName}}</td>
-				<td>{{dealPrice(item.turnVolume.toFixed(2))}}元</td>
+				<td>{{dealPrice(item.turnVolume.toFixed(2))}}</td>
 				<td>{{item.quoteTime}}</td>
 				<td>
 					<van-tag 

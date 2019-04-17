@@ -13,7 +13,7 @@
 		<h1 class="title">欢迎注册</h1>
 		<van-row >
 			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
-				<i class="iconfont icon-nickname"></i>
+				<i class="iconfont icon-mine"></i>
 			</van-col>
 			<van-col span="22">
 				<van-field 
@@ -29,12 +29,16 @@
 				<i class="iconfont icon-lock"></i>
 			</van-col>
 			<van-col span="22">
-				<van-field 
+				<PasswordI
+					v-model="register.password"
+					placeholder="请输入密码"
+				/>
+				<!-- <van-field 
 				autocomplete="new-password"
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model="register.password" placeholder="请输入密码"
-				type="password" />
+				type="password" /> -->
 			</van-col>
 		</van-row>
 		<van-row >
@@ -42,12 +46,16 @@
 				<i class="iconfont icon-lock"></i>
 			</van-col>
 			<van-col span="22">
-				<van-field 
+				<PasswordI
+					v-model="register.password2"
+					placeholder="请再次输入密码"
+				/>
+				<!-- <van-field 
 				autocomplete="new-password"
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model="register.password2" placeholder="请再次输入密码"
-				type="password" />
+				type="password" /> -->
 			</van-col>
 		</van-row>
 		<van-row >
@@ -139,9 +147,13 @@
 <script>
 import _server from '@/server/server';
 import _common from '@/server/index';
+import PasswordI from '@/components/PasswordI';
 
 export default{
 	name: "Register",
+	components:{
+		PasswordI
+	},
 	data(){
 		return {
 			img: '',
@@ -225,7 +237,7 @@ export default{
 			}, 1000)
 		},
 		getSmsCaptcha(){
-			if(!this.register.phone){
+			if(!this.register.phone || !_common.common_reg.phone(this.register.phone)){
 				this.$toast('请先输入正确的手机号！');
 				return;
 			}

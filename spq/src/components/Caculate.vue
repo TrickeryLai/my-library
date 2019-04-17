@@ -15,29 +15,43 @@
 				<van-row>
 					<van-col span="8" ><span style="vertical-align:-12px;">票面金额(万元)</span></van-col>
 					<van-col span="16" >
-						<van-field v-model="value" placeholder="票面金额(万元)" style="padding-top:3px;padding-bottom:3px" />
+						<van-field 
+						v-model="value" 
+						clearable
+						placeholder="票面金额(万元)" 
+						style="padding-top:3px;padding-bottom:3px" />
 					</van-col>
 				</van-row>
 				<van-row>
 					<van-col span="8" ><span style="vertical-align:-12px;">贴现日期</span></van-col>
 					<van-col span="16" >
-						<van-field @click="choseTimeFn" v-model="timeChoseValue" readonly style="padding-top:3px;padding-bottom:3px"/>
+						<van-field 
+						@click="choseTimeFn" 
+						v-model="timeChoseValue" 
+						readonly 
+						style="padding-top:3px;padding-bottom:3px"/>
 					</van-col>
 				</van-row>
 				<van-row>
 					<van-col span="8" ><span style="vertical-align:-12px;">到期日期</span></van-col>
 					<van-col span="16" >
-						<van-field @click="choseTimeFn2" 
-									v-model="endTimeChoseValue" 
-									readonly 
-									style="padding-top:3px;padding-bottom:3px"
-									/>
+						<van-field 
+							@click="choseTimeFn2" 
+							v-model="endTimeChoseValue" 
+							readonly 
+							style="padding-top:3px;padding-bottom:3px"
+						/>
 					</van-col>
 				</van-row>
 				<van-row>
 					<van-col span="8" ><span style="vertical-align:-12px;">调整天数</span></van-col>
 					<van-col span="16" >
-						<van-field v-model="changeDay" placeholder="调整天数" type="number" style="padding-top:3px;padding-bottom:3px"/>
+						<van-field 
+						v-model="changeDay" 
+						placeholder="调整天数"
+						clearable 
+						type="number" 
+						style="padding-top:3px;padding-bottom:3px"/>
 					</van-col>
 				</van-row>
         <van-row>
@@ -46,22 +60,35 @@
 				<van-row>
 					<van-col span="8" ><span style="vertical-align:-12px;">月利率（%）</span></van-col>
 					<van-col span="16" >
-						<van-field v-model="monthRate" placeholder="月利率（%）"  style="padding-top:3px;padding-bottom:3px"
+						<van-field 
+						v-model="monthRate" 
+						clearable
+						placeholder="月利率（%）"  
+						style="padding-top:3px;padding-bottom:3px"
 						@input="rateChange(1)"/>
 					</van-col>
 				</van-row>
 				<van-row>
 					<van-col span="8" ><span style="vertical-align:-12px;">年利率（%）</span></van-col>
 					<van-col span="16" >
-						<van-field v-model="yearRate" placeholder="年利率（%）" style="padding-top:3px;padding-bottom:3px"
+						<van-field 
+						v-model="yearRate" 
+						clearable
+						placeholder="年利率（%）" 
+						style="padding-top:3px;padding-bottom:3px"
 						@input="rateChange(2)" />
 					</van-col>
 				</van-row>
 				<van-row>
 					<van-col span="8" ><span style="vertical-align:-12px;">每十万手续费</span></van-col>
 					<van-col span="16" >
-						<van-field v-model="shouxufei" placeholder="每十万手续费（元）" style="padding-top:3px;padding-bottom:3px"
-						@input="rateChange(3)" />
+						<van-field 
+							v-model="shouxufei" 
+							clearable
+							placeholder="每十万手续费（元）" 
+							style="padding-top:3px;padding-bottom:3px"
+							@input="rateChange(3)" 
+						/>
 					</van-col>
 				</van-row>
 				<van-row style="margin: 5px;">

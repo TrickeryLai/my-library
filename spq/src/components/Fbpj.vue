@@ -35,7 +35,7 @@
         <h3 class="title van-hairline--bottom">票面信息</h3>
         <div class="realName-conten-inner">
             <van-row class="realName-box-row">
-              <van-col span="7" class="realName-content-box-left"><i class="required">*</i>票据号码</van-col>
+              <van-col span="7" class="realName-content-box-left"><i class="required">*</i>票据号码&nbsp{{submitData.cpNo && submitData.cpNo.toString().length}}</van-col>
               <van-col span="17" class="realName-content-box-right">
                  <van-field
                  v-model="submitData.cpNo"
@@ -192,6 +192,7 @@
       v-model="currentDate"
       type="date"
       :min-date="minDate"
+      :max-date="new Date(new Date().getTime() + 366*24*60*60*1000)"
       :formatter="formatter"
       @confirm="timeChoseConfirm"
       @cancel="timeChoseCancel"
@@ -367,15 +368,15 @@ import _common from '@/server/index'
                 calDay = this.lastDay, txje;
                 
             if(type == 1){
-              this.sell.turnVolume = (cpAmount - (cpAmount/100000)*this.sell.deductAmount).toFixed(4);//成交金额
+              this.sell.turnVolume = (cpAmount - (cpAmount/100000)*this.sell.deductAmount).toFixed(2);//成交金额
               this.sell.approvalApr = ((cpAmount -this.sell.turnVolume)*36000/(calDay*cpAmount)).toFixed(8);
             }else if(type == 2){
 
               txje = ((cpAmount*calDay*(this.sell.approvalApr/100))/360/(cpAmount/100000));
-              this.sell.deductAmount =  txje.toFixed(4);//每十万扣款
-              this.sell.turnVolume = (cpAmount - cpAmount/100000*txje).toFixed(4);//成交金额
+              this.sell.deductAmount =  txje.toFixed(2);//每十万扣款
+              this.sell.turnVolume = (cpAmount - cpAmount/100000*txje).toFixed(2);//成交金额
             }else if(type == 3){
-              this.sell.deductAmount = ((cpAmount-this.sell.turnVolume)/(cpAmount/100000)).toFixed(4);//每十万扣款
+              this.sell.deductAmount = ((cpAmount-this.sell.turnVolume)/(cpAmount/100000)).toFixed(2);//每十万扣款
               this.sell.approvalApr = ((cpAmount -this.sell.turnVolume)*36000/(calDay*cpAmount)).toFixed(8);//年华利率
             }
           },

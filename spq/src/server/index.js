@@ -87,6 +87,12 @@ let commonUrl = {
         last = Math.ceil((endT - startT)/(24*60*60*1000));
         return last;
     },
+    /**
+     * [formatterTime 时间格式转换]
+     * @param  {Date}   t    [时间]
+     * @param  {String} type [转换格式，yyyy 年，MM月，dd 日]
+     * @return {[type]}      [description]
+     */
     formatterTime(t = new Date(), type = 'yyyy年MM月dd日'){
         let date ='', time = new Date(t), yyyy, MM, dd;
         yyyy = time.getFullYear();
@@ -97,8 +103,16 @@ let commonUrl = {
         type = type.replace('dd', dd);
         return type;
     },
+    /**
+     * [addZero 补0, ]
+     * @param {[type]} v [description]
+     * @param {Number} n [保留的位数，默认 2位 （0v）]
+     */
     addZero(v, n = 2){
       let value = '0000' + v;
+      if(v.toString().length > n){
+        n = v.toString().length;
+      }
       return value.substr(value.length - n, n);
     },
     changeNumToTex(n) {

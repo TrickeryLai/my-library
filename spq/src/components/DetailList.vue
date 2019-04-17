@@ -345,17 +345,17 @@
 				if(type == 1){
 					txje = ((cpAmount*calDay*(this.submit.yearRate/100))/360/(cpAmount/100000));
 					// this.submit.yearRate = 0;//年利率
-					this.submit.reduceAmount = txje.toFixed(4);//每十万扣款
-					this.submit.dealAmount = (cpAmount - cpAmount/100000*txje).toFixed(4);//成交金额
+					this.submit.reduceAmount = txje.toFixed(2);//每十万扣款
+					this.submit.dealAmount = (cpAmount - cpAmount/100000*txje).toFixed(2);//成交金额
 				}
 				if(type == 2){
-					this.submit.dealAmount = (cpAmount - (cpAmount/100000)*this.submit.reduceAmount).toFixed(4);//成交金额
+					this.submit.dealAmount = (cpAmount - (cpAmount/100000)*this.submit.reduceAmount).toFixed(2);//成交金额
 
 					this.submit.yearRate =((cpAmount -this.submit.dealAmount)*36000/(calDay*cpAmount)).toFixed(8);//年利率
 					// this.submit.reduceAmount = 0;//每十万扣款
 				}
 				if(type == 3){
-					this.submit.reduceAmount = ((cpAmount-this.submit.dealAmount)/(cpAmount/100000)).toFixed(4);//每十万扣款
+					this.submit.reduceAmount = ((cpAmount-this.submit.dealAmount)/(cpAmount/100000)).toFixed(2);//每十万扣款
 					this.submit.yearRate =((cpAmount -this.submit.dealAmount)*36000/(calDay*cpAmount)).toFixed(8);//年利率
 					// this.submit.dealAmount = 0;//成交金额
 				}

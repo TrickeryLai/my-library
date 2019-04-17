@@ -25,6 +25,7 @@
   input, textarea{
     -webkit-touch-callout: all; 
     -webkit-user-select: all;
+    -webkit-user-select: text
   }
   *:not(input,textarea) { 
     -webkit-touch-callout: none; 

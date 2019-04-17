@@ -13,7 +13,7 @@
 	<h1 class="title">欢迎登录</h1>
 	<van-row >
 		<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
-			<i class="iconfont icon-nickname"></i>
+			<i class="iconfont icon-mine"></i>
 		</van-col>
 		<van-col span="22">
 			<van-field 
@@ -29,11 +29,12 @@
 			<i class="iconfont icon-lock"></i>
 		</van-col>
 		<van-col span="22">
-			<van-field 
+			<PasswordI v-model="register.password"/>
+			<!-- <van-field 
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model="register.password" placeholder="请输入密码"
-				type="password" />
+				type="password" /> -->
 		</van-col>
 	</van-row>
 	<van-row >
@@ -68,16 +69,21 @@
 </template>
 
 <script>
-import _server from '@/server/server'
+import _server from '@/server/server';
+import PasswordI from '@/components/PasswordI';
 
 export default{
 	name: "Login",
+	components:{
+		PasswordI
+	},
 	data(){
 		return {
 			img: '',
 			title: '登录',
 			isLogining: false,
 			getCaptchaState: false,
+			isShowWord: false,
 			register: {
 				username: "",
 				password: ""

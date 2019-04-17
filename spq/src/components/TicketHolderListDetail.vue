@@ -216,7 +216,7 @@
 				//查看所有报价信息
 				this.priceListShow = true;
 				this.priceListBaseData = this.initData;
-				if(this.initData.cpStatus == '01'){
+				if(this.initData.cpStatus == '01' || this.initData.cpStatus == '04'){
 					this.priceType = 1;
 				}else{
 					this.priceType = 0;
