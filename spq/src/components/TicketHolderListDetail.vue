@@ -82,7 +82,7 @@
 							class="detail-row-special detail-row-left" 
 							style="padding-top: 5px;padding-bottom: 5px;"
 							>
-								买家最新报价
+								{{buyPriceText}}
 								<span 
 									class="blue-font" 
 									style="margin-left:3px;"
@@ -180,7 +180,8 @@
 				priceListBaseData: '',
 				refreshPriceState: false,
 				hasBuyPrice: false,
-				buyPrice: ''
+				buyPrice: '',
+				buyPriceText: '买家最新报价'
 			}
 		},
 		watch: {
@@ -188,7 +189,12 @@
 				this.show = newValue;
 				if(newValue){
 					this.setTimeoutFn();
-					this.getbuyPrice();	
+					this.getbuyPrice();
+					if(this.initData.cpStatus == 2){
+						this.buyPriceText = '撮合成交价';
+					}else{
+						this.buyPriceText = '买家最新报价';
+					}	
 				}else{
 					clearInterval(this.timerOut);
 					this.time = 60;
@@ -211,6 +217,7 @@
 			biddingSuccess(){
 				//撮合成功
 				this.$emit("refresh");
+				this.priceListClose();
 			},
 			showAllPrice(){
 				//查看所有报价信息
@@ -236,10 +243,21 @@
 		        _server.getQuotedPrice({
 		          _id,
 		          success(res){
+		          	let result;
 	            	_this.refreshPriceState = false;
 		            if(res && res.length > 0){
 	              		_this.hasBuyPrice = true;
-              			_this.buyPrice = res[0].turnVolume;	
+
+              			if(_this.initData.cpStatus == 2){
+	              			result = res.filter(item => {
+	              				if(item.quoteStatus == 2){
+	              					return item;
+	              				}
+	              			})
+							_this.buyPrice = result[0].turnVolume;
+						}else{
+              				_this.buyPrice = res[0].turnVolume;	
+						}
 		            	
 		            }else{
 		              _this.hasBuyPrice = false;

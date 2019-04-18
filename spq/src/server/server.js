@@ -558,7 +558,124 @@ let server = {
             return reject(error)
         })   
       })
-    }
+    },
+    /**
+     * [refuseQuotedPric 拒绝报价]
+     * @param  {[type]} id [description]
+     * @return {[type]}    [description]
+     */
+    refuseQuotedPric(id){
+      let url = `open-cp/v1/quotedPrice/refuse/${id}`;
+
+      return new Promise((resolve, reject) => {
+        Axios.put({
+          isLoading: true,
+          url,
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          // console.log(error);
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [addCompanyAccount 增加银行账户]
+     * @param {[type]} data [description]
+     */
+    addCompanyAccount(data){
+      let url = 'open-cp/v1/companyAccount/insertAccountInfo';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          isLoading: true,
+          url,
+          data: data
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          // console.log(error);
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [getBankList 获取银行列表]
+     * @return {[type]} [description]
+     */
+    getBankList(){
+      let url = 'open-cp/v1/companyAccount/queryAllBank';
+      return new Promise((resolve, reject) => {
+        Axios.get({
+          url
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [getCompanyAccount 获取列表]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+     getCompanyAccount(data){
+      let url = 'open-cp/v1/companyAccount';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          isLoading: true,
+          url,
+          isdeal: true,
+          data: data
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          // console.log(error);
+          return reject(error);
+        })
+      })
+    },
+     refuseQuotedPric(id){
+      let url = `open-cp/v1/companyAccount/${id}`;
+
+      return new Promise((resolve, reject) => {
+        Axios.put({
+          isLoading: true,
+          url,
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          // console.log(error);
+          return reject(error);
+        })
+      })
+    },
   	
 }
 

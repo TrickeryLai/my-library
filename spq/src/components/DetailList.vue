@@ -76,7 +76,7 @@
 							class="detail-row-special detail-row-left" 
 							style="padding-top: 10px;padding-bottom: 10px;display:inline-block;"
 							>
-								买家最新报价
+								{{buyPriceText}}
 								<span 
 									class="blue-font" 
 									style="margin-left:3px;"
@@ -110,15 +110,15 @@
 						<van-col class="detail-row-left" span="12">年化利率</van-col>
 						<van-col class="detail-row-left" span="12">每十万扣款</van-col>
 						<van-col class="detail-row-left" span="24">
-							<van-field 
-							style="width:35%;display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
+							<van-field
+							class="detail-small-input w-35p" 
 							v-model="submit.yearRate"
 							placeholder="年化利率"
 							@input="changeData(1, submit.yearRate)"
 							type="number" />
 						%
 							<van-field 
-							style="width:35%;display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
+							class="detail-small-input w-35p"
 							v-model="submit.reduceAmount"
 							@input="changeData(2, submit.reduceAmount)" 
 							placeholder="每十万扣款"
@@ -128,7 +128,7 @@
 						<van-col span="24">
 							<span class="detail-row-left">成交金额（元）</span>
 							<van-field 
-							style="display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;" 
+							class="detail-small-input" 
 							v-model="submit.dealAmount" 
 							@input="changeData(3, submit.dealAmount)"
 							placeholder="成交金额"
@@ -195,7 +195,8 @@
 				},
 				refreshPriceState: false,//刷新价格开关
 				buyPrice: '',
-        		hasBuyPrice: false
+        		hasBuyPrice: false,
+        		buyPriceText: '买家最新报价'
 			}
 		},
 		watch: {
@@ -208,6 +209,11 @@
 					this.submit.reduceAmount = '';
 					this.submit.dealAmount = '';
 					this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
+					if(this.initData.cpStatus == 2){
+						this.buyPriceText = '撮合成交价';
+					}else{
+						this.buyPriceText = '买家最新报价';
+					}
 				}else{
 					clearInterval(this.timerOut);
 					this.time = 60;
@@ -256,10 +262,20 @@
 		        _server.getQuotedPrice({
 		          _id,
 		          success(res){
+		          	let result;
 	            	_this.refreshPriceState = false;
 		            if(res && res.length > 0){
 	              		_this.hasBuyPrice = true;
-              			_this.buyPrice = res[0].turnVolume;	
+	              		if(_this.initData.cpStatus == 2){
+	              			result = res.filter(item => {
+	              				if(item.quoteStatus == 2){
+	              					return item;
+	              				}
+	              			})
+							_this.buyPrice = result[0].turnVolume;
+						}else{
+              				_this.buyPrice = res[0].turnVolume;	
+						}
 		            	
 		            }else{
 		              _this.hasBuyPrice = false;
@@ -271,9 +287,7 @@
 				ImagePreview({
 					images: [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg],
 					startPosition: index,
-					onClose() {
-				    // do something
-				}
+					
 				});
 			},
 			modelClose(){

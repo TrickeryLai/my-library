@@ -1,4 +1,6 @@
 
+import AreaData from '@/server/areaData';
+
 let protocol = location.protocol || 'http';
 // let protocol = 'http:';
 let common = {
@@ -36,6 +38,29 @@ let commonUrl = {
     }
   },
   common_fn:{
+    getAddress(provinceCode, cityCode){
+      let result = {
+       
+      };
+      if(provinceCode){
+        for(let i in AreaData.province_list){
+          if(i == provinceCode){
+            result[i] = AreaData.province_list[i];
+            break;
+          }
+        }
+      }
+      if(cityCode){
+        for(let i in AreaData.city_list){
+          if(i == cityCode){
+            result[i] = AreaData.city_list[i];
+            break;
+          }
+        }
+      }
+      return result;
+      
+    },
     formateUlr(url){
       if(!url){
         return url;

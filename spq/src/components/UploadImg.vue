@@ -158,11 +158,18 @@
               });
               xhr.addEventListener("load", function (e, data) {
                   // para.uploadComplete(xhr.responseText);
-                  _this.$emit('uploadPicProgress', {state: 3, imgData: JSON.parse(this.responseText)});
-                  _this.yyzzPicUState.isUpload = 3;
+                  if(JSON.parse(this.responseText).code == 0){
+                    _this.$emit('uploadPicProgress', {state: 3, imgData: JSON.parse(this.responseText)});
+                    _this.yyzzPicUState.isUpload = 3;
+                  }else{
+                    // _this.yyzzPicUrl = '';
+                    _this.$emit('uploadPicProgress', {state: 4, imgData: e});
+                  }
+                  
               });
               xhr.addEventListener("error", function (e) {
                   // para.uploadError(e);
+                  // _this.yyzzPicUrl = '';
                   _this.$emit('uploadPicProgress', {state: 4, imgData: e});
               });
               xhr.addEventListener('readystatechange', function(e){
@@ -223,11 +230,17 @@
               });
               xhr.addEventListener("load", function (e, data) {
                   // para.uploadComplete(xhr.responseText);
-                  _this.$emit('uploadPicProgress', {state: 3, imgData: JSON.parse(e.target.responseText)});
-                  _this.yyzzPicUState.isUpload = 3;
+                  if(JSON.parse(this.responseText).code == 0){
+                    _this.$emit('uploadPicProgress', {state: 3, imgData: JSON.parse(this.responseText)});
+                    _this.yyzzPicUState.isUpload = 3;
+                  }else{
+                    // _this.yyzzPicUrl = '';
+                    _this.$emit('uploadPicProgress', {state: 4, imgData: e});
+                  }
               });
               xhr.addEventListener("error", function (e) {
                   // para.uploadError(e);
+                  // _this.yyzzPicUrl = '';
                   _this.$emit('uploadPicProgress', {state: 4, imgData: {}});
               });
 

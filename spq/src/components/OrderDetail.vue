@@ -90,7 +90,7 @@
                 class="detail-row-special detail-row-left"
                 style="padding-top: 5px;padding-bottom: 5px;"
               >
-								买家最新报价
+								{{buyPriceText}}
 								<span
                   class="blue-font"
                   style="margin-left:3px;"
@@ -121,20 +121,20 @@
                 </van-col>
               </van-row>
               <van-row class="detail-row-special"
-                       v-if="item.quoteStatus == '04' && (initData.cpStatus == '01' || initData.cpStatus == '04')">
+                       v-if="(item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '01' || initData.cpStatus == '04')">
 
                 <van-col class="detail-row-left" span="12">年化利率</van-col>
                 <van-col class="detail-row-left" span="12">每十万扣款</van-col>
                 <van-col class="detail-row-left" span="24">
                   <van-field
-                    style="width:35%;display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;"
+                    class="detail-small-input w-35p"
                     v-model="submit.yearRate"
                     placeholder="年化利率"
                     @input="changeData(1, submit.yearRate)"
                     type="number"/>
                   %
                   <van-field
-                    style="width:35%;display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;"
+                    class="detail-small-input w-35p"
                     v-model="submit.reduceAmount"
                     @input="changeData(2, submit.reduceAmount)"
                     placeholder="每十万扣款"
@@ -144,7 +144,7 @@
                 <van-col span="24">
                   <span class="detail-row-left">成交金额（元）</span>
                   <van-field
-                    style="display:inline-block;vertical-align:middle;margin-left:0;margin-right:0;padding-left:0;padding-right:0;"
+                    class="detail-small-input"
                     v-model="submit.dealAmount"
                     @input="changeData(3, submit.dealAmount)"
                     placeholder="成交金额"
@@ -157,7 +157,7 @@
           <van-row type="flex" justify="center" style="width: 100%;height: 44px;position: absolute;left: 0; bottom: 0;">
             <div
               style="width: 100%;"
-              v-if="item.quoteStatus == '04' && (initData.cpStatus == '01' || initData.cpStatus == '04')">
+              v-if="(item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '01' || initData.cpStatus == '04')">
               <van-col span="24">
                 <van-button
                   type="primary"
@@ -240,7 +240,8 @@
         priceListBaseData: '',
         refreshPriceState: false,
         hasBuyPrice: false,
-        buyPrice: ''
+        buyPrice: '',
+        buyPriceText: '买家最新报价'
       }
     },
     watch: {
@@ -252,6 +253,11 @@
           this.submit.yearRate = '';//年化利率
           this.submit.reduceAmount = '';//每十万扣款
           this.submit.dealAmount = '';
+          if(this.initData.cpStatus == 2){
+            this.buyPriceText = '撮合成交价';
+          }else{
+            this.buyPriceText = '买家最新报价';
+          }
         } else {
           clearInterval(this.timerOut);
           this.time = 60;
@@ -299,10 +305,20 @@
         _server.getQuotedPrice({
           _id,
           success(res) {
+            let result;
             _this.refreshPriceState = false;
             if (res && res.length > 0) {
               _this.hasBuyPrice = true;
-              _this.buyPrice = res[0].turnVolume;
+              if(_this.initData.cpStatus == 2){
+                      result = res.filter(item => {
+                        if(item.quoteStatus == 2){
+                          return item;
+                        }
+                      })
+              _this.buyPrice = result[0].turnVolume;
+            }else{
+                      _this.buyPrice = res[0].turnVolume; 
+            }
 
             } else {
               _this.hasBuyPrice = false;
@@ -342,7 +358,8 @@
           message: '确认取消对此票据的报价么？'
         }).then(() => {
           let priceId = this.item.priceId, quoteStatus = this.item.quoteStatus;
-          if (quoteStatus != 1 || quoteStatus != 4) {
+          console.log(quoteStatus != '01')
+          if (quoteStatus != '01' && quoteStatus != '04') {
             return;
           }
           _server.cancelQuotedPrice(priceId, (res) => {

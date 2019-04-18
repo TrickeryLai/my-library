@@ -14,10 +14,10 @@
     <div style="padding-top: 0px;text-align: left;">
       <van-tabs
         v-model="active"
-        @click="onChangeTabs"
         sticky
         :offset-top="46"
         swipeable
+        lazy-render
         color="#1989fa"
       >
         <van-tab title="提现银行账户">
@@ -48,16 +48,17 @@
         title: '银行账户设置',
         active: '0',
         ListData: [
-          {}, {}
         ]
       }
     },
     created(){
-        this.onChangeTabs(this.active);
+        // this.onChangeTabs(this.active);
     },
     watch: {
       active(newV){
+        
         this.onChangeTabs(newV);
+        
       }
     },
     methods: {
@@ -70,11 +71,27 @@
       onChangeTabs(active){
         if(active == 0){
           //提现银行账户
-          this.ListData = [{},{}];
+          this.getListData(1);
         }else{
           //签收银行账户
-          this.ListData = [{},{},{},{}];
+          this.getListData(2);
         }
+      },
+      getListData(type = 1){
+        let data = {
+          pageSize: 10000,
+          pageNum: 1,
+          accountType: type
+        }
+        _server.getCompanyAccount(data).then(response => {
+          if(response.code == 0){
+            this.ListData = response.list;
+          }else{
+            this.$toast(response.errMsg);
+          }
+        }).catch(error => {
+
+        })
       },
       gotoChange(){
         this.$router.push({path:'/home/selfInfo/changePassword'});

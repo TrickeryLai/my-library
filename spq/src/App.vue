@@ -21,6 +21,13 @@
   *{
     margin: 0;
     padding: 0;
+    cursor: pointer!important;
+  }
+  .van-swipe{
+    touch-callout: all!important; 
+    user-select: all!important;
+    user-select: text!important;
+    cursor: pointer!important;
   }
   input, textarea{
     -webkit-touch-callout: all; 
@@ -80,16 +87,23 @@
   .text-right{
     text-align: right;
   }
+  .relative {
+    position: relative;
+  }
+  .rant-active {
+    color: #0079f3;
+  }
+  .w-35p{
+    width: 35%;
+  }
+  .detail-small-input{
+    display:inline-block!important;
+    vertical-align:middle;
+    margin-left:0;
+    margin-right:0;
+    padding-left:0;
+    padding-right:0;
+  }
 
-  @keyframes loading{
-    from{
-      transform:rotate(0deg);
-    }
-    to{
-      transform:rotate(360deg);
-    }
-  }
-  ._self-loading{
-    animation: loading 1s infinite;
-  }
+
   </style>

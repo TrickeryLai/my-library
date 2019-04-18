@@ -11,22 +11,12 @@
   </van-nav-bar>
   <div style="padding-bottom: 50px;">
     <van-row class="realName-box-row">
-      <van-col span="7" class="realName-content-box-left"><i class="required">*</i>户名</van-col>
+      <van-col span="7" class="realName-content-box-left"><i class="required">*</i>对公账号</van-col>
       <van-col span="17" class="realName-content-box-right">
         <van-field
-          v-model="submitData.hm"
+          v-model="submitData.accountNo"
           clearable
-          placeholder="户名"
-        />
-      </van-col>
-    </van-row>
-    <van-row class="realName-box-row">
-      <van-col span="7" class="realName-content-box-left"><i class="required">*</i>账户</van-col>
-      <van-col span="17" class="realName-content-box-right">
-        <van-field
-          v-model="submitData.zh"
-          clearable
-          placeholder="账户"
+          placeholder="对公账号"
         />
       </van-col>
     </van-row>
@@ -34,10 +24,12 @@
       <van-col span="7" class="realName-content-box-left"><i class="required">*</i>开户行全称</van-col>
       <van-col span="17" class="realName-content-box-right">
         <van-field
-          v-model="submitData.khqc"
+          v-model="submitData.bankName"
           clearable
           placeholder="开户行全称"
-        />
+          readonly
+          @click="choseBankName"
+        /> 
       </van-col>
     </van-row>
     <van-row class="realName-box-row">
@@ -57,27 +49,18 @@
       <van-col span="7" class="realName-content-box-left"><i class="required">*</i>开户行支行</van-col>
       <van-col span="17" class="realName-content-box-right">
         <van-field
-          v-model="submitData.khhzh"
+          v-model="submitData.bankSubbranch"
           clearable
           placeholder="开户行支行"
-          list='khhzh'
+          
         />
-        <datalist id="khhzh" style="width: 100%;height: 50px;overflow: auto;">
-          <option>12</option>
-          <option>13</option>
-          <option>14</option>
-          <option>15</option>
-          <option>16</option>
-          <option>17</option>
-          <option>18</option>
-        </datalist>  
       </van-col>
     </van-row>
     <van-row class="realName-box-row">
       <van-col span="7" class="realName-content-box-left"><i class="required">*</i>大额行号</van-col>
       <van-col span="17" class="realName-content-box-right">
         <van-field
-          v-model="submitData.dehh"
+          v-model="submitData.largeAccountNo"
           clearable
           placeholder="大额行号"
         />
@@ -86,7 +69,7 @@
     <van-row class="realName-box-row" style="padding-top:10px;padding-bottom: 10px;">
       <van-col span="7" class="realName-content-box-left"><i class="required">*</i>添加类型</van-col>
       <van-col span="17" class="realName-content-box-right">
-        <van-radio-group v-model="type" class="text-left">
+        <van-radio-group v-model="submitData.accountType" class="text-left">
           <van-radio name="1" class="type-choose">
             提现银行账户
             <i
@@ -97,6 +80,30 @@
           </van-radio>
           <van-radio name="2" class="type-choose">
             签收银行账户
+            <i
+              class="iconfont"
+              slot="icon"
+              slot-scope="props"
+              :class="{'icon-active icon-gouxuan': props.checked,'icon-mygou': !props.checked}" 
+              ></i>
+          </van-radio>
+        </van-radio-group>
+      </van-col>
+    </van-row>
+    <van-row class="realName-box-row" style="padding-top:10px;padding-bottom: 10px;">
+      <van-col span="7" class="realName-content-box-left"><i class="required">*</i>状态</van-col>
+      <van-col span="17" class="realName-content-box-right">
+        <van-radio-group v-model="submitData.status" class="text-left">
+          <van-radio name="1" class="type-choose">
+            默认
+            <i
+              class="iconfont"
+              slot="icon"
+              slot-scope="props"
+              :class="{'icon-active icon-gouxuan': props.checked,'icon-mygou': !props.checked}" ></i>
+          </van-radio>
+          <van-radio name="0" class="type-choose">
+            非默认
             <i
               class="iconfont"
               slot="icon"
@@ -121,11 +128,22 @@
         @confirm="addressConfirm"
         @cancel="addressChoseClose" />
     </van-popup>
+
+    <van-popup v-model="choseBankNameState" position="bottom" @close="choseBankNameClose">
+      <van-picker
+        show-toolbar
+        :columns="bankList"
+        value-key="bankName"
+        @confirm="choseBankNameConfirm"
+        @cancel="choseBankNameClose"
+      />
+    </van-popup>
 </div>
 </template>
 
 <script>
   import areaData from '@/server/areaData';
+  import _server from '@/server/server';
   export default{
     name: 'AddBankCard',
     data(){
@@ -135,16 +153,40 @@
         type: '1',
         chosedCode: '440300',
         addressChoseState: false,
+        choseBankNameState: false,
+        bankList: [],
         submitData: {
-          
+          accountType: "1",
+          status: "1",
+          addressItem: {},
+          bankNameItem: {}
         }
       }
     },
     created(){
+      this.getBankList();
     },
     methods:{
       onClickLeft(){
         window.history.go(-1);
+      },
+      choseBankNameClose(){
+        this.choseBankNameState = false;
+      },
+      choseBankName(){
+        this.choseBankNameState = true;
+      },
+      choseBankNameConfirm(v){
+        this.submitData.bankNameItem = v;
+        this.submitData.bankName = v.bankName;
+        this.choseBankNameClose()
+      },
+      getBankList(){
+        _server.getBankList().then(response => {
+            this.bankList = response;
+          }).then( error =>{
+
+          })
       },
       choseAddress(){
         //选择地址
@@ -157,6 +199,7 @@
         this.addressChoseState = false;
         this.chosedCode = item[item.length - 1].code;
         this.submitData.address = this.getAddressStr(item);
+        this.submitData.addressItem = item;
       },
       getAddressStr(item){
         if(!item){
@@ -171,15 +214,11 @@
         return result;
       },
       checkedInfo(){
-        if(!this.submitData.hm){
-          this.$toast('请填写户名！');
+        if(!this.submitData.accountNo){
+          this.$toast('请填写对公账号！');
           return false;
         }
-        if(!this.submitData.zh){
-          this.$toast('请填写账户！');
-          return false;
-        }
-        if(!this.submitData.khqc){
+        if(!this.submitData.bankName){
           this.$toast('请填写开户行全称！');
           return false;
         }
@@ -187,11 +226,11 @@
           this.$toast('请选择开户行所在地！');
           return false;
         }
-        if(!this.submitData.khhzh){
+        if(!this.submitData.bankSubbranch){
           this.$toast('请填写开户行支行！');
           return false;
         }
-        if(!this.submitData.dehh){
+        if(!this.submitData.largeAccountNo){
           this.$toast('请填写大额行号！');
           return false;
         }
@@ -201,11 +240,40 @@
         if(!this.checkedInfo()){
           return;
         }
-        if(this.type == 1){
-          //提现银行账户
-        }else{
-          //签收银行账户
-        }
+        
+        let data = {
+          accountType: '', //账户类型：1-提现账户；2-签收账户
+          accountNo: '', //对公账号
+          bankName: '',//开户行全称
+          bankProvince: '',//开户行所在省
+          bankCity: '',//开户行所在市
+          bankSubbranch: '',//开户行支行
+          largeAccountNo: '',//大额行号
+          status: '',//状态：0-非默认；1-默认
+          pageSize: 1,
+          pageNum: 1000
+        };
+
+        data = Object.assign({}, data, this.submitData);
+
+        delete data.address;
+        delete data.addressItem;
+        delete data.bankNameItem;
+        delete data.bankName;
+
+        data.bankProvince = this.submitData.addressItem[0].code;
+        data.bankCity = this.submitData.addressItem[1].code;
+        data.bankId = this.submitData.bankNameItem.bankId;
+
+        _server.addCompanyAccount(data).then( response => {
+            if(response.code == 0){
+                this.$toast('账户增加成功！');
+                window.history.go(-1);
+                return;
+            }
+        }).catch(error => {
+
+        })
       }
     }
   }

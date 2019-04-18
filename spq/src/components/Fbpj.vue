@@ -507,7 +507,7 @@ import _common from '@/server/index'
             return result;
           },
           checkSubmitData(){
-            if(this.pjzPicUState.state == 0 || this.pjzPicUState.state == 4){
+            if(!this.pjzPic || this.pjzPicUState.state == 0 || this.pjzPicUState.state == 4){
               this.$toast('请上传票据正面图片！')
               return false;
             }
@@ -515,7 +515,7 @@ import _common from '@/server/index'
               this.$toast('票据正面图片正在上传！')
               return false;
             }
-            if(this.pjfPicUState.state == 0 || this.pjfPicUState.state == 4){
+            if(!this.pjfPic || this.pjfPicUState.state == 0 || this.pjfPicUState.state == 4){
               this.$toast('请上传票据反面图片！')
               return false;
             }
@@ -531,12 +531,20 @@ import _common from '@/server/index'
               this.$toast('请输入正确的票据金额！')
               return false;
             }
+            if(this.submitData.cpAmount < 50000 || this.submitData.cpAmount > 50000000){
+              this.$toast('票据金额应在 5万 - 5000万之间！');
+              return false;
+            }
             if(!this.endTimeChoseValue){
               this.$toast('请选择到期日期！')
               return false;
             }
             if(!this.submitData.acceptor){
               this.$toast('请输入承兑人！')
+              return false;
+            }
+            if(!this.sell.approvalApr || !this.sell.turnVolume || !this.sell.deductAmount){
+              this.$toast('请填写报价信息！');
               return false;
             }
             return true;

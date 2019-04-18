@@ -39,16 +39,29 @@
 					color="#f2826a"
 					v-if="item.quoteStatus == '04'"
 					>取消</van-tag>
+					<van-tag 
+					round
+					color="#f2826a"
+					v-if="item.quoteStatus == '05'"
+					>拒绝</van-tag>
 				</td>
 				<td 
 				v-if="pageType == 1"
-				@click="biddingFn(item)"
 				>
-					<van-button 
+					<van-button
+						@click="biddingFn(item)"
+						style="display:block;margin:3px;" 
 						size="mini" 
 						type="info"
 						v-if="item.quoteStatus == '01'"
 					>撮合</van-button>
+					<van-button 
+						@click="refuseFn(item)"
+						style="display:block;margin:3px;" 
+						size="mini" 
+						type="danger"
+						v-if="item.quoteStatus == '01'"
+					>拒绝</van-button>
 				</td>
 			</tr>
 		</table>
@@ -120,12 +133,24 @@
 				_this = this;
 				_server.biddingFn(data, (res) => {
 					if(res.code == 0){
-						_this.$toast('操作成功');
+						_this.$toast('撮合成功！');
 						_this.isShow = false;
 						_this.$emit('optionSuccess')
 					}else{
 
 					}
+				})
+			},
+			refuseFn(item){
+				//拒绝
+				_server.refuseQuotedPric(item.priceId).then(response => {
+					if(response.code == 0){
+						this.$toast('操作成功！');
+						this.isShow = false;
+						this.$emit('close');
+					}
+				}).catch( error => {
+
 				})
 			},
 			pageChangeFn(){

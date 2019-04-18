@@ -9,8 +9,7 @@
 		/>
 		<div class="list-wrap">
 			<van-row class="nav-top">
-				<div
-				style="position:absolute;left:0;top:0;width: 100%;background:#fff;padding: 10px 0;border-bottom: 1px solid #ccc;">
+				<div class="top-search-box">
 				<van-col span="8">
 					<div @click="sortAmount">
 						票面金额
@@ -364,6 +363,15 @@ import _common from '@/server/index'
 </script>
 
 <style scoped>
+.top-search-box{
+	position:absolute;
+	left:0;
+	top:0;
+	width: 100%;
+	background:#fff;
+	padding: 10px 0;
+	border-bottom: 1px solid #ccc;
+}
 .icon-arrowdownb:before {
 	content: "\E6CE";
 	position: absolute;
@@ -377,11 +385,6 @@ import _common from '@/server/index'
 	top: -12px;
 	left: 0;
 }
-
-.relative {
-	position: relative;
-}
-
 .list-wrap {
 	padding-top: 38px;
 	background: #f5f5f5;
@@ -413,7 +416,4 @@ import _common from '@/server/index'
 	width: 100%;
 }
 
-.rant-active {
-	color: #1989fa;
-}
 </style>

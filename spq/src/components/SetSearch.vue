@@ -50,12 +50,12 @@
           <van-cell-group class="van-hairline--bottom">
             <h3 class="title">票面金额</h3>
             <van-tag
-              style="margin:10px 0px 0 15px;padding: 5px;"
-              v-for="(item, index) in amountType"
-              clearable
-              :key="index"
-              :type="searchData.amountChosed.val == item.val ? 'primary': ''"
-              @click="choseAmount(item)"
+            	class="my-tag"	
+              	v-for="(item, index) in amountType"
+              	clearable
+              	:key="index"
+              	:type="searchData.amountChosed.val == item.val ? 'primary': ''"
+              	@click="choseAmount(item)"
             >{{item.name}}
             </van-tag>
             <div>
@@ -77,7 +77,7 @@
           <van-cell-group class="van-hairline--bottom">
             <h3 class="title">剩余天数</h3>
             <van-tag
-              style="margin:10px 0px 0 15px;padding: 5px;"
+              class="my-tag"
               v-for="(item, index) in dayType"
               :type="searchData.dayChoose.val == item.val ? 'primary': ''"
               :key="index"
@@ -230,10 +230,16 @@
 					cpNo: '',//票据号码
 					amountChosed: {},//面额选择
 					dayChoose: {},//剩余天数选择
-					isPerfect: {},//瑕疵
-					dealChoose: {},//成交信用
+					isPerfect: {
+						
+					},//瑕疵
+					dealChoose: {
+						
+					},//成交信用
+          			cpStatus: {
+
+          			},//票据状态
 					onlyShow: false,//只显示我的白名单票据
-          			cpStatus: {},//票据状态
 				},
 		        cpStatus:[
         			{
@@ -497,7 +503,7 @@
 	bottom:0;
 }
 .my-tag{
-	margin:10px 0px 5px 15px;
+	margin: 5px 0px 5px 15px;
 	padding: 5px;
 }
 .my-input{
