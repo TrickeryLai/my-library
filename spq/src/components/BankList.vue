@@ -16,29 +16,31 @@
         </van-col>
       </van-row>
       <van-row class="card-box-line">
-        <van-col span="24">
+        <van-col span="16">
           {{item.bankSubbranch}}
+        </van-col>
+        <van-col span="8" style="text-align: center;">
+              <van-button
+                style="width: 100%;max-width: 100px;font-size: 12px;"
+                type="default"
+                size="small"
+                @click.stop="changeType(item)"
+              >
+                {{listType === 0?'设为签收账户': '设为提现账户'}}
+              </van-button>
         </van-col>
             <!-- <van-col span="12">
               户名
             </van-col> -->
-          </van-row>
-          <van-row class="card-box-line" >
-            <van-col span="24" style="font-size: 18px;padding-top:10px;">
-              {{dealNumber(item.accountNo)}}
-            </van-col>
-            <!-- <van-col span="8" style="text-align: center;">
-              <van-button
-                style="width: 100%;max-width: 100px;font-size: 12px;color: #1989fa;"
-                type="default"
-                size="small"
-                @click.stop="setBasical(item)"
-              >设置为默认</van-button>
-            </van-col> -->
-          </van-row>
-        </div>
-      </div>
+      </van-row>
+      <van-row class="card-box-line" >
+          <van-col span="24" style="font-size: 18px;padding-top:10px;">
+            {{dealNumber(item.accountNo)}}
+          </van-col>
+      </van-row>
     </div>
+  </div>
+  </div>
   </template>
 
   <script>
@@ -46,26 +48,41 @@
   import _server from '@/server/server';
   export default{
     name: 'BankList',
-    props:['listData'],
+    props:['listData', 'type'],
     data(){
       return {
-        data: this.listData
+        data: this.listData,
+        listType: this.type,
+        btnTxt: '转为签收账户'
       }
     },
     watch:{
       listData(newV){
-        this.data = newV;
+        this.data = newV; 
+      },
+      type(newV){
+        this.listType = newV;
       }
     },
     methods:{
-      setBasical(item){
-        //设置为默认
-        
+      changeType(item){
+        //转换类型
+        let data = {
+          accountType: item.accountType == 2? '1': '2',
+          accountId: item.accountId
+        };
+        _server.changeAccountType(data).then(response => {
+          if(response.code == 0){
+            this.$toast('操作成功！')
+          }
+        }).catch(error => {
+
+        })
       },
       getAdress(pCode, cCode){
         let result =  _common.common_fn.getAddress(pCode, cCode);
 
-        if(pCode == cCode){
+        if(result[pCode] == result[cCode]){
           result = result[pCode];
         }else{
           result = result[pCode] + result[cCode];

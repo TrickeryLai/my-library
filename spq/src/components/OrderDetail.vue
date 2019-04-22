@@ -32,10 +32,11 @@
               <van-row class="detail-row">
                 <van-col class="detail-row-left" span="6">票据状态</van-col>
                 <van-col class="detail-row-right" span="18">
-                  <van-tag round type="success" v-if="initData.cpStatus == 1">发布中</van-tag>
+                  <van-tag round type="success" v-if="initData.cpStatus == 1">审核中</van-tag>
                   <van-tag round type="danger" v-else-if="initData.cpStatus == 2">已成交</van-tag>
                   <van-tag round v-else-if="initData.cpStatus == 3">已注销</van-tag>
                   <van-tag round color="#f2826a" v-else-if="initData.cpStatus == 4">报价中</van-tag>
+                  <van-tag round v-else-if="initData.cpStatus == 5">审核失败</van-tag>
                   <van-tag round v-if="initData.stringDate < 0">已过期</van-tag>
                 </van-col>
               </van-row>
@@ -94,7 +95,7 @@
 								<span
                   class="blue-font"
                   style="margin-left:3px;"
-                  v-if="initData.cpStatus == '01' && initData.stringDate >= 0"
+                  v-if="initData.cpStatus == '04' && initData.stringDate >= 0"
                   @click="getbuyPrice"
                 >
 									{{time}}秒后自动刷新
@@ -121,7 +122,7 @@
                 </van-col>
               </van-row>
               <van-row class="detail-row-special"
-                       v-if="(item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '01' || initData.cpStatus == '04')">
+                       v-if="(item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '04')">
 
                 <van-col class="detail-row-left" span="12">年化利率</van-col>
                 <van-col class="detail-row-left" span="12">每十万扣款</van-col>
@@ -157,7 +158,7 @@
           <van-row type="flex" justify="center" style="width: 100%;height: 44px;position: absolute;left: 0; bottom: 0;">
             <div
               style="width: 100%;"
-              v-if="(item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '01' || initData.cpStatus == '04')">
+              v-if="(item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '04')">
               <van-col span="24">
                 <van-button
                   type="primary"
@@ -170,7 +171,7 @@
               style="width: 100%;"
               v-else>
               <van-col span="12"
-                       v-if="item.quoteStatus == 1 && initData.stringDate >= 0 && (initData.cpStatus == 1 || initData.cpStatus == '04')">
+                       v-if="item.quoteStatus == 1 && initData.stringDate >= 0 && (initData.cpStatus == '04')">
                 <van-button
                   type="danger"
                   style="width: 100%;"
@@ -178,7 +179,7 @@
                 </van-button>
               </van-col>
               <van-col span="12"
-                       v-if="item.quoteStatus == 1 && initData.stringDate >= 0 && (initData.cpStatus == 1 || initData.cpStatus == '04')">
+                       v-if="item.quoteStatus == 1 && initData.stringDate >= 0 && (initData.cpStatus == '04')">
                 <van-button
                   type="info"
                   style="width: 100%;"
@@ -186,7 +187,7 @@
                 </van-button>
               </van-col>
               <van-col span="24"
-                       v-if="item.quoteStatus != 1 || initData.stringDate < 0 || (initData.cpStatus != 1 && initData.cpStatus != '04')">
+                       v-if="item.quoteStatus != 1 || initData.stringDate < 0 || (initData.cpStatus != '04')">
                 <van-button
                   type="info"
                   style="width: 100%;"
@@ -267,10 +268,10 @@
     },
     methods: {
       setTimeoutFn() {
-        if (this.item.quoteStatus == '04' && (this.initData.cpStatus == '01' || this.initData.cpStatus == '04')) {
+        if (this.item.quoteStatus == '04' && (this.initData.cpStatus == '04')) {
 
         } else {
-          if ((this.initData.cpStatus != '01' && this.initData.cpStatus != '04') || this.initData.stringDate < 0) {
+          if ((this.initData.cpStatus != '04') || this.initData.stringDate < 0) {
             return;
           }
         }

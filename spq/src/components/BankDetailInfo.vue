@@ -34,6 +34,10 @@
 	  				<van-col span="16" class="baseInfo-box-right">{{initItem.largeAccountNo || '-'}}</van-col>
 	  			</van-row>
 	  		</van-cell-group>
+	  		<van-button 
+		      type="danger" 
+		      style="width: 100%;"
+		      @click="deleteFn">删除</van-button>
 	  	</div>
 	</div>
 </template>
@@ -41,8 +45,12 @@
 <script>
 	import _common from '@/server/index';
   	import _server from '@/server/server';
+  	import {Dialog} from 'vant';
 	export default{
 		name: 'BankDetailInfo',
+		components:{
+			Dialog
+		},
 		data(){
 			return {
 				title:'银行账户信息',
@@ -57,7 +65,7 @@
 				window.history.go(-1);
 			},
 			onClickRight(){
-
+				this.$router.replace({path:'/home/selfInfo/changeAccount', query: {item: JSON.stringify(this.initItem)}});
 			},
 			initData(){
 				this.initItem = JSON.parse(this.$route.query.item);
@@ -65,7 +73,7 @@
 		 	getAdress(pCode, cCode){
 		        let result =  _common.common_fn.getAddress(pCode, cCode);
 
-		        if(pCode == cCode){
+		        if(result[pCode] == result[cCode]){
 		          result = result[pCode];
 		        }else{
 		          result = result[pCode] + result[cCode];
@@ -75,6 +83,24 @@
 			dealNumber(n){
 		        return _common.common_fn.dealPrice(n, 4, ' ');
 	      	},
+	      	deleteFn(){
+	      		let id = this.initItem.accountId;
+	      		Dialog.alert({
+	      			title: '确认删除',
+	      			message: '确认删除该账户么？'
+	      		}).then(() => {
+  					// on close
+  					_server.deleteAccount(id).then(response => {
+  						if(response.code == 0){
+  							this.$toast('删除成功！');
+  							this.$router.replace('/home/selfInfo/matchBank');
+  						}
+	      			}).catch( error => {
+
+	      			})
+				});
+	      		
+	      	}
 		}
 	}
 </script>

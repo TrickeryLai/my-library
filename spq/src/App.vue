@@ -61,6 +61,9 @@
   .blue-font{
     color: #0079f3;
   }
+  .red-font{
+    color: red;
+  }
   .black-font{
     color: #000;
     font-size: 16px;

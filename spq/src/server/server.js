@@ -655,13 +655,19 @@ let server = {
         })
       })
     },
-     refuseQuotedPric(id){
+    /**
+     * [changeCompanyAccount 修改银行账户信息]
+     * @param  {[type]} id [description]
+     * @return {[type]}    [description]
+     */
+     changeCompanyAccount(id, data){
       let url = `open-cp/v1/companyAccount/${id}`;
 
       return new Promise((resolve, reject) => {
         Axios.put({
           isLoading: true,
           url,
+          data
         }).then((response) => {
           if(response.code == 0 || response.code == 110008){
             // callback && callback(response);
@@ -676,7 +682,56 @@ let server = {
         })
       })
     },
-  	
+    /**
+     * [deleteAccount 删除银行帐户]
+     * @return {[type]} [description]
+     */
+    deleteAccount(id){
+      let url = `open-cp/v1/companyAccount/${id}`;
+
+      return new Promise((resolve, reject) => {
+        Axios.deleteN({
+          isLoading: true,
+          url
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          // console.log(error);
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [changeAccountType 修改账户类型]
+     * @return {[type]} [description]
+     */
+  	changeAccountType(data){
+      let url = 'open-cp/v1/companyAccount/copyAccount';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          isLoading: true,
+          url,
+          data: data,
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          return reject(response);
+        })
+      })
+    }
 }
 
 export default server;

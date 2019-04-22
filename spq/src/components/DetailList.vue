@@ -81,7 +81,7 @@
 									class="blue-font" 
 									style="margin-left:3px;"
 									@click="getbuyPrice"
-									v-if="initData.cpStatus == '01'"
+									v-if="initData.cpStatus == '04'"
 								>
 									{{time}}秒后自动刷新
 									<i class="iconfont icon-refresh"></i>
@@ -105,7 +105,7 @@
 							@click="showAllPrice">&nbsp查看所有</span>
 						</van-col>
 					</van-row>
-					<van-row class="detail-row-special" v-if="initData.cpStatus == '01' || initData.cpStatus == '04'">
+					<van-row class="detail-row-special" v-if="initData.cpStatus == '04'">
 
 						<van-col class="detail-row-left" span="12">年化利率</van-col>
 						<van-col class="detail-row-left" span="12">每十万扣款</van-col>
@@ -140,7 +140,7 @@
 			</van-cell-group>
 			<div style="text-align: center;width: 100%;height: 50px;">
 				<van-button
-					v-if="initData.cpStatus == '01' || initData.cpStatus == '04'"
+					v-if="initData.cpStatus == '04'"
 					type="info"
 					style="width: 100%;position: absolute; left: 0; bottom: 0;"
 					@click="ok">我要买</van-button>
@@ -175,6 +175,7 @@
 	import _server from '@/server/server';
 	import _common from '@/server/index';
 
+	// 01-审核中；02-成交；03-注销;04-报价中;05-审核失败
 	export default{
 		name: 'DetailList',
 		props: ['showState', 'initData', 'item'],
@@ -229,7 +230,7 @@
 			},
 			setTimeoutFn(){
 				//如果不是报价状态，则可用取消查询
-				if(this.initData.cpStatus != '01'){
+				if(this.initData.cpStatus != '04'){
 					return;
 				}
 				this.timerOut = setInterval(() => {

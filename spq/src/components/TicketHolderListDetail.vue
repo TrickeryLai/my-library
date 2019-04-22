@@ -30,10 +30,11 @@
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据状态</van-col>
 						<van-col class="detail-row-right" span="18">
-							<van-tag round  type="success" v-if="initData.cpStatus == 1">发布中</van-tag>
+							<van-tag round  type="success" v-if="initData.cpStatus == 1">审核中</van-tag>
 							<van-tag round type="danger" v-else-if="initData.cpStatus == 2">已成交</van-tag>
 							<van-tag round v-else-if="initData.cpStatus == 3">已注销</van-tag>
-              <van-tag round color="#f2826a" v-else-if="initData.cpStatus == 4">报价中</van-tag>
+              				<van-tag round color="#f2826a" v-else-if="initData.cpStatus == 4">报价中</van-tag>
+              				<van-tag round v-else-if="initData.cpStatus == 5">审核失败</van-tag>
 							<van-tag round v-if="initData.stringDate < 0">已过期</van-tag>
 						</van-col>
 					</van-row>
@@ -86,7 +87,7 @@
 								<span 
 									class="blue-font" 
 									style="margin-left:3px;"
-									v-if="initData.cpStatus == '01' && initData.stringDate >= 0"
+									v-if="initData.cpStatus == '04' && initData.stringDate >= 0"
 									@click="getbuyPrice"
 								>
 									{{time}}秒后自动刷新
@@ -116,7 +117,7 @@
 				
 			</van-cell-group>
 			<van-row type="flex" justify="center" style="width: 100%;height: 44px;position: absolute;left: 0; bottom: 0;">
-					<van-col span="12" v-if="initData.cpStatus == 1">
+					<van-col span="12" v-if="initData.cpStatus == 4">
 						<van-button
 						type="danger"
 						style="width: 100%;"
@@ -128,16 +129,14 @@
 						style="width: 100%;"
 						@click="change">修改</van-button>
 					</van-col>
-					<van-col span="24" v-if="initData.cpStatus != 1 || initData.stringDate < 0">
+					<van-col span="24">
 						<van-button
 						type="info"
 						style="width: 100%;"
 						@click="ok">关闭</van-button>
 					</van-col>
 					
-			</van-row>
-			
-				
+				</van-row>
 			</div>
 		</div>
 	</van-popup>
@@ -204,7 +203,7 @@
 		},
 		methods: {
 			setTimeoutFn(){
-				if(this.initData.cpStatus != '01' || this.initData.stringDate < 0){
+				if(this.initData.cpStatus != '04' || this.initData.stringDate < 0){
 					return;
 				}
 				this.timerOut = setInterval(() => {
@@ -223,7 +222,7 @@
 				//查看所有报价信息
 				this.priceListShow = true;
 				this.priceListBaseData = this.initData;
-				if(this.initData.cpStatus == '01' || this.initData.cpStatus == '04'){
+				if(this.initData.cpStatus == '04'){
 					this.priceType = 1;
 				}else{
 					this.priceType = 0;
@@ -297,7 +296,7 @@
 					message: '确认注销此票据么？'
 				}).then(() => {
 					let cpId = this.initData.cpId, cpStatus = this.initData.cpStatus;
-					if(cpStatus != 1){
+					if(cpStatus != 4){
 						return;
 					}
 					_server.deleteCommercialPaper(cpId, (res) =>{

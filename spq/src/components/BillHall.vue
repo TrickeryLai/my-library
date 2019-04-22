@@ -79,7 +79,7 @@
 							<van-col span="6" style="text-align:right;" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)
 							</van-col>
 							<van-col span="4">
-							<van-tag round  type="success" v-if="item.cpStatus == 1">发布中</van-tag>
+							<van-tag round  type="success" v-if="item.cpStatus == 1">审核中</van-tag>
 							<van-tag round type="danger" v-else-if="item.cpStatus == 2">已成交</van-tag>
 							<van-tag round v-else-if="item.cpStatus == 3">已注销</van-tag>
 							<van-tag round color="#f2826a" v-else-if="item.cpStatus == 4">报价中</van-tag>

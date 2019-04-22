@@ -23,11 +23,13 @@
         <van-tab title="提现银行账户">
           <BankList
             :listData="ListData"
+            :type="active"
           />
         </van-tab>
         <van-tab title="签收银行账户">
           <BankList
             :listData="ListData"
+            :type="active"
           />
         </van-tab>
       </van-tabs>
@@ -46,7 +48,7 @@
     data(){
       return{
         title: '银行账户设置',
-        active: '0',
+        active: '0',// 0 ，提现账户，1，签收账户
         ListData: [
         ]
       }
@@ -55,10 +57,8 @@
         // this.onChangeTabs(this.active);
     },
     watch: {
-      active(newV){
-        
-        this.onChangeTabs(newV);
-        
+      active(newV){    
+        this.onChangeTabs(newV);   
       }
     },
     methods: {

@@ -17,6 +17,7 @@ import RealNameChange from '@/components/RealNameChange'
 import MatchBank from '@/components/MatchBank'
 import AddBankCard from '@/components/AddBankCard'
 import BankDetailInfo from '@/components/BankDetailInfo'
+import ChangeAccount from '@/components/ChangeAccount'
 
 let routerData = {
   routes: [
@@ -155,6 +156,15 @@ let routerData = {
         isNChecked: true,
       },
       component: BankDetailInfo
+    },
+    {
+      path: '/home/selfInfo/changeAccount',
+      name: 'ChangeAccount',
+      meta:{
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: ChangeAccount
     }
 
     ]

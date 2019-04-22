@@ -45,10 +45,10 @@ Axios.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
    // 为所有接口加上前缀
-  config.url = server.headUrl + config.url;
-  config.headers.lang = 'zh_cn';
-  return config;
-}, (err)=> {
+   config.url = server.headUrl + config.url;
+   config.headers.lang = 'zh_cn';
+   return config;
+ }, (err)=> {
   // 错误处理
   // console.log('err',err)
   return Promise.reject(err)
@@ -62,14 +62,14 @@ Axios.interceptors.response.use((response) => {
       router.replace({path: '/login'});
       Toast(response.data.errMsg);
       return false;
-  }
+    }
 
-  return response;
- }, (error) => {
-  let errMsg = error.message;
-  if(errMsg.indexOf('timeout') > -1){
-    Toast('请求超时！');
-  }
+      return response;
+   }, (error) => {
+    let errMsg = error.message;
+    if(errMsg.indexOf('timeout') > -1){
+      Toast('请求超时！');
+    }
   // 处理响应失败
   return Promise.reject(error);
  });
@@ -110,6 +110,41 @@ let _Axios = {
         } 
       })
     })
+  },
+  deleteN(params = {}){
+    if(params.isLoading){
+      model.show();
+    }
+    // Vue.prototype.__globalModelState = true;
+    
+    return new Promise((resolve, reject) => {
+     Axios({
+      method: 'delete',
+      params: params.data,
+      header: params.header,
+      url: params.url
+    }).then((res)=>{
+      if(params.isLoading){
+        setTimeout(()=>{
+          model.hide();
+          return resolve(res.data);
+        }, model.time);
+        return;
+      }else{
+        return resolve(res.data);
+      }
+      // params.success(res.data);
+    }).catch((error) =>{
+      if(params.isLoading){
+        setTimeout(()=>{
+          model.hide();
+          return reject(error);
+        }, model.time);
+        return;
+      }
+    })
+  })
+
   },
   delete(params = {}){
 
@@ -176,7 +211,7 @@ let _Axios = {
   post(params = {}){
 
     if(params.isLoading){
-        model.show();
+      model.show();
     }
     params.header = params.header || {};
     header = Object.assign({}, header, params.header);
@@ -198,19 +233,19 @@ let _Axios = {
     }
 
     return new Promise((resolve, reject)=>{
-        Axios(option).then((res) =>{
-          let data = res.data ? res.data : res;
-          if(params.isLoading){
-            setTimeout(()=>{
-              model.hide();
+      Axios(option).then((res) =>{
+        let data = res.data ? res.data : res;
+        if(params.isLoading){
+          setTimeout(()=>{
+            model.hide();
               // params.success(data);
               return resolve(data);
             }, model.time);
-            return;
-          }else{
-            return resolve(data);
-          }
-        }).catch((error) =>{
+          return;
+        }else{
+          return resolve(data);
+        }
+      }).catch((error) =>{
           // params.error && params.error(error); 
           if(params.isLoading){
             setTimeout(()=>{
@@ -228,7 +263,7 @@ let _Axios = {
   put(params = {}){
 
     if(params.isLoading){
-        model.show();
+      model.show();
     }
     params.header = params.header || {};
     header = Object.assign({}, header, params.header);
@@ -250,19 +285,19 @@ let _Axios = {
     }
 
     return new Promise((resolve, reject)=>{
-        Axios(option).then((res) =>{
-          let data = res.data ? res.data : res;
-          if(params.isLoading){
-            setTimeout(()=>{
-              model.hide();
+      Axios(option).then((res) =>{
+        let data = res.data ? res.data : res;
+        if(params.isLoading){
+          setTimeout(()=>{
+            model.hide();
               // params.success(data);
               return resolve(data);
             }, model.time);
-            return;
-          }else{
-            return resolve(data);
-          }
-        }).catch((error) =>{
+          return;
+        }else{
+          return resolve(data);
+        }
+      }).catch((error) =>{
           // params.error && params.error(error); 
           if(params.isLoading){
             setTimeout(()=>{

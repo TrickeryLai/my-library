@@ -91,6 +91,7 @@ export default{
 		}
 	},
 	created(){
+		// window.location.href = '#';
 		this.changeCodePic();
 		this.initData()
 	},
