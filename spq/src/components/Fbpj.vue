@@ -12,7 +12,7 @@
       <van-cell-group class="">
         <h3 class="title van-hairline--bottom">上传票面</h3>
         <div class="realName-conten-inner">
-          <div style="display:inline-block;margin-right: 5px;">
+          <div class="pic-box">
             <UploadImg
             uploadUrl = "open-cp/v1/upload"
             :initPic = "pjzPic"
@@ -20,13 +20,21 @@
             @uploadPicProgress='pjzUploadPicFn' />
             <p class="picTitle" @click="showPjPic(1)"><span style="color: red;">*</span>票据正面<span class="blue-font">示例</span></p>
           </div>
-          <div style="display:inline-block;margin-right: 10px;">
+          <div class="pic-box">
             <UploadImg
             uploadUrl = "open-cp/v1/upload"
             :initPic = "pjfPic"
             @removePic='pjfRemovePic'
             @uploadPicProgress='pjfUploadPicFn' /> 
             <p class="picTitle" @click="showPjPic(2)"><span style="color: red;">*</span>票据背面<span class="blue-font">示例</span></p>
+          </div>
+          <div class="pic-box" v-for="(item, index) in imageList" :key="index" v-show="item.imageName || index == imageList.length - 1">
+            <UploadImg
+            uploadUrl = "open-cp/v1/upload"
+            :initPic = "item.imageName"
+            @removePic='moreRemovePic(item)'
+            @uploadPicProgress='moreUploadPicFn' /> 
+            <p class="picTitle">背面图片</p> 
           </div>
         </div>
       </van-cell-group>
@@ -234,6 +242,9 @@ import _common from '@/server/index'
               lastDay: 0,//剩余天数
               minDate: new Date(new Date().getTime() + 24*60*60*1000),
               bsValue: 0,//背书次数
+              imageList:[
+               {imageName: ''}
+              ],
               sell:{
                 deductAmount: '',
                 approvalApr: '',
@@ -347,8 +358,8 @@ import _common from '@/server/index'
               this.pjfPic = _common.picUrl + data.backBillImg;
               this.currentDate = new Date(data.dueDate);
               this.endTimeChoseValue = this.getTime(data.dueDate);
-              this.xcChoseList = this.initXcList(data.cpDefect)
-
+              this.xcChoseList = this.initXcList(data.cpDefect);
+              this.imageList = data.imageList ? data.imageList : [''];
               this.lastDay = this.getLastDay(this.currentDate);
               
               if(data.frontBillImg){
@@ -359,6 +370,22 @@ import _common from '@/server/index'
                 this.pjfPicUState.state = 3;
               }
               
+          },
+          moreRemovePic(item){
+            let result = [];
+
+            this.imageList.forEach(i => {
+              if(item.imageName == i.imageName){
+                i.imageName = '';
+              }
+            });
+           
+            // console.log(this.imageList, '----------------')
+          },
+          moreUploadPicFn(data){
+            if(data.state == 3){
+              this.imageList.unshift({imageName: data.imgData.data});
+            }
           },
           typeChange(type){
             // this.sell.deductAmount = '';
@@ -486,7 +513,7 @@ import _common from '@/server/index'
               //营业执照上传
               this.pjzPicUState.state = data.state;
               if(data.state == 3){
-                  this.pjzPic = data.imgData.data
+                  this.pjzPic = data.imgData.data;
               }
           },
           pjfUploadPicFn(data){
@@ -523,8 +550,8 @@ import _common from '@/server/index'
               this.$toast('票据反面图片正在上传！')
               return false;
             }
-            if(!this.submitData.cpNo || this.submitData.cpNo.toString().length != 30){
-              this.$toast('请填写正确的30位票据号！')
+            if(!this.submitData.cpNo || this.submitData.cpNo.toString().length != 30 || this.submitData.cpNo.toString().substring(0,1) != 2){
+              this.$toast('请填写正确的30位商业承兑汇票号！')
               return false;
             }
             if(!this.submitData.cpAmount || !/^(0|[1-9]\d*)(\.\d+)?$/.test(this.submitData.cpAmount)){
@@ -717,5 +744,9 @@ import _common from '@/server/index'
   display: flex;
   justify-content:center;
   align-items:Center;
+}
+.pic-box{
+  display:inline-block;
+  margin-right: 5px;
 }
 </style>

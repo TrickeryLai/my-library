@@ -28,8 +28,16 @@
 						<van-col class="detail-row-right" span="18">{{initData.cpAmount && dealPrice(initData.cpAmount.toFixed(2))}}元</van-col>
 					</van-row>
 					<van-row class="detail-row">
+						<van-col class="detail-row-left" span="6">背书次数</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.endorseTimes}}次</van-col>
+					</van-row>
+					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">到期时间</van-col>
 						<van-col class="detail-row-right" span="18">{{initData.dueDate}}</van-col>
+					</van-row>
+					<van-row class="detail-row" v-if="initData.actualTime">
+						<van-col class="detail-row-left" span="6">成交日期</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.actualTime}}</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">成交信用</van-col>
@@ -149,13 +157,19 @@
 					type="primary"
 					style="width: 100%;position: absolute; left: 0; bottom: 0;"
 					@click="modelClose"
-					>已成交</van-button>
+					>成交中</van-button>
 				<van-button
 					v-if="initData.cpStatus == '03'"
 					type="danger"
 					style="width: 100%;position: absolute; left: 0; bottom: 0;"
 					@click="modelClose"
 					>已注销</van-button>
+				<van-button
+					v-if="initData.cpStatus == '06'"
+					color="#1989fa"
+					style="width: 100%;position: absolute; left: 0; bottom: 0;"
+					@click="modelClose"
+					>已成交</van-button>
 			</div>
 				
 			</div>
@@ -209,7 +223,8 @@
 					this.submit.yearRate = '';
 					this.submit.reduceAmount = '';
 					this.submit.dealAmount = '';
-					this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
+					// this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
+					this.imgs = [_common.picUrl + this.initData.frontBillImg];
 					if(this.initData.cpStatus == 2){
 						this.buyPriceText = '撮合成交价';
 					}else{

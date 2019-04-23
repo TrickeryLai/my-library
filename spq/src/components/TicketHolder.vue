@@ -59,7 +59,8 @@
 										审核失败
 									</van-tag>
 								</div>
-								<van-tag round type="danger" v-else-if="item.cpStatus == 2">已成交</van-tag>
+								<van-tag round type="danger" v-else-if="item.cpStatus == 2">成交中</van-tag>
+								<van-tag round color="#1989fa" v-else-if="item.cpStatus == 6">已成交</van-tag>
 								<van-tag round v-else-if="item.cpStatus == 3">已注销</van-tag>
 							</div>
 						</van-col>
@@ -170,7 +171,7 @@ export default{
 					this.fbList = [];//不清空，在滚动至多页的时候，重新刷新会一直触发onload
 				}
 				//查询条件
-				data = Object.assign({}, pageData, {acceptor: this.searchValue});
+				data = Object.assign({}, pageData, {acceptor: this.searchValue, createTimeSort: 0});
 				delete data.total;
 				//获取列表数据
 				_server.getCommercialPaperList({

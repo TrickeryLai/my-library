@@ -11,26 +11,29 @@
 		</van-nav-bar>
 		<h1 class="top-title">票据融资，多、块、好、省</h1>
 		<h1 class="title">欢迎注册</h1>
-		<van-row >
+		<van-row>
+			<van-col span="1" class="red-font" style="padding-top: 12px;">*</van-col>
 			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
 				<i class="iconfont icon-mine"></i>
 			</van-col>
-			<van-col span="22">
+			<van-col span="21">
 				<van-field 
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
-				v-model="register.loginName" placeholder="请输入用户名"
+				v-model.trim="register.loginName"
+				placeholder="请输入用户名"
 				:error="registerError.loginName"
 				type="text" />
 			</van-col>
 		</van-row>
 		<van-row >
+			<van-col span="1" class="red-font" style="padding-top: 12px;">*</van-col>
 			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
 				<i class="iconfont icon-lock"></i>
 			</van-col>
-			<van-col span="22">
+			<van-col span="21">
 				<PasswordI
-					v-model="register.password"
+					v-model.trim="register.password"
 					placeholder="请输入密码"
 				/>
 				<!-- <van-field 
@@ -42,12 +45,13 @@
 			</van-col>
 		</van-row>
 		<van-row >
+			<van-col span="1" class="red-font" style="padding-top: 12px;">*</van-col>
 			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
 				<i class="iconfont icon-lock"></i>
 			</van-col>
-			<van-col span="22">
+			<van-col span="21">
 				<PasswordI
-					v-model="register.password2"
+					v-model.trim="register.password2"
 					placeholder="请再次输入密码"
 				/>
 				<!-- <van-field 
@@ -59,38 +63,41 @@
 			</van-col>
 		</van-row>
 		<van-row >
+			<van-col span="1" class="red-font" style="padding-top: 12px;">*</van-col>
 			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
 				<i class="iconfont icon-link"></i>
 			</van-col>
-			<van-col span="22">
+			<van-col span="21">
 				<van-field 
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
-				v-model="register.email" placeholder="请输入邮箱"
+				v-model.trim="register.email" placeholder="请输入邮箱"
 				type="email" />
 			</van-col>
 		</van-row>
 		<van-row >
+			<van-col span="1" class="red-font" style="padding-top: 12px;">*</van-col>
 			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
 				<i class="iconfont icon-mobile-alt"></i>
 			</van-col>
-			<van-col span="22">
+			<van-col span="21">
 				<van-field 
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
-				v-model="register.phone" placeholder="请输入手机号"
+				v-model.trim="register.phone" placeholder="请输入手机号"
 				type="phone" />
 			</van-col>
 		</van-row>
 		<van-row >
+			<van-col span="1" class="red-font" style="padding-top: 12px;">*</van-col>
 			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
 				<i class="iconfont icon-safety-certificate"></i>
 			</van-col>
-			<van-col span="14">
+			<van-col span="13">
 				<van-field 
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
-				v-model="register.smsCaptcha" placeholder="请输入短信验证码"
+				v-model.trim="register.smsCaptcha" placeholder="请输入短信验证码"
 				type="text"
 				
 				/>
@@ -111,14 +118,15 @@
 		
 		</van-row>
 		<van-row >
+			<van-col span="1" class="red-font" style="padding-top: 12px;">*</van-col>
 			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
 				<i class="iconfont icon-safety-certificate"></i>
 			</van-col>
-			<van-col span="14">
+			<van-col span="13">
 				<van-field 
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
-				v-model="register.code" placeholder="请输入右侧验证码"
+				v-model.trim="register.code" placeholder="请输入右侧验证码"
 				type="text"
 				
 				/>

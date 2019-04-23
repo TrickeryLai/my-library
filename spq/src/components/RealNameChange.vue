@@ -12,6 +12,37 @@
     </van-nav-bar>
     <div class="realName-content">
       <van-cell-group class="realName-content-box">
+        <van-steps 
+        :active="companyStepActive" 
+        class="text-left"
+        :active-icon="companyData.authStatus == 2 ? 'cross': 'checked'"
+        :active-color="companyData.authStatus == 2 ? 'red': '#38f'"
+        >
+          <van-step>填写认证信息</van-step>
+          <van-step>待审核</van-step>
+          <van-step v-if="companyData.authStatus == 2">
+          审核不通过
+          </van-step>
+          <van-step v-else>已认证</van-step>
+        </van-steps>
+        <p v-if="companyData.authStatus == 2">{{companyData.authNoPassCause}}</p>
+        <!-- <h3 class="title van-hairline--bottom">认证状态</h3>
+        <div class="realName-conten-inner">
+          <van-row>
+            <van-col span="6">认证状态</van-col>
+            <van-col span="18">
+              <span v-if="companyData.authStatus == 1">待审核</span>
+              <span v-else-if="companyData.authStatus == 2">审核不通过</span>
+              <span v-else-if="companyData.authStatus == 9">已认证</span>
+            </van-col>
+          </van-row>
+          <van-row v-if="companyData.authStatus == 2">
+            <van-col span="6">原因</van-col>
+            <van-col span="18">{{companyData.authNoPassCause}}</van-col>
+          </van-row> -->
+        <!-- </div> -->
+      </van-cell-group>
+      <van-cell-group class="realName-content-box">
         <h3 class="title van-hairline--bottom">营业执照</h3>
         <div class="realName-conten-inner">
          <UploadImg
@@ -159,6 +190,8 @@
               title: '修改认证信息',
               zIndex: 999,
               common: _common,
+              companyData: '',
+              companyStepActive: 1,
               submitData:{
                 orgName: '',
                 email: '',
@@ -197,8 +230,38 @@
           },
           init(){
               let data = this.$route.query.data, initData = {};
+              let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')): '',
+                _id = user ? user.orgId : '',
+                _this = this;
 
-              this.baseInfo = Object.assign({}, JSON.parse(data));
+              if(!_id){
+                return;
+              }
+              if(!data){
+                _server.getCompanyData({
+                  _id,
+                  success(res){
+                    if(res){
+                      _this.initData(res);
+                      //authStatus(认证状态：1-待审核；2-审核不通过；9-已认证)
+                      if(res.authStatus == 1){
+                        _this.companyStepActive = 1;
+                      }else if(res.authStatus == 2 || res.authStatus == 9){
+                         _this.companyStepActive = 2;
+                      }
+                    }
+                  }
+                })
+              }else{
+                data = JSON.parse(data);
+                this.initData(data);
+              }
+
+          },
+          initData(data){
+              let initData = {};
+              this.companyData = data;
+              this.baseInfo = Object.assign({}, data);
               initData = Object.assign({}, this.baseInfo);
               this.yyzzPic = initData.businessLicenseImgPath;
               this.yyzzPicUState.state = 3;
@@ -286,8 +349,8 @@
               this.$toast('请输入法人正确手机号！');
               return false;
             }
-            if(!this.submitData.frIdCard){
-              this.$toast('请输入法人身份证号！');
+            if(!this.submitData.frIdCard || !_common.common_reg.idCard(this.submitData.frIdCard)){
+              this.$toast('请输入法人正确身份证号！');
               return false;
             }
 

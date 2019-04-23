@@ -24,17 +24,26 @@
 						<van-col class="detail-row-right" span="18">{{dealPrice(initData.cpAmount &&　initData.cpAmount.toFixed(2))}}元</van-col>
 					</van-row>
 					<van-row class="detail-row">
+						<van-col class="detail-row-left" span="6">背书次数</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.endorseTimes}}次</van-col>
+					</van-row>
+					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">到期时间</van-col>
 						<van-col class="detail-row-right" span="18">{{initData.dueDate}}</van-col>
+					</van-row>
+					<van-row class="detail-row" v-if="initData.actualTime">
+						<van-col class="detail-row-left" span="6">成交日期</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.actualTime}}</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据状态</van-col>
 						<van-col class="detail-row-right" span="18">
 							<van-tag round  type="success" v-if="initData.cpStatus == 1">审核中</van-tag>
-							<van-tag round type="danger" v-else-if="initData.cpStatus == 2">已成交</van-tag>
+							<van-tag round type="danger" v-else-if="initData.cpStatus == 2">成交中</van-tag>
 							<van-tag round v-else-if="initData.cpStatus == 3">已注销</van-tag>
               				<van-tag round color="#f2826a" v-else-if="initData.cpStatus == 4">报价中</van-tag>
               				<van-tag round v-else-if="initData.cpStatus == 5">审核失败</van-tag>
+              				<van-tag round color="#1989fa" v-else-if="initData.cpStatus == 6">已成交</van-tag>
 							<van-tag round v-if="initData.stringDate < 0">已过期</van-tag>
 						</van-col>
 					</van-row>
@@ -198,7 +207,8 @@
 					clearInterval(this.timerOut);
 					this.time = 60;
 				}
-				this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
+				// this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
+				this.imgs = [_common.picUrl + this.initData.frontBillImg];
 			}
 		},
 		methods: {

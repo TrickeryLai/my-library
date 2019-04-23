@@ -300,8 +300,8 @@
               this.$toast('请输入法人正确手机号！');
               return false;
             }
-            if(!this.submitData.frIdCard){
-              this.$toast('请输入法人身份证号！');
+            if(!this.submitData.frIdCard || !_common.common_reg.idCard(this.submitData.frIdCard)){
+              this.$toast('请输入法人正确身份证号！');
               return false;
             }
             if(!this.submitData.paymentPassword){

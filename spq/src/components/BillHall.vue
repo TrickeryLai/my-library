@@ -80,9 +80,10 @@
 							</van-col>
 							<van-col span="4">
 							<van-tag round  type="success" v-if="item.cpStatus == 1">审核中</van-tag>
-							<van-tag round type="danger" v-else-if="item.cpStatus == 2">已成交</van-tag>
+							<van-tag round type="danger" v-else-if="item.cpStatus == 2">成交中</van-tag>
 							<van-tag round v-else-if="item.cpStatus == 3">已注销</van-tag>
 							<van-tag round color="#f2826a" v-else-if="item.cpStatus == 4">报价中</van-tag>
+							<van-tag round color="#1989fa" v-else-if="item.cpStatus == 6">已成交</van-tag>
 							</van-col>
 							</van-row>
 							<van-row>
@@ -122,6 +123,9 @@ import SetSearch from '@/components/SetSearch'
 import DetailList from '@/components/DetailList'
 import _server from '@/server/server'
 import _common from '@/server/index'
+
+//01-待发布；02-成交中；03-注销;04-发布中;05-审核失败;06-已成交;
+//待发布-----审核>发布中-----撮合>成交中------收取费用>已成交
 
   //  Field Type Comment
   //  cp_id bigint(20) NOT NULL 序号
