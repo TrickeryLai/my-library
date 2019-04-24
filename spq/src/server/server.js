@@ -288,11 +288,12 @@ let server = {
 	      url,
 	      isLoading: true,  
 	    }).then((response) => {
-	          params.success &&  params.success(response)
-	        // if(response.code == 0 || response.code == 110008){
-	        // }else{
-	        //   Toast(response.errMsg);
-	        // }
+	          
+	        if(response.code == 0 || response.code == 110008){
+            params.success &&  params.success(response)
+	        }else{
+	          Toast(response.errMsg);
+	        }
 	      })
 	    .catch(error => {
 	    	console.log(error);

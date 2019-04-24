@@ -1,18 +1,18 @@
 <template>
 	<div>
 		<van-nav-bar
-		:title="title"
 		left-arrow
 		fixed
 		@click-left="onClickLeft"
 		class="top-bg"
 		>
-			<i class="iconfont icon-previous_step" slot="left"></i>
+			<span slot="title" class="top-bg-title">{{title}}</span>
+			<i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
 		</van-nav-bar>
 		<div>
 			<van-cell-group>
 				<van-field
-				v-model="submitData.oldPwd"
+				v-model.trim="submitData.oldPwd"
 				clearable
         		type="password"
 				label="原密码"
@@ -20,7 +20,7 @@
 				placeholder="原密码"
 				/>
 				<van-field
-				v-model="submitData.newPwd"
+				v-model.trim="submitData.newPwd"
 				clearable
         		type="password"
         		autocomplete="new-password"
@@ -28,7 +28,7 @@
 				placeholder="新密码"
 				/>
 		        <van-field
-		          v-model="submitData.confirmPwd"
+		          v-model.trim="submitData.confirmPwd"
 		          clearable
 		          type="password"
 		          autocomplete="new-password"

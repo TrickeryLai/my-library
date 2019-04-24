@@ -1,13 +1,13 @@
 <template>
 	<div style="height: 100%;">
 	    <van-nav-bar
-	      :title="title"
 	      left-arrow
 	      fixed
 	      @click-left="onClickLeft"
 	      class="top-bg"
 	    >
-	      <i class="iconfont icon-previous_step" slot="left"></i>
+	    	<span slot="title" class="top-bg-title">{{title}}</span>
+	      	<i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
 	    </van-nav-bar>
 	    <pdf
 	      :src="pdfUrl"

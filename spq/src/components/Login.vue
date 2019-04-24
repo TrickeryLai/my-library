@@ -1,14 +1,14 @@
 <template>
 <div class="register-content">
 	<van-nav-bar
-		:title="title"
 		left-arrow
 		fixed
 		@click-left="onClickLeft"
 		class="top-bg"
-  >
-    <i class="iconfont icon-previous_step" slot="left"></i>
-  </van-nav-bar>
+  	>	
+  		<span slot="title" class="top-bg-title">{{title}}</span>
+    	<i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
+  	</van-nav-bar>
 	<h1 class="top-title">票据融资，多、块、好、省</h1>
 	<h1 class="title">欢迎登录</h1>
 	<van-row >
@@ -19,7 +19,7 @@
 			<van-field 
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
-				v-model="register.username" placeholder="请输入用户名"
+				v-model.trim="register.username" placeholder="请输入用户名"
 				type="text" />
 
 		</van-col>
@@ -29,7 +29,7 @@
 			<i class="iconfont icon-lock"></i>
 		</van-col>
 		<van-col span="22">
-			<PasswordI v-model="register.password"/>
+			<PasswordI v-model.trim="register.password"/>
 			<!-- <van-field 
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
@@ -45,7 +45,7 @@
 			<van-field 
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
-				v-model="register.code" placeholder="请输入验证码"
+				v-model.trim="register.code" placeholder="请输入验证码"
 				type="text"
 				/>
 		</van-col>

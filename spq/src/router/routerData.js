@@ -126,7 +126,7 @@ let routerData = {
       name: 'RealNameChange',
       meta:{
         isLogin: true,
-        isNChecked: true,
+        isNChecked: false,
       },
       component: RealNameChange
     },

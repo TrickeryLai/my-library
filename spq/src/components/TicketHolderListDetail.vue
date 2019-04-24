@@ -207,8 +207,8 @@
 					clearInterval(this.timerOut);
 					this.time = 60;
 				}
-				// this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
-				this.imgs = [_common.picUrl + this.initData.frontBillImg];
+				this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
+				// this.imgs = [_common.picUrl + this.initData.frontBillImg];
 			}
 		},
 		methods: {

@@ -1,12 +1,13 @@
 <template>
 	<div class="order-page">
 		<van-nav-bar
-		:title="title"
-		:right-text="rightText"
 		fixed
 		class="top-bg"
 		@click-right="rightClick"
-		/>
+		>
+			<span slot="title" class="top-bg-title">{{title}}</span>
+			<span slot="right" class="top-bg-title">{{rightText}}</span>
+		</van-nav-bar>
 		<div class="">
 			<!-- <van-search
 			style="position:absolute;left: 0;top: 0;width: 100%;"

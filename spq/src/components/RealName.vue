@@ -1,23 +1,23 @@
 <template>
   <div class="realName-page">
     <van-nav-bar
-      :title="title"
       left-arrow
       fixed
       @click-left="onClickLeft"
       class="top-bg"
       :z-index = "zIndex"
     >
-      <i class="iconfont icon-previous_step" slot="left"></i>
+      <span slot="title" class="top-bg-title">{{title}}</span>
+      <i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
     </van-nav-bar>
     <van-steps
       :active="active"
       active-color="#38f"
       class="text-left"
     >
-      <van-step>上传相关图片</van-step>
-      <van-step>填写企业信息</van-step>
-      <van-step>认证</van-step>
+      <van-step>提交信息</van-step>
+      <van-step>审核</van-step>
+      <van-step>认证成功</van-step>
 
     </van-steps>
     <div class="realName-content">
@@ -54,43 +54,44 @@
         <h3 class="title van-hairline--bottom">企业信息</h3>
         <div class="realName-conten-inner">
             <van-field
-            v-model="submitData.orgName"
+            v-model.trim="submitData.orgName"
+            type="text"
             required
             clearable
             label="企业名称："
             placeholder="企业名称"
             />
             <van-field
-              v-model="submitData.organizationCode"
+              v-model.trim="submitData.organizationCode"
               required
               clearable
               label="社会信用代码："
               placeholder="社会信用代码"
             />
             <van-field
-            v-model="submitData.email"
+            v-model.trim="submitData.email"
             required
             clearable
             label="联系人邮箱："
             placeholder="联系人邮箱"
             />
             <van-field
-            v-model="submitData.contactPhone"
+            v-model.trim="submitData.contactPhone"
             required
             clearable
             label="联系人手机："
-            type="number"
+            type="phone"
             placeholder="联系人手机"
             />
             
             <van-field
             size="large"
-            v-model="submitData.registerAddress"
+            v-model.trim="submitData.registerAddress"
             required
             label="企业注册地址："
             type="textarea"
             placeholder="企业注册地址"
-            rows="1"
+            rows="2"
             autosize
             />
         </div>
@@ -100,14 +101,14 @@
         <h3 class="title van-hairline--bottom">法人信息</h3>
         <div class="realName-conten-inner">
             <van-field
-            v-model="submitData.leader"
+            v-model.trim="submitData.leader"
             required
             clearable
             label="姓名："
             placeholder="法人姓名"
             />
              <van-field
-            v-model="submitData.phone"
+            v-model.trim="submitData.phone"
             type="phone"
             required
             clearable
@@ -115,7 +116,7 @@
             placeholder="法人手机号"
             />
             <van-field
-              v-model="submitData.frIdCard"
+              v-model.trim="submitData.frIdCard"
               required
               clearable
               label="身份证号："
@@ -128,20 +129,21 @@
         <h3 class="title van-hairline--bottom">经办人信息</h3>
         <div class="realName-conten-inner">
             <van-field
-            v-model="submitData.jbrName"
+            v-model.trim="submitData.jbrName"
             clearable
+            type="text"
             label="姓名："
             placeholder="经办人姓名"
             />
              <van-field
-            v-model="submitData.jbrPhone"
+            v-model.trim="submitData.jbrPhone"
             type="phone"
             clearable
             label="手机号："
             placeholder="经办人手机号"
             />
              <van-field
-              v-model="submitData.jbrIdCard"
+              v-model.trim="submitData.jbrIdCard"
               clearable
               label="身份证号："
               placeholder="经办人身份证号"
@@ -153,7 +155,7 @@
         <h3 class="title van-hairline--bottom">支付信息</h3>
         <div class="realName-conten-inner">
           <van-field
-            v-model="submitData.paymentPassword"
+            v-model.trim="submitData.paymentPassword"
             clearable
             type="password"
             required
@@ -162,7 +164,7 @@
             placeholder="支付密码"
           />
           <van-field
-            v-model="submitData.paymentPassword2"
+            v-model.trim="submitData.paymentPassword2"
             type="password"
             required
             clearable
@@ -315,6 +317,28 @@
 
             return true;
           },
+          getBaseInfo(){
+            let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')): '',
+            _id = user ? user.orgId : '',
+            _this = this;
+
+            if(!_id){
+              return;
+            }
+
+            _server.getCompanyData({
+              _id,
+              success(res){
+                if(res){
+                  _this.baseInfo = res;
+                  localStorage.setItem('user', JSON.stringify(res));
+                  let path = _this.$route.query.redirect? decodeURIComponent(_this.$route.query.redirect) : '/home/selfInfo';
+                  // let path = '/login';
+                  _this.$router.replace({path});
+                }
+              }
+            })
+          },
           submitInfo(){
             //提交信息
 
@@ -394,19 +418,15 @@
 
             _server.getAuthentication(data, (res) =>{
                 if(res.code == 0){
-                    //登录之后跳转的路由， 默认大厅， 通过redirect 设置
-                  // let path = this.$route.query.redirect? decodeURIComponent(this.$route.query.redirect) : '/home/selfInfo';
+                  // this.getBaseInfo();
+                  
                   //认证之后重新登录更新个人信息 或者 能够刷新本地缓存？？
-                  let path = '/login';
-
-                  //手动更改缓存的认证判定？
-                  let user = JSON.parse(localStorage.getItem('user'));
-
-                  user._checked = true;
-
-                  localStorage.setItem('user', JSON.stringify(user));
-                  this.$toast('认证成功，请重新登录！');
-                  _this.$router.replace({path});
+                  this.$toast('信息已提交审核！');
+                  this.getBaseInfo();
+                  // let path = _this.$route.query.redirect? decodeURIComponent(_this.$route.query.redirect) : '/home/selfInfo';
+                  // let path = '/login';
+                  // this.$router.replace({path});
+                    //登录之后跳转的路由， 默认大厅， 通过redirect 设置
                 }else{
                   this.$toast(res.errMsg);
                 }

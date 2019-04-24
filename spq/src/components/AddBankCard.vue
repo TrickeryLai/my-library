@@ -1,20 +1,20 @@
 <template>
 <div>
   <van-nav-bar
-    :title="title"
     left-arrow
     fixed
     @click-left="onClickLeft"
     class="top-bg"
   >
-    <i class="iconfont icon-previous_step" slot="left"></i>
+    <span slot="title" class="top-bg-title">{{title}}</span>
+    <i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
   </van-nav-bar>
   <div style="padding-bottom: 50px;">
     <van-row class="realName-box-row">
       <van-col span="7" class="realName-content-box-left"><i class="required">*</i>对公账号</van-col>
       <van-col span="17" class="realName-content-box-right">
         <van-field
-          v-model="submitData.accountNo"
+          v-model.trim="submitData.accountNo"
           clearable
           placeholder="对公账号"
         />
@@ -49,7 +49,7 @@
       <van-col span="7" class="realName-content-box-left"><i class="required">*</i>开户行支行</van-col>
       <van-col span="17" class="realName-content-box-right">
         <van-field
-          v-model="submitData.bankSubbranch"
+          v-model.trim="submitData.bankSubbranch"
           clearable
           placeholder="开户行支行"
           
@@ -60,7 +60,7 @@
       <van-col span="7" class="realName-content-box-left"><i class="required">*</i>大额行号</van-col>
       <van-col span="17" class="realName-content-box-right">
         <van-field
-          v-model="submitData.largeAccountNo"
+          v-model.trim="submitData.largeAccountNo"
           clearable
           placeholder="大额行号"
         />

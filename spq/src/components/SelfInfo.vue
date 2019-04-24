@@ -1,16 +1,23 @@
 <template>
 	<div>
 		<van-nav-bar
-		:title="title"
 		fixed
 		class="top-bg"
-		/>
+		>
+			<span slot="title" class="top-bg-title">{{title}}</span>
+		</van-nav-bar>
 		<div class="selfInfo-top">
 			<div style="position: absolute;left:0;top:0;width: 100%;height: 100%;">
-				<div class="checked-icon" v-if="(!this.baseInfo.orgId && !this.baseInfo._checked)" @click="goChecked">
+				<div class="checked-icon" v-if="!this.baseInfo.authStatus" @click="goChecked">
 					<span class="point"></span>未认证
 				</div>
-				<div class="checked-icon active-c" v-if="(this.baseInfo.orgId || this.baseInfo._checked)" >
+				<div class="checked-icon active-d" v-if="this.baseInfo.authStatus == 1" @click="goChecked" >
+					<span class="point"></span>待审核
+				</div>
+				<div class="checked-icon active-n" v-if="this.baseInfo.authStatus == 2" @click="goChecked" >
+					<span class="point"></span>审核未通过
+				</div>
+				<div class="checked-icon active-c" v-if="this.baseInfo.authStatus == 9" @click="goChecked" >
 					<span class="point"></span>已认证
 				</div>
 				<div class="selfInfo-center">
@@ -103,7 +110,8 @@
 
 <script>
 
-  import _server from '@/server/index';
+  import _server from '@/server/server';
+  import _common from '@/server/index'
 
 	export default{
 		name: 'Order',
@@ -117,37 +125,61 @@
 			}
 		},
 		created(){
-		  	this.initData();
 			this.getBaseInfo();
 		},
 		methods: {
 			goChecked(){
-				this.$router.push({path:'/home/realName'})
+				let path = ''
+				if(!this.baseInfo.authStatus){
+					path = '/home/realName';
+				}else{
+					path = '/home/selfInfo/realNameChange';
+				}
+				this.$router.push({path})
 			},
 	      	initData(){
-			  	this.xyData = _server.xyData;
-			  	this.orgName = localStorage.getItem('baseInfo')?JSON.parse(localStorage.getItem('baseInfo')).companyName: '';
+			  	this.xyData = _common.xyData;
+			  	this.orgName = localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')).companyName: '';
+	      	},
+	      	getBaseInfo(){
+	      		let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')): '',
+	      		_id = user ? user.orgId : '',
+	      		_this = this;
+
+	      		if(!_id){
+	      			return;
+	      		}
+	      		_server.getCompanyData({
+	      			_id,
+	      			success(res){
+	      				if(res){
+	      					_this.baseInfo = res;
+	      					localStorage.setItem('user', JSON.stringify(res));
+	      					_this.initData();
+	      				}
+	      			}
+	      		})
 	      	},
 			safeFn(){
 				this.$router.push({path:'/home/selfInfo/safeSetting'})
 			},
-      bankFn(){
-			  this.$router.push({path: '/home/selfInfo/matchBank'})
-      },
+	      	bankFn(){
+				  this.$router.push({path: '/home/selfInfo/matchBank'})
+	      	},
 			gotoCaculate(){
 				this.$router.push({path:'/home/selfInfo/caculate'})
 			},
 			gotoBaseInfo(){
 				this.$router.push({path:'/home/selfInfo/baseInfo'})
 			},
-			getBaseInfo(){
-				let baseInfo = localStorage.getItem('user');
-				if(baseInfo){
-					this.baseInfo = JSON.parse(baseInfo);
-				}else{
-					// this.$router.replace({path:'/login'});
-				}
-			},
+			// getBaseInfo(){
+			// 	let baseInfo = localStorage.getItem('user');
+			// 	if(baseInfo){
+			// 		this.baseInfo = JSON.parse(baseInfo);
+			// 	}else{
+			// 		// this.$router.replace({path:'/login'});
+			// 	}
+			// },
 			xyFn(){
 				this.show = true;
 			},
@@ -181,11 +213,11 @@
 	top: 8px;
 	padding: 8px;
 	border-radius: 10px;
-	border: 1px solid #fff;
 	color: #fff;
 	font-size: 12px;
 	background-color: rgba(0, 0, 0 , .3);
-	transform: scale(.8);	
+	transform: scale(.8);
+	border-color: #1989fa;	
 }
 .checked-icon .point{
 	display:inline-block;
@@ -195,9 +227,15 @@
 	border-radius: 50%;
 	background-color: rgba(255, 255, 255);
 }
-.checked-icon.active-c{
+.checked-icon.active-c, .checked-icon.active-d{
 	color: #fff;
-	border-color: #1989fa;
+	border: 1px solid #fff;
+}
+.checked-icon.active-c{
+	border: 1px solid #1989fa;
+}
+.checked-icon.active-n .point{
+	background-color: red;
 }
 .checked-icon.active-c .point{
 	background-color: #1989fa;

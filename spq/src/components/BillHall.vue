@@ -1,12 +1,13 @@
 <template>
 	<div>
 		<van-nav-bar
-		:title="title"
-		right-text="筛选"
 		fixed
 		@click-right="onClickRight"
 		class="top-bg"
-		/>
+		>
+			<span slot="title" class="top-bg-title">{{title}}</span>
+			<span slot="right" class="top-bg-title">筛选</span>
+		</van-nav-bar>
 		<div class="list-wrap">
 			<van-row class="nav-top">
 				<div class="top-search-box">
@@ -70,11 +71,12 @@
 							<template slot="title">
 							<van-row gutter="3" class="van-hairline--bottom">
 
-							<van-col span="14" class="van-ellipsis text-left">
-							<van-tag mark type="success" v-if="item.creditRating == 1">优秀</van-tag>
-							<van-tag mark type="primary" v-else-if="item.creditRating == 2">良好</van-tag>
-							<van-tag mark type="danger" v-else-if="item.creditRating == 3">一般</van-tag>
-							承兑人：{{item.acceptor}}
+								<van-col span="14" class="van-ellipsis text-left">
+								<span class="blue-font" v-if="item.creditRating == 1">优秀</span>
+								<span class="blue-font" v-else-if="item.creditRating == 2">良好</span>
+								<span class="blue-font" v-else-if="item.creditRating == 3">一般</span>
+								<span style="color: #eee;padding: 0 2px;">|</span>
+								承兑人：{{item.acceptor}}
 							</van-col>
 							<van-col span="6" style="text-align:right;" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)
 							</van-col>
@@ -86,17 +88,21 @@
 							<van-tag round color="#1989fa" v-else-if="item.cpStatus == 6">已成交</van-tag>
 							</van-col>
 							</van-row>
-							<van-row>
-							<van-col v-if="item.cpAmount > 10000" span="8" class="black-font text-left">{{item.cpAmount &&
-								dealPrice((item.cpAmount/10000).toFixed(2))}}
-								<span class="small-font">万元</span>
-							</van-col>
-							<van-col v-else span="8" class="black-font text-left">{{item.cpAmount && dealPrice((item.cpAmount).toFixed(2))}}
-								<span class="small-font">元</span>
-							</van-col>
-							<van-col span="8" class="black-font">{{spliceTime(item.createTime)}}</van-col>
-							<van-col span="8" class="black-font">{{item.dueDate}}</van-col>
-						</van-row>
+							<van-row style="vertical-align: bottom;padding-left:0;padding-right: 0;">
+								<van-col v-if="item.cpAmount > 10000" span="9" class="black-font text-left" style="padding-left:0;padding-right: 0;">
+									<span class="price-txt">
+										{{item.cpAmount && dealPrice((item.cpAmount/10000).toFixed(2))}}
+									</span>
+									<span class="small-font">万元</span>
+								</van-col>
+								<van-col v-else span="9" class="black-font text-left">
+									<span  class="price-txt">{{item.cpAmount && dealPrice((item.cpAmount).toFixed(2))}}
+									</span>
+									<span class="small-font">元</span>
+								</van-col>
+								<van-col span="8" class="black-font">{{spliceTime(item.createTime)}}</van-col>
+								<van-col span="7" class="black-font">{{item.dueDate}}</van-col>
+							</van-row>
 					</template>
 				</van-cell>
 			</van-list>

@@ -1,12 +1,13 @@
 <template>
 	<div class="ticketHolder">
 		<van-nav-bar
-		:title="title"
-		right-text="发布"
 		fixed
 		@click-right="onClickRight"
 		class="top-bg"
-		/>
+		>
+			<span slot="title" class="top-bg-title">{{title}}</span>
+			<span slot="right" class="top-bg-title">发布</span>
+		</van-nav-bar>
 		<div class="ticket-search">
 			<van-search
 			style="position:absolute;left: 0;top: 0;width: 100%;"

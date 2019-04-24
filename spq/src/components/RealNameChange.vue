@@ -1,14 +1,14 @@
 <template>
   <div class="realName-page">
     <van-nav-bar
-      :title="title"
       left-arrow
       fixed
       @click-left="onClickLeft"
       class="top-bg"
       :z-index = "zIndex"
     >
-      <i class="iconfont icon-previous_step" slot="left"></i>
+      <span slot="title" class="top-bg-title">{{title}}</span>
+      <i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
     </van-nav-bar>
     <div class="realName-content">
       <van-cell-group class="realName-content-box">
@@ -18,14 +18,15 @@
         :active-icon="companyData.authStatus == 2 ? 'cross': 'checked'"
         :active-color="companyData.authStatus == 2 ? 'red': '#38f'"
         >
-          <van-step>填写认证信息</van-step>
+          <!-- <i slot="icon" class="icon icon-icon_roundclose"></i> -->
+          <van-step>提交信息</van-step>
           <van-step>待审核</van-step>
           <van-step v-if="companyData.authStatus == 2">
           审核不通过
           </van-step>
           <van-step v-else>已认证</van-step>
         </van-steps>
-        <p v-if="companyData.authStatus == 2">{{companyData.authNoPassCause}}</p>
+        <p v-if="companyData.authStatus == 2" style="padding: 5px; color: red;">{{companyData.authNoPassCause}}</p>
         <!-- <h3 class="title van-hairline--bottom">认证状态</h3>
         <div class="realName-conten-inner">
           <van-row>
@@ -46,10 +47,14 @@
         <h3 class="title van-hairline--bottom">营业执照</h3>
         <div class="realName-conten-inner">
          <UploadImg
+            v-if="companyData.authStatus != 9"
             :initPic='common.picUrl + yyzzPic'
             uploadUrl = "open-cp/v1/upload"
             @removePic='yyzzRemovePic'
             @uploadPicProgress='yyzzUploadPicFn' /> 
+          <div v-else class="picAdd-box">
+            <img :src="common.picUrl + yyzzPic">
+          </div>
         </div>
       </van-cell-group>
       <van-cell-group class="realName-content-box" style="display:none;">
@@ -76,28 +81,32 @@
         <h3 class="title van-hairline--bottom">企业信息</h3>
         <div class="realName-conten-inner">
             <van-field
-            v-model="submitData.orgName"
+            v-model.trim="submitData.orgName"
+            :readonly="companyData.authStatus == 9"
             required
             clearable
             label="企业名称："
             placeholder="企业名称"
             />
             <van-field
-              v-model="submitData.organizationCode"
+              v-model.trim="submitData.organizationCode"
+              :readonly="companyData.authStatus == 9"
               required
               clearable
               label="社会信用代码："
               placeholder="社会信用代码"
             />
             <van-field
-            v-model="submitData.email"
+            v-model.trim="submitData.email"
+            type="email"
             required
             clearable
             label="联系人邮箱："
             placeholder="联系人邮箱"
             />
             <van-field
-            v-model="submitData.contactPhone"
+            v-model.trim="submitData.contactPhone"
+            type="phone"
             required
             clearable
             label="联系人手机："
@@ -110,7 +119,7 @@
             label="企业注册地址："
             type="textarea"
             placeholder="企业注册地址"
-            rows="1"
+            rows="2"
             autosize
             />
         </div>
@@ -120,14 +129,16 @@
         <h3 class="title van-hairline--bottom">法人信息</h3>
         <div class="realName-conten-inner">
             <van-field
-            v-model="submitData.leader"
+            v-model.trim="submitData.leader"
+            :readonly="companyData.authStatus == 9"
+            type="text"
             required
             clearable
             label="姓名："
             placeholder="法人姓名"
             />
              <van-field
-            v-model="submitData.phone"
+            v-model.trim="submitData.phone"
             type="phone"
             required
             clearable
@@ -135,7 +146,8 @@
             placeholder="法人手机号"
             />
             <van-field
-              v-model="submitData.frIdCard"
+              v-model.trim="submitData.frIdCard"
+              :readonly="companyData.authStatus == 9"
               clearable
               required
               label="身份证号："
@@ -148,20 +160,20 @@
         <h3 class="title van-hairline--bottom">经办人信息</h3>
         <div class="realName-conten-inner">
             <van-field
-            v-model="submitData.jbrName"
+            v-model.trim="submitData.jbrName"
             clearable
             label="姓名："
             placeholder="经办人姓名"
             />
              <van-field
-            v-model="submitData.jbrPhone"
+            v-model.trim="submitData.jbrPhone"
             type="phone"
             clearable
             label="手机号："
             placeholder="经办人手机号"
             />
              <van-field
-              v-model="submitData.jbrIdCard"
+              v-model.trim="submitData.jbrIdCard"
               clearable
               label="身份证号："
               placeholder="经办人身份证号"
@@ -173,7 +185,7 @@
           style="width: 100%;"
           type="info"
           @click="submitInfo"
-        >确认</van-button>
+        >提交</van-button>
       </div>
     </div>
   </div>
@@ -440,5 +452,22 @@
   display: flex;
   justify-content:center;
   align-items:center;
+}
+.realName-page .picAdd-box{
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  line-height: 100px;
+  color: #232333;
+  background: #ddd;
+  position: relative;
+}
+.realName-page .picAdd-box img{
+  width: 100%;
+  max-height: 100%;
+  vertical-align: middle;
+}
+.realName-page input[readonly]{
+  background: #fff;
 }
 </style>

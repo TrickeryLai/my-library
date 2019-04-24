@@ -120,14 +120,14 @@
 						<van-col class="detail-row-left" span="24">
 							<van-field
 							class="detail-small-input w-35p" 
-							v-model="submit.yearRate"
+							v-model.trim="submit.yearRate"
 							placeholder="年化利率"
 							@input="changeData(1, submit.yearRate)"
 							type="number" />
 						%
 							<van-field 
 							class="detail-small-input w-35p"
-							v-model="submit.reduceAmount"
+							v-model.trim="submit.reduceAmount"
 							@input="changeData(2, submit.reduceAmount)" 
 							placeholder="每十万扣款"
 							type="number" />
@@ -137,7 +137,7 @@
 							<span class="detail-row-left">成交金额（元）</span>
 							<van-field 
 							class="detail-small-input" 
-							v-model="submit.dealAmount" 
+							v-model.trim="submit.dealAmount" 
 							@input="changeData(3, submit.dealAmount)"
 							placeholder="成交金额"
 							type="number" />
@@ -224,7 +224,7 @@
 					this.submit.reduceAmount = '';
 					this.submit.dealAmount = '';
 					// this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
-					this.imgs = [_common.picUrl + this.initData.frontBillImg];
+					this.imgs = [_common.mosPicUrl + this.initData.frontBillImg];
 					if(this.initData.cpStatus == 2){
 						this.buyPriceText = '撮合成交价';
 					}else{
@@ -321,6 +321,20 @@
 					this.$toast('请先实名认证！');
 					return;
 				}
+				// if(!authStatus){
+				// 	next({path: '/home/realName', query:{redirect: to.fullPath}});
+				// 	Toast('请先实名认证！');
+				// 	return;
+				// }else if(authStatus == 1){
+				// 	Toast('认证信息正在审核中！');
+				// 	next({path: '/home/selfInfo/realNameChange', query:{redirect: to.fullPath}});
+				// 	return;
+				// }else if(authStatus == 2){
+				// 	Toast('认证未通过请重新认证！');
+				// 	next({path: '/home/selfInfo/realNameChange', query:{redirect: to.fullPath}});
+				// 	return;
+				// } 
+
 				if(this.initData.createBy == user.loginName){
 					this.$toast('不能对自己发布的票据进行竞价！');
 					return;

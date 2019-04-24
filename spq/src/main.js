@@ -37,7 +37,6 @@ router.beforeEach( (to, from, next) => {
       user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')): '';
   let orgId = user ? user. orgId : '';
   let authStatus = user ? user.authStatus : '';
-  let _checked = user ? user._checked : '';//手动设置的验证值
    //路由跳转清空所有提示框 -- 登录页面,实名认证不清除
   if(to.name !== 'Login' && to.name !== 'RealName'){
       // Toast.clear();
@@ -50,31 +49,32 @@ router.beforeEach( (to, from, next) => {
       return;
   }
   //判断是否认证，否则跳出
-  if(to.meta.isNChecked && !orgId && !_checked){
-      next({path: '/home/realName', query:{redirect: to.fullPath}});
-      Toast('请先实名认证！');
-      return;
-  }
-
-  // if(to.meta.isNChecked){
-  //   // authStatus(认证状态：1-待审核；2-审核不通过；9-已认证)
-  //   if(!authStatus){
+  // if(to.meta.isNChecked && !orgId){
   //     next({path: '/home/realName', query:{redirect: to.fullPath}});
   //     Toast('请先实名认证！');
   //     return;
-  //   }else if(authStatus == 1){
-  //     Toast('认证正在审核中！');
-  //     next({path: '/home/realNameChange'});
-  //     return;
-  //   }else if(authStatus == 2){
-  //     Toast('认证未通过请重新认证！');
-  //     next({path: '/home/realNameChange', query:{redirect: to.fullPath}});
-  //     return;
-  //   } 
   // }
+
+  if(to.meta.isNChecked){
+    // authStatus(认证状态：1-待审核；2-审核不通过；9-已认证)
+    if(!authStatus){
+      // next({path: '/home/realName', query:{redirect: to.fullPath}});
+      next({path: '/home/realName'});
+      Toast('请先实名认证！');
+      return;
+    }else if(authStatus == 1){
+      next({path: '/home/selfInfo/realNameChange', query:{redirect: to.fullPath}});
+      Toast('认证信息正在审核中！');
+      return;
+    }else if(authStatus == 2){
+      next({path: '/home/selfInfo/realNameChange', query:{redirect: to.fullPath}});
+      Toast('认证未通过请重新认证！');
+      return;
+    } 
+  }
   
   //默认操作跳转下个页面
-  next()
+  next();
 });
 
 /* eslint-disable no-new */

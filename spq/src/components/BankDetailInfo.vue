@@ -1,15 +1,15 @@
 <template>
 	<div>
 	  	<van-nav-bar
-		    :title="title"
 		    left-arrow
 		    fixed
-		    right-text="修改"
 		    @click-right="onClickRight"
 		    @click-left="onClickLeft"
 		    class="top-bg"
 	  	>
-	  		<i class="iconfont icon-previous_step" slot="left"></i>
+	  		<span slot="title" class="top-bg-title">{{title}}</span>
+	  		<span slot="right" class="top-bg-title">修改</span>
+	  		<i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
 	  	</van-nav-bar>
 	  	<div>
 	  		<van-cell-group class="baseInfo-box">

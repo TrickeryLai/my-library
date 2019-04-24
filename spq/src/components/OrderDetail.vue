@@ -138,14 +138,14 @@
                 <van-col class="detail-row-left" span="24">
                   <van-field
                     class="detail-small-input w-35p"
-                    v-model="submit.yearRate"
+                    v-model.trim="submit.yearRate"
                     placeholder="年化利率"
                     @input="changeData(1, submit.yearRate)"
                     type="number"/>
                   %
                   <van-field
                     class="detail-small-input w-35p"
-                    v-model="submit.reduceAmount"
+                    v-model.trim="submit.reduceAmount"
                     @input="changeData(2, submit.reduceAmount)"
                     placeholder="每十万扣款"
                     type="number"/>
@@ -155,7 +155,7 @@
                   <span class="detail-row-left">成交金额（元）</span>
                   <van-field
                     class="detail-small-input"
-                    v-model="submit.dealAmount"
+                    v-model.trim="submit.dealAmount"
                     @input="changeData(3, submit.dealAmount)"
                     placeholder="成交金额"
                     type="number"/>
@@ -272,7 +272,7 @@
           clearInterval(this.timerOut);
           this.time = 60;
         }
-        this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
+        this.imgs = [_common.mosPicUrl + this.initData.frontBillImg];
       }
     },
     methods: {

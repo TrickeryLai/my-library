@@ -1,13 +1,13 @@
 <template>
 	<div class="register-content">
 		<van-nav-bar
-		:title="title"
 		left-arrow
 		fixed
 		@click-left="onClickLeft"
 		class="top-bg"
 		>
-			<i class="iconfont icon-previous_step" slot="left"></i>
+			<span slot="title" class="top-bg-title">{{title}}</span>
+			<i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
 		</van-nav-bar>
 		<h1 class="top-title">票据融资，多、块、好、省</h1>
 		<h1 class="title">欢迎注册</h1>
@@ -273,7 +273,7 @@ export default{
 					phoneNumber: this.register.phone, 
 					email: this.register.email, 
 					captchaCode: this.register.code, 
-					smsCaptcha: 1234 || parseInt(this.register.smsCaptcha),//短信验证码
+					smsCaptcha: parseInt(this.register.smsCaptcha),//短信验证码
 					smsCaptchaKey: this.smsCaptchaKey,//
 					captchaKey: this.captchaKey,
 				};
