@@ -7,6 +7,7 @@
 			<span slot="title" class="top-bg-title">{{title}}</span>
 		</van-nav-bar>
 		<div class="selfInfo-top">
+			<img :src="bgImg" style="position: absolute;left:0; top:0; width: 100%;height: 100%;">
 			<div style="position: absolute;left:0;top:0;width: 100%;height: 100%;">
 				<div class="checked-icon" v-if="!this.baseInfo.authStatus" @click="goChecked">
 					<span class="point"></span>未认证
@@ -111,7 +112,9 @@
 <script>
 
   import _server from '@/server/server';
-  import _common from '@/server/index'
+  import _common from '@/server/index';
+
+  import bgImg from '@/assets/self-bg2.png';
 
 	export default{
 		name: 'Order',
@@ -119,6 +122,7 @@
 			return {
 				title: '个人中心',
 				show: false,
+				bgImg: bgImg,
     			xyData: [],//协议数据
 				baseInfo:{},
 				orgName: '',
@@ -200,12 +204,12 @@
 	top: 45px;
 	width: 100%;
 	height: 200px;
-	background: -moz-linear-gradient(top, #0079f3 0%, #f5f5f5 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0079f3), color-stop(100%,#f5f5f5));
-	background: -webkit-linear-gradient(top, #0079f3 0%,#f5f5f5 100%);
-	background: -o-linear-gradient(top, #0079f3 0%,#f5f5f5 100%);
-	background: -ms-linear-gradient(top, #0079f3 0%,#f5f5f5 100%);
-	background: linear-gradient(to bottom, #0079f3 0%,#f5f5f5 100%);
+	background: -moz-linear-gradient(left, #1E90FF 0%, #00BFFF 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1E90FF), color-stop(100%,#00BFFF));
+    background: -webkit-linear-gradient(left, #1E90FF 0%,#00BFFF 100%);
+    background: -o-linear-gradient(left, #1E90FF 0%,#00BFFF 100%);
+    background: -ms-linear-gradient(left, #1E90FF 0%,#00BFFF 100%);
+    background: linear-gradient(to right, #1E90FF 0%,#00BFFF 100%);
 }
 .checked-icon{
 	position: absolute;

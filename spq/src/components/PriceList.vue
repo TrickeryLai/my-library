@@ -8,7 +8,7 @@
 	<div style="max-height: 50vh;overflow-y:auto;padding: 0 5px;margin-top:5px;"
 	 @touchmove.stop
 	 >
-		<table class="table" v-if="isTable">
+		<!-- <table class="table" v-if="isTable">
 			<tr>
 				<th>公司名称</th>
 				<th>竞价金额(元)</th>
@@ -66,7 +66,7 @@
 					>拒绝</van-button>
 				</td>
 			</tr>
-		</table>
+		</table> -->
 		<div 
 			v-for="(item, index) in list"
 			:key = "index"
@@ -261,7 +261,10 @@
 	padding-top: 5px;
 	padding-bottom: 5px;
 }
+.price-list-box .van-row:nth-child(2n+1){
+	background:#fff;
+}
 .price-list-box .van-row:nth-child(2n){
-	background:#eee;
+	background:#f5f5f5;
 }
 </style>

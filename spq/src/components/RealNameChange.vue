@@ -255,11 +255,18 @@
                   success(res){
                     if(res){
                       _this.initData(res);
+                      localStorage.setItem('user', JSON.stringify(res));
                       //authStatus(认证状态：1-待审核；2-审核不通过；9-已认证)
                       if(res.authStatus == 1){
+                        _this.$toast('认证信息正在审核！');
                         _this.companyStepActive = 1;
                       }else if(res.authStatus == 2 || res.authStatus == 9){
                          _this.companyStepActive = 2;
+                         if(res.authStatus == 2){
+                            _this.$toast('审核未通过，请修改之后再提交！');
+                         }else if(res.authStatus == 9){
+                            _this.$toast('审核已通过！');
+                         }
                       }
                     }
                   }

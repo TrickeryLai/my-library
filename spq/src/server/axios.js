@@ -24,7 +24,7 @@ let model = {
   time: 300,
   show(){
     // Toast.clear();
-    modelToast = Toast.loading({
+    Vue.prototype.$modelToast = modelToast = Toast.loading({
       position: 'middle',
       mask: true,
       duration: 0,       // 持续展示 toast
@@ -314,6 +314,6 @@ let _Axios = {
   }
 }
 
-Vue.prototype.$axios = _Axios
+Vue.prototype.$axios = _Axios;
 
 export default _Axios;

@@ -5,7 +5,12 @@
 </template>
 
 <script>
-
+// background: -moz-linear-gradient(left, #1E90FF 0%, #00BFFF 100%);
+//     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1E90FF), color-stop(100%,#00BFFF));
+//     background: -webkit-linear-gradient(left, #1E90FF 0%,#00BFFF 100%);
+//     background: -o-linear-gradient(left, #1E90FF 0%,#00BFFF 100%);
+//     background: -ms-linear-gradient(left, #1E90FF 0%,#00BFFF 100%);
+//     background: linear-gradient(to right, #1E90FF 0%,#00BFFF 100%);
 // color: #2c3e50;
   export default {
     name: 'App',
@@ -53,18 +58,19 @@
     font-size: 16px;
   }
   .top-bg{
-    background: -moz-linear-gradient(left, #1E90FF 0%, #00BFFF 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1E90FF), color-stop(100%,#00BFFF));
-    background: -webkit-linear-gradient(left, #1E90FF 0%,#00BFFF 100%);
-    background: -o-linear-gradient(left, #1E90FF 0%,#00BFFF 100%);
-    background: -ms-linear-gradient(left, #1E90FF 0%,#00BFFF 100%);
-    background: linear-gradient(to right, #1E90FF 0%,#00BFFF 100%);
+    background-color: #eee;
+  }
+  .top-bg-title{
+   
   }
   .text-left{
     text-align: left;
   }
   .blue-font{
     color: #0079f3;
+  }
+  .deep-blue-font{
+    color: #011629;
   }
   .red-font{
     color: red;
@@ -120,8 +126,9 @@
     color: red;
     font-size: 22px;
   }
-  .top-bg-title{
-    color: #fff;
+  .xy-txt{
+    color: #232333;
+    font-weight: 900;
   }
 
   </style>

@@ -30,7 +30,7 @@
             @uploadPicProgress='pjfUploadPicFn' /> 
             <p class="picTitle" @click="showPjPic(2)"><span style="color: red;">*</span>票据背面<span class="blue-font">示例</span></p>
           </div>
-          <div class="pic-box" v-for="(item, index) in imageList" :key="index" v-show="item.imageName || (index == imageList.length - 1)">
+          <div class="pic-box" v-for="(item, index) in imageList" :key="index" v-if="item.imageName || (index == imageList.length - 1)">
             <UploadImg
             uploadUrl = "open-cp/v1/upload"
             :initPic = "getPicUrl(item.imageName)"
@@ -334,7 +334,8 @@ import _common from '@/server/index'
           }
       },
       created(){
-          this.initType()
+          this.initType();
+          this.$canScroll();
       },
       methods: {
           onClickLeft(){
@@ -385,23 +386,30 @@ import _common from '@/server/index'
               if(data.backBillImg){
                 this.pjfPicUState.state = 3;
               }
+
+              if(data.imageList && data.imageList.length < 9){
+                this.imageList.push({imageName: ''});
+              }
               
           },
           moreRemovePic(item){
-            let result = [], i = 0;
+            let result = [];
 
             this.imageList.forEach(i => {
               if(item.imageName == i.imageName){
                 i.imageName = '';
-              }else if(i.imageName){
-                i += 1;
               }
             });
 
-            if(i < 9){
+            this.imageList = this.imageList.filter(i => {
+              if(i.imageName){
+                return true;
+              }
+            })
+
+            if(this.imageList.length < 9){
               this.imageList.push({imageName: ''});
             }
-            // console.log(this.imageList, '----------------')
           },
           moreUploadPicFn(data){
             if(data.state == 3){
@@ -418,7 +426,6 @@ import _common from '@/server/index'
                 result.push({imageName: ''});
               }
               this.imageList = [].concat(result);
-              console.log(this.imageList);
             }
           },
           typeChange(type){
@@ -592,8 +599,12 @@ import _common from '@/server/index'
               this.$toast('票据反面图片正在上传！')
               return false;
             }
-            if(!this.submitData.cpNo || this.submitData.cpNo.toString().length != 30 || this.submitData.cpNo.toString().substring(0,1) != 2){
+            if(!this.submitData.cpNo || this.submitData.cpNo.toString().length != 30){
               this.$toast('请填写正确的30位商业承兑汇票号！')
+              return false;
+            }
+            if(this.submitData.cpNo.toString().substring(0,1) != 2){
+              this.$toast('请填写商业承兑汇票类型票号！')
               return false;
             }
             if(!this.submitData.cpAmount || !/^(0|[1-9]\d*)(\.\d+)?$/.test(this.submitData.cpAmount)){
@@ -623,6 +634,13 @@ import _common from '@/server/index'
             if(!this.checkSubmitData()){
               return;
             }
+
+            let imgListD = this.imageList.filter(item => {
+                if(item.imageName){
+                  return true;
+                }
+            });
+
             let initData = JSON.parse(this.$route.query.pjData);
             let data = {
               acceptor: this.submitData.acceptor,
@@ -637,6 +655,7 @@ import _common from '@/server/index'
               backBillImg: _common.common_fn.formateUlr(this.pjfPic),
               turnVolume: this.sell.turnVolume ? parseFloat(this.sell.turnVolume): '',
               cpId: initData.cpId,
+              imageList: imgListD
             }
 
             _server.changeCommercialPaper(data, (res) =>{

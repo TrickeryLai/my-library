@@ -35,9 +35,12 @@ let server = {
    * @param  {Function} callback [description]
    * @return {[type]}            [description]
    */
-  getSmsCaptcha(phoneNumber){
+  getSmsCaptcha(phoneNumber, loginName){
     let url = 'open-cp/v1/smsCaptcha/?phoneNumber=' + phoneNumber;
 
+    if(loginName){
+      url += '&loginName=' + loginName;
+    }
     return new Promise((resolve, reject) => {
       Axios.get({
         url: url,
@@ -157,6 +160,29 @@ let server = {
 			});
 		return this;
 	},
+  /***/
+  forgetPassword(data){
+    let url = 'open-cp/v1/forgetPassword';
+
+    return new Promise( (resolve, reject) => {
+      Axios.post({
+        isLoading: true,
+        url,
+        data: data,
+      }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+      }).catch(error => {
+        return reject(error);
+        // console.log(error);
+      });
+    })
+    
+  },
 	/**
 	 * [getBusinessTickets 大厅获取票据列表]
 	 * @param  {[type]}   data     [description]
@@ -207,6 +233,33 @@ let server = {
 	    });
 	    return this;
   	},
+    /**
+     * [getSelfTicketDetail 获取票据详情，含img]
+     * @param  {[type]} params [description]
+     * @return {[type]}        [description]
+     */
+    getSelfTicketDetail(_id){
+      let url = 'open-cp/v1/commercialPaper/paper/' + _id;
+
+      return new Promise( (resolve, reject) => {
+        Axios.get({
+          isLoading: true,
+          url,
+        }).then((response) => { 
+          
+            if(response.code == 0 || response.code == 110008){
+                return resolve(response)
+            }else{
+              Toast(response.errMsg);
+              return reject(error);
+            }
+          })
+        .catch(error => {
+            return reject(error);
+        });
+      })
+     
+    },
   	/**
   	 * [发布票据 description]
   	 * @param  {[type]}   data     [description]

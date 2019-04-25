@@ -18,6 +18,7 @@ import MatchBank from '@/components/MatchBank'
 import AddBankCard from '@/components/AddBankCard'
 import BankDetailInfo from '@/components/BankDetailInfo'
 import ChangeAccount from '@/components/ChangeAccount'
+import ForgetPassword from '@/components/ForgetPassword'
 
 let routerData = {
   routes: [
@@ -195,6 +196,15 @@ let routerData = {
       isNChecked: false,
     },
     component: PreviewPdf
+  },
+  {
+    path: '/forgetPassword',
+    name: 'ForgetPassword',
+    meta:{
+      isLogin: false,
+      isNChecked: false,
+    },
+    component: ForgetPassword
   }
   ]
 }

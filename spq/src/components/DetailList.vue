@@ -157,7 +157,7 @@
 					type="primary"
 					style="width: 100%;position: absolute; left: 0; bottom: 0;"
 					@click="modelClose"
-					>成交中</van-button>
+					>报价成功</van-button>
 				<van-button
 					v-if="initData.cpStatus == '03'"
 					type="danger"
@@ -166,7 +166,7 @@
 					>已注销</van-button>
 				<van-button
 					v-if="initData.cpStatus == '06'"
-					color="#1989fa"
+					type="primary"
 					style="width: 100%;position: absolute; left: 0; bottom: 0;"
 					@click="modelClose"
 					>已成交</van-button>
@@ -315,25 +315,21 @@
 				let _this = this;
 				//判断是否验证
 				let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '';
-				if(!(user.orgId || user._checked)){
-
-					this.$router.push({path: '/home/realName', query:{redirect: currentPath}});
-					this.$toast('请先实名认证！');
+				let authStatus = user.authStatus;
+ 
+				if(!authStatus){
+					next({path: '/home/realName'});
+					Toast('请先实名认证！');
 					return;
-				}
-				// if(!authStatus){
-				// 	next({path: '/home/realName', query:{redirect: to.fullPath}});
-				// 	Toast('请先实名认证！');
-				// 	return;
-				// }else if(authStatus == 1){
-				// 	Toast('认证信息正在审核中！');
-				// 	next({path: '/home/selfInfo/realNameChange', query:{redirect: to.fullPath}});
-				// 	return;
-				// }else if(authStatus == 2){
-				// 	Toast('认证未通过请重新认证！');
-				// 	next({path: '/home/selfInfo/realNameChange', query:{redirect: to.fullPath}});
-				// 	return;
-				// } 
+				}else if(authStatus == 1){
+					Toast('认证信息正在审核中！');
+					next({path: '/home/selfInfo/realNameChange'});
+					return;
+				}else if(authStatus == 2){
+					Toast('认证未通过请重新认证！');
+					next({path: '/home/selfInfo/realNameChange'});
+					return;
+				} 
 
 				if(this.initData.createBy == user.loginName){
 					this.$toast('不能对自己发布的票据进行竞价！');
@@ -415,6 +411,7 @@
 	text-align: left;
 	color: #000;
 	font-weight: normal;
+	font-size: 16px;
 }
 .title::before{
 	content: '';
@@ -423,7 +420,7 @@
 	height: 8px;
 	border-radius: 50%;
 	background: #0079f3;
-	vertical-align: 5px;
+	vertical-align: 1px;
 	margin-right: 7px;
 }
 .model-content{

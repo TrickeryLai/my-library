@@ -23,73 +23,76 @@
 							class="iconfont icon-arrowdownb" 
 							:class="{'rant-active': (sortState.amountSort === 1)}"
 							name="arrow-down"/>
-							</span>
-							</div>
-							</van-col>
-							<van-col span="8">
-							<div @click="sortPublish">
+						</span>
+					</div>
+				</van-col>
+				<van-col span="8">
+					<div @click="sortPublish">
 							发布时间
-							<span class="rant-arrow">
+						<span class="rant-arrow">
 							<i 
 							class="iconfont icon-arrowup" :class="{'rant-active': sortState.createTimeSort === 0}"
 							name="arrow-up"/>
 							<i class="iconfont icon-arrowdownb" :class="{'rant-active': sortState.createTimeSort === 1}"
 							name="arrow-down"/>
-							</span>
-							</div>
-							</van-col>
-							<van-col span="8">
-							<div @click="sortEndTime">
+						</span>
+					</div>
+				</van-col>
+				<van-col span="8">
+					<div @click="sortEndTime">
 							到期日
-							<span class="rant-arrow">
+						<span class="rant-arrow">
 							<i class="iconfont icon-arrowup" :class="{'rant-active': sortState.dueDateSort === 0}" name="arrow-up"/>
 							<i class="iconfont icon-arrowdownb" :class="{'rant-active': sortState.dueDateSort === 1}"
 							name="arrow-down"/>
-							</span>
-							</div>
-							</van-col>
-							</div>
-							</van-row>
-							<div style="margin-top: 5px;padding-bottom:50px;">
-							<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-							<van-list
-							v-model="loading"
-							:finished="finished"
-							finished-text="没有更多了"
-							:error.sync="error"
-							error-text="请求失败，点击重新加载"
-							:offset=20
-							@load="onLoad"
-							>
-							<van-cell
-							v-for="(item,index) in list"
-							:key="index"
-							:title="index"
-							style="margin-bottom: 5px;box-shadow: 1px 1px 0px 1px #ccc;"
-							@click="showDetail(item)"
-							>
-							<template slot="title">
-							<van-row gutter="3" class="van-hairline--bottom">
+						</span>
+					</div>
+				</van-col>
+			</div>
+		</van-row>
+		<div style="margin-top: 5px;padding-bottom:50px;">
+			<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+				<van-list
+					ref="bscroll"
+					v-model="loading"
+					:finished="finished"
+					finished-text="没有更多了"
+					:error.sync="error"
+					error-text="请求失败，点击重新加载"
+					:offset=20
+					@load="onLoad"
+					>
+						<van-cell
 
+						v-for="(item,index) in list"
+						:key="index"
+						:title="index"
+						style="margin-bottom: 5px;box-shadow: 1px 1px 0px 1px #ccc;"
+						@click="showDetail(item)"
+						>
+							<template slot="title">
+							<van-row gutter="3" class="van-hairline--bottom" style="overflow: hidden;">
 								<van-col span="14" class="van-ellipsis text-left">
-								<span class="blue-font" v-if="item.creditRating == 1">优秀</span>
-								<span class="blue-font" v-else-if="item.creditRating == 2">良好</span>
-								<span class="blue-font" v-else-if="item.creditRating == 3">一般</span>
-								<span style="color: #eee;padding: 0 2px;">|</span>
-								承兑人：{{item.acceptor}}
-							</van-col>
-							<van-col span="6" style="text-align:right;" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)
-							</van-col>
-							<van-col span="4">
-							<van-tag round  type="success" v-if="item.cpStatus == 1">审核中</van-tag>
-							<van-tag round type="danger" v-else-if="item.cpStatus == 2">成交中</van-tag>
-							<van-tag round v-else-if="item.cpStatus == 3">已注销</van-tag>
-							<van-tag round color="#f2826a" v-else-if="item.cpStatus == 4">报价中</van-tag>
-							<van-tag round color="#1989fa" v-else-if="item.cpStatus == 6">已成交</van-tag>
-							</van-col>
+									<span class="xy-txt" v-if="item.creditRating == 1">优秀</span>
+									<span class="xy-txt" v-else-if="item.creditRating == 2">良好</span>
+									<span class="xy-txt" v-else-if="item.creditRating == 3">一般</span>
+									<span style="color: #eee;padding: 0 2px;">|</span>
+									承兑人：{{item.acceptor}}
+								</van-col>
+								<van-col span="5" style="text-align:right;" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)
+								</van-col>
+								<van-col span="5">
+									<van-tag type="success" v-if="item.cpStatus == 1">审核中</van-tag>
+									<van-tag type="danger" v-else-if="item.cpStatus == 2">报价成功</van-tag>
+									<van-tag v-else-if="item.cpStatus == 3">已注销</van-tag>
+									<van-tag type="primary" v-else-if="item.cpStatus == 4">可报价</van-tag>
+									<van-tag type="success" v-else-if="item.cpStatus == 6">已成交</van-tag>
+									<van-tag v-else-if="item.cpStatus == 7">买方违约</van-tag>
+									<van-tag v-else-if="item.cpStatus == 8">卖方违约</van-tag>
+								</van-col>
 							</van-row>
-							<van-row style="vertical-align: bottom;padding-left:0;padding-right: 0;">
-								<van-col v-if="item.cpAmount > 10000" span="9" class="black-font text-left" style="padding-left:0;padding-right: 0;">
+							<van-row style="margin-top: 5px;">
+								<van-col v-if="item.cpAmount > 10000" span="9" class="black-font text-left">
 									<span class="price-txt">
 										{{item.cpAmount && dealPrice((item.cpAmount/10000).toFixed(2))}}
 									</span>
@@ -129,6 +132,7 @@ import SetSearch from '@/components/SetSearch'
 import DetailList from '@/components/DetailList'
 import _server from '@/server/server'
 import _common from '@/server/index'
+
 
 //01-待发布；02-成交中；03-注销;04-发布中;05-审核失败;06-已成交;
 //待发布-----审核>发布中-----撮合>成交中------收取费用>已成交
@@ -176,6 +180,7 @@ import _common from '@/server/index'
 	        searchModelState: false,//筛选弹出框状态
 	        isGetingData: false,//是否正在请求数据
 	        searchData: '',//搜索条件
+	        aBScroll: '',
 	        // 0是asc   1是desc
 	        sortState: {
 	          	dueDateSort: '',//到期时间排序
@@ -190,8 +195,12 @@ import _common from '@/server/index'
       		list: []
   		}
 	},
+	mounted(){
+		
+	},
 	methods: {
 		onClickRight() {
+			this.$noScroll();
 			this.searchModelState = true;
 			this.loading = true;
 		},
@@ -208,72 +217,74 @@ import _common from '@/server/index'
 			return _common.common_fn.getLastTime(endTime);
 		},
 		searchModelClose(data) {
+			this.$canScroll();
 			this.searchModelState = false;
 			this.isGetingData = false;
 			this.loading = false;
 		},
 		detailModelClose() {
+			this.$canScroll();
 			this.detailModelState = false;
 			this.loading = false;
 		},
-	getData(data, callback) {
-		if (this.isGetData) {
-			return;
-		}
-		this.isGetData = true;
-        this.loading = true;//处于加载状态，不触发onLoad
-        let _this = this;
-        let pageData = Object.assign({}, this.pageData);
-        let initData = {
-          faceValue_id: '',//票据金额 underThound 10万以下  thoundToOneMillion 10-100万  moreOneMillion  100万以上   moreFiveMillion  500万以上
-          faceValueMin: '',
-          faceValueMax: '',
-          remainingDays_id: '',//剩余天数 lessThanNinety 90天内   ninetyToHundredEighty 90-180天   hundredEightyToThreeHundredsixty 180-360天
-          daysMin: '',
-          daysMax: '',
-          flaw_id: '',//瑕疵  Y 有   N 无
-          credit_id: '',//excellent 优秀   well 良好 ordinary 一般
-          pageSize: pageData.pageSize,
-          pageNum: pageData.pageNum,
-          dueDateSort: this.sortState.dueDateSort,
-          createTimeSort: this.sortState.createTimeSort,
-          amountSort: this.sortState.amountSort,
-          onlyShow: '' ,
-          cpStatus: '',//票据状态
- 	 	};
-      	if (this.pageData.pageNum == 1) {
-      		this.list = [];//不清空，在滚动至多页的时候，重新刷新会一直触发onload
-      	}
-        //查询条件
-        data = Object.assign({}, initData, data);
-        //获取列表数据
-        _server.getBusinessTickets(data).then((response) => {
-        	this.isGetData = false;
-        	this.loading = false;
-        	this.isLoading = false;
-        	this.error = false;
-        	if (response.code == 0) {
-        		if (this.pageData.pageNum > 1) {
-        			response.list.forEach((item) => {
-        				this.list.push(item);
-        			});
-        		} else {
-        			this.list = response.list;
+		getData(data, callback) {
+			if (this.isGetData) {
+				return;
+			}
+			this.isGetData = true;
+	        this.loading = true;//处于加载状态，不触发onLoad
+	        let _this = this;
+	        let pageData = Object.assign({}, this.pageData);
+	        let initData = {
+	          faceValue_id: '',//票据金额 underThound 10万以下  thoundToOneMillion 10-100万  moreOneMillion  100万以上   moreFiveMillion  500万以上
+	          faceValueMin: '',
+	          faceValueMax: '',
+	          remainingDays_id: '',//剩余天数 lessThanNinety 90天内   ninetyToHundredEighty 90-180天   hundredEightyToThreeHundredsixty 180-360天
+	          daysMin: '',
+	          daysMax: '',
+	          flaw_id: '',//瑕疵  Y 有   N 无
+	          credit_id: '',//excellent 优秀   well 良好 ordinary 一般
+	          pageSize: pageData.pageSize,
+	          pageNum: pageData.pageNum,
+	          dueDateSort: this.sortState.dueDateSort,
+	          createTimeSort: this.sortState.createTimeSort,
+	          amountSort: this.sortState.amountSort,
+	          onlyShow: '' ,
+	          cpStatus: '',//票据状态
+	 	 	};
+	      	if (this.pageData.pageNum == 1) {
+	      		this.list = [];//不清空，在滚动至多页的时候，重新刷新会一直触发onload
+	      	}
+	        //查询条件
+	        data = Object.assign({}, initData, data);
+	        //获取列表数据
+	        _server.getBusinessTickets(data).then((response) => {
+	        	this.isGetData = false;
+	        	this.loading = false;
+	        	this.isLoading = false;
+	        	this.error = false;
+	        	if (response.code == 0) {
+	        		if (this.pageData.pageNum > 1) {
+	        			response.list.forEach((item) => {
+	        				this.list.push(item);
+	        			});
+	        		} else {
+	        			this.list = response.list;
 
-        		}
-            //数据全部加载完成
-            if (this.list.length >= response.pageInfo.total) {
-            	this.finished = true;
-            } else {
-            	this.finished = false;
-            }
-        }
-    	}).catch((error) => {
-	    	this.error = true;
-	    	this.isGetData = false;
-	    	this.loading = false;
-	    	this.isLoading = false;
-    	})
+	        		}
+	            //数据全部加载完成
+	            if (this.list.length >= response.pageInfo.total) {
+	            	this.finished = true;
+	            } else {
+	            	this.finished = false;
+	            }
+	        }
+	    	}).catch((error) => {
+		    	this.error = true;
+		    	this.isGetData = false;
+		    	this.loading = false;
+		    	this.isLoading = false;
+	    	})
 	},
 	onRefresh() {
         //获取列表
@@ -333,6 +344,7 @@ import _common from '@/server/index'
       			if (res.code == 0) {
       				_this.detailItem = res.data;
       				_this.detailModelState = true;
+      				_this.$noScroll();
       			}
       		}
       	});
@@ -343,10 +355,12 @@ import _common from '@/server/index'
         this.getData(this.searchData);
     },
     modelOk(data) {
+    	console.log(data);
+    	this.$canScroll();
     	this.isGetingData = false;
     	let searchData = {
     		faceValue_id: data.amountChosed.val ? data.amountChosed.val : '',
-    		faceValueMin: data.amountChosed.min ? parseFloat(data.amountChosed.min * 10000) : '',
+    		faceValueMin: data.amountChosed.min ? ((data.amountChosed.min == 100 || data.amountChosed.min == 500) ? parseFloat(data.amountChosed.min * 10000) + 0.00001 : parseFloat(data.amountChosed.min * 10000)) : '',
     		faceValueMax: data.amountChosed.max ? parseFloat(data.amountChosed.max * 10000) : '',
     		remainingDays_id: data.dayChoose.val ? data.dayChoose.val : '',
     		daysMax: data.dayChoose.max ? parseFloat(data.dayChoose.max) : '',
@@ -366,6 +380,7 @@ import _common from '@/server/index'
         this.getData(searchData);
     },
     modelClose() {
+    	this.$canScroll();
     	this.searchModelState = false;
     }
 }

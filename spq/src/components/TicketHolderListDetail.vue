@@ -3,7 +3,6 @@
 	<van-popup  
 	v-model="show"
 	position="right"
-	:lock-scroll = "false"
 	@close="modelClose"
 	>
 		<div class="model-content">
@@ -38,14 +37,20 @@
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">票据状态</van-col>
 						<van-col class="detail-row-right" span="18">
-							<van-tag round  type="success" v-if="initData.cpStatus == 1">审核中</van-tag>
-							<van-tag round type="danger" v-else-if="initData.cpStatus == 2">成交中</van-tag>
-							<van-tag round v-else-if="initData.cpStatus == 3">已注销</van-tag>
-              				<van-tag round color="#f2826a" v-else-if="initData.cpStatus == 4">报价中</van-tag>
-              				<van-tag round v-else-if="initData.cpStatus == 5">审核失败</van-tag>
-              				<van-tag round color="#1989fa" v-else-if="initData.cpStatus == 6">已成交</van-tag>
-							<van-tag round v-if="initData.stringDate < 0">已过期</van-tag>
+							<van-tag type="success" v-if="initData.cpStatus == 1">审核中</van-tag>
+							<van-tag type="danger" v-else-if="initData.cpStatus == 2">报价成功</van-tag>
+							<van-tag v-else-if="initData.cpStatus == 3">已注销</van-tag>
+              				<van-tag type="primary" v-else-if="initData.cpStatus == 4">可报价</van-tag>
+              				<van-tag v-else-if="initData.cpStatus == 5">审核失败</van-tag>
+              				<van-tag color="#1989fa" v-else-if="initData.cpStatus == 6">已成交</van-tag>
+              				<van-tag v-else-if="item.cpStatus == 7">买方违约</van-tag>
+							<van-tag v-else-if="item.cpStatus == 8">卖方违约</van-tag>
+							<van-tag v-if="initData.stringDate < 0">已过期</van-tag>
 						</van-col>
+					</van-row>
+					<van-row class="detail-row" v-if="initData.cpStatus == 5">
+						<van-col class="detail-row-left" span="6">原因</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.refusalCause}}</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">成交信用</van-col>
@@ -83,7 +88,7 @@
 					</van-row>
 				</van-cell-group>
 			</van-cell-group>
-			<van-cell-group class="van-hairline--bottom" style="padding-bottom: 60px;">
+			<van-cell-group v-if="item.cpStatus == 2 || item.cpStatus == 3 || item.cpStatus == 4 || item.cpStatus == 6" class="van-hairline--bottom" style="padding-bottom: 60px;">
 				<h3 class="title">报价信息</h3>
 				<van-cell-group>
 					<van-row>
@@ -126,13 +131,13 @@
 				
 			</van-cell-group>
 			<van-row type="flex" justify="center" style="width: 100%;height: 44px;position: absolute;left: 0; bottom: 0;">
-					<van-col span="12" v-if="initData.cpStatus == 4">
+					<van-col span="12" v-if="initData.cpStatus == 4 || initData.cpStatus == 1 || initData.cpStatus == 5">
 						<van-button
 						type="danger"
 						style="width: 100%;"
 						@click="deleteP">注销</van-button>
 					</van-col>
-					<van-col span="12" v-if="initData.cpStatus == 1 && initData.stringDate >= 0">
+					<van-col span="12" v-if="(initData.cpStatus == 1 || initData.cpStatus == 5) && initData.stringDate >= 0">
 						<van-button
 						type="primary"
 						style="width: 100%;"
@@ -279,8 +284,18 @@
 				this.priceListShow = false;
 			},
 			previewPic(index){
+				let imageList = this.initData.imageList, 
+					imageResult = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
+				if(imageList && imageList.length > 0){
+					imageList.forEach( item => {
+						if(item.imageName){
+							imageResult.push(_common.picUrl + item.imageName);
+						}
+					})
+				}
+
 				ImagePreview({
-					images: [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg],
+					images: imageResult,
 					startPosition: index,
 					onClose() {
 				    // do something
@@ -368,6 +383,7 @@
 	text-align: left;
 	color: #000;
 	font-weight: normal;
+	font-size: 16px;
 }
 .title::before{
 	content: '';
@@ -376,7 +392,7 @@
 	height: 8px;
 	border-radius: 50%;
 	background: #0079f3;
-	vertical-align: 5px;
+	vertical-align: 1px;
 	margin-right: 7px;
 }
 .model-content{

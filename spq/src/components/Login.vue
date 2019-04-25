@@ -1,76 +1,80 @@
 <template>
 <div class="register-content">
 	<van-nav-bar
-		left-arrow
 		fixed
-		@click-left="onClickLeft"
 		class="top-bg"
   	>	
   		<span slot="title" class="top-bg-title">{{title}}</span>
-    	<i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
+    	<!-- <i class="iconfont icon-previous_step top-bg-title" slot="left"></i> -->
   	</van-nav-bar>
-	<h1 class="top-title">票据融资，多、块、好、省</h1>
-	<h1 class="title">欢迎登录</h1>
-	<van-row >
-		<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
-			<i class="iconfont icon-mine"></i>
-		</van-col>
-		<van-col span="22">
-			<van-field 
-				class="van-hairline--surround register-input"
-				style="display:inline-block;margin:0;padding:0;" 
-				v-model.trim="register.username" placeholder="请输入用户名"
-				type="text" />
+  	<div style="position: absolute;top:43%;left:50%;width:100%;transform:translate(-50%,-50%);">
+  		  	<div :style="{backgroundImage:'url('+topImg+')'}"
+  	style="height:110px;margin: 10px 40px 30px;background-position:center;background-size:cover;background-repeat: no-repeat;">
+		</div>
+	  	<div style="margin: 10px 40px 0;">
+			<van-row >
+				<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
+					<i class="iconfont icon-mine"></i>
+				</van-col>
+				<van-col span="22">
+					<van-field 
+						class="van-hairline--surround register-input"
+						style="display:inline-block;margin:0;padding:0;" 
+						v-model.trim="register.username" placeholder="请输入用户名"
+						type="text" />
 
-		</van-col>
-	</van-row>
-	<van-row >
-		<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
-			<i class="iconfont icon-lock"></i>
-		</van-col>
-		<van-col span="22">
-			<PasswordI v-model.trim="register.password"/>
-			<!-- <van-field 
-				class="van-hairline--surround register-input"
-				style="display:inline-block;margin:0;padding:0;" 
-				v-model="register.password" placeholder="请输入密码"
-				type="password" /> -->
-		</van-col>
-	</van-row>
-	<van-row >
-		<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
-			<i class="iconfont icon-safety-certificate"></i>
-		</van-col>
-		<van-col span="14">
-			<van-field 
-				class="van-hairline--surround register-input"
-				style="display:inline-block;margin:0;padding:0;" 
-				v-model.trim="register.code" placeholder="请输入验证码"
-				type="text"
-				/>
-		</van-col>
-		<van-col span="8">
-			<img style="height: 33px;width:100%" 
-			:src="img"
-			@click="changeCodePic"
-			>
-		</van-col>
-		
-	</van-row>
-	<div class="login-bottom">
-		<van-button 
-			type="info"
-			@click="loginFn"
-			style="width: 100%;border-radius: 100px;"
-		>登录</van-button>
-		<p style="padding: 5px;">没有已有账号，<span class="blue-font" @click="gotoRegister">立即注册</span></p>
-	</div>
+				</van-col>
+			</van-row>
+			<van-row >
+				<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
+					<i class="iconfont icon-lock"></i>
+				</van-col>
+				<van-col span="22">
+					<PasswordI v-model.trim="register.password"/>
+					<!-- <van-field 
+						class="van-hairline--surround register-input"
+						style="display:inline-block;margin:0;padding:0;" 
+						v-model="register.password" placeholder="请输入密码"
+						type="password" /> -->
+				</van-col>
+			</van-row>
+			<van-row >
+				<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
+					<i class="iconfont icon-safety-certificate"></i>
+				</van-col>
+				<van-col span="14">
+					<van-field 
+						class="van-hairline--surround register-input"
+						style="display:inline-block;margin:0;padding:0;" 
+						v-model.trim="register.code" placeholder="请输入验证码"
+						type="text"
+						/>
+				</van-col>
+				<van-col span="8">
+					<img style="height: 33px;width:100%" 
+					:src="img"
+					@click="changeCodePic"
+					>
+				</van-col>
+			</van-row>
+			<p class="text-right deep-blue-font" @click="gotoFindWord">忘记密码？</p>
+			<div class="login-bottom">
+				<van-button 
+					type="info"
+					@click="loginFn"
+					style="width: 100%;border-radius: 100px;background:#011629;border-color: #011629;"
+				>登录</van-button>
+				<p style="padding: 5px;">没有已有账号，<span class="blue-font" @click="gotoRegister">立即注册</span></p>
+			</div>
+	  	</div>
+  	</div>
 </div>
 </template>
 
 <script>
 import _server from '@/server/server';
 import PasswordI from '@/components/PasswordI';
+import topImg from '@/assets/top-bg.png';
 
 export default{
 	name: "Login",
@@ -84,6 +88,7 @@ export default{
 			isLogining: false,
 			getCaptchaState: false,
 			isShowWord: false,
+			topImg: topImg,
 			register: {
 				username: "",
 				password: ""
@@ -162,6 +167,9 @@ export default{
 		gotoRegister(){
 			this.$router.replace({path: 'register'})
 		},
+		gotoFindWord(){
+			this.$router.replace({path: '/forgetPassword'})
+		},
 		changeCodePic(){
 			if(this.getCaptchaState){
 				return;
@@ -183,8 +191,6 @@ export default{
 <style scoped>
 .register-content{
 	background: #f5f5f5;
-	border-radius: 5px;
-	margin: 10px 40px 0;
 }
 .register-content .van-row{
 	margin: 10px 0;
@@ -203,7 +209,7 @@ export default{
 	font-weight: bold;
 	font-size: 24px;
 	color:#232333;
-	margin: 25px 0 15px;
+	margin: 30px 0 25px;
 	text-shadow: 2px 2px 2px #fff;
 }
 .register-content .title{

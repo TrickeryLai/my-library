@@ -111,7 +111,7 @@
 		</van-pull-refresh>
 	</div>
 
-</van-collapse-item>
+	</van-collapse-item>
 			<!-- <van-collapse-item class="text-left" title="暂存中" name="2">
 				
 			</van-collapse-item> -->
@@ -308,6 +308,7 @@ export default{
 						if(res.code == 0){
 							_this.fbListState.detailItem = res.data;
 							_this.fbListState.detailModelState = true;
+							_this.$noScroll();
 						}
 					}
 				});
@@ -321,6 +322,7 @@ export default{
 				this.fbGetData();
 			},
 			detailModelClose(){
+				this.$canScroll();
 				this.fbListState.detailModelState = false;
 			},
 			formatter(type, value) {

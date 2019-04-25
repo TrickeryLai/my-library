@@ -46,23 +46,26 @@
 						<van-col span="18" class="van-ellipsis text-left">承兑人：{{item.acceptor}}</van-col>
 						<van-col span="6">
 							<div>
-								<div v-if="item.cpStatus == 1 || item.cpStatus == 4">
-									<van-tag round v-if="getLastTime(item.dueDate) < 0">
+								<div v-if="item.cpStatus == 1 || item.cpStatus == 4 || item.cpStatus == 5">
+									<van-tag  v-if="getLastTime(item.dueDate) < 0">
 										已过期
 									</van-tag>
-									<van-tag round type="success" v-else-if="item.cpStatus == 1">
+									<van-tag  type="success" v-else-if="item.cpStatus == 1">
 										审核中
 									</van-tag>
-									<van-tag round color="#f2826a" v-else-if="item.cpStatus == 4">
-										报价中
+									<van-tag  type="primary" v-else-if="item.cpStatus == 4">
+										可报价
 									</van-tag>
-									<van-tag round v-else-if="item.cpStatus == 5">
+									<van-tag  v-else-if="item.cpStatus == 5">
 										审核失败
 									</van-tag>
 								</div>
-								<van-tag round type="danger" v-else-if="item.cpStatus == 2">成交中</van-tag>
-								<van-tag round color="#1989fa" v-else-if="item.cpStatus == 6">已成交</van-tag>
-								<van-tag round v-else-if="item.cpStatus == 3">已注销</van-tag>
+
+								<van-tag type="danger" v-else-if="item.cpStatus == 2">报价成功</van-tag>
+								<van-tag color="#f2826a" v-else-if="item.cpStatus == 6">已成交</van-tag>
+								<van-tag v-else-if="item.cpStatus == 3">已注销</van-tag>
+								<van-tag v-else-if="item.cpStatus == 7">买方违约</van-tag>
+								<van-tag v-else-if="item.cpStatus == 8">卖方违约</van-tag>
 							</div>
 						</van-col>
 					</van-row>
@@ -216,15 +219,17 @@ export default{
 			fbShowDetail(item){
 				let _this = this;
 				this.fbListState.currentItem = item;
-				_server.getBusinessTicketDetail({
-					_id: item.cpId,
-					success(res){
+				_server.getSelfTicketDetail(
+					item.cpId,	
+				).then((res) =>{
 						if(res.code == 0){
 							_this.fbListState.detailItem = res.data;
 							_this.fbListState.detailModelState = true;
+							_this.$noScroll();
 						}
-					}
-				});
+					}).catch(error => {
+
+					})
 			},
 			detailModelOk(){
 				this.detailModelClose();
@@ -236,6 +241,7 @@ export default{
 			},
 			detailModelClose(){
 				this.fbListState.detailModelState = false;
+				this.$canScroll();
 			}
 
 		}

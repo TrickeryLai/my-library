@@ -280,13 +280,13 @@
 						val: 'moreOneMillion',
 						name: '100万以上',
 						max: '',
-						min: 100
+						min: 100,
 					},
 					{
 						val: 'moreFiveMillion',
 						name: '500万以上',
 						max: '',
-						min: 500
+						min: 500,
 					}
 				],
 				dayType:[
@@ -395,6 +395,7 @@
 			  	this.searchData.cpStatus = item;
 	      	},
 			choseAmount(item){
+				console.log(item)
 				this.searchData.amountChosed = item;
 			},
 			choseLastDay(item){
@@ -447,6 +448,7 @@
 	text-align: left;
 	color: #000;
 	font-weight: normal;
+	font-size:16px;
 }
 .setSearch-model .title::before{
 	content: '';
@@ -455,7 +457,7 @@
 	height: 8px;
 	border-radius: 50%;
 	background: #0079f3;
-	vertical-align: 5px;
+	vertical-align: 1px;
 	margin-right: 7px;
 }
 .setSearch-model.model-content{

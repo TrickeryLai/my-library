@@ -12,7 +12,25 @@ import Axios from '@/server/axios'
 import UploadImg from '@/components/UploadImg';
 import PreviewPdf from '@/components/PreviewPdf'
 
-import '@/assets/font/iconfont.css'
+import '@/assets/font/iconfont.css';
+
+//弹出框禁止滑动
+Vue.prototype.$noScroll = function () {
+//   var mo = function (e) { e.preventDefault() }
+  document.body.style.overflow = 'hidden';
+  document.body.style.position = 'fixed';
+//   document.addEventListener('touchmove', mo, false)// 禁止页面滑动
+}
+ 
+//弹出框可以滑动
+Vue.prototype.$canScroll = function () {
+//   var mo = function (e) {
+//     e.preventDefault();
+//   }
+  document.body.style.overflow = ''// 出现滚动条
+  document.body.style.position = '';
+//   document.removeEventListener('touchmove', mo, false)
+}
 
 // //全局注册组件
 Vue.component('UploadImg', UploadImg);
@@ -37,9 +55,10 @@ router.beforeEach( (to, from, next) => {
       user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')): '';
   let orgId = user ? user. orgId : '';
   let authStatus = user ? user.authStatus : '';
+  Vue.prototype.$modelToast && Vue.prototype.$modelToast.clear();
    //路由跳转清空所有提示框 -- 登录页面,实名认证不清除
   if(to.name !== 'Login' && to.name !== 'RealName'){
-      // Toast.clear();
+      // Vue.prototype.$modelToast && Vue.prototype.$modelToast.clear();
   }
 
   //判断是否需要登录, 通过本地是否存在 token, 未登录跳转至登录页面，同时将该页面地址传入 redirect
@@ -64,11 +83,9 @@ router.beforeEach( (to, from, next) => {
       return;
     }else if(authStatus == 1){
       next({path: '/home/selfInfo/realNameChange', query:{redirect: to.fullPath}});
-      Toast('认证信息正在审核中！');
       return;
     }else if(authStatus == 2){
       next({path: '/home/selfInfo/realNameChange', query:{redirect: to.fullPath}});
-      Toast('认证未通过请重新认证！');
       return;
     } 
   }

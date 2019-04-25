@@ -421,11 +421,11 @@
                   // this.getBaseInfo();
                   
                   //认证之后重新登录更新个人信息 或者 能够刷新本地缓存？？
-                  this.$toast('信息已提交审核！');
-                  this.getBaseInfo();
+                  this.$toast('信息已提交审核，请重新登录！');
+                  
                   // let path = _this.$route.query.redirect? decodeURIComponent(_this.$route.query.redirect) : '/home/selfInfo';
-                  // let path = '/login';
-                  // this.$router.replace({path});
+                  let path = '/login';
+                  this.$router.replace({path});
                     //登录之后跳转的路由， 默认大厅， 通过redirect 设置
                 }else{
                   this.$toast(res.errMsg);
