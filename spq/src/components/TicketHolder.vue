@@ -61,7 +61,7 @@
 									</van-tag>
 								</div>
 
-								<van-tag type="danger" v-else-if="item.cpStatus == 2">报价成功</van-tag>
+								<van-tag type="danger" v-else-if="item.cpStatus == 2">撮合成功</van-tag>
 								<van-tag color="#f2826a" v-else-if="item.cpStatus == 6">已成交</van-tag>
 								<van-tag v-else-if="item.cpStatus == 3">已注销</van-tag>
 								<van-tag v-else-if="item.cpStatus == 7">买方违约</van-tag>

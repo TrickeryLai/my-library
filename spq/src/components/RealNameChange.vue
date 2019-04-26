@@ -11,7 +11,7 @@
       <i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
     </van-nav-bar>
     <div class="realName-content">
-      <van-cell-group class="realName-content-box">
+      <van-cell-group class="">
         <van-steps 
         :active="companyStepActive" 
         class="text-left"

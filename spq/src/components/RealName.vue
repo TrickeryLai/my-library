@@ -21,7 +21,7 @@
 
     </van-steps>
     <div class="realName-content">
-      <van-cell-group class="realName-content-box">
+      <van-cell-group class="">
         <h3 class="title van-hairline--bottom">营业执照</h3>
         <div class="realName-conten-inner">
          <UploadImg

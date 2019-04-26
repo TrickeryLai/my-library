@@ -83,7 +83,7 @@
 								</van-col>
 								<van-col span="5">
 									<van-tag type="success" v-if="item.cpStatus == 1">审核中</van-tag>
-									<van-tag type="danger" v-else-if="item.cpStatus == 2">报价成功</van-tag>
+									<van-tag type="danger" v-else-if="item.cpStatus == 2">撮合成功</van-tag>
 									<van-tag v-else-if="item.cpStatus == 3">已注销</van-tag>
 									<van-tag type="primary" v-else-if="item.cpStatus == 4">我要买</van-tag>
 									<van-tag type="success" v-else-if="item.cpStatus == 6">已成交</van-tag>

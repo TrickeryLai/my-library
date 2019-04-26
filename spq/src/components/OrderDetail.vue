@@ -41,7 +41,7 @@
                 <van-col class="detail-row-left" span="6">票据状态</van-col>
                 <van-col class="detail-row-right" span="18">
                   <van-tag type="success" v-if="initData.cpStatus == 1">审核中</van-tag>
-                  <van-tag type="danger" v-else-if="initData.cpStatus == 2">报价成功</van-tag>
+                  <van-tag type="danger" v-else-if="initData.cpStatus == 2">撮合成功</van-tag>
                   <van-tag v-else-if="initData.cpStatus == 3">已注销</van-tag>
                   <van-tag type="primary" v-else-if="initData.cpStatus == 4">已发布</van-tag>
                   <van-tag v-else-if="initData.cpStatus == 5">审核失败</van-tag>
