@@ -85,21 +85,20 @@
             :readonly="companyData.authStatus == 9"
             required
             clearable
-            label="企业名称："
-            placeholder="企业名称"
+            label="公司名称："
+            placeholder="公司名称"
             />
             <van-field
               v-model.trim="submitData.organizationCode"
               :readonly="companyData.authStatus == 9"
               required
               clearable
-              label="社会信用代码："
-              placeholder="社会信用代码"
+              label="组织机构代码："
+              placeholder="组织机构代码"
             />
             <van-field
             v-model.trim="submitData.email"
             type="email"
-            required
             clearable
             label="联系人邮箱："
             placeholder="联系人邮箱"
@@ -107,7 +106,6 @@
             <van-field
             v-model.trim="submitData.contactPhone"
             type="phone"
-            required
             clearable
             label="联系人手机："
             placeholder="联系人手机"
@@ -115,7 +113,6 @@
             <van-field
             size="large"
             v-model="submitData.registerAddress"
-            required
             label="企业注册地址："
             type="textarea"
             placeholder="企业注册地址"
@@ -140,7 +137,6 @@
              <van-field
             v-model.trim="submitData.phone"
             type="phone"
-            required
             clearable
             label="手机号："
             placeholder="法人手机号"
@@ -161,6 +157,8 @@
         <div class="realName-conten-inner">
             <van-field
             v-model.trim="submitData.jbrName"
+            :readonly="companyData.authStatus == 9"
+            required
             clearable
             label="姓名："
             placeholder="经办人姓名"
@@ -168,6 +166,8 @@
              <van-field
             v-model.trim="submitData.jbrPhone"
             type="phone"
+            :readonly="companyData.authStatus == 9"
+            required
             clearable
             label="手机号："
             placeholder="经办人手机号"
@@ -230,11 +230,11 @@
                 state: 0,//上传状态 0未上传， 1正在上传， 2上传成功
                 
               }
-
           }
       },
       created(){
         this.init();
+        this.$canScroll();
       },
       methods: {
           onClickLeft(){
@@ -265,7 +265,13 @@
                          if(res.authStatus == 2){
                             _this.$toast('审核未通过，请修改之后再提交！');
                          }else if(res.authStatus == 9){
-                            _this.$toast('审核已通过！');
+                            //如果通过了认证，并且带了重定向地址，重定向
+                            if(_this.$route.query && _this.$route.query.redirect){
+                                _this.$router.replace({path: _this.$route.query.redirect});
+                                _this.$toast('已通过认证！');
+                                return;
+                            }
+                            
                          }
                       }
                     }
@@ -340,39 +346,46 @@
               return false;
             }
             if(!this.submitData.orgName){
-              this.$toast('请输入企业名称');
+              this.$toast('请输入公司名称');
               return false;
             }
-            if(!this.submitData.registerAddress){
-              this.$toast('请输入企业注册地址！');
-              return false;
-            }
+            // if(!this.submitData.registerAddress){
+            //   this.$toast('请输入企业注册地址！');
+            //   return false;
+            // }
             if(!this.submitData.organizationCode){
-              this.$toast('请输入社会信用代码！');
+              this.$toast('请输入组织机构代码！');
               return false;
             }
 
-            if(!this.submitData.email || !_common.common_reg.email(this.submitData.email)){
-              this.$toast('请输入正确的联系人邮箱！');
-              return false;
-            }
-            if(!this.submitData.contactPhone || !_common.common_reg.phone(this.submitData.contactPhone)){
-              this.$toast('请输入联系人正确手机号！');
-              return false;
-            }
+            // if(!this.submitData.email || !_common.common_reg.email(this.submitData.email)){
+            //   this.$toast('请输入正确的联系人邮箱！');
+            //   return false;
+            // }
+            // if(!this.submitData.contactPhone || !_common.common_reg.phone(this.submitData.contactPhone)){
+            //   this.$toast('请输入联系人正确手机号！');
+            //   return false;
+            // }
             if(!this.submitData.leader){
               this.$toast('请输入法人姓名！');
               return false;
             }
-            if(!this.submitData.phone || !_common.common_reg.phone(this.submitData.phone)){
-              this.$toast('请输入法人正确手机号！');
-              return false;
-            }
+            // if(!this.submitData.phone || !_common.common_reg.phone(this.submitData.phone)){
+            //   this.$toast('请输入法人正确手机号！');
+            //   return false;
+            // }
             if(!this.submitData.frIdCard || !_common.common_reg.idCard(this.submitData.frIdCard)){
               this.$toast('请输入法人正确身份证号！');
               return false;
             }
-
+            if(!this.submitData.jbrName){
+              this.$toast('请输入经办人姓名！');
+              return false;
+            }
+            if(!this.submitData.jbrPhone || !_common.common_reg.phone(this.submitData.jbrPhone)){
+              this.$toast('请输入经办人正确手机号！');
+              return false;
+            }
             return true;
           },
           submitInfo(){

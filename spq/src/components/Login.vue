@@ -57,7 +57,9 @@
 					>
 				</van-col>
 			</van-row>
-			<p class="text-right deep-blue-font" @click="gotoFindWord">忘记密码？</p>
+			<p class="text-right deep-blue-font" >
+				<span @click="gotoFindWord">忘记密码？</span>
+			</p>
 			<div class="login-bottom">
 				<van-button 
 					type="info"
@@ -151,6 +153,7 @@ export default{
 					// localStorage.setItem('loginData', JSON.stringify(loginData));
 					localStorage.setItem('token', response.token);
 					localStorage.setItem('user', JSON.stringify(response.user));
+					localStorage.setItem('userId', JSON.stringify(response.user.userId));
 					this.$router.replace({path});
             	//注册成功
                 }else if(response.code == 110008){

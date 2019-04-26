@@ -40,7 +40,7 @@
 							<van-tag type="success" v-if="initData.cpStatus == 1">审核中</van-tag>
 							<van-tag type="danger" v-else-if="initData.cpStatus == 2">报价成功</van-tag>
 							<van-tag v-else-if="initData.cpStatus == 3">已注销</van-tag>
-              				<van-tag type="primary" v-else-if="initData.cpStatus == 4">可报价</van-tag>
+              				<van-tag type="primary" v-else-if="initData.cpStatus == 4">已发布</van-tag>
               				<van-tag v-else-if="initData.cpStatus == 5">审核失败</van-tag>
               				<van-tag color="#1989fa" v-else-if="initData.cpStatus == 6">已成交</van-tag>
               				<van-tag v-else-if="item.cpStatus == 7">买方违约</van-tag>

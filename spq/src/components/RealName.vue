@@ -58,26 +58,24 @@
             type="text"
             required
             clearable
-            label="企业名称："
-            placeholder="企业名称"
+            label="公司名称："
+            placeholder="公司名称"
             />
             <van-field
               v-model.trim="submitData.organizationCode"
               required
               clearable
-              label="社会信用代码："
-              placeholder="社会信用代码"
+              label="组织机构代码："
+              placeholder="组织机构代码"
             />
             <van-field
             v-model.trim="submitData.email"
-            required
             clearable
             label="联系人邮箱："
             placeholder="联系人邮箱"
             />
             <van-field
             v-model.trim="submitData.contactPhone"
-            required
             clearable
             label="联系人手机："
             type="phone"
@@ -87,7 +85,6 @@
             <van-field
             size="large"
             v-model.trim="submitData.registerAddress"
-            required
             label="企业注册地址："
             type="textarea"
             placeholder="企业注册地址"
@@ -110,7 +107,6 @@
              <van-field
             v-model.trim="submitData.phone"
             type="phone"
-            required
             clearable
             label="手机号："
             placeholder="法人手机号"
@@ -131,6 +127,7 @@
             <van-field
             v-model.trim="submitData.jbrName"
             clearable
+            required
             type="text"
             label="姓名："
             placeholder="经办人姓名"
@@ -138,6 +135,7 @@
              <van-field
             v-model.trim="submitData.jbrPhone"
             type="phone"
+            required
             clearable
             label="手机号："
             placeholder="经办人手机号"
@@ -220,6 +218,7 @@
       },
       created(){
         // this.init();
+        this.$canScroll();
       },
       methods: {
           onClickLeft(){
@@ -274,36 +273,40 @@
               return false;
             }
             if(!this.submitData.orgName){
-              this.$toast('请输入企业名称');
-              return false;
-            }
-            if(!this.submitData.registerAddress){
-              this.$toast('请输入企业注册地址！');
+              this.$toast('请输入公司名称');
               return false;
             }
             if(!this.submitData.organizationCode){
-              this.$toast('请输入社会信用代码！');
+              this.$toast('请输入组织机构代码！');
               return false;
             }
 
-            if(!this.submitData.email || !_common.common_reg.email(this.submitData.email)){
-              this.$toast('请输入正确的联系人邮箱！');
-              return false;
-            }
-            if(!this.submitData.contactPhone || !_common.common_reg.phone(this.submitData.contactPhone)){
-              this.$toast('请输入联系人正确手机号！');
-              return false;
-            }
+            // if(!this.submitData.email || !_common.common_reg.email(this.submitData.email)){
+            //   this.$toast('请输入正确的联系人邮箱！');
+            //   return false;
+            // }
+            // if(!this.submitData.contactPhone || !_common.common_reg.phone(this.submitData.contactPhone)){
+            //   this.$toast('请输入联系人正确手机号！');
+            //   return false;
+            // }
             if(!this.submitData.leader){
               this.$toast('请输入法人姓名！');
               return false;
             }
-            if(!this.submitData.phone || !_common.common_reg.phone(this.submitData.phone)){
-              this.$toast('请输入法人正确手机号！');
-              return false;
-            }
+            // if(!this.submitData.phone || !_common.common_reg.phone(this.submitData.phone)){
+            //   this.$toast('请输入法人正确手机号！');
+            //   return false;
+            // }
             if(!this.submitData.frIdCard || !_common.common_reg.idCard(this.submitData.frIdCard)){
               this.$toast('请输入法人正确身份证号！');
+              return false;
+            }
+            if(!this.submitData.jbrName){
+              this.$toast('请输入经办人姓名！');
+              return false;
+            }
+            if(!this.submitData.jbrPhone || !_common.common_reg.phone(this.submitData.jbrPhone)){
+              this.$toast('请输入经办人正确手机号！');
               return false;
             }
             if(!this.submitData.paymentPassword){

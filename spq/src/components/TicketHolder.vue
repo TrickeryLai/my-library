@@ -54,7 +54,7 @@
 										审核中
 									</van-tag>
 									<van-tag  type="primary" v-else-if="item.cpStatus == 4">
-										可报价
+										已发布
 									</van-tag>
 									<van-tag  v-else-if="item.cpStatus == 5">
 										审核失败
@@ -73,11 +73,15 @@
 						<van-col span="18">
 							<span class="text-left">票面金额：</span>
 							<span v-if="item.cpAmount > 10000">
-								{{item.cpAmount　&& (item.cpAmount/10000).toFixed(2)}} 
+								<span class="price-txt">
+									{{item.cpAmount　&& (item.cpAmount/10000).toFixed(2)}} 
+								</span>
 								<span class="small-font">万元</span>
 							</span>
 							<span v-else>
-								{{item.cpAmount　&& (item.cpAmount).toFixed(2)}} 
+								<span class="price-txt">
+									{{item.cpAmount　&& (item.cpAmount).toFixed(2)}} 
+								</span>
 								<span class="small-font">元</span>
 							</span>
 							

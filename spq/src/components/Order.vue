@@ -77,12 +77,12 @@
 						<van-row>
 							<van-col span="18">
 								<span class="text-left">我的竞价金额：</span>
-								<span v-if="item.turnVolume > 10000">
-									<span  style="font-size: 18px;">{{item.turnVolume && (item.turnVolume/10000).toFixed(2)}}</span> 
+								<!-- <span v-if="item.turnVolume > 10000">
+									<span class="price-txt">{{item.turnVolume && (item.turnVolume/10000).toFixed(2)}}</span> 
 									<span class="small-font">万元</span>
-								</span>
-								<span v-else>
-									<span style="font-size: 18px;">{{item.turnVolume && (item.turnVolume).toFixed(2)}}</span> 
+								</span> -->
+								<span>
+									<span class="price-txt">{{item.turnVolume && dealPrice((item.turnVolume).toFixed(2))}}</span> 
 									<span class="small-font">元</span>	
 								</span>
 								
@@ -92,10 +92,10 @@
 									<van-tag round  type="primary" v-if="item.quoteStatus == 1">
 										报价中
 									</van-tag>
-									<van-tag round type="success" v-else-if="item.quoteStatus == 2">撮合成交</van-tag>
+									<van-tag round type="success" v-else-if="item.quoteStatus == 2">撮合成功</van-tag>
 									<van-tag round v-else-if="item.quoteStatus == 3">撮合失败</van-tag>
-									<van-tag round v-else-if="item.quoteStatus == 4">已取消</van-tag>
-									<van-tag round v-else-if="item.quoteStatus == 5">已拒绝</van-tag>
+									<van-tag round v-else-if="item.quoteStatus == 4">取消报价</van-tag>
+									<van-tag round v-else-if="item.quoteStatus == 5">报价被拒</van-tag>
 								</div>
 							</van-col>
 						</van-row>
@@ -210,6 +210,9 @@ export default{
 				}else{
 					this.rightText = '选择';
 				}
+			},
+			dealPrice(price){
+				return _common.common_fn.dealPrice(price);
 			},
 			getLastTime(endTime){
 				return _common.common_fn.getLastTime(endTime);

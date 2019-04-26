@@ -13,7 +13,7 @@ let xyHeadUrl = protocol + '//' + common.ip + ':' + common.xyPort +'/open-cp/v1/
 let commonUrl = {
 	headUrl: protocol + '//' + common.ip + ':' + common.port +'/',
   picUrl: protocol + '//' + common.ip + ':' + common.xyPort +'/open-cp/v1/images/',
-  mosPicUrl: protocol + '//' + common.ip + ':' + common.xyPort +'open-cp/v1/images/mos/',
+  mosPicUrl: protocol + '//' + common.ip + ':' + common.xyPort +'/open-cp/v1/images/mos/',
   xyData: [
     {
        name: '平台撮合规则',

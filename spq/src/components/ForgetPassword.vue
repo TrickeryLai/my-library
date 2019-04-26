@@ -36,7 +36,7 @@
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model.trim="register.phone" placeholder="请输入绑定的手机号"
-				type="phone" />
+				type="number" />
 			</van-col>
 		</van-row>
 		<van-row >
@@ -49,7 +49,7 @@
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model.trim="register.smsCaptcha" placeholder="请输入短信验证码"
-				type="text"
+				type="number"
 				
 				/>
 			</van-col>
@@ -255,7 +255,7 @@ export default{
 					password: this.register.password, 
 					phoneNumber: this.register.phone, 
 					captchaCode: this.register.code, 
-					smsCaptcha: parseInt(this.register.smsCaptcha),//短信验证码
+					smsCaptcha: this.register.smsCaptcha,//短信验证码
 					smsCaptchaKey: this.smsCaptchaKey,//
 					captchaKey: this.captchaKey,
 				};

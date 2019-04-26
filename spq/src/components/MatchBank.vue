@@ -9,7 +9,7 @@
     >
       <span slot="title" class="top-bg-title">{{title}}</span>
       <i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
-      <i class="iconfont icon-add" style="color: #fff;" slot="right"></i>
+      <i class="iconfont icon-add top-bg-title" slot="right"></i>
     </van-nav-bar>
     <div style="padding-top: 0px;text-align: left;">
       <van-tabs

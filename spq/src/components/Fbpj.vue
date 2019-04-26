@@ -161,6 +161,7 @@
                 <van-field
                   v-model.trim="sell.deductAmount"
                   @input="typeChange(1)"
+                  type="number"
                   clearable
                   placeholder="每十万扣款(元)"
                 />
@@ -170,6 +171,7 @@
                 <van-field
                   v-model.trim="sell.approvalApr"
                   @input="typeChange(2)"
+                  type="number"
                   clearable
                   placeholder="年化利率(%)"
                 />
@@ -178,6 +180,7 @@
                 <van-field
                   v-model.trim="sell.turnVolume"
                   @input="typeChange(3)"
+                  type="number"
                   clearable
                   placeholder="成交金额(元)"
                 />
@@ -604,7 +607,7 @@ import _common from '@/server/index'
               return false;
             }
             if(this.submitData.cpNo.toString().substring(0,1) != 2){
-              this.$toast('请填写商业承兑汇票类型票号！')
+              this.$toast('本系统仅处理电子商业汇票！')
               return false;
             }
             if(!this.submitData.cpAmount || !/^(0|[1-9]\d*)(\.\d+)?$/.test(this.submitData.cpAmount)){

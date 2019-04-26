@@ -115,12 +115,12 @@ let server = {
    * @return {[type]}            [description]
    */
   changePassword(data, callback){
-    let user = localStorage.getItem('user') ?  JSON.parse(localStorage.getItem('user')): '';
+    let userId = localStorage.getItem('userId') ?  JSON.parse(localStorage.getItem('userId')): '';
     let url = 'open-cp/v1/users/';
-    if(!user){
+    if(!userId){
       return;
     }
-    url += user.userId;
+    url += userId;
     Axios.patch({
       isLoading: true,
       url,

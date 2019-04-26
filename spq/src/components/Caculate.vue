@@ -16,6 +16,7 @@
 					<van-col span="16" >
 						<van-field 
 						v-model.trim="value" 
+						type="number"
 						clearable
 						placeholder="票面金额(万元)" 
 						style="padding-top:3px;padding-bottom:3px" />
@@ -62,6 +63,7 @@
 						<van-field 
 						v-model.trim="monthRate" 
 						clearable
+						type="number"
 						placeholder="月利率（%）"  
 						style="padding-top:3px;padding-bottom:3px"
 						@input="rateChange(1)"/>
@@ -73,6 +75,7 @@
 						<van-field 
 						v-model.trim="yearRate" 
 						clearable
+						type="number"
 						placeholder="年利率（%）" 
 						style="padding-top:3px;padding-bottom:3px"
 						@input="rateChange(2)" />
@@ -84,6 +87,7 @@
 						<van-field 
 							v-model.trim="shouxufei" 
 							clearable
+							type="number"
 							placeholder="每十万手续费（元）" 
 							style="padding-top:3px;padding-bottom:3px"
 							@input="rateChange(3)" 

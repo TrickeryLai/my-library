@@ -224,7 +224,7 @@
 					this.submit.reduceAmount = '';
 					this.submit.dealAmount = '';
 					// this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
-					this.imgs = [_common.mosPicUrl + this.initData.frontBillImg];
+					this.imgs = this.initData.frontBillImg?[_common.mosPicUrl + this.initData.frontBillImg]: [];
 					if(this.initData.cpStatus == 2){
 						this.buyPriceText = '撮合成交价';
 					}else{
@@ -301,7 +301,7 @@
 			},
 			previewPic(index){
 				ImagePreview({
-					images: [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg],
+					images: [_common.mosPicUrl + this.initData.frontBillImg],
 					startPosition: index,
 					
 				});
@@ -318,16 +318,14 @@
 				let authStatus = user.authStatus;
  
 				if(!authStatus){
-					next({path: '/home/realName'});
-					Toast('请先实名认证！');
+					this.$router.push({path: '/home/realName'});
+					this.$toast('请先实名认证！');
 					return;
 				}else if(authStatus == 1){
-					Toast('认证信息正在审核中！');
-					next({path: '/home/selfInfo/realNameChange'});
+					this.$router.push({path: '/home/selfInfo/realNameChange'});
 					return;
 				}else if(authStatus == 2){
-					Toast('认证未通过请重新认证！');
-					next({path: '/home/selfInfo/realNameChange'});
+					this.$router.push({path: '/home/selfInfo/realNameChange'});
 					return;
 				} 
 
