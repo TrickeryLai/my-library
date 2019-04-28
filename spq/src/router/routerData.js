@@ -20,8 +20,19 @@ import BankDetailInfo from '@/components/BankDetailInfo'
 import ChangeAccount from '@/components/ChangeAccount'
 import ForgetPassword from '@/components/ForgetPassword'
 
+import PushPage from '@/components/PushPage';
+
 let routerData = {
   routes: [
+  {
+    path: '/pushPage',
+    name: 'PushPage',
+    meta:{
+        isLogin: false,
+        isNChecked: false,
+    },
+    component: PushPage
+  },
   {
     path: '/home',
     name: 'Tabber',

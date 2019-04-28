@@ -515,6 +515,8 @@
   .detail-row {
     padding: 10px 15px;
     color: #333;
+    display: flex;
+    align-items: center;
   }
 
   .detail-row-special {

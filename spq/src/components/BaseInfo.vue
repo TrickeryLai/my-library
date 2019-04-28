@@ -165,6 +165,8 @@
   }
   .baseInfo-box-row{
     padding: 5px 0;
+    display: flex;
+    align-items: center;
   }
   .baseInfo-box-left{
     text-align: right;

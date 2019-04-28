@@ -151,7 +151,7 @@
 					v-if="initData.cpStatus == '04'"
 					type="info"
 					style="width: 100%;position: absolute; left: 0; bottom: 0;"
-					@click="ok">我要买</van-button>
+					@click="okFn">我要买</van-button>
 				<van-button
 					v-if="initData.cpStatus == '02'"
 					type="primary"
@@ -310,6 +310,45 @@
 				//关闭的时候改变对应状态，继续观察
 				this.$emit("close")
 			},
+			getCompanyDataInfo(id){
+	            id = localStorage.getItem('userId')?JSON.parse(localStorage.getItem('userId')): '';
+
+	            return new Promise((resolve, reject) => {
+	            	_server.getCompanyDataInfo(id).then((res) => {
+		                if(res.code == 0){
+		                  return resolve(res);
+		                }else{
+		                  this.$toast(res.errMsg);
+		                  return reject(res);
+		                }
+		            	}).catch(error =>{
+		            		return reject(error);
+		            	})
+	            })
+	            
+          	},
+          	okFn(){
+          		let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '';
+          		if(this.initData.createBy == user.loginName){
+					this.$toast('不能对自己发布的票据进行竞价！');
+					return;
+				}
+				if(!this.submit.dealAmount || !this.submit.yearRate || !this.submit.reduceAmount){
+					this.$toast('请先完整填写报价信息！');
+					return;
+				}
+				if(parseFloat(this.submit.dealAmount) < 0){
+					this.$toast('成交金额不能小于0！');
+					return;
+				}
+
+          		this.getCompanyDataInfo().then(res => {
+          			localStorage.setItem('user', JSON.stringify(res));
+          			this.ok();
+ 				}).catch(error => {
+ 					
+ 				})
+          	},
 			ok(){
 				let currentPath = this.$router.history.current.fullPath;
 				let _this = this;
@@ -328,19 +367,6 @@
 					this.$router.push({path: '/home/selfInfo/realNameChange'});
 					return;
 				} 
-
-				if(this.initData.createBy == user.loginName){
-					this.$toast('不能对自己发布的票据进行竞价！');
-					return;
-				}
-				if(!this.submit.dealAmount || !this.submit.yearRate || !this.submit.reduceAmount){
-					this.$toast('请先完整填写报价信息！');
-					return;
-				}
-				if(parseFloat(this.submit.dealAmount) < 0){
-					this.$toast('成交金额不能小于0！');
-					return;
-				}
 
 				let data = {
 					approvalApr: this.submit.yearRate,
@@ -434,6 +460,8 @@
 .detail-row{
 	padding: 10px 15px;
 	color: #333;
+	display: flex;
+    align-items: center;
 }
 .detail-row-special{
 	padding: 10px 15px;
@@ -444,6 +472,8 @@
 }
 .detail-row-left{
 	font-size: 14px;
+	display: inline-block;
+	vertical-align: middle;
 }
 .buy-price{
 	color: #000;
@@ -453,6 +483,8 @@
 }
 .detail-row-right{
 	word-break: break-all;
+	display: inline-block;
+	vertical-align: middle;
 }
 .picBox{
 	display:inline-block;

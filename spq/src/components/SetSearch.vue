@@ -273,9 +273,9 @@
 						min: 10
 					},
 					{
-						val: 'moreOneMillion',
-						name: '100万以上',
-						max: '',
+						val: '',
+						name: '100-500万',
+						max: 500,
 						min: 100,
 					},
 					{

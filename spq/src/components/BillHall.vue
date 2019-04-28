@@ -198,6 +198,9 @@ import _common from '@/server/index'
 	mounted(){
 		
 	},
+	created(){
+		this.$canScroll();
+	},
 	methods: {
 		onClickRight() {
 			this.$noScroll();

@@ -160,7 +160,11 @@ let server = {
 			});
 		return this;
 	},
-  /***/
+  /**
+   * [forgetPassword 忘记密码]
+   * @param  {[type]} data [description]
+   * @return {[type]}      [description]
+   */
   forgetPassword(data){
     let url = 'open-cp/v1/forgetPassword';
 
@@ -785,7 +789,24 @@ let server = {
           return reject(response);
         })
       })
-    }
+    },
+    /**
+     * [getBankList description]
+     * @return {[type]} [description]
+     */
+    getCompanyDataInfo(id){
+      let url = 'open-cp/v1/company/byUserId/'+id;
+      return new Promise((resolve, reject) => {
+        Axios.get({
+          url
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
 }
 
 export default server;

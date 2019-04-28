@@ -143,6 +143,12 @@
 						style="width: 100%;"
 						@click="change">修改</van-button>
 					</van-col>
+					<!-- <van-col span="12" v-if="(initData.cpStatus == 2">
+						<van-button
+						type="primary"
+						style="width: 100%;"
+						@click="change">上传凭证</van-button>
+					</van-col> -->
 					<van-col span="24">
 						<van-button
 						type="info"
@@ -407,6 +413,8 @@
 .detail-row{
 	padding: 10px 15px;
 	color: #333;
+	display: flex;
+    align-items: center;
 }
 .detail-row-special{
 	padding: 10px 15px;

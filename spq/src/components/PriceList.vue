@@ -73,10 +73,10 @@
 			class="price-list-box"
 			v-if="!isTable"
 			>
-			<van-row>
+			<!-- <van-row>
 				<van-col span="8">公司名称</van-col>
 				<van-col span="16">{{item.companyName}}</van-col>
-			</van-row>
+			</van-row> -->
 			<van-row>
 				<van-col span="8">竞价金额(元)</van-col>
 				<van-col span="16" class="blue-font" :class="{'red-font': item.quoteStatus == '02'}">{{dealPrice(item.turnVolume.toFixed(2))}}</van-col>
@@ -87,11 +87,11 @@
 			</van-row>
 			<van-row>
 				<van-col span="8">竞价年利率</van-col>
-				<van-col span="16">{{item.approvalApr}}</van-col>
+				<van-col span="16">{{item.approvalApr}} %</van-col>
 			</van-row>
 			<van-row>
 				<van-col span="8">竞价每十万扣款</van-col>
-				<van-col span="16">{{item.deductAmount}}</van-col>
+				<van-col span="16">{{item.deductAmount}}&nbsp元</van-col>
 			</van-row>
 			<van-row>
 				<van-col span="8">状态</van-col>
@@ -197,33 +197,63 @@
 	          	})
 			},
 			biddingFn(item){
+
+				this.$dialog.confirm({
+					title: '确认撮合',
+					message: '确认撮合该笔报价么？'
+				}).then(() =>{
+					this.biddingSubmit(item);
+				}).catch(()=>{
+
+				})
+			},
+			biddingSubmit(item, isSure = 'no'){
+				
 				//撮合
 				let data = {
 					cpId: item.cpId,
-					priceId: item.priceId
+					priceId: item.priceId,
+					priceCount: this.list.length,
+					isSure
 				},
+
 				_this = this;
 				_server.biddingFn(data, (res) => {
 					if(res.code == 0){
 						_this.$toast('撮合成功！');
 						_this.isShow = false;
 						_this.$emit('optionSuccess')
-					}else{
-
+					}else if(res.code == 200013){
+						_this.$dialog.confirm({
+							title: '报价提示',
+							message: '有人针对此张票有最新报价，是否确认继续报价成交？'
+						}).then(() => {
+							_this.biddingSubmit(item, 'yes');
+						}).catch(()=>{
+							_this.getData();
+						})
 					}
 				})
 			},
 			refuseFn(item){
-				//拒绝
-				_server.refuseQuotedPric(item.priceId).then(response => {
-					if(response.code == 0){
-						this.$toast('操作成功！');
-						this.isShow = false;
-						this.$emit('close');
-					}
-				}).catch( error => {
+				this.$dialog.confirm({
+					title: '确认拒绝',
+					message: '确认拒绝该笔报价么？'
+				}).then(() => {
+					//拒绝
+					_server.refuseQuotedPric(item.priceId).then(response => {
+						if(response.code == 0){
+							this.$toast('操作成功！');
+							this.isShow = false;
+							this.$emit('close');
+						}
+					}).catch( error => {
+
+					})
+				}).catch((error) => {
 
 				})
+				
 			},
 			pageChangeFn(){
 

@@ -33,7 +33,7 @@ let model = {
     });
   },
   hide(){
-    modelToast.clear();
+    Vue.prototype.$modelToast.clear();
   }
 };
 

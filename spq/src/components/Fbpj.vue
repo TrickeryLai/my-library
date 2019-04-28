@@ -340,6 +340,21 @@ import _common from '@/server/index'
           this.initType();
           this.$canScroll();
       },
+      beforeRouteLeave(to, from, next){
+        if(this.pageType == 1){
+          next();
+          return;
+        }
+
+        this.$dialog.confirm({
+          title: '确认离开',
+          message: '确认离开该页面么，系统将不会保存当前页面的信息？'
+        }).then(() =>{
+          next();
+        }).catch(()=>{
+          next(false);
+        })
+      },
       methods: {
           onClickLeft(){
               window.history.go(-1);
@@ -376,10 +391,18 @@ import _common from '@/server/index'
               this.sell.turnVolume = data.turnVolume;
               this.pjzPic = data.frontBillImg;
               this.pjfPic = data.backBillImg;
-              this.currentDate = new Date(data.dueDate);
-              this.endTimeChoseValue = this.getTime(data.dueDate);
+             
               this.xcChoseList = this.initXcList(data.cpDefect);
               this.imageList = data.imageList && data.imageList.length > 0 ? data.imageList : [''];
+             
+              this.currentDate = '';
+              this.endTimeTrue = '';
+              this.endTimeChoseValue = '';
+              this.lastDay = 0;
+
+              this.currentDate = new Date(data.dueDate);
+              this.endTimeTrue = this.currentDate;
+              this.endTimeChoseValue = this.getTime(data.dueDate);
               this.lastDay = this.getLastDay(this.currentDate);
               
               if(data.frontBillImg){
@@ -618,8 +641,14 @@ import _common from '@/server/index'
               this.$toast('票据金额应在 5万 - 5000万之间！');
               return false;
             }
+
             if(!this.endTimeChoseValue){
               this.$toast('请选择到期日期！')
+              return false;
+            }
+            // console.log(this.endTimeTrue)
+            if(!this.dealTime(this.endTimeTrue)){
+              this.$toast('到期日期应大于当天！')
               return false;
             }
             if(!this.submitData.acceptor){
@@ -631,6 +660,23 @@ import _common from '@/server/index'
               return false;
             }
             return true;
+          },
+          dealTime(t){
+            if(!t){
+              return;
+            }
+            let rT = new Date(t);
+            let nowY = new Date().getFullYear(), nM = new Date().getMonth(), nD = new Date().getDate();
+            if(rT.getFullYear() > nowY){
+              return true;
+            }
+            if(rT.getMonth() > nM){
+              return true;
+            }
+            if(rT.getDate() > nD){
+              return true;
+            }
+            return false;
           },
           change(){
             //修改
@@ -735,7 +781,7 @@ import _common from '@/server/index'
           //  ,
           // turnVolume (number): 成交金额（发布金额）
           // }
-            
+            let _this = this;
             if(!this.checkSubmitData()){
               return;
             }
@@ -746,7 +792,7 @@ import _common from '@/server/index'
                   success(res){
                       if(res.code == 0){
                         //验证成功，提交
-                        this.submitDataFn();
+                        _this.submitDataFn();
                       }
                   }
                 })

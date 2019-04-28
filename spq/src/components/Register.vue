@@ -185,6 +185,14 @@ export default{
 	created(){
 		this.changeCodePic();
 	},
+	watch:{
+		'register.code'(newV){
+			if(!newV){
+				return ;
+			}
+			this.register.code = newV.replace(/[^\w\/]/ig,'');
+		}
+	},
 	methods: {
 		onClickLeft(){
 			window.history.go(-1);

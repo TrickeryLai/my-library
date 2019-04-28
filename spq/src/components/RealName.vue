@@ -320,26 +320,22 @@
 
             return true;
           },
-          getBaseInfo(){
-            let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')): '',
-            _id = user ? user.orgId : '',
-            _this = this;
-
-            if(!_id){
-              return;
-            }
-
-            _server.getCompanyData({
-              _id,
-              success(res){
-                if(res){
-                  _this.baseInfo = res;
+          getCompanyDataInfo(id){
+            //获取认证信息
+            id = localStorage.getItem('userId')?JSON.parse(localStorage.getItem('userId')): '';
+            _server.getCompanyDataInfo(id).then((res) => {
+                if(res.code == 0){
+                  this.baseInfo = res;
                   localStorage.setItem('user', JSON.stringify(res));
-                  let path = _this.$route.query.redirect? decodeURIComponent(_this.$route.query.redirect) : '/home/selfInfo';
+                  let path = this.$route.query.redirect? decodeURIComponent(this.$route.query.redirect) : '/home/billHall';
                   // let path = '/login';
-                  _this.$router.replace({path});
+                  this.$toast('信息已提交，请等待审核！');
+                  this.$router.replace({path});
+                }else{
+                  this.$toast(res.errMsg);
                 }
-              }
+            }).catch(error =>{
+
             })
           },
           submitInfo(){
@@ -421,14 +417,15 @@
 
             _server.getAuthentication(data, (res) =>{
                 if(res.code == 0){
-                  // this.getBaseInfo();
                   
-                  //认证之后重新登录更新个人信息 或者 能够刷新本地缓存？？
-                  this.$toast('信息已提交审核，请重新登录！');
+                  this.getCompanyDataInfo();
+                  return;
+                  // //认证之后重新登录更新个人信息 或者 能够刷新本地缓存？？
+                  // this.$toast('信息已提交审核，请重新登录！');
                   
-                  // let path = _this.$route.query.redirect? decodeURIComponent(_this.$route.query.redirect) : '/home/selfInfo';
-                  let path = '/login';
-                  this.$router.replace({path});
+                  // // let path = _this.$route.query.redirect? decodeURIComponent(_this.$route.query.redirect) : '/home/selfInfo';
+                  // let path = '/login';
+                  // this.$router.replace({path});
                     //登录之后跳转的路由， 默认大厅， 通过redirect 设置
                 }else{
                   this.$toast(res.errMsg);

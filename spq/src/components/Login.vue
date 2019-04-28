@@ -7,7 +7,8 @@
   		<span slot="title" class="top-bg-title">{{title}}</span>
     	<!-- <i class="iconfont icon-previous_step top-bg-title" slot="left"></i> -->
   	</van-nav-bar>
-  	<div style="position: absolute;top:43%;left:50%;width:100%;transform:translate(-50%,-50%);">
+  	<!-- <div style="position: absolute;top:43%;left:50%;width:100%;transform:translate(-50%,-50%);"> -->
+  		<div style="margin-top: 40px;">
   		  	<div :style="{backgroundImage:'url('+topImg+')'}"
   	style="height:110px;margin: 10px 40px 30px;background-position:center;background-size:cover;background-repeat: no-repeat;">
 		</div>
@@ -48,6 +49,7 @@
 						style="display:inline-block;margin:0;padding:0;" 
 						v-model.trim="register.code" placeholder="请输入验证码"
 						type="text"
+						@blur="inputBlur"
 						/>
 				</van-col>
 				<van-col span="8">
@@ -93,7 +95,8 @@ export default{
 			topImg: topImg,
 			register: {
 				username: "",
-				password: ""
+				password: "",
+				code: "",
 			}
 		}
 	},
@@ -102,9 +105,20 @@ export default{
 		this.changeCodePic();
 		this.initData()
 	},
+	watch:{
+		'register.code'(newV){
+			if(!newV){
+				return ;
+			}
+			this.register.code = newV.replace(/[^\w\/]/ig,'');
+		}
+	},
 	methods: {
 		onClickLeft(){
 			window.history.go(-1);
+		},
+		inputBlur(){
+			window.scrollTo(0,0)
 		},
 		initData(){
 			let params = this.$route.params;
