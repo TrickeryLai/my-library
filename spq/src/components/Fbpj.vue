@@ -51,6 +51,7 @@
                  v-model.trim="submitData.cpNo"
                  type="number"
                  clearable
+                 v-reset-page
                  placeholder="可从网银复制（30位数字）"
                  />
               </van-col>
@@ -62,6 +63,7 @@
                  v-model.trim="submitData.cpAmount"
                  type="number"
                  clearable
+                 v-reset-page
                  placeholder="请输入金额(元)"
                  />
               </van-col>
@@ -93,6 +95,7 @@
               <van-col span="7" class="realName-content-box-left"><i class="required">*</i>承兑人全称</van-col>
               <van-col span="17" class="realName-content-box-right">
                  <van-field
+                  v-reset-page
                  v-model.trim="submitData.acceptor"
                  clearable
                  placeholder="请输入承兑人全称"
@@ -136,6 +139,7 @@
         <h3 class="title van-hairline--bottom">可指定用户买家</h3>
         <div class="realName-conten-inner">
           <van-field
+            v-reset-page
             v-model.trim="submitData.buyerId"
             clearable
             placeholder="可输入买家id"
@@ -159,6 +163,7 @@
             <van-row>
               <van-col span="8">
                 <van-field
+                  v-reset-page
                   v-model.trim="sell.deductAmount"
                   @input="typeChange(1)"
                   type="number"
@@ -169,6 +174,7 @@
 
               <van-col span="8">
                 <van-field
+                  v-reset-page
                   v-model.trim="sell.approvalApr"
                   @input="typeChange(2)"
                   type="number"
@@ -178,6 +184,7 @@
               </van-col>
               <van-col span="8">
                 <van-field
+                  v-reset-page
                   v-model.trim="sell.turnVolume"
                   @input="typeChange(3)"
                   type="number"
@@ -243,6 +250,7 @@ import _common from '@/server/index'
               pageType: 0, //0 发布票据， 1 修改票据
               title: '票据发布',
               zIndex: 999,
+              isFbSuccess: false,
               endTimeChoseValue: '',
               timeChoseValue: false,//时间选择弹窗
               picShowModel: false,//图片查看弹窗
@@ -341,11 +349,19 @@ import _common from '@/server/index'
           this.$canScroll();
       },
       beforeRouteLeave(to, from, next){
+        if(to.name == 'Login'){
+          next();
+          return;
+        }
         if(this.pageType == 1){
           next();
           return;
         }
 
+        if(this.isFbSuccess){
+          next();
+          return ;
+        }
         this.$dialog.confirm({
           title: '确认离开',
           message: '确认离开该页面么，系统将不会保存当前页面的信息？'
@@ -585,18 +601,35 @@ import _common from '@/server/index'
               this.pjfPic = '';
           },
           pjzUploadPicFn(data){
-              //营业执照上传
+              //票据正面
               this.pjzPicUState.state = data.state;
               if(data.state == 3){
-                  this.pjzPic = data.imgData.data;
+                  // this.pjzPic = data.imgData.data;
+                  setTimeout( () =>{
+                    this.getOcrData({imageName: data.imgData.data});
+                  })
               }
           },
           pjfUploadPicFn(data){
-              //营业执照上传
+              //票据反面
               this.pjfPicUState.state = data.state;
               if(data.state == 3){
-                  this.pjfPic = data.imgData.data
+                  this.pjfPic = data.imgData.data;
               }
+          },
+          getOcrData(data){
+            _server.getOcrData(data).then(response => {
+                if(response.code == 0){
+                  if(response.data.cpNo){
+                    this.submitData.cpNo = response.data.cpNo;
+                  }
+                  if(response.data.acceptor){
+                    this.submitData.acceptor = response.data.acceptor;
+                  }
+                }
+            }).catch(error => {
+
+            })
           },
           choseSell(){
 
@@ -744,6 +777,7 @@ import _common from '@/server/index'
             };
             _server.getCommercialPaper(data, (res) =>{
                 if(res.code == 0){
+                  this.isFbSuccess = true;
                   this.$toast('发布成功!');
                   this.$router.go(-1);
                 }

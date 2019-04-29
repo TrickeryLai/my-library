@@ -50,7 +50,7 @@
 					我的买入
 					<span class="blue-font" style="font-size: 12px;" @click.stop="rightClick">({{beginTimeData.value}}&nbsp-&nbsp{{endTimeData.value}})</span>
 				</p>
-				<div style="max-height: 350px;overflow:auto;border: 1px solid #ccc;">
+				<div style="max-height: 350px;overflow:auto;overflow-y:scroll;border: 1px solid #ccc;">
 					<van-pull-refresh 
 					v-model="fbListState.isLoading" 
 					@refresh="fbOnRefresh">
@@ -195,7 +195,21 @@ export default{
 		},
 		created(){
 			this.fbOnLoad();
+
 		},
+		beforeRouteLeave(to, from, next){
+			if(to.name == 'Login' || to.name == 'RealName' || to.name == 'RealNameChange'){
+				next();
+				return;
+			}
+	      	if(this.fbListState.detailModelState){
+		        this.detailModelClose();
+		        next(false);
+		        return;
+	      	} 
+
+	      	next();
+	    },
 		methods:{
 			spliceTime(item){
 				if(!item){
@@ -311,7 +325,6 @@ export default{
 						if(res.code == 0){
 							_this.fbListState.detailItem = res.data;
 							_this.fbListState.detailModelState = true;
-							_this.$noScroll();
 						}
 					}
 				});

@@ -12,24 +12,27 @@ import Axios from '@/server/axios'
 import UploadImg from '@/components/UploadImg';
 import PreviewPdf from '@/components/PreviewPdf'
 
+import '@/directive/inputReset.js';
+
 import '@/assets/font/iconfont.css';
 
+  var mo = function (e) {
+    e.preventDefault();
+  };
 //弹出框禁止滑动
 Vue.prototype.$noScroll = function () {
-//   var mo = function (e) { e.preventDefault() }
+  
   document.body.style.overflow = 'hidden';
-  document.body.style.position = 'fixed';
-//   document.addEventListener('touchmove', mo, false)// 禁止页面滑动
+  // document.body.style.position = 'fixed';
+  document.addEventListener('touchmove', mo,{ passive: false })// 禁止页面滑动
 }
  
 //弹出框可以滑动
 Vue.prototype.$canScroll = function () {
-//   var mo = function (e) {
-//     e.preventDefault();
-//   }
+
   document.body.style.overflow = ''// 出现滚动条
-  document.body.style.position = '';
-//   document.removeEventListener('touchmove', mo, false)
+  // document.body.style.position = '';
+  document.removeEventListener('touchmove', mo,{ passive: false })
 }
 
 // //全局注册组件

@@ -21,7 +21,7 @@
 	
 	<van-collapse class="ticket-content-list" v-model="activeName" accordion>
 		<van-collapse-item class="text-left" title="已发布" name="1">
-			<div style="max-height: 350px;overflow:auto;border: 1px solid #ccc;">
+			<div style="max-height: 350px;overflow:auto;overflow-y:scroll;border: 1px solid #ccc;">
 				<van-pull-refresh 
 				v-model="fbListState.isLoading" 
 				@refresh="fbOnRefresh">
@@ -153,6 +153,23 @@ export default{
 		created(){
 			this.fbOnLoad();
 		},
+		beforeRouteLeave(to, from, next){
+			if(to.name == 'Login' || to.name == 'RealName' || to.name == 'RealNameChange'){
+				next();
+				return;
+			}
+			if(to.name=='Fbpj'){
+				next();
+				return;
+			}
+			if(this.fbListState.detailModelState){
+				this.fbListState.detailModelState = false;
+				next(false);
+				return;
+			}	
+
+			next();
+		},
 		methods:{
 			onClickRight(){
 				this.$router.push({path: '/home/ticketHolder/fbpj'});
@@ -229,7 +246,7 @@ export default{
 						if(res.code == 0){
 							_this.fbListState.detailItem = res.data;
 							_this.fbListState.detailModelState = true;
-							_this.$noScroll();
+							
 						}
 					}).catch(error => {
 

@@ -19,6 +19,7 @@
 				</van-col>
 				<van-col span="22">
 					<van-field 
+						v-reset-page
 						class="van-hairline--surround register-input"
 						style="display:inline-block;margin:0;padding:0;" 
 						v-model.trim="register.username" placeholder="请输入用户名"
@@ -45,6 +46,7 @@
 				</van-col>
 				<van-col span="14">
 					<van-field 
+						v-reset-page
 						class="van-hairline--surround register-input"
 						style="display:inline-block;margin:0;padding:0;" 
 						v-model.trim="register.code" placeholder="请输入验证码"
@@ -64,6 +66,7 @@
 			</p>
 			<div class="login-bottom">
 				<van-button 
+					v-reset-page
 					type="info"
 					@click="loginFn"
 					style="width: 100%;border-radius: 100px;background:#011629;border-color: #011629;"

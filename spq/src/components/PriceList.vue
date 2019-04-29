@@ -197,15 +197,17 @@
 	          	})
 			},
 			biddingFn(item){
-
-				this.$dialog.confirm({
+				let dia;
+				dia = this.$dialog.confirm({
 					title: '确认撮合',
 					message: '确认撮合该笔报价么？'
 				}).then(() =>{
 					this.biddingSubmit(item);
+					
 				}).catch(()=>{
 
 				})
+				
 			},
 			biddingSubmit(item, isSure = 'no'){
 				

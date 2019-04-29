@@ -6,158 +6,160 @@
 	@close="modelClose"
 	>
 		<div class="model-content">
-			<div style="height: 100%;overflow:auto;">
+			<div style="height: 100%;overflow:auto;overflow-y:scroll;">
 				<van-cell-group class="van-hairline--bottom">
-				<h3 class="title">票据详情</h3>
-				<van-cell-group>
-					<van-row class="detail-row">
-						<van-col class="detail-row-left" span="6">承兑人</van-col>
-						<van-col class="detail-row-right" span="18">{{initData.acceptor}}</van-col>
-					</van-row>
-					<van-row class="detail-row">
-						<van-col class="detail-row-left" span="6">票据号码</van-col>
-						<van-col class="detail-row-right" span="18">{{initData.cpNo}}</van-col>
-					</van-row>
-					<van-row class="detail-row">
-						<van-col class="detail-row-left" span="6">票据金额</van-col>
-						<van-col class="detail-row-right" span="18">{{dealPrice(initData.cpAmount &&　initData.cpAmount.toFixed(2))}}元</van-col>
-					</van-row>
-					<van-row class="detail-row">
-						<van-col class="detail-row-left" span="6">背书次数</van-col>
-						<van-col class="detail-row-right" span="18">{{initData.endorseTimes}}次</van-col>
-					</van-row>
-					<van-row class="detail-row">
-						<van-col class="detail-row-left" span="6">到期时间</van-col>
-						<van-col class="detail-row-right" span="18">{{initData.dueDate}}</van-col>
-					</van-row>
-					<van-row class="detail-row" v-if="initData.actualTime">
-						<van-col class="detail-row-left" span="6">成交日期</van-col>
-						<van-col class="detail-row-right" span="18">{{initData.actualTime}}</van-col>
-					</van-row>
-					<van-row class="detail-row">
-						<van-col class="detail-row-left" span="6">票据状态</van-col>
-						<van-col class="detail-row-right" span="18">
-							<van-tag type="success" v-if="initData.cpStatus == 1">审核中</van-tag>
-							<van-tag type="danger" v-else-if="initData.cpStatus == 2">撮合成功</van-tag>
-							<van-tag v-else-if="initData.cpStatus == 3">已注销</van-tag>
-              				<van-tag type="primary" v-else-if="initData.cpStatus == 4">已发布</van-tag>
-              				<van-tag v-else-if="initData.cpStatus == 5">审核失败</van-tag>
-              				<van-tag color="#1989fa" v-else-if="initData.cpStatus == 6">已成交</van-tag>
-              				<van-tag v-else-if="item.cpStatus == 7">买方违约</van-tag>
-							<van-tag v-else-if="item.cpStatus == 8">卖方违约</van-tag>
-							<van-tag v-if="initData.stringDate < 0">已过期</van-tag>
-						</van-col>
-					</van-row>
-					<van-row class="detail-row" v-if="initData.cpStatus == 5">
-						<van-col class="detail-row-left" span="6">原因</van-col>
-						<van-col class="detail-row-right" span="18">{{initData.refusalCause}}</van-col>
-					</van-row>
-					<van-row class="detail-row">
-						<van-col class="detail-row-left" span="6">成交信用</van-col>
-						<van-col class="detail-row-left" span="18">
-							<van-tag mark type="success" v-if="initData.creditRating == 1">优秀</van-tag>
-							<van-tag mark type="primary" v-else-if="initData.creditRating == 2">良好</van-tag>
-							<van-tag mark type="danger" v-else-if="initData.creditRating == 3">一般</van-tag>
-						</van-col>
-					</van-row>
-					<!-- <van-row class="detail-row">
-						<van-col class="detail-row-left" span="6">是否有瑕疵</van-col>
-						<van-col class="detail-row-left" span="18">
-							<van-tag mark type="danger" v-if="initData.isDefect == 1">有瑕疵</van-tag>
-							<van-tag mark type="success" v-else-if="initData.isDefect == 0">无瑕疵</van-tag>
-						</van-col>
-					</van-row> -->
-					<van-row class="detail-row">
-						<van-col class="detail-row-left" span="6">票据瑕疵</van-col>
-						<van-col class="detail-row-left" span="18">
-							{{initData.cpDefect}}
-						</van-col>
-					</van-row>
-					<van-row class="detail-row">
-						<van-col class="detail-row-left" span="6">票据图片</van-col>
-						<van-col class="detail-row-left" span="18">
-							<div 
-							v-for = "(item, index) in imgs"
-							:key="index" 
-							class="picBox">
-								<img 
-								:src="item"
-								@click="previewPic(index)" />
-							</div>
-						</van-col>
-					</van-row>
+					<h3 class="title">票据详情</h3>
+					<van-cell-group>
+						<van-row class="detail-row">
+							<van-col class="detail-row-left" span="6">承兑人</van-col>
+							<van-col class="detail-row-right" span="18">{{initData.acceptor}}</van-col>
+						</van-row>
+						<van-row class="detail-row">
+							<van-col class="detail-row-left" span="6">票据号码</van-col>
+							<van-col class="detail-row-right" span="18">{{initData.cpNo}}</van-col>
+						</van-row>
+						<van-row class="detail-row">
+							<van-col class="detail-row-left" span="6">票据金额</van-col>
+							<van-col class="detail-row-right" span="18">{{dealPrice(initData.cpAmount &&　initData.cpAmount.toFixed(2))}}元</van-col>
+						</van-row>
+						<van-row class="detail-row">
+							<van-col class="detail-row-left" span="6">背书次数</van-col>
+							<van-col class="detail-row-right" span="18">{{initData.endorseTimes}}次</van-col>
+						</van-row>
+						<van-row class="detail-row">
+							<van-col class="detail-row-left" span="6">到期时间</van-col>
+							<van-col class="detail-row-right" span="18">{{initData.dueDate}}</van-col>
+						</van-row>
+						<van-row class="detail-row" v-if="initData.actualTime">
+							<van-col class="detail-row-left" span="6">成交日期</van-col>
+							<van-col class="detail-row-right" span="18">{{initData.actualTime}}</van-col>
+						</van-row>
+						<van-row class="detail-row">
+							<van-col class="detail-row-left" span="6">票据状态</van-col>
+							<van-col class="detail-row-right" span="18">
+								<van-tag type="success" v-if="initData.cpStatus == 1">审核中</van-tag>
+								<van-tag type="danger" v-else-if="initData.cpStatus == 2">撮合成功</van-tag>
+								<van-tag v-else-if="initData.cpStatus == 3">已注销</van-tag>
+	              				<van-tag type="primary" v-else-if="initData.cpStatus == 4">已发布</van-tag>
+	              				<van-tag v-else-if="initData.cpStatus == 5">审核失败</van-tag>
+	              				<van-tag color="#1989fa" v-else-if="initData.cpStatus == 6">已成交</van-tag>
+	              				<van-tag v-else-if="item.cpStatus == 7">买方违约</van-tag>
+								<van-tag v-else-if="item.cpStatus == 8">卖方违约</van-tag>
+								<van-tag v-if="initData.stringDate < 0">已过期</van-tag>
+							</van-col>
+						</van-row>
+						<van-row class="detail-row" v-if="initData.cpStatus == 5">
+							<van-col class="detail-row-left" span="6">原因</van-col>
+							<van-col class="detail-row-right" span="18">{{initData.refusalCause}}</van-col>
+						</van-row>
+						<van-row class="detail-row">
+							<van-col class="detail-row-left" span="6">成交信用</van-col>
+							<van-col class="detail-row-left" span="18">
+								<van-tag mark type="success" v-if="initData.creditRating == 1">优秀</van-tag>
+								<van-tag mark type="primary" v-else-if="initData.creditRating == 2">良好</van-tag>
+								<van-tag mark type="danger" v-else-if="initData.creditRating == 3">一般</van-tag>
+							</van-col>
+						</van-row>
+						<!-- <van-row class="detail-row">
+							<van-col class="detail-row-left" span="6">是否有瑕疵</van-col>
+							<van-col class="detail-row-left" span="18">
+								<van-tag mark type="danger" v-if="initData.isDefect == 1">有瑕疵</van-tag>
+								<van-tag mark type="success" v-else-if="initData.isDefect == 0">无瑕疵</van-tag>
+							</van-col>
+						</van-row> -->
+						<van-row class="detail-row">
+							<van-col class="detail-row-left" span="6">票据瑕疵</van-col>
+							<van-col class="detail-row-left" span="18">
+								{{initData.cpDefect}}
+							</van-col>
+						</van-row>
+						<van-row class="detail-row">
+							<van-col class="detail-row-left" span="6">票据图片</van-col>
+							<van-col class="detail-row-left" span="18">
+								<div 
+								v-for = "(item, index) in imgs"
+								:key="index" 
+								class="picBox">
+									<img 
+									:src="item"
+									@click="previewPic(index)" />
+								</div>
+							</van-col>
+						</van-row>
+					</van-cell-group>
 				</van-cell-group>
-			</van-cell-group>
-			<van-cell-group v-if="item.cpStatus == 2 || item.cpStatus == 3 || item.cpStatus == 4 || item.cpStatus == 6" class="van-hairline--bottom" style="padding-bottom: 60px;">
-				<h3 class="title">报价信息</h3>
-				<van-cell-group>
-					<van-row>
-						<van-col span="24" @click="getbuyPrice">
-							<span 
-							class="detail-row-special detail-row-left" 
-							style="padding-top: 5px;padding-bottom: 5px;"
-							>
-								{{buyPriceText}}
+				<van-cell-group v-if="item.cpStatus == 2 || item.cpStatus == 3 || item.cpStatus == 4 || item.cpStatus == 6" class="van-hairline--bottom" style="padding-bottom: 60px;">
+					<h3 class="title">报价信息</h3>
+					<van-cell-group>
+						<van-row>
+							<van-col span="24" @click="getbuyPrice">
 								<span 
-									class="blue-font" 
-									style="margin-left:3px;"
-									v-if="initData.cpStatus == '04' && initData.stringDate >= 0"
-									@click="getbuyPrice"
+								class="detail-row-special detail-row-left" 
+								style="padding-top: 5px;padding-bottom: 5px;"
 								>
-									{{time}}秒后自动刷新
-									<i class="iconfont icon-refresh"></i>
+									{{buyPriceText}}
+									<span 
+										class="blue-font" 
+										style="margin-left:3px;"
+										v-if="initData.cpStatus == '04' && initData.stringDate >= 0"
+										@click="getbuyPrice"
+									>
+										{{time}}秒后自动刷新
+										<i class="iconfont icon-refresh"></i>
+									</span>
+									
 								</span>
-								
-							</span>
-							<!-- <van-icon name="replay" class="float:right;" /> -->
-						</van-col>
-					</van-row>
-					<van-row style="background: #f5f5f5;">
-						<van-col span="24" class="buy-price">
-							<span v-if="hasBuyPrice">
-								{{dealPrice(buyPrice && buyPrice.toFixed(2))}}元
-							</span>
-			              	<span v-else>
-			                	等待买家报价
-			              	</span>
-							<span
-							v-if="hasBuyPrice"
-							class="blue-font"
-							style="font-size:12px;" 
-							@click="showAllPrice">&nbsp查看所有</span>
-						</van-col>
-					</van-row>
-				</van-cell-group>
-				
-			</van-cell-group>
-			<van-row type="flex" justify="center" style="width: 100%;height: 44px;position: absolute;left: 0; bottom: 0;">
-					<van-col span="12" v-if="initData.cpStatus == 4 || initData.cpStatus == 1 || initData.cpStatus == 5">
-						<van-button
-						type="danger"
-						style="width: 100%;"
-						@click="deleteP">注销</van-button>
-					</van-col>
-					<van-col span="12" v-if="(initData.cpStatus == 1 || initData.cpStatus == 5) && initData.stringDate >= 0">
-						<van-button
-						type="primary"
-						style="width: 100%;"
-						@click="change">修改</van-button>
-					</van-col>
-					<!-- <van-col span="12" v-if="(initData.cpStatus == 2">
-						<van-button
-						type="primary"
-						style="width: 100%;"
-						@click="change">上传凭证</van-button>
-					</van-col> -->
-					<van-col span="24">
-						<van-button
-						type="info"
-						style="width: 100%;"
-						@click="ok">关闭</van-button>
-					</van-col>
+								<!-- <van-icon name="replay" class="float:right;" /> -->
+							</van-col>
+						</van-row>
+						<van-row style="background: #f5f5f5;">
+							<van-col span="24" class="buy-price">
+								<span v-if="hasBuyPrice">
+									{{dealPrice(buyPrice && buyPrice.toFixed(2))}}元
+								</span>
+				              	<span v-else>
+				                	等待买家报价
+				              	</span>
+								<span
+								v-if="hasBuyPrice"
+								class="blue-font"
+								style="font-size:12px;" 
+								@click="showAllPrice">&nbsp查看所有</span>
+							</van-col>
+						</van-row>
+					</van-cell-group>
 					
-				</van-row>
+				</van-cell-group>
 			</div>
+			<div style="text-align: center;width: 100%;height: 44px;position: fixed; left: 0; bottom: 0;">
+					<van-row type="flex" justify="center" style="width: 100%;height: 44px;position: absolute;left: 0; bottom: 0;">
+						<van-col span="12" v-if="initData.cpStatus == 4 || initData.cpStatus == 1 || initData.cpStatus == 5">
+							<van-button
+							type="danger"
+							style="width: 100%;"
+							@click="deleteP">注销</van-button>
+						</van-col>
+						<van-col span="12" v-if="(initData.cpStatus == 1 || initData.cpStatus == 5) && initData.stringDate >= 0">
+							<van-button
+							type="primary"
+							style="width: 100%;"
+							@click="change">修改</van-button>
+						</van-col>
+						<!-- <van-col span="12" v-if="(initData.cpStatus == 2">
+							<van-button
+							type="primary"
+							style="width: 100%;"
+							@click="change">上传凭证</van-button>
+						</van-col> -->
+						<van-col span="24">
+							<van-button
+							type="info"
+							style="width: 100%;"
+							@click="ok">关闭</van-button>
+						</van-col>
+						
+					</van-row>
+				</div>
 		</div>
 	</van-popup>
 	<PriceList 
@@ -240,10 +242,12 @@
 				this.priceListClose();
 			},
 			showAllPrice(){
+				let calDay = this.getLastTime();//剩余时间
+				console.log(calDay)
 				//查看所有报价信息
 				this.priceListShow = true;
 				this.priceListBaseData = this.initData;
-				if(this.initData.cpStatus == '04'){
+				if(this.initData.cpStatus == '04' && calDay >= 0){
 					this.priceType = 1;
 				}else{
 					this.priceType = 0;
@@ -353,7 +357,7 @@
 
 				let LastTime = new Date(dueDate).getTime() - new Date().getTime();
 
-				LastTime = Math.ceil(LastTime / (24*60*60));
+				LastTime = Math.ceil(LastTime / ((24*60*60)*1000));
 				return LastTime;
 			},
 			changeData(type){
@@ -404,11 +408,12 @@
 .model-content{
 	text-align: left;
   	height: 100%;
-  	position: relative;
+  	position: absolute;
 }
 .van-popup{
 	width: 80%;
   	height: 100%;
+  	position: fixed;
 }
 .detail-row{
 	padding: 10px 15px;

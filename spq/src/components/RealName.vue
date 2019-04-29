@@ -55,6 +55,7 @@
         <div class="realName-conten-inner">
             <van-field
             v-model.trim="submitData.orgName"
+            v-reset-page
             type="text"
             required
             clearable
@@ -63,6 +64,7 @@
             />
             <van-field
               v-model.trim="submitData.organizationCode"
+              v-reset-page
               required
               clearable
               label="组织机构代码："
@@ -70,12 +72,14 @@
             />
             <van-field
             v-model.trim="submitData.email"
+            v-reset-page
             clearable
             label="联系人邮箱："
             placeholder="联系人邮箱"
             />
             <van-field
             v-model.trim="submitData.contactPhone"
+            v-reset-page
             clearable
             label="联系人手机："
             type="phone"
@@ -85,6 +89,7 @@
             <van-field
             size="large"
             v-model.trim="submitData.registerAddress"
+            v-reset-page
             label="企业注册地址："
             type="textarea"
             placeholder="企业注册地址"
@@ -99,6 +104,7 @@
         <div class="realName-conten-inner">
             <van-field
             v-model.trim="submitData.leader"
+            v-reset-page
             required
             clearable
             label="姓名："
@@ -106,6 +112,7 @@
             />
              <van-field
             v-model.trim="submitData.phone"
+            v-reset-page
             type="phone"
             clearable
             label="手机号："
@@ -113,6 +120,7 @@
             />
             <van-field
               v-model.trim="submitData.frIdCard"
+              v-reset-page
               required
               clearable
               label="身份证号："
@@ -126,6 +134,7 @@
         <div class="realName-conten-inner">
             <van-field
             v-model.trim="submitData.jbrName"
+            v-reset-page
             clearable
             required
             type="text"
@@ -134,6 +143,7 @@
             />
              <van-field
             v-model.trim="submitData.jbrPhone"
+            v-reset-page
             type="phone"
             required
             clearable
@@ -142,6 +152,7 @@
             />
              <van-field
               v-model.trim="submitData.jbrIdCard"
+              v-reset-page
               clearable
               label="身份证号："
               placeholder="经办人身份证号"
@@ -154,6 +165,7 @@
         <div class="realName-conten-inner">
           <van-field
             v-model.trim="submitData.paymentPassword"
+            v-reset-page
             clearable
             type="password"
             required
@@ -163,6 +175,7 @@
           />
           <van-field
             v-model.trim="submitData.paymentPassword2"
+            v-reset-page
             type="password"
             required
             clearable

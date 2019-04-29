@@ -201,6 +201,29 @@ import _common from '@/server/index'
 	created(){
 		this.$canScroll();
 	},
+	beforeRouteLeave(to, from, next){
+		if(to.name == 'Login' || to.name == 'RealName' || to.name == 'RealNameChange'){
+			next();
+			return;
+		}
+		if(this.detailModelState ){
+			this.detailModelState = false;
+			this.isGetingData = false;
+			this.loading = false;
+			next(false);
+			return;
+		}	
+
+		if(this.searchModelState){
+			this.searchModelState = false;
+			this.isGetingData = false;
+			this.loading = false;
+			next(false);
+			return;
+		}
+		this.$canScroll();
+		next();
+	},
 	methods: {
 		onClickRight() {
 			this.$noScroll();

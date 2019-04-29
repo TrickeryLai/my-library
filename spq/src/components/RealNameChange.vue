@@ -81,6 +81,7 @@
         <h3 class="title van-hairline--bottom">企业信息</h3>
         <div class="realName-conten-inner">
             <van-field
+            v-reset-page
             v-model.trim="submitData.orgName"
             :readonly="companyData.authStatus == 9"
             required
@@ -89,6 +90,7 @@
             placeholder="公司名称"
             />
             <van-field
+              v-reset-page
               v-model.trim="submitData.organizationCode"
               :readonly="companyData.authStatus == 9"
               required
@@ -97,6 +99,7 @@
               placeholder="组织机构代码"
             />
             <van-field
+            v-reset-page
             v-model.trim="submitData.email"
             type="email"
             clearable
@@ -104,6 +107,7 @@
             placeholder="联系人邮箱"
             />
             <van-field
+            v-reset-page
             v-model.trim="submitData.contactPhone"
             type="phone"
             clearable
@@ -111,6 +115,7 @@
             placeholder="联系人手机"
             />
             <van-field
+            v-reset-page
             size="large"
             v-model="submitData.registerAddress"
             label="企业注册地址："
@@ -126,6 +131,7 @@
         <h3 class="title van-hairline--bottom">法人信息</h3>
         <div class="realName-conten-inner">
             <van-field
+            v-reset-page
             v-model.trim="submitData.leader"
             :readonly="companyData.authStatus == 9"
             type="text"
@@ -135,6 +141,7 @@
             placeholder="法人姓名"
             />
              <van-field
+            v-reset-page
             v-model.trim="submitData.phone"
             type="phone"
             clearable
@@ -142,6 +149,7 @@
             placeholder="法人手机号"
             />
             <van-field
+              v-reset-page
               v-model.trim="submitData.frIdCard"
               :readonly="companyData.authStatus == 9"
               clearable
@@ -156,6 +164,7 @@
         <h3 class="title van-hairline--bottom">经办人信息</h3>
         <div class="realName-conten-inner">
             <van-field
+            v-reset-page
             v-model.trim="submitData.jbrName"
             :readonly="companyData.authStatus == 9"
             required
@@ -164,6 +173,7 @@
             placeholder="经办人姓名"
             />
              <van-field
+            v-reset-page
             v-model.trim="submitData.jbrPhone"
             type="phone"
             :readonly="companyData.authStatus == 9"
@@ -173,6 +183,7 @@
             placeholder="经办人手机号"
             />
              <van-field
+              v-reset-page
               v-model.trim="submitData.jbrIdCard"
               clearable
               label="身份证号："

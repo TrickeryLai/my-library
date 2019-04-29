@@ -18,6 +18,7 @@
 			</van-col>
 			<van-col span="21">
 				<van-field 
+				v-reset-page
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model.trim="register.loginName"
@@ -71,6 +72,7 @@
 			</van-col>
 			<van-col span="21">
 				<van-field 
+				v-reset-page
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model.trim="register.email" placeholder="请输入邮箱"
@@ -84,6 +86,7 @@
 			</van-col>
 			<van-col span="21">
 				<van-field 
+				v-reset-page
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model.trim="register.phone" placeholder="请输入手机号"
@@ -97,6 +100,7 @@
 			</van-col>
 			<van-col span="13">
 				<van-field 
+				v-reset-page
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model.trim="register.smsCaptcha" placeholder="请输入短信验证码"
@@ -125,6 +129,7 @@
 			</van-col>
 			<van-col span="13">
 				<van-field 
+				v-reset-page
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model.trim="register.code" placeholder="请输入右侧验证码"

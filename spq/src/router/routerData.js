@@ -153,7 +153,7 @@ let routerData = {
     },
     {
       path: '/home/selfInfo/addBankCard',
-      name: 'MatchBank',
+      name: 'AddBankCard',
       meta:{
         isLogin: true,
         isNChecked: true,

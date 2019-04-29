@@ -2,6 +2,7 @@
 	<div>
 		<van-col span="22">
 			<van-field
+				v-reset-page
 				:autocomplete = 'autocomplete1'
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;"

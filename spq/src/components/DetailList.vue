@@ -7,7 +7,7 @@
 	@touchmove.stop
 	>
 		<div class="model-content" @touchmove.stop>
-			<div style="height: 100%;overflow:auto;">
+			<div style="height: 100%;overflow:auto;overflow-y:scroll;">
 				<van-cell-group class="van-hairline--bottom">
 				<h3 class="title">票据详情</h3>
 				<van-cell-group>
@@ -75,7 +75,7 @@
 					</van-row>
 				</van-cell-group>
 			</van-cell-group>
-			<van-cell-group class="">
+			<van-cell-group class="" style="padding-bottom: 50px;">
 				<h3 class="title">报价信息</h3>
 				<van-cell-group>
 					<van-row>
@@ -114,11 +114,12 @@
 						</van-col>
 					</van-row>
 					<van-row class="detail-row-special" v-if="initData.cpStatus == '04'">
-
 						<van-col class="detail-row-left" span="12">年化利率</van-col>
 						<van-col class="detail-row-left" span="12">每十万扣款</van-col>
 						<van-col class="detail-row-left" span="24">
 							<van-field
+							v-reset-page
+							clearable
 							class="detail-small-input w-35p" 
 							v-model.trim="submit.yearRate"
 							placeholder="年化利率"
@@ -126,6 +127,8 @@
 							type="number" />
 						%
 							<van-field 
+							v-reset-page
+							clearable
 							class="detail-small-input w-35p"
 							v-model.trim="submit.reduceAmount"
 							@input="changeData(2, submit.reduceAmount)" 
@@ -136,6 +139,8 @@
 						<van-col span="24">
 							<span class="detail-row-left">成交金额（元）</span>
 							<van-field 
+							v-reset-page
+							clearable
 							class="detail-small-input" 
 							v-model.trim="submit.dealAmount" 
 							@input="changeData(3, submit.dealAmount)"
@@ -146,33 +151,36 @@
 				</van-cell-group>
 				
 			</van-cell-group>
-			<div style="text-align: center;width: 100%;height: 50px;">
-				<van-button
-					v-if="initData.cpStatus == '04'"
-					type="info"
-					style="width: 100%;position: absolute; left: 0; bottom: 0;"
-					@click="okFn">我要买</van-button>
-				<van-button
-					v-if="initData.cpStatus == '02'"
-					type="primary"
-					style="width: 100%;position: absolute; left: 0; bottom: 0;"
-					@click="modelClose"
-					>报价成功</van-button>
-				<van-button
-					v-if="initData.cpStatus == '03'"
-					type="danger"
-					style="width: 100%;position: absolute; left: 0; bottom: 0;"
-					@click="modelClose"
-					>已注销</van-button>
-				<van-button
-					v-if="initData.cpStatus == '06'"
-					type="primary"
-					style="width: 100%;position: absolute; left: 0; bottom: 0;"
-					@click="modelClose"
-					>已成交</van-button>
+			
 			</div>
-				
+			<div style="text-align: center;width: 100%;height: 44px;position: fixed; left: 0; bottom: 0;">
+				<div style="position: absolute;left:0; top: 0;width: 100%;">
+					<van-button
+						v-if="initData.cpStatus == '04'"
+						type="info"
+						style="width: 100%;height: 100%;"
+						@click="okFn">我要买</van-button>
+					<van-button
+						v-if="initData.cpStatus == '02'"
+						type="primary"
+						style="width: 100%;height: 100%;"
+						@click="modelClose"
+						>报价成功</van-button>
+					<van-button
+						v-if="initData.cpStatus == '03'"
+						type="danger"
+						style="width: 100%;height: 100%;"
+						@click="modelClose"
+						>已注销</van-button>
+					<van-button
+						v-if="initData.cpStatus == '06'"
+						type="primary"
+						style="width: 100%;height: 100%;"
+						@click="modelClose"
+						>已成交</van-button>
+				</div>
 			</div>
+			
 		</div>	
 	</van-popup>
 	<PriceList 
@@ -197,6 +205,7 @@
 		data(){
 			return {
 				finished:true,
+				isPreviewPic: false,
 				show: this.showState,
 				initD: this.initData,
 				priceListShow: false,
@@ -211,10 +220,13 @@
 				refreshPriceState: false,//刷新价格开关
 				buyPrice: '',
         		hasBuyPrice: false,
-        		buyPriceText: '买家最新报价'
+        		buyPriceText: '买家最新报价',
+        		imagePreview: '',
 			}
 		},
+
 		watch: {
+			
 			showState(newValue, oldValue){
 				this.show = newValue;
 				if(newValue){
@@ -300,11 +312,16 @@
 		        })
 			},
 			previewPic(index){
-				ImagePreview({
+				this.isPreviewPic = true;
+				this.imagePreview = ImagePreview({
 					images: [_common.mosPicUrl + this.initData.frontBillImg],
 					startPosition: index,
-					
+					onClose(){
+						this.isPreviewPic = false;
+					}
 				});
+
+
 			},
 			modelClose(){
 				//关闭的时候改变对应状态，继续观察
@@ -451,11 +468,12 @@
 	text-align: left;
   	height: 100%;
   	-webkit-overflow-scrolling: touch;
-  	position: relative;
+  	position: absolute;
 }
 .van-popup{
 	width: 80%;
   	height: 100%;
+  	position: fixed;
 }
 .detail-row{
 	padding: 10px 15px;

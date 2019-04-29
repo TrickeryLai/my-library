@@ -18,6 +18,7 @@
 			</van-col>
 			<van-col span="21">
 				<van-field 
+				v-reset-page
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model.trim="register.loginName"
@@ -32,7 +33,8 @@
 				<i class="iconfont icon-mobile-alt"></i>
 			</van-col>
 			<van-col span="21">
-				<van-field 
+				<van-field
+				v-reset-page 
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model.trim="register.phone" placeholder="请输入绑定的手机号"
@@ -46,6 +48,7 @@
 			</van-col>
 			<van-col span="13">
 				<van-field 
+				v-reset-page
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model.trim="register.smsCaptcha" placeholder="请输入短信验证码"
@@ -77,12 +80,6 @@
 					v-model.trim="register.password"
 					placeholder="请输入新密码"
 				/>
-				<!-- <van-field 
-				autocomplete="new-password"
-				class="van-hairline--surround register-input"
-				style="display:inline-block;margin:0;padding:0;" 
-				v-model="register.password" placeholder="请输入密码"
-				type="password" /> -->
 			</van-col>
 		</van-row>
 		<van-row >
@@ -96,12 +93,6 @@
 					v-model.trim="register.password2"
 					placeholder="请再次输入新密码"
 				/>
-				<!-- <van-field 
-				autocomplete="new-password"
-				class="van-hairline--surround register-input"
-				style="display:inline-block;margin:0;padding:0;" 
-				v-model="register.password2" placeholder="请再次输入密码"
-				type="password" /> -->
 			</van-col>
 		</van-row>
 		</van-row>
@@ -112,6 +103,7 @@
 			</van-col>
 			<van-col span="13">
 				<van-field 
+				v-reset-page
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model.trim="register.code" placeholder="请输入右侧验证码"

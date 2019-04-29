@@ -225,12 +225,12 @@ let server = {
         isLoading: true,
 	      url,
 	    }).then((response) => { 
-          params.success &&  params.success(response)
-	        // if(response.code == 0 || response.code == 110008){
-	          
-	        // }else{
-	        //   Toast(response.errMsg);
-	        // }
+          
+	        if(response.code == 0 || response.code == 110008){
+	          params.success &&  params.success(response);
+	        }else{
+	          response.errMsg && Toast(response.errMsg);
+	        }
 	      })
 	    .catch(error => {
 	    	  console.log(error)
@@ -803,6 +803,33 @@ let server = {
           return resolve(response);
         }).catch(error => {
           return reject(error);
+        })
+      })
+    },
+    /**
+     * [getOcrData OCR识别图片信息]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    getOcrData(data){
+      let url = 'open-cp/v1/ocr/ticket';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          isLoading: true,
+          url,
+          data: data,
+          isdeal: true,
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          return reject(response);
         })
       })
     },
