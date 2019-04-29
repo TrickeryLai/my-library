@@ -604,10 +604,8 @@ import _common from '@/server/index'
               //票据正面
               this.pjzPicUState.state = data.state;
               if(data.state == 3){
-                  // this.pjzPic = data.imgData.data;
-                  setTimeout( () =>{
-                    this.getOcrData({imageName: data.imgData.data});
-                  })
+                  this.pjzPic = data.imgData.data;
+                  this.getOcrData({imageName: data.imgData.data});
               }
           },
           pjfUploadPicFn(data){
@@ -638,36 +636,36 @@ import _common from '@/server/index'
             let result = '';
             this.xcChoseList.forEach((item) => {
               result += item.name + ',';
-            })
+            });
             return result;
           },
           checkSubmitData(){
             if(!this.pjzPic || this.pjzPicUState.state == 0 || this.pjzPicUState.state == 4){
-              this.$toast('请上传票据正面图片！')
+              this.$toast('请上传票据正面图片！');
               return false;
             }
             if(this.pjzPicUState.state == 1){
-              this.$toast('票据正面图片正在上传！')
+              this.$toast('票据正面图片正在上传！');
               return false;
             }
             if(!this.pjfPic || this.pjfPicUState.state == 0 || this.pjfPicUState.state == 4){
-              this.$toast('请上传票据反面图片！')
+              this.$toast('请上传票据反面图片！');
               return false;
             }
             if(this.pjfPicUState.state == 1){
-              this.$toast('票据反面图片正在上传！')
+              this.$toast('票据反面图片正在上传！');
               return false;
             }
             if(!this.submitData.cpNo || this.submitData.cpNo.toString().length != 30){
-              this.$toast('请填写正确的30位商业承兑汇票号！')
+              this.$toast('请填写正确的30位商业承兑汇票号！');
               return false;
             }
             if(this.submitData.cpNo.toString().substring(0,1) != 2){
-              this.$toast('本系统仅处理电子商业汇票！')
+              this.$toast('本系统仅处理电子商业汇票！');
               return false;
             }
             if(!this.submitData.cpAmount || !/^(0|[1-9]\d*)(\.\d+)?$/.test(this.submitData.cpAmount)){
-              this.$toast('请输入正确的票据金额！')
+              this.$toast('请输入正确的票据金额！');
               return false;
             }
             if(this.submitData.cpAmount < 50000 || this.submitData.cpAmount > 50000000){
@@ -676,16 +674,16 @@ import _common from '@/server/index'
             }
 
             if(!this.endTimeChoseValue){
-              this.$toast('请选择到期日期！')
+              this.$toast('请选择到期日期！');
               return false;
             }
             // console.log(this.endTimeTrue)
             if(!this.dealTime(this.endTimeTrue)){
-              this.$toast('到期日期应大于当天！')
+              this.$toast('到期日期应大于当天！');
               return false;
             }
             if(!this.submitData.acceptor){
-              this.$toast('请输入承兑人！')
+              this.$toast('请输入承兑人！');
               return false;
             }
             if(!this.sell.approvalApr || !this.sell.turnVolume || !this.sell.deductAmount){

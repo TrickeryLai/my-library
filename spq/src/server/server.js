@@ -529,11 +529,7 @@ let server = {
           data: data,
           isdeal: true,
         }).then((response) => {
-          if(response.code == 0 || response.code == 110008){
-            callback && callback(response);
-          }else{
-            response.errMsg && Toast(response.errMsg);
-          }
+          callback && callback(response);
         }).catch(error => {
           console.log(error)
         })

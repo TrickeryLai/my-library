@@ -161,6 +161,7 @@
 				isShow: this.show,
 				pageType: this.type,
 				list:[],
+        basesData: this.baseData,
 				isTable: false,
 				pageData:{
 					pageSize: 5,
@@ -173,6 +174,8 @@
 			show(newV){
 				this.isShow = newV;
 				if(this.isShow){
+            console.log('cpid',this.baseData.cpId);
+				      this.basesData = this.baseData;
 		          this.getData(this.baseData.cpId);
 		          this.pageType = this.type;
 		        }
@@ -203,14 +206,14 @@
 					message: '确认撮合该笔报价么？'
 				}).then(() =>{
 					this.biddingSubmit(item);
-					
+
 				}).catch(()=>{
 
 				})
 				
 			},
 			biddingSubmit(item, isSure = 'no'){
-				
+
 				//撮合
 				let data = {
 					cpId: item.cpId,
@@ -232,7 +235,7 @@
 						}).then(() => {
 							_this.biddingSubmit(item, 'yes');
 						}).catch(()=>{
-							_this.getData();
+							_this.getData(_this.baseData.cpId);
 						})
 					}
 				})
