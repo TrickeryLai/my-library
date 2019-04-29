@@ -3,14 +3,38 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" /> 
     <title>商票之家</title>
   </head>
   <script type="text/javascript">
   	//微信授权
+    //https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx704fe06769976b17&redirect_uri=http%3A%2F%2F117.71.57.247%3A3580%2Fdist%2Findex.html%23%2Fhome%2FbillHall&response_type=code&scope=snsapi_base&state=1#wechat_redirect/
     // var url = window.location.href;
     // if(url.indexOf('code') <= -1){
-    //     location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=xxxxxxxxxxxxxx&redirect_uri=http%3A%2F%2F192.168.15.10：8080&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+    //     location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx704fe06769976b17&redirect_uri=http%3A%2F%2F117.71.57.247%3A3580%2Fdist%2Findex.html%23%2Fhome%2FbillHall&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect';
     // }
+    // 
+    window.onload = function() {
+    // 阻止双击放大
+      var lastTouchEnd = 0;
+      document.addEventListener('touchstart', function(event) {
+          if (event.touches.length > 1) {
+              event.preventDefault();
+          }
+      });
+      document.addEventListener('touchend', function(event) {
+          var now = (new Date()).getTime();
+          if (now - lastTouchEnd <= 300) {
+              event.preventDefault();
+          }
+          lastTouchEnd = now;
+      }, false);
+
+      // 阻止双指放大
+      document.addEventListener('gesturestart', function(event) {
+          event.preventDefault();
+      });
+    }
 </script>
   <body>
     <div id="app"></div>

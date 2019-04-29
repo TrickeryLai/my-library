@@ -1,13 +1,13 @@
 <template>
 	<div>
 		<van-nav-bar
-		:title="title"
 		left-arrow
 		fixed
 		@click-left="onClickLeft"
 		class="top-bg"
 		>
-			<i class="iconfont icon-previous_step" slot="left"></i>
+			<span slot="title" class="top-bg-title">{{title}}</span>
+			<i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
 		</van-nav-bar>
 		<div style="padding-top: 0px;text-align: left;">
 			<van-cell class="van-hairline--bottom" @click="gotoChange(1)" title="修改登录密码">

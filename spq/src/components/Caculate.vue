@@ -1,13 +1,12 @@
 <template>
 	<div>
 		<van-nav-bar
-		:title="title"
 		left-arrow
 		fixed
 		@click-left="onClickLeft"
 		class="top-bg"
-		>
-			<i class="iconfont icon-previous_step" slot="left"></i>
+		>	<span slot="title" class="top-bg-title">{{title}}</span>
+			<i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
 		</van-nav-bar>
 		<div>
 			<div class="caculate-top"></div>
@@ -16,7 +15,8 @@
 					<van-col span="8" ><span style="vertical-align:-12px;">票面金额(万元)</span></van-col>
 					<van-col span="16" >
 						<van-field 
-						v-model="value" 
+						v-model.trim="value" 
+						type="number"
 						clearable
 						placeholder="票面金额(万元)" 
 						style="padding-top:3px;padding-bottom:3px" />
@@ -47,7 +47,7 @@
 					<van-col span="8" ><span style="vertical-align:-12px;">调整天数</span></van-col>
 					<van-col span="16" >
 						<van-field 
-						v-model="changeDay" 
+						v-model.trim="changeDay" 
 						placeholder="调整天数"
 						clearable 
 						type="number" 
@@ -61,8 +61,9 @@
 					<van-col span="8" ><span style="vertical-align:-12px;">月利率（%）</span></van-col>
 					<van-col span="16" >
 						<van-field 
-						v-model="monthRate" 
+						v-model.trim="monthRate" 
 						clearable
+						type="number"
 						placeholder="月利率（%）"  
 						style="padding-top:3px;padding-bottom:3px"
 						@input="rateChange(1)"/>
@@ -72,8 +73,9 @@
 					<van-col span="8" ><span style="vertical-align:-12px;">年利率（%）</span></van-col>
 					<van-col span="16" >
 						<van-field 
-						v-model="yearRate" 
+						v-model.trim="yearRate" 
 						clearable
+						type="number"
 						placeholder="年利率（%）" 
 						style="padding-top:3px;padding-bottom:3px"
 						@input="rateChange(2)" />
@@ -83,8 +85,9 @@
 					<van-col span="8" ><span style="vertical-align:-12px;">每十万手续费</span></van-col>
 					<van-col span="16" >
 						<van-field 
-							v-model="shouxufei" 
+							v-model.trim="shouxufei" 
 							clearable
+							type="number"
 							placeholder="每十万手续费（元）" 
 							style="padding-top:3px;padding-bottom:3px"
 							@input="rateChange(3)" 

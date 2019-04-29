@@ -110,6 +110,17 @@
     beforeDestoy(){
         clearInterval(this.intervaler);
     },
+    watch:{
+      initPic(newV, oldV){
+        let url = newV.indexOf('jpg') >= 0 || newV.indexOf('png') >= 0;
+        
+        if(!url){
+          this.yyzzPicUrl = '';
+        }else{
+          this.yyzzPicUrl = newV;
+        }
+      }
+    },
 		methods:{
           uploadPic(){
             //通知正在上传
@@ -256,7 +267,6 @@
                     _this.$toast(res.errMsg);
                   }
                 }
-
               });
 
               xhr.open("post", _common.headUrl + this.uploadUrl, true);

@@ -1,23 +1,37 @@
 <template>
   <div style="padding-bottom: 50px;">
     <van-nav-bar
-      :title="title"
       left-arrow
       fixed
-      right-text="修改"
       @click-left="onClickLeft"
       @click-right="onClickRight"
       class="top-bg"
     >
-      <i class="iconfont icon-previous_step" slot="left"></i>
+      <span slot="title" class="top-bg-title">{{title}}</span>
+      <!-- <span slot="right" class="top-bg-title">修改</span> -->
+      <i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
     </van-nav-bar>
     <van-cell-group class="baseInfo-box">
-      <van-row class="baseInfo-box-row">
-            <van-col span="8" class="baseInfo-box-left">企业名称:</van-col>
+        <!-- <van-row class="baseInfo-box-row">
+            <van-col span="8" class="baseInfo-box-left">审核状态:</van-col>
+            <van-col span="16" class="baseInfo-box-right">
+              <span v-if="baseInfo.authStatus == 1">待审核</span>
+              <span v-else-if="baseInfo.authStatus == 2">审核未通过</span>
+              <span v-else-if="baseInfo.authStatus == 9">已审核</span>
+            </van-col>
+        </van-row>
+        <van-row class="baseInfo-box-row" v-if="baseInfo.authStatus == 2">
+            <van-col span="8" class="baseInfo-box-left">审核状态:</van-col>
+            <van-col span="16" class="baseInfo-box-right">
+              {{baseInfo.authNoPassCause}}
+            </van-col>
+        </van-row> -->
+        <van-row class="baseInfo-box-row">
+            <van-col span="8" class="baseInfo-box-left">公司名称:</van-col>
             <van-col span="16" class="baseInfo-box-right">{{baseInfo.companyName || '-'}}</van-col>
         </van-row>
         <van-row class="baseInfo-box-row">
-            <van-col span="8" class="baseInfo-box-left">统一社会信息代码:</van-col>
+            <van-col span="8" class="baseInfo-box-left">组织机构代码:</van-col>
             <van-col span="16" class="baseInfo-box-right">{{baseInfo.organizationCode || '-'}}</van-col>
         </van-row>
         <van-row class="baseInfo-box-row">
@@ -101,7 +115,15 @@
         window.history.go(-1);
       },
       onClickRight(){
-        this.$router.push({path:'/home/selfInfo/realNameChange',query: {data: JSON.stringify(this.baseInfo)}})
+        // this.$router.push({path:'/home/selfInfo/realNameChange',query: {data: JSON.stringify(this.baseInfo)}});
+        let authStatus = JSON.parse(localStorage.getItem('user')).authStatus;
+
+        if(!authStatus){
+          this.$router.push({path:'/home/realName'});
+          this.$toast('请先实名认证！');
+        }else{
+          this.$router.push({path:'/home/selfInfo/realNameChange'});
+        }
       },
       loginOut(){
         _server.logout({}, (res) => {
@@ -127,7 +149,7 @@
           success(res){
             if(res){
               _this.baseInfo = res;
-              localStorage.setItem('baseInfo', JSON.stringify(res));
+              localStorage.setItem('user', JSON.stringify(res));
             }
           }
         })
@@ -143,6 +165,8 @@
   }
   .baseInfo-box-row{
     padding: 5px 0;
+    display: flex;
+    align-items: center;
   }
   .baseInfo-box-left{
     text-align: right;

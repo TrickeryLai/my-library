@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "better-scroll": "^1.15.2",
     "qs.js": "^0.1.12",
     "vant": "^1.6.11",
     "vue": "^2.5.2",

@@ -17,9 +17,22 @@ import RealNameChange from '@/components/RealNameChange'
 import MatchBank from '@/components/MatchBank'
 import AddBankCard from '@/components/AddBankCard'
 import BankDetailInfo from '@/components/BankDetailInfo'
+import ChangeAccount from '@/components/ChangeAccount'
+import ForgetPassword from '@/components/ForgetPassword'
+
+import PushPage from '@/components/PushPage';
 
 let routerData = {
   routes: [
+  {
+    path: '/pushPage',
+    name: 'PushPage',
+    meta:{
+        isLogin: false,
+        isNChecked: false,
+    },
+    component: PushPage
+  },
   {
     path: '/home',
     name: 'Tabber',
@@ -125,7 +138,7 @@ let routerData = {
       name: 'RealNameChange',
       meta:{
         isLogin: true,
-        isNChecked: true,
+        isNChecked: false,
       },
       component: RealNameChange
     },
@@ -140,7 +153,7 @@ let routerData = {
     },
     {
       path: '/home/selfInfo/addBankCard',
-      name: 'MatchBank',
+      name: 'AddBankCard',
       meta:{
         isLogin: true,
         isNChecked: true,
@@ -155,6 +168,15 @@ let routerData = {
         isNChecked: true,
       },
       component: BankDetailInfo
+    },
+    {
+      path: '/home/selfInfo/changeAccount',
+      name: 'ChangeAccount',
+      meta:{
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: ChangeAccount
     }
 
     ]
@@ -185,6 +207,15 @@ let routerData = {
       isNChecked: false,
     },
     component: PreviewPdf
+  },
+  {
+    path: '/forgetPassword',
+    name: 'ForgetPassword',
+    meta:{
+      isLogin: false,
+      isNChecked: false,
+    },
+    component: ForgetPassword
   }
   ]
 }

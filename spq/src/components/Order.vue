@@ -1,12 +1,13 @@
 <template>
 	<div class="order-page">
 		<van-nav-bar
-		:title="title"
-		:right-text="rightText"
 		fixed
 		class="top-bg"
 		@click-right="rightClick"
-		/>
+		>
+			<span slot="title" class="top-bg-title">{{title}}</span>
+			<span slot="right" class="top-bg-title">{{rightText}}</span>
+		</van-nav-bar>
 		<div class="">
 			<!-- <van-search
 			style="position:absolute;left: 0;top: 0;width: 100%;"
@@ -49,7 +50,7 @@
 					我的买入
 					<span class="blue-font" style="font-size: 12px;" @click.stop="rightClick">({{beginTimeData.value}}&nbsp-&nbsp{{endTimeData.value}})</span>
 				</p>
-				<div style="max-height: 350px;overflow:auto;border: 1px solid #ccc;">
+				<div style="max-height: 350px;overflow:auto;overflow-y:scroll;border: 1px solid #ccc;">
 					<van-pull-refresh 
 					v-model="fbListState.isLoading" 
 					@refresh="fbOnRefresh">
@@ -76,12 +77,12 @@
 						<van-row>
 							<van-col span="18">
 								<span class="text-left">我的竞价金额：</span>
-								<span v-if="item.turnVolume > 10000">
-									<span  style="font-size: 18px;">{{item.turnVolume && (item.turnVolume/10000).toFixed(2)}}</span> 
+								<!-- <span v-if="item.turnVolume > 10000">
+									<span class="price-txt">{{item.turnVolume && (item.turnVolume/10000).toFixed(2)}}</span> 
 									<span class="small-font">万元</span>
-								</span>
-								<span v-else>
-									<span style="font-size: 18px;">{{item.turnVolume && (item.turnVolume).toFixed(2)}}</span> 
+								</span> -->
+								<span>
+									<span class="price-txt">{{item.turnVolume && dealPrice((item.turnVolume).toFixed(2))}}</span> 
 									<span class="small-font">元</span>	
 								</span>
 								
@@ -91,10 +92,10 @@
 									<van-tag round  type="primary" v-if="item.quoteStatus == 1">
 										报价中
 									</van-tag>
-									<van-tag round type="success" v-else-if="item.quoteStatus == 2">撮合成交</van-tag>
+									<van-tag round type="success" v-else-if="item.quoteStatus == 2">撮合成功</van-tag>
 									<van-tag round v-else-if="item.quoteStatus == 3">撮合失败</van-tag>
-									<van-tag round v-else-if="item.quoteStatus == 4">已取消</van-tag>
-									<van-tag round v-else-if="item.quoteStatus == 5">已拒绝</van-tag>
+									<van-tag round v-else-if="item.quoteStatus == 4">取消报价</van-tag>
+									<van-tag round v-else-if="item.quoteStatus == 5">报价被拒</van-tag>
 								</div>
 							</van-col>
 						</van-row>
@@ -110,7 +111,7 @@
 		</van-pull-refresh>
 	</div>
 
-</van-collapse-item>
+	</van-collapse-item>
 			<!-- <van-collapse-item class="text-left" title="暂存中" name="2">
 				
 			</van-collapse-item> -->
@@ -194,7 +195,21 @@ export default{
 		},
 		created(){
 			this.fbOnLoad();
+
 		},
+		beforeRouteLeave(to, from, next){
+			if(to.name == 'Login' || to.name == 'RealName' || to.name == 'RealNameChange'){
+				next();
+				return;
+			}
+	      	if(this.fbListState.detailModelState){
+		        this.detailModelClose();
+		        next(false);
+		        return;
+	      	} 
+
+	      	next();
+	    },
 		methods:{
 			spliceTime(item){
 				if(!item){
@@ -209,6 +224,9 @@ export default{
 				}else{
 					this.rightText = '选择';
 				}
+			},
+			dealPrice(price){
+				return _common.common_fn.dealPrice(price);
 			},
 			getLastTime(endTime){
 				return _common.common_fn.getLastTime(endTime);
@@ -320,6 +338,7 @@ export default{
 				this.fbGetData();
 			},
 			detailModelClose(){
+				this.$canScroll();
 				this.fbListState.detailModelState = false;
 			},
 			formatter(type, value) {

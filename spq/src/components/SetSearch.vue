@@ -119,7 +119,7 @@
               @click="choseDeal(item)"
             >{{item.name}}</van-tag>
           </van-cell-group>
-          <van-cell-group>
+          <van-cell-group v-if="false">
             <h3 class="title">票据状态</h3>
             <van-tag
               class="my-tag"
@@ -247,20 +247,16 @@
 		            name:'全部'
 		          },
 		          {
-		            val: '01',
-		            name:'发布中'
+		            val: '02',
+		            name: '报价成功'
 		          },
 		          {
-		            val: '02',
+		            val: '06',
 		            name: '已成交'
 		          },
 		          {
-		            val: '03',
-		            name: '已注销'
-		          },
-		          {
 		            val: '04',
-		            name: '报价中'
+		            name: '可报价'
 		          }
 		        ],
 				amountType:[
@@ -277,16 +273,16 @@
 						min: 10
 					},
 					{
-						val: 'moreOneMillion',
-						name: '100万以上',
-						max: '',
-						min: 100
+						val: '',
+						name: '100-500万',
+						max: 500,
+						min: 100,
 					},
 					{
 						val: 'moreFiveMillion',
 						name: '500万以上',
 						max: '',
-						min: 500
+						min: 500,
 					}
 				],
 				dayType:[
@@ -299,8 +295,8 @@
 					{
 						val: 'ninetyToHundredEighty',
 						name: '91-180天',
-						max: 91,
-						min: 180
+						max: 180,
+						min: 91
 					},
 					{
 						val: 'hundredEightyToThreeHundredsixty',
@@ -428,8 +424,8 @@
 				this.searchData.startDate = this.beginData.val;
 				this.searchData.endDate = this.endData.val;
 
-				this.$emit("ok", this.searchData);
-				this.modelClose();
+				// this.$emit("ok", this.searchData);
+				// this.modelClose();
 			},
 			ok(){
 				this.searchData.startDate = this.beginData.val;
@@ -447,6 +443,7 @@
 	text-align: left;
 	color: #000;
 	font-weight: normal;
+	font-size:16px;
 }
 .setSearch-model .title::before{
 	content: '';
@@ -455,7 +452,7 @@
 	height: 8px;
 	border-radius: 50%;
 	background: #0079f3;
-	vertical-align: 5px;
+	vertical-align: 1px;
 	margin-right: 7px;
 }
 .setSearch-model.model-content{

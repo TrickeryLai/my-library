@@ -1,15 +1,15 @@
 <template>
   <div>
     <van-nav-bar
-      :title="title"
       left-arrow
       fixed
       @click-left="onClickLeft"
       @click-right="onClickRight"
       class="top-bg"
     >
-      <i class="iconfont icon-previous_step" slot="left"></i>
-      <i class="iconfont icon-add" slot="right"></i>
+      <span slot="title" class="top-bg-title">{{title}}</span>
+      <i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
+      <i class="iconfont icon-add top-bg-title" slot="right"></i>
     </van-nav-bar>
     <div style="padding-top: 0px;text-align: left;">
       <van-tabs
@@ -23,11 +23,13 @@
         <van-tab title="提现银行账户">
           <BankList
             :listData="ListData"
+            :type="active"
           />
         </van-tab>
         <van-tab title="签收银行账户">
           <BankList
             :listData="ListData"
+            :type="active"
           />
         </van-tab>
       </van-tabs>
@@ -46,7 +48,7 @@
     data(){
       return{
         title: '银行账户设置',
-        active: '0',
+        active: '0',// 0 ，提现账户，1，签收账户
         ListData: [
         ]
       }
@@ -55,10 +57,8 @@
         // this.onChangeTabs(this.active);
     },
     watch: {
-      active(newV){
-        
-        this.onChangeTabs(newV);
-        
+      active(newV){    
+        this.onChangeTabs(newV);   
       }
     },
     methods: {

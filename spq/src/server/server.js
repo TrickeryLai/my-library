@@ -35,9 +35,12 @@ let server = {
    * @param  {Function} callback [description]
    * @return {[type]}            [description]
    */
-  getSmsCaptcha(phoneNumber){
+  getSmsCaptcha(phoneNumber, loginName){
     let url = 'open-cp/v1/smsCaptcha/?phoneNumber=' + phoneNumber;
 
+    if(loginName){
+      url += '&loginName=' + loginName;
+    }
     return new Promise((resolve, reject) => {
       Axios.get({
         url: url,
@@ -112,12 +115,12 @@ let server = {
    * @return {[type]}            [description]
    */
   changePassword(data, callback){
-    let user = localStorage.getItem('user') ?  JSON.parse(localStorage.getItem('user')): '';
+    let userId = localStorage.getItem('userId') ?  JSON.parse(localStorage.getItem('userId')): '';
     let url = 'open-cp/v1/users/';
-    if(!user){
+    if(!userId){
       return;
     }
-    url += user.userId;
+    url += userId;
     Axios.patch({
       isLoading: true,
       url,
@@ -157,6 +160,33 @@ let server = {
 			});
 		return this;
 	},
+  /**
+   * [forgetPassword 忘记密码]
+   * @param  {[type]} data [description]
+   * @return {[type]}      [description]
+   */
+  forgetPassword(data){
+    let url = 'open-cp/v1/forgetPassword';
+
+    return new Promise( (resolve, reject) => {
+      Axios.post({
+        isLoading: true,
+        url,
+        data: data,
+      }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+      }).catch(error => {
+        return reject(error);
+        // console.log(error);
+      });
+    })
+    
+  },
 	/**
 	 * [getBusinessTickets 大厅获取票据列表]
 	 * @param  {[type]}   data     [description]
@@ -195,18 +225,45 @@ let server = {
         isLoading: true,
 	      url,
 	    }).then((response) => { 
-          params.success &&  params.success(response)
-	        // if(response.code == 0 || response.code == 110008){
-	          
-	        // }else{
-	        //   Toast(response.errMsg);
-	        // }
+          
+	        if(response.code == 0 || response.code == 110008){
+	          params.success &&  params.success(response);
+	        }else{
+	          response.errMsg && Toast(response.errMsg);
+	        }
 	      })
 	    .catch(error => {
 	    	  console.log(error)
 	    });
 	    return this;
   	},
+    /**
+     * [getSelfTicketDetail 获取票据详情，含img]
+     * @param  {[type]} params [description]
+     * @return {[type]}        [description]
+     */
+    getSelfTicketDetail(_id){
+      let url = 'open-cp/v1/commercialPaper/paper/' + _id;
+
+      return new Promise( (resolve, reject) => {
+        Axios.get({
+          isLoading: true,
+          url,
+        }).then((response) => { 
+          
+            if(response.code == 0 || response.code == 110008){
+                return resolve(response)
+            }else{
+              Toast(response.errMsg);
+              return reject(error);
+            }
+          })
+        .catch(error => {
+            return reject(error);
+        });
+      })
+     
+    },
   	/**
   	 * [发布票据 description]
   	 * @param  {[type]}   data     [description]
@@ -288,11 +345,12 @@ let server = {
 	      url,
 	      isLoading: true,  
 	    }).then((response) => {
-	          params.success &&  params.success(response)
-	        // if(response.code == 0 || response.code == 110008){
-	        // }else{
-	        //   Toast(response.errMsg);
-	        // }
+	          
+	        if(response.code == 0 || response.code == 110008){
+            params.success &&  params.success(response)
+	        }else{
+	          Toast(response.errMsg);
+	        }
 	      })
 	    .catch(error => {
 	    	console.log(error);
@@ -655,13 +713,19 @@ let server = {
         })
       })
     },
-     refuseQuotedPric(id){
+    /**
+     * [changeCompanyAccount 修改银行账户信息]
+     * @param  {[type]} id [description]
+     * @return {[type]}    [description]
+     */
+     changeCompanyAccount(id, data){
       let url = `open-cp/v1/companyAccount/${id}`;
 
       return new Promise((resolve, reject) => {
         Axios.put({
           isLoading: true,
           url,
+          data
         }).then((response) => {
           if(response.code == 0 || response.code == 110008){
             // callback && callback(response);
@@ -676,7 +740,100 @@ let server = {
         })
       })
     },
-  	
+    /**
+     * [deleteAccount 删除银行帐户]
+     * @return {[type]} [description]
+     */
+    deleteAccount(id){
+      let url = `open-cp/v1/companyAccount/${id}`;
+
+      return new Promise((resolve, reject) => {
+        Axios.deleteN({
+          isLoading: true,
+          url
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          // console.log(error);
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [changeAccountType 修改账户类型]
+     * @return {[type]} [description]
+     */
+  	changeAccountType(data){
+      let url = 'open-cp/v1/companyAccount/copyAccount';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          isLoading: true,
+          url,
+          data: data,
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          return reject(response);
+        })
+      })
+    },
+    /**
+     * [getBankList description]
+     * @return {[type]} [description]
+     */
+    getCompanyDataInfo(id){
+      let url = 'open-cp/v1/company/byUserId/'+id;
+      return new Promise((resolve, reject) => {
+        Axios.get({
+          url
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [getOcrData OCR识别图片信息]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    getOcrData(data){
+      let url = 'open-cp/v1/ocr/ticket';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          isLoading: true,
+          url,
+          data: data,
+          isdeal: true,
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          return reject(response);
+        })
+      })
+    },
+
 }
 
 export default server;

@@ -66,29 +66,6 @@
         />
       </van-col>
     </van-row>
-    <van-row class="realName-box-row" style="padding-top:10px;padding-bottom: 10px;">
-      <van-col span="7" class="realName-content-box-left"><i class="required">*</i>添加类型</van-col>
-      <van-col span="17" class="realName-content-box-right">
-        <van-radio-group v-model="submitData.accountType" class="text-left">
-          <van-radio name="1" class="type-choose">
-            提现银行账户
-            <i
-              class="iconfont"
-              slot="icon"
-              slot-scope="props"
-              :class="{'icon-active icon-gouxuan': props.checked,'icon-mygou': !props.checked}" ></i>
-          </van-radio>
-          <van-radio name="2" class="type-choose">
-            签收银行账户
-            <i
-              class="iconfont"
-              slot="icon"
-              slot-scope="props"
-              :class="{'icon-active icon-gouxuan': props.checked,'icon-mygou': !props.checked}" 
-              ></i>
-          </van-radio>
-        </van-radio-group>
-      </van-col>
     </van-row>
     <van-row class="realName-box-row" style="padding-top:10px;padding-bottom: 10px;">
       <van-col span="7" class="realName-content-box-left"><i class="required">*</i>状态</van-col>
@@ -117,7 +94,7 @@
     <van-button 
       type="info" 
       style="width: 100%;margin-top: 10px;"
-      @click="addFn">添加</van-button>
+      @click="addFn">修改</van-button>
   </div>
   <van-popup v-model="addressChoseState" position="bottom" @close="addressChoseClose">
       <van-area
@@ -132,6 +109,7 @@
     <van-popup v-model="choseBankNameState" position="bottom" @close="choseBankNameClose">
       <van-picker
         show-toolbar
+        :default-index="defaultIndex"
         :columns="bankList"
         value-key="bankName"
         @confirm="choseBankNameConfirm"
@@ -143,7 +121,10 @@
 
 <script>
   import areaData from '@/server/areaData';
+  import _common from '@/server/index';
   import _server from '@/server/server';
+
+
   export default{
     name: 'AddBankCard',
     data(){
@@ -155,20 +136,42 @@
         addressChoseState: false,
         choseBankNameState: false,
         bankList: [],
+        defaultIndex: 1,
         submitData: {
+          accountNo: '',
+          bankName: '',
+          bankSubbranch: '',
+          largeAccountNo: '',
           accountType: "1",
           status: "1",
+          bankName: '',
           addressItem: {},
           bankNameItem: {}
         }
       }
     },
     created(){
+      this.initDataFn();
       this.getBankList();
     },
     methods:{
       onClickLeft(){
         window.history.go(-1);
+      },
+      initDataFn(){
+        let addressR;
+        this.submitData = JSON.parse(this.$route.query.item);
+        this.submitData.address = this.getAdress(this.submitData.bankProvince, this.submitData.bankCity);
+        this.chosedCode = this.submitData.bankCity;
+        addressR = _common.common_fn.getAddress(this.submitData.bankProvince, this.submitData.bankCity)
+        this.submitData.addressItem = [{
+            code: this.submitData.bankProvince,
+            name: addressR[this.submitData.bankProvince]
+          },
+          {
+            code: this.submitData.bankCity,
+            name: addressR[this.submitData.bankCity]
+            }]; 
       },
       choseBankNameClose(){
         this.choseBankNameState = false;
@@ -181,9 +184,27 @@
         this.submitData.bankName = v.bankName;
         this.choseBankNameClose()
       },
+      getAdress(pCode, cCode){
+            let result =  _common.common_fn.getAddress(pCode, cCode);
+
+            if(result[pCode] == result[cCode]){
+              result = result[pCode];
+            }else{
+              result = result[pCode] + result[cCode];
+            }
+            return result;
+      },
       getBankList(){
         _server.getBankList().then(response => {
+
             this.bankList = response;
+            this.bankList.forEach((item, index) => {
+              if(item.bankId == this.submitData.bankId){
+                this.submitData.bankNameItem = item;
+                this.defaultIndex = index;
+                return;
+              }
+              })
           }).then( error =>{
 
           })
@@ -240,34 +261,25 @@
         if(!this.checkedInfo()){
           return;
         }
+        let id = this.submitData.accountId;
         
         let data = {
-          accountType: '', //账户类型：1-提现账户；2-签收账户
-          accountNo: '', //对公账号
-          bankName: '',//开户行全称
-          bankProvince: '',//开户行所在省
-          bankCity: '',//开户行所在市
-          bankSubbranch: '',//开户行支行
-          largeAccountNo: '',//大额行号
-          status: '',//状态：0-非默认；1-默认
+          accountType: this.submitData.accountType, //账户类型：1-提现账户；2-签收账户
+          accountNo: this.submitData.accountNo, //对公账号
+          bankName: this.submitData.accountNo,//开户行全称
+          bankProvince: this.submitData.addressItem[0].code,//开户行所在省
+          bankCity: this.submitData.addressItem[1].code,//开户行所在市
+          bankSubbranch: this.submitData.bankSubbranch,//开户行支行
+          largeAccountNo: this.submitData.largeAccountNo,//大额行号
+          status: this.submitData.status,//状态：0-非默认；1-默认
+          bankId: this.submitData.bankNameItem.bankId,
           pageSize: 1,
           pageNum: 1000
         };
 
-        data = Object.assign({}, data, this.submitData);
-
-        delete data.address;
-        delete data.addressItem;
-        delete data.bankNameItem;
-        delete data.bankName;
-
-        data.bankProvince = this.submitData.addressItem[0].code;
-        data.bankCity = this.submitData.addressItem[1].code;
-        data.bankId = this.submitData.bankNameItem.bankId;
-
-        _server.addCompanyAccount(data).then( response => {
+        _server.changeCompanyAccount(id, data).then( response => {
             if(response.code == 0){
-                this.$toast('账户增加成功！');
+                this.$toast('账户修改成功！');
                 window.history.go(-1);
                 return;
             }

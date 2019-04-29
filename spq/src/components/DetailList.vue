@@ -7,7 +7,7 @@
 	@touchmove.stop
 	>
 		<div class="model-content" @touchmove.stop>
-			<div style="height: 100%;overflow:auto;">
+			<div style="height: 100%;overflow:auto;overflow-y:scroll;">
 				<van-cell-group class="van-hairline--bottom">
 				<h3 class="title">票据详情</h3>
 				<van-cell-group>
@@ -28,8 +28,16 @@
 						<van-col class="detail-row-right" span="18">{{initData.cpAmount && dealPrice(initData.cpAmount.toFixed(2))}}元</van-col>
 					</van-row>
 					<van-row class="detail-row">
+						<van-col class="detail-row-left" span="6">背书次数</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.endorseTimes}}次</van-col>
+					</van-row>
+					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">到期时间</van-col>
 						<van-col class="detail-row-right" span="18">{{initData.dueDate}}</van-col>
+					</van-row>
+					<van-row class="detail-row" v-if="initData.actualTime">
+						<van-col class="detail-row-left" span="6">成交日期</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.actualTime}}</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">成交信用</van-col>
@@ -67,7 +75,7 @@
 					</van-row>
 				</van-cell-group>
 			</van-cell-group>
-			<van-cell-group class="">
+			<van-cell-group class="" style="padding-bottom: 50px;">
 				<h3 class="title">报价信息</h3>
 				<van-cell-group>
 					<van-row>
@@ -81,7 +89,7 @@
 									class="blue-font" 
 									style="margin-left:3px;"
 									@click="getbuyPrice"
-									v-if="initData.cpStatus == '01'"
+									v-if="initData.cpStatus == '04'"
 								>
 									{{time}}秒后自动刷新
 									<i class="iconfont icon-refresh"></i>
@@ -105,21 +113,24 @@
 							@click="showAllPrice">&nbsp查看所有</span>
 						</van-col>
 					</van-row>
-					<van-row class="detail-row-special" v-if="initData.cpStatus == '01' || initData.cpStatus == '04'">
-
+					<van-row class="detail-row-special" v-if="initData.cpStatus == '04'">
 						<van-col class="detail-row-left" span="12">年化利率</van-col>
 						<van-col class="detail-row-left" span="12">每十万扣款</van-col>
 						<van-col class="detail-row-left" span="24">
 							<van-field
+							v-reset-page
+							clearable
 							class="detail-small-input w-35p" 
-							v-model="submit.yearRate"
+							v-model.trim="submit.yearRate"
 							placeholder="年化利率"
 							@input="changeData(1, submit.yearRate)"
 							type="number" />
 						%
 							<van-field 
+							v-reset-page
+							clearable
 							class="detail-small-input w-35p"
-							v-model="submit.reduceAmount"
+							v-model.trim="submit.reduceAmount"
 							@input="changeData(2, submit.reduceAmount)" 
 							placeholder="每十万扣款"
 							type="number" />
@@ -128,8 +139,10 @@
 						<van-col span="24">
 							<span class="detail-row-left">成交金额（元）</span>
 							<van-field 
+							v-reset-page
+							clearable
 							class="detail-small-input" 
-							v-model="submit.dealAmount" 
+							v-model.trim="submit.dealAmount" 
 							@input="changeData(3, submit.dealAmount)"
 							placeholder="成交金额"
 							type="number" />
@@ -138,27 +151,36 @@
 				</van-cell-group>
 				
 			</van-cell-group>
-			<div style="text-align: center;width: 100%;height: 50px;">
-				<van-button
-					v-if="initData.cpStatus == '01' || initData.cpStatus == '04'"
-					type="info"
-					style="width: 100%;position: absolute; left: 0; bottom: 0;"
-					@click="ok">我要买</van-button>
-				<van-button
-					v-if="initData.cpStatus == '02'"
-					type="primary"
-					style="width: 100%;position: absolute; left: 0; bottom: 0;"
-					@click="modelClose"
-					>已成交</van-button>
-				<van-button
-					v-if="initData.cpStatus == '03'"
-					type="danger"
-					style="width: 100%;position: absolute; left: 0; bottom: 0;"
-					@click="modelClose"
-					>已注销</van-button>
+			
 			</div>
-				
+			<div style="text-align: center;width: 100%;height: 44px;position: fixed; left: 0; bottom: 0;">
+				<div style="position: absolute;left:0; top: 0;width: 100%;">
+					<van-button
+						v-if="initData.cpStatus == '04'"
+						type="info"
+						style="width: 100%;height: 100%;"
+						@click="okFn">我要买</van-button>
+					<van-button
+						v-if="initData.cpStatus == '02'"
+						type="primary"
+						style="width: 100%;height: 100%;"
+						@click="modelClose"
+						>报价成功</van-button>
+					<van-button
+						v-if="initData.cpStatus == '03'"
+						type="danger"
+						style="width: 100%;height: 100%;"
+						@click="modelClose"
+						>已注销</van-button>
+					<van-button
+						v-if="initData.cpStatus == '06'"
+						type="primary"
+						style="width: 100%;height: 100%;"
+						@click="modelClose"
+						>已成交</van-button>
+				</div>
 			</div>
+			
 		</div>	
 	</van-popup>
 	<PriceList 
@@ -175,6 +197,7 @@
 	import _server from '@/server/server';
 	import _common from '@/server/index';
 
+	// 01-审核中；02-成交；03-注销;04-报价中;05-审核失败
 	export default{
 		name: 'DetailList',
 		props: ['showState', 'initData', 'item'],
@@ -182,6 +205,7 @@
 		data(){
 			return {
 				finished:true,
+				isPreviewPic: false,
 				show: this.showState,
 				initD: this.initData,
 				priceListShow: false,
@@ -196,10 +220,13 @@
 				refreshPriceState: false,//刷新价格开关
 				buyPrice: '',
         		hasBuyPrice: false,
-        		buyPriceText: '买家最新报价'
+        		buyPriceText: '买家最新报价',
+        		imagePreview: '',
 			}
 		},
+
 		watch: {
+			
 			showState(newValue, oldValue){
 				this.show = newValue;
 				if(newValue){
@@ -208,7 +235,8 @@
 					this.submit.yearRate = '';
 					this.submit.reduceAmount = '';
 					this.submit.dealAmount = '';
-					this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
+					// this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
+					this.imgs = this.initData.frontBillImg?[_common.mosPicUrl + this.initData.frontBillImg]: [];
 					if(this.initData.cpStatus == 2){
 						this.buyPriceText = '撮合成交价';
 					}else{
@@ -229,7 +257,7 @@
 			},
 			setTimeoutFn(){
 				//如果不是报价状态，则可用取消查询
-				if(this.initData.cpStatus != '01'){
+				if(this.initData.cpStatus != '04'){
 					return;
 				}
 				this.timerOut = setInterval(() => {
@@ -284,28 +312,41 @@
 		        })
 			},
 			previewPic(index){
-				ImagePreview({
-					images: [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg],
+				this.isPreviewPic = true;
+				this.imagePreview = ImagePreview({
+					images: [_common.mosPicUrl + this.initData.frontBillImg],
 					startPosition: index,
-					
+					onClose(){
+						this.isPreviewPic = false;
+					}
 				});
+
+
 			},
 			modelClose(){
 				//关闭的时候改变对应状态，继续观察
 				this.$emit("close")
 			},
-			ok(){
-				let currentPath = this.$router.history.current.fullPath;
-				let _this = this;
-				//判断是否验证
-				let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '';
-				if(!(user.orgId || user._checked)){
+			getCompanyDataInfo(id){
+	            id = localStorage.getItem('userId')?JSON.parse(localStorage.getItem('userId')): '';
 
-					this.$router.push({path: '/home/realName', query:{redirect: currentPath}});
-					this.$toast('请先实名认证！');
-					return;
-				}
-				if(this.initData.createBy == user.loginName){
+	            return new Promise((resolve, reject) => {
+	            	_server.getCompanyDataInfo(id).then((res) => {
+		                if(res.code == 0){
+		                  return resolve(res);
+		                }else{
+		                  this.$toast(res.errMsg);
+		                  return reject(res);
+		                }
+		            	}).catch(error =>{
+		            		return reject(error);
+		            	})
+	            })
+	            
+          	},
+          	okFn(){
+          		let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '';
+          		if(this.initData.createBy == user.loginName){
 					this.$toast('不能对自己发布的票据进行竞价！');
 					return;
 				}
@@ -317,6 +358,32 @@
 					this.$toast('成交金额不能小于0！');
 					return;
 				}
+
+          		this.getCompanyDataInfo().then(res => {
+          			localStorage.setItem('user', JSON.stringify(res));
+          			this.ok();
+ 				}).catch(error => {
+ 					
+ 				})
+          	},
+			ok(){
+				let currentPath = this.$router.history.current.fullPath;
+				let _this = this;
+				//判断是否验证
+				let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '';
+				let authStatus = user.authStatus;
+ 
+				if(!authStatus){
+					this.$router.push({path: '/home/realName'});
+					this.$toast('请先实名认证！');
+					return;
+				}else if(authStatus == 1){
+					this.$router.push({path: '/home/selfInfo/realNameChange'});
+					return;
+				}else if(authStatus == 2){
+					this.$router.push({path: '/home/selfInfo/realNameChange'});
+					return;
+				} 
 
 				let data = {
 					approvalApr: this.submit.yearRate,
@@ -385,6 +452,7 @@
 	text-align: left;
 	color: #000;
 	font-weight: normal;
+	font-size: 16px;
 }
 .title::before{
 	content: '';
@@ -393,22 +461,25 @@
 	height: 8px;
 	border-radius: 50%;
 	background: #0079f3;
-	vertical-align: 5px;
+	vertical-align: 1px;
 	margin-right: 7px;
 }
 .model-content{
 	text-align: left;
   	height: 100%;
   	-webkit-overflow-scrolling: touch;
-  	position: relative;
+  	position: absolute;
 }
 .van-popup{
 	width: 80%;
   	height: 100%;
+  	position: fixed;
 }
 .detail-row{
 	padding: 10px 15px;
 	color: #333;
+	display: flex;
+    align-items: center;
 }
 .detail-row-special{
 	padding: 10px 15px;
@@ -419,6 +490,8 @@
 }
 .detail-row-left{
 	font-size: 14px;
+	display: inline-block;
+	vertical-align: middle;
 }
 .buy-price{
 	color: #000;
@@ -428,6 +501,8 @@
 }
 .detail-row-right{
 	word-break: break-all;
+	display: inline-block;
+	vertical-align: middle;
 }
 .picBox{
 	display:inline-block;

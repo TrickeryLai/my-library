@@ -1,32 +1,42 @@
 <template>
   <div>
     <van-nav-bar
-      :title="title"
       left-arrow
       fixed
       @click-left="onClickLeft"
       class="top-bg"
       :z-index = "zIndex"
-    />
+    >
+      <span slot="title" class="top-bg-title">{{title}}</span>
+      <i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
+    </van-nav-bar>
     <div class="realName-content">
       <van-cell-group class="">
         <h3 class="title van-hairline--bottom">上传票面</h3>
         <div class="realName-conten-inner">
-          <div style="display:inline-block;margin-right: 5px;">
+          <div class="pic-box">
             <UploadImg
             uploadUrl = "open-cp/v1/upload"
-            :initPic = "pjzPic"
+            :initPic = "getPicUrl(pjzPic)"
             @removePic='pjzRemovePic'
             @uploadPicProgress='pjzUploadPicFn' />
             <p class="picTitle" @click="showPjPic(1)"><span style="color: red;">*</span>票据正面<span class="blue-font">示例</span></p>
           </div>
-          <div style="display:inline-block;margin-right: 10px;">
+          <div class="pic-box">
             <UploadImg
             uploadUrl = "open-cp/v1/upload"
-            :initPic = "pjfPic"
+            :initPic = "getPicUrl(pjfPic)"
             @removePic='pjfRemovePic'
             @uploadPicProgress='pjfUploadPicFn' /> 
             <p class="picTitle" @click="showPjPic(2)"><span style="color: red;">*</span>票据背面<span class="blue-font">示例</span></p>
+          </div>
+          <div class="pic-box" v-for="(item, index) in imageList" :key="index" v-if="item.imageName || (index == imageList.length - 1)">
+            <UploadImg
+            uploadUrl = "open-cp/v1/upload"
+            :initPic = "getPicUrl(item.imageName)"
+            @removePic='moreRemovePic(item)'
+            @uploadPicProgress='moreUploadPicFn' /> 
+            <p class="picTitle">背面图片</p> 
           </div>
         </div>
       </van-cell-group>
@@ -38,8 +48,10 @@
               <van-col span="7" class="realName-content-box-left"><i class="required">*</i>票据号码&nbsp{{submitData.cpNo && submitData.cpNo.toString().length}}</van-col>
               <van-col span="17" class="realName-content-box-right">
                  <van-field
-                 v-model="submitData.cpNo"
+                 v-model.trim="submitData.cpNo"
+                 type="number"
                  clearable
+                 v-reset-page
                  placeholder="可从网银复制（30位数字）"
                  />
               </van-col>
@@ -48,8 +60,10 @@
               <van-col span="7" class="realName-content-box-left"><i class="required">*</i>票面金额(元)</van-col>
               <van-col span="17" class="realName-content-box-right">
                  <van-field
-                 v-model="submitData.cpAmount"
+                 v-model.trim="submitData.cpAmount"
+                 type="number"
                  clearable
+                 v-reset-page
                  placeholder="请输入金额(元)"
                  />
               </van-col>
@@ -81,7 +95,8 @@
               <van-col span="7" class="realName-content-box-left"><i class="required">*</i>承兑人全称</van-col>
               <van-col span="17" class="realName-content-box-right">
                  <van-field
-                 v-model="submitData.acceptor"
+                  v-reset-page
+                 v-model.trim="submitData.acceptor"
                  clearable
                  placeholder="请输入承兑人全称"
                  />
@@ -124,7 +139,8 @@
         <h3 class="title van-hairline--bottom">可指定用户买家</h3>
         <div class="realName-conten-inner">
           <van-field
-            v-model="submitData.buyerId"
+            v-reset-page
+            v-model.trim="submitData.buyerId"
             clearable
             placeholder="可输入买家id"
           /> 
@@ -147,8 +163,10 @@
             <van-row>
               <van-col span="8">
                 <van-field
-                  v-model="sell.deductAmount"
+                  v-reset-page
+                  v-model.trim="sell.deductAmount"
                   @input="typeChange(1)"
+                  type="number"
                   clearable
                   placeholder="每十万扣款(元)"
                 />
@@ -156,16 +174,20 @@
 
               <van-col span="8">
                 <van-field
-                  v-model="sell.approvalApr"
+                  v-reset-page
+                  v-model.trim="sell.approvalApr"
                   @input="typeChange(2)"
+                  type="number"
                   clearable
                   placeholder="年化利率(%)"
                 />
               </van-col>
               <van-col span="8">
                 <van-field
-                  v-model="sell.turnVolume"
+                  v-reset-page
+                  v-model.trim="sell.turnVolume"
                   @input="typeChange(3)"
+                  type="number"
                   clearable
                   placeholder="成交金额(元)"
                 />
@@ -224,16 +246,26 @@ import _common from '@/server/index'
       name: 'Fbpj',
       data(){
           return{
+              common: _common,
               pageType: 0, //0 发布票据， 1 修改票据
               title: '票据发布',
               zIndex: 999,
+              isFbSuccess: false,
               endTimeChoseValue: '',
               timeChoseValue: false,//时间选择弹窗
               picShowModel: false,//图片查看弹窗
               currentDate: '',
+              initPjzPic: '',
+              initPjfPic: '',
               lastDay: 0,//剩余天数
               minDate: new Date(new Date().getTime() + 24*60*60*1000),
               bsValue: 0,//背书次数
+              imageList:[
+               {imageName: ''}
+              ],
+              initImgList: [
+                {imageName: ''}
+              ],
               sell:{
                 deductAmount: '',
                 approvalApr: '',
@@ -313,11 +345,41 @@ import _common from '@/server/index'
           }
       },
       created(){
-          this.initType()
+          this.initType();
+          this.$canScroll();
+      },
+      beforeRouteLeave(to, from, next){
+        if(to.name == 'Login'){
+          next();
+          return;
+        }
+        if(this.pageType == 1){
+          next();
+          return;
+        }
+
+        if(this.isFbSuccess){
+          next();
+          return ;
+        }
+        this.$dialog.confirm({
+          title: '确认离开',
+          message: '确认离开该页面么，系统将不会保存当前页面的信息？'
+        }).then(() =>{
+          next();
+        }).catch(()=>{
+          next(false);
+        })
       },
       methods: {
           onClickLeft(){
               window.history.go(-1);
+          },
+          getPicUrl(url){
+            if(!url){
+              return '';
+            }
+            return _common.picUrl + url;
           },
           initType(){
               let inData;
@@ -343,12 +405,20 @@ import _common from '@/server/index'
               this.sell.approvalApr = data.approvalApr;
               this.sell.deductAmount = data.deductAmount;
               this.sell.turnVolume = data.turnVolume;
-              this.pjzPic = _common.picUrl + data.frontBillImg;
-              this.pjfPic = _common.picUrl + data.backBillImg;
-              this.currentDate = new Date(data.dueDate);
-              this.endTimeChoseValue = this.getTime(data.dueDate);
-              this.xcChoseList = this.initXcList(data.cpDefect)
+              this.pjzPic = data.frontBillImg;
+              this.pjfPic = data.backBillImg;
+             
+              this.xcChoseList = this.initXcList(data.cpDefect);
+              this.imageList = data.imageList && data.imageList.length > 0 ? data.imageList : [''];
+             
+              this.currentDate = '';
+              this.endTimeTrue = '';
+              this.endTimeChoseValue = '';
+              this.lastDay = 0;
 
+              this.currentDate = new Date(data.dueDate);
+              this.endTimeTrue = this.currentDate;
+              this.endTimeChoseValue = this.getTime(data.dueDate);
               this.lastDay = this.getLastDay(this.currentDate);
               
               if(data.frontBillImg){
@@ -358,7 +428,47 @@ import _common from '@/server/index'
               if(data.backBillImg){
                 this.pjfPicUState.state = 3;
               }
+
+              if(data.imageList && data.imageList.length < 9){
+                this.imageList.push({imageName: ''});
+              }
               
+          },
+          moreRemovePic(item){
+            let result = [];
+
+            this.imageList.forEach(i => {
+              if(item.imageName == i.imageName){
+                i.imageName = '';
+              }
+            });
+
+            this.imageList = this.imageList.filter(i => {
+              if(i.imageName){
+                return true;
+              }
+            })
+
+            if(this.imageList.length < 9){
+              this.imageList.push({imageName: ''});
+            }
+          },
+          moreUploadPicFn(data){
+            if(data.state == 3){
+              let result = this.imageList, i = 0;
+              result.push({imageName: data.imgData.data});
+              result.forEach(item => {
+                if(item.imageName){
+                  i += 1;
+                }
+              })
+
+              
+              if(i < 9){
+                result.push({imageName: ''});
+              }
+              this.imageList = [].concat(result);
+            }
           },
           typeChange(type){
             // this.sell.deductAmount = '';
@@ -366,6 +476,14 @@ import _common from '@/server/index'
             // this.sell.turnVolume = '';//成交金额
             let cpAmount = parseFloat(this.submitData.cpAmount),
                 calDay = this.lastDay, txje;
+            if(!cpAmount){
+              this.$toast('请先填写票据金额！');
+              return;
+            }
+            if(!calDay){
+              this.$toast('请先选择到期日期！');
+              return;
+            }
                 
             if(type == 1){
               this.sell.turnVolume = (cpAmount - (cpAmount/100000)*this.sell.deductAmount).toFixed(2);//成交金额
@@ -483,18 +601,35 @@ import _common from '@/server/index'
               this.pjfPic = '';
           },
           pjzUploadPicFn(data){
-              //营业执照上传
+              //票据正面
               this.pjzPicUState.state = data.state;
               if(data.state == 3){
-                  this.pjzPic = data.imgData.data
+                  // this.pjzPic = data.imgData.data;
+                  setTimeout( () =>{
+                    this.getOcrData({imageName: data.imgData.data});
+                  })
               }
           },
           pjfUploadPicFn(data){
-              //营业执照上传
+              //票据反面
               this.pjfPicUState.state = data.state;
               if(data.state == 3){
-                  this.pjfPic = data.imgData.data
+                  this.pjfPic = data.imgData.data;
               }
+          },
+          getOcrData(data){
+            _server.getOcrData(data).then(response => {
+                if(response.code == 0){
+                  if(response.data.cpNo){
+                    this.submitData.cpNo = response.data.cpNo;
+                  }
+                  if(response.data.acceptor){
+                    this.submitData.acceptor = response.data.acceptor;
+                  }
+                }
+            }).catch(error => {
+
+            })
           },
           choseSell(){
 
@@ -524,7 +659,11 @@ import _common from '@/server/index'
               return false;
             }
             if(!this.submitData.cpNo || this.submitData.cpNo.toString().length != 30){
-              this.$toast('请填写正确的30位票据号！')
+              this.$toast('请填写正确的30位商业承兑汇票号！')
+              return false;
+            }
+            if(this.submitData.cpNo.toString().substring(0,1) != 2){
+              this.$toast('本系统仅处理电子商业汇票！')
               return false;
             }
             if(!this.submitData.cpAmount || !/^(0|[1-9]\d*)(\.\d+)?$/.test(this.submitData.cpAmount)){
@@ -535,8 +674,14 @@ import _common from '@/server/index'
               this.$toast('票据金额应在 5万 - 5000万之间！');
               return false;
             }
+
             if(!this.endTimeChoseValue){
               this.$toast('请选择到期日期！')
+              return false;
+            }
+            // console.log(this.endTimeTrue)
+            if(!this.dealTime(this.endTimeTrue)){
+              this.$toast('到期日期应大于当天！')
               return false;
             }
             if(!this.submitData.acceptor){
@@ -549,11 +694,35 @@ import _common from '@/server/index'
             }
             return true;
           },
+          dealTime(t){
+            if(!t){
+              return;
+            }
+            let rT = new Date(t);
+            let nowY = new Date().getFullYear(), nM = new Date().getMonth(), nD = new Date().getDate();
+            if(rT.getFullYear() > nowY){
+              return true;
+            }
+            if(rT.getMonth() > nM){
+              return true;
+            }
+            if(rT.getDate() > nD){
+              return true;
+            }
+            return false;
+          },
           change(){
             //修改
             if(!this.checkSubmitData()){
               return;
             }
+
+            let imgListD = this.imageList.filter(item => {
+                if(item.imageName){
+                  return true;
+                }
+            });
+
             let initData = JSON.parse(this.$route.query.pjData);
             let data = {
               acceptor: this.submitData.acceptor,
@@ -568,6 +737,7 @@ import _common from '@/server/index'
               backBillImg: _common.common_fn.formateUlr(this.pjfPic),
               turnVolume: this.sell.turnVolume ? parseFloat(this.sell.turnVolume): '',
               cpId: initData.cpId,
+              imageList: imgListD
             }
 
             _server.changeCommercialPaper(data, (res) =>{
@@ -580,6 +750,11 @@ import _common from '@/server/index'
             })
           },
           submitDataFn(){
+            let imgListD = this.imageList.filter(item => {
+                if(item.imageName){
+                  return true;
+                }
+            });
             let data = {
               channel: '02',
               buyerId: this.submitData.buyerId,
@@ -595,13 +770,14 @@ import _common from '@/server/index'
                   deductAmount: this.sell.deductAmount?parseFloat(this.sell.deductAmount): '',
                   frontBillImg: this.pjzPic,
                   backBillImg: this.pjfPic,
-                  turnVolume: this.sell.turnVolume ? parseFloat(this.sell.turnVolume): ''
+                  turnVolume: this.sell.turnVolume ? parseFloat(this.sell.turnVolume): '',
+                  imageList: imgListD
                 }
               ]
             };
-
             _server.getCommercialPaper(data, (res) =>{
                 if(res.code == 0){
+                  this.isFbSuccess = true;
                   this.$toast('发布成功!');
                   this.$router.go(-1);
                 }
@@ -639,7 +815,7 @@ import _common from '@/server/index'
           //  ,
           // turnVolume (number): 成交金额（发布金额）
           // }
-            
+            let _this = this;
             if(!this.checkSubmitData()){
               return;
             }
@@ -650,7 +826,7 @@ import _common from '@/server/index'
                   success(res){
                       if(res.code == 0){
                         //验证成功，提交
-                        this.submitDataFn();
+                        _this.submitDataFn();
                       }
                   }
                 })
@@ -717,5 +893,9 @@ import _common from '@/server/index'
   display: flex;
   justify-content:center;
   align-items:Center;
+}
+.pic-box{
+  display:inline-block;
+  margin-right: 5px;
 }
 </style>

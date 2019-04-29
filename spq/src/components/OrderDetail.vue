@@ -7,7 +7,7 @@
       @close="modelClose"
     >
       <div class="model-content">
-        <div style="height: 100%;overflow:auto;">
+        <div style="height: 100%;overflow:auto;overflow-y:scroll;">
           <van-cell-group class="van-hairline--bottom">
             <h3 class="title">票据详情</h3>
             <van-cell-group>
@@ -26,17 +26,29 @@
                 </van-col>
               </van-row>
               <van-row class="detail-row">
+                <van-col class="detail-row-left" span="6">背书次数</van-col>
+                <van-col class="detail-row-right" span="18">{{initData.endorseTimes}}次</van-col>
+              </van-row>
+              <van-row class="detail-row">
                 <van-col class="detail-row-left" span="6">到期时间</van-col>
                 <van-col class="detail-row-right" span="18">{{initData.dueDate}}</van-col>
+              </van-row>
+              <van-row class="detail-row" v-if="initData.actualTime">
+                <van-col class="detail-row-left" span="6">成交日期</van-col>
+                <van-col class="detail-row-right" span="18">{{initData.actualTime}}</van-col>
               </van-row>
               <van-row class="detail-row">
                 <van-col class="detail-row-left" span="6">票据状态</van-col>
                 <van-col class="detail-row-right" span="18">
-                  <van-tag round type="success" v-if="initData.cpStatus == 1">发布中</van-tag>
-                  <van-tag round type="danger" v-else-if="initData.cpStatus == 2">已成交</van-tag>
-                  <van-tag round v-else-if="initData.cpStatus == 3">已注销</van-tag>
-                  <van-tag round color="#f2826a" v-else-if="initData.cpStatus == 4">报价中</van-tag>
-                  <van-tag round v-if="initData.stringDate < 0">已过期</van-tag>
+                  <van-tag type="success" v-if="initData.cpStatus == 1">审核中</van-tag>
+                  <van-tag type="danger" v-else-if="initData.cpStatus == 2">撮合成功</van-tag>
+                  <van-tag v-else-if="initData.cpStatus == 3">已注销</van-tag>
+                  <van-tag type="primary" v-else-if="initData.cpStatus == 4">已发布</van-tag>
+                  <van-tag v-else-if="initData.cpStatus == 5">审核失败</van-tag>
+                  <van-tag type="success" v-else-if="initData.cpStatus == 6">已成交</van-tag>
+                  <van-tag v-else-if="item.cpStatus == 7">买方违约</van-tag>
+                  <van-tag v-else-if="item.cpStatus == 8">卖方违约</van-tag>
+                  <van-tag v-if="initData.stringDate < 0">已过期</van-tag>
                 </van-col>
               </van-row>
               <van-row class="detail-row">
@@ -94,7 +106,7 @@
 								<span
                   class="blue-font"
                   style="margin-left:3px;"
-                  v-if="initData.cpStatus == '01' && initData.stringDate >= 0"
+                  v-if="initData.cpStatus == '04' && initData.stringDate >= 0"
                   @click="getbuyPrice"
                 >
 									{{time}}秒后自动刷新
@@ -121,23 +133,25 @@
                 </van-col>
               </van-row>
               <van-row class="detail-row-special"
-                       v-if="(item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '01' || initData.cpStatus == '04')">
+                       v-if="(item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '04')">
 
                 <van-col class="detail-row-left" span="12">年化利率</van-col>
                 <van-col class="detail-row-left" span="12">每十万扣款</van-col>
                 <van-col class="detail-row-left" span="24">
                   <van-field
                     class="detail-small-input w-35p"
-                    v-model="submit.yearRate"
+                    v-model.trim="submit.yearRate"
                     placeholder="年化利率"
+                    clearable
                     @input="changeData(1, submit.yearRate)"
                     type="number"/>
                   %
                   <van-field
                     class="detail-small-input w-35p"
-                    v-model="submit.reduceAmount"
+                    v-model.trim="submit.reduceAmount"
                     @input="changeData(2, submit.reduceAmount)"
                     placeholder="每十万扣款"
+                    clearable
                     type="number"/>
                   <span>元/十万</span>
                 </van-col>
@@ -145,60 +159,60 @@
                   <span class="detail-row-left">成交金额（元）</span>
                   <van-field
                     class="detail-small-input"
-                    v-model="submit.dealAmount"
+                    v-model.trim="submit.dealAmount"
                     @input="changeData(3, submit.dealAmount)"
                     placeholder="成交金额"
+                    clearable
                     type="number"/>
                 </van-col>
               </van-row>
             </van-cell-group>
 
           </van-cell-group>
-          <van-row type="flex" justify="center" style="width: 100%;height: 44px;position: absolute;left: 0; bottom: 0;">
-            <div
-              style="width: 100%;"
-              v-if="(item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '01' || initData.cpStatus == '04')">
-              <van-col span="24">
-                <van-button
-                  type="primary"
-                  style="width: 100%;"
-                  @click="buyAgain(item)">再次报价
-                </van-button>
-              </van-col>
-            </div>
-            <div
-              style="width: 100%;"
-              v-else>
-              <van-col span="12"
-                       v-if="item.quoteStatus == 1 && initData.stringDate >= 0 && (initData.cpStatus == 1 || initData.cpStatus == '04')">
-                <van-button
-                  type="danger"
-                  style="width: 100%;"
-                  @click="deleteP">取消报价
-                </van-button>
-              </van-col>
-              <van-col span="12"
-                       v-if="item.quoteStatus == 1 && initData.stringDate >= 0 && (initData.cpStatus == 1 || initData.cpStatus == '04')">
-                <van-button
-                  type="info"
-                  style="width: 100%;"
-                  @click="ok">关闭
-                </van-button>
-              </van-col>
-              <van-col span="24"
-                       v-if="item.quoteStatus != 1 || initData.stringDate < 0 || (initData.cpStatus != 1 && initData.cpStatus != '04')">
-                <van-button
-                  type="info"
-                  style="width: 100%;"
-                  @click="ok">关闭
-                </van-button>
-              </van-col>
-            </div>
-
-          </van-row>
-
-
         </div>
+         <div style="text-align: center;width: 100%;height: 44px;position: fixed; left: 0; bottom: 0;">
+            <van-row type="flex" justify="center" style="width: 100%;height: 44px;position: absolute;left: 0; bottom: 0;">
+              <div
+                style="width: 100%;"
+                v-if="(item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '04')">
+                <van-col span="24">
+                  <van-button
+                    type="primary"
+                    style="width: 100%;"
+                    @click="buyAgain(item)">再次报价
+                  </van-button>
+                </van-col>
+              </div>
+              <div
+                style="width: 100%;"
+                v-else>
+                <van-col span="12"
+                         v-if="item.quoteStatus == 1 && initData.stringDate >= 0 && (initData.cpStatus == '04')">
+                  <van-button
+                    type="danger"
+                    style="width: 100%;"
+                    @click="deleteP">取消报价
+                  </van-button>
+                </van-col>
+                <van-col span="12"
+                         v-if="item.quoteStatus == 1 && initData.stringDate >= 0 && (initData.cpStatus == '04')">
+                  <van-button
+                    type="info"
+                    style="width: 100%;"
+                    @click="ok">关闭
+                  </van-button>
+                </van-col>
+                <van-col span="24"
+                         v-if="item.quoteStatus != 1 || initData.stringDate < 0 || (initData.cpStatus != '04')">
+                  <van-button
+                    type="info"
+                    style="width: 100%;"
+                    @click="ok">关闭
+                  </van-button>
+                </van-col>
+              </div>
+            </van-row>
+          </div>
       </div>
     </van-popup>
     <PriceList
@@ -262,15 +276,15 @@
           clearInterval(this.timerOut);
           this.time = 60;
         }
-        this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
+        this.imgs = this.initData.frontBillImg?[_common.mosPicUrl + this.initData.frontBillImg]:[];
       }
     },
     methods: {
       setTimeoutFn() {
-        if (this.item.quoteStatus == '04' && (this.initData.cpStatus == '01' || this.initData.cpStatus == '04')) {
+        if (this.item.quoteStatus == '04' && (this.initData.cpStatus == '04')) {
 
         } else {
-          if ((this.initData.cpStatus != '01' && this.initData.cpStatus != '04') || this.initData.stringDate < 0) {
+          if ((this.initData.cpStatus != '04') || this.initData.stringDate < 0) {
             return;
           }
         }
@@ -331,8 +345,9 @@
         this.priceListShow = false;
       },
       previewPic(index) {
+        let imgs = this.initData.frontBillImg?[_common.mosPicUrl + this.initData.frontBillImg]:[];
         ImagePreview({
-          images: [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg],
+          images: imgs,
           startPosition: index,
           onClose() {
             // do something
@@ -474,6 +489,7 @@
     text-align: left;
     color: #000;
     font-weight: normal;
+    font-size:16px;
   }
 
   .title::before {
@@ -483,24 +499,27 @@
     height: 8px;
     border-radius: 50%;
     background: #0079f3;
-    vertical-align: 5px;
+    vertical-align: 1px;
     margin-right: 7px;
   }
 
   .model-content {
     text-align: left;
     height: 100%;
-    position: relative;
+    position: absolute;
   }
 
   .van-popup {
     width: 80%;
     height: 100%;
+    position: fixed;
   }
 
   .detail-row {
     padding: 10px 15px;
     color: #333;
+    display: flex;
+    align-items: center;
   }
 
   .detail-row-special {

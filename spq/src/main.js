@@ -12,7 +12,28 @@ import Axios from '@/server/axios'
 import UploadImg from '@/components/UploadImg';
 import PreviewPdf from '@/components/PreviewPdf'
 
-import '@/assets/font/iconfont.css'
+import '@/directive/inputReset.js';
+
+import '@/assets/font/iconfont.css';
+
+  var mo = function (e) {
+    e.preventDefault();
+  };
+//弹出框禁止滑动
+Vue.prototype.$noScroll = function () {
+  
+  document.body.style.overflow = 'hidden';
+  // document.body.style.position = 'fixed';
+  document.addEventListener('touchmove', mo,{ passive: false })// 禁止页面滑动
+}
+ 
+//弹出框可以滑动
+Vue.prototype.$canScroll = function () {
+
+  document.body.style.overflow = ''// 出现滚动条
+  // document.body.style.position = '';
+  document.removeEventListener('touchmove', mo,{ passive: false })
+}
 
 // //全局注册组件
 Vue.component('UploadImg', UploadImg);
@@ -36,10 +57,11 @@ router.beforeEach( (to, from, next) => {
   let localItem = localStorage.getItem('token'),
       user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')): '';
   let orgId = user ? user. orgId : '';
-  let _checked = user ? user._checked : '';//手动设置的验证值
+  let authStatus = user ? user.authStatus : '';
+  Vue.prototype.$modelToast && Vue.prototype.$modelToast.clear();
    //路由跳转清空所有提示框 -- 登录页面,实名认证不清除
   if(to.name !== 'Login' && to.name !== 'RealName'){
-      // Toast.clear();
+      // Vue.prototype.$modelToast && Vue.prototype.$modelToast.clear();
   }
 
   //判断是否需要登录, 通过本地是否存在 token, 未登录跳转至登录页面，同时将该页面地址传入 redirect
@@ -49,14 +71,30 @@ router.beforeEach( (to, from, next) => {
       return;
   }
   //判断是否认证，否则跳出
-  if(to.meta.isNChecked && !orgId && !_checked){
-      next({path: '/home/realName', query:{redirect: to.fullPath}});
+  // if(to.meta.isNChecked && !orgId){
+  //     next({path: '/home/realName', query:{redirect: to.fullPath}});
+  //     Toast('请先实名认证！');
+  //     return;
+  // }
+
+  if(to.meta.isNChecked){
+    // authStatus(认证状态：1-待审核；2-审核不通过；9-已认证)
+    if(!authStatus){
+      // next({path: '/home/realName', query:{redirect: to.fullPath}});
+      next({path: '/home/realName'});
       Toast('请先实名认证！');
       return;
+    }else if(authStatus == 1){
+      next({path: '/home/selfInfo/realNameChange', query:{redirect: to.fullPath}});
+      return;
+    }else if(authStatus == 2){
+      next({path: '/home/selfInfo/realNameChange', query:{redirect: to.fullPath}});
+      return;
+    } 
   }
   
   //默认操作跳转下个页面
-  next()
+  next();
 });
 
 /* eslint-disable no-new */

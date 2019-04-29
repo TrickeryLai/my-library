@@ -1,24 +1,60 @@
 <template>
   <div class="realName-page">
     <van-nav-bar
-      :title="title"
       left-arrow
       fixed
       @click-left="onClickLeft"
       class="top-bg"
       :z-index = "zIndex"
     >
-      <i class="iconfont icon-previous_step" slot="left"></i>
+      <span slot="title" class="top-bg-title">{{title}}</span>
+      <i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
     </van-nav-bar>
     <div class="realName-content">
+      <van-cell-group class="">
+        <van-steps 
+        :active="companyStepActive" 
+        class="text-left"
+        :active-icon="companyData.authStatus == 2 ? 'cross': 'checked'"
+        :active-color="companyData.authStatus == 2 ? 'red': '#38f'"
+        >
+          <!-- <i slot="icon" class="icon icon-icon_roundclose"></i> -->
+          <van-step>提交信息</van-step>
+          <van-step>待审核</van-step>
+          <van-step v-if="companyData.authStatus == 2">
+          审核不通过
+          </van-step>
+          <van-step v-else>已认证</van-step>
+        </van-steps>
+        <p v-if="companyData.authStatus == 2" style="padding: 5px; color: red;">{{companyData.authNoPassCause}}</p>
+        <!-- <h3 class="title van-hairline--bottom">认证状态</h3>
+        <div class="realName-conten-inner">
+          <van-row>
+            <van-col span="6">认证状态</van-col>
+            <van-col span="18">
+              <span v-if="companyData.authStatus == 1">待审核</span>
+              <span v-else-if="companyData.authStatus == 2">审核不通过</span>
+              <span v-else-if="companyData.authStatus == 9">已认证</span>
+            </van-col>
+          </van-row>
+          <van-row v-if="companyData.authStatus == 2">
+            <van-col span="6">原因</van-col>
+            <van-col span="18">{{companyData.authNoPassCause}}</van-col>
+          </van-row> -->
+        <!-- </div> -->
+      </van-cell-group>
       <van-cell-group class="realName-content-box">
         <h3 class="title van-hairline--bottom">营业执照</h3>
         <div class="realName-conten-inner">
          <UploadImg
+            v-if="companyData.authStatus != 9"
             :initPic='common.picUrl + yyzzPic'
             uploadUrl = "open-cp/v1/upload"
             @removePic='yyzzRemovePic'
             @uploadPicProgress='yyzzUploadPicFn' /> 
+          <div v-else class="picAdd-box">
+            <img :src="common.picUrl + yyzzPic">
+          </div>
         </div>
       </van-cell-group>
       <van-cell-group class="realName-content-box" style="display:none;">
@@ -45,41 +81,47 @@
         <h3 class="title van-hairline--bottom">企业信息</h3>
         <div class="realName-conten-inner">
             <van-field
-            v-model="submitData.orgName"
+            v-reset-page
+            v-model.trim="submitData.orgName"
+            :readonly="companyData.authStatus == 9"
             required
             clearable
-            label="企业名称："
-            placeholder="企业名称"
+            label="公司名称："
+            placeholder="公司名称"
             />
             <van-field
-              v-model="submitData.organizationCode"
+              v-reset-page
+              v-model.trim="submitData.organizationCode"
+              :readonly="companyData.authStatus == 9"
               required
               clearable
-              label="社会信用代码："
-              placeholder="社会信用代码"
+              label="组织机构代码："
+              placeholder="组织机构代码"
             />
             <van-field
-            v-model="submitData.email"
-            required
+            v-reset-page
+            v-model.trim="submitData.email"
+            type="email"
             clearable
             label="联系人邮箱："
             placeholder="联系人邮箱"
             />
             <van-field
-            v-model="submitData.contactPhone"
-            required
+            v-reset-page
+            v-model.trim="submitData.contactPhone"
+            type="phone"
             clearable
             label="联系人手机："
             placeholder="联系人手机"
             />
             <van-field
+            v-reset-page
             size="large"
             v-model="submitData.registerAddress"
-            required
             label="企业注册地址："
             type="textarea"
             placeholder="企业注册地址"
-            rows="1"
+            rows="2"
             autosize
             />
         </div>
@@ -89,22 +131,27 @@
         <h3 class="title van-hairline--bottom">法人信息</h3>
         <div class="realName-conten-inner">
             <van-field
-            v-model="submitData.leader"
+            v-reset-page
+            v-model.trim="submitData.leader"
+            :readonly="companyData.authStatus == 9"
+            type="text"
             required
             clearable
             label="姓名："
             placeholder="法人姓名"
             />
              <van-field
-            v-model="submitData.phone"
+            v-reset-page
+            v-model.trim="submitData.phone"
             type="phone"
-            required
             clearable
             label="手机号："
             placeholder="法人手机号"
             />
             <van-field
-              v-model="submitData.frIdCard"
+              v-reset-page
+              v-model.trim="submitData.frIdCard"
+              :readonly="companyData.authStatus == 9"
               clearable
               required
               label="身份证号："
@@ -117,20 +164,27 @@
         <h3 class="title van-hairline--bottom">经办人信息</h3>
         <div class="realName-conten-inner">
             <van-field
-            v-model="submitData.jbrName"
+            v-reset-page
+            v-model.trim="submitData.jbrName"
+            :readonly="companyData.authStatus == 9"
+            required
             clearable
             label="姓名："
             placeholder="经办人姓名"
             />
              <van-field
-            v-model="submitData.jbrPhone"
+            v-reset-page
+            v-model.trim="submitData.jbrPhone"
             type="phone"
+            :readonly="companyData.authStatus == 9"
+            required
             clearable
             label="手机号："
             placeholder="经办人手机号"
             />
              <van-field
-              v-model="submitData.jbrIdCard"
+              v-reset-page
+              v-model.trim="submitData.jbrIdCard"
               clearable
               label="身份证号："
               placeholder="经办人身份证号"
@@ -142,7 +196,7 @@
           style="width: 100%;"
           type="info"
           @click="submitInfo"
-        >确认</van-button>
+        >提交</van-button>
       </div>
     </div>
   </div>
@@ -159,6 +213,8 @@
               title: '修改认证信息',
               zIndex: 999,
               common: _common,
+              companyData: '',
+              companyStepActive: 1,
               submitData:{
                 orgName: '',
                 email: '',
@@ -185,11 +241,11 @@
                 state: 0,//上传状态 0未上传， 1正在上传， 2上传成功
                 
               }
-
           }
       },
       created(){
         this.init();
+        this.$canScroll();
       },
       methods: {
           onClickLeft(){
@@ -197,8 +253,51 @@
           },
           init(){
               let data = this.$route.query.data, initData = {};
+              let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')): '',
+                _id = user ? user.orgId : '',
+                _this = this;
 
-              this.baseInfo = Object.assign({}, JSON.parse(data));
+              if(!_id){
+                return;
+              }
+              if(!data){
+                _server.getCompanyData({
+                  _id,
+                  success(res){
+                    if(res){
+                      _this.initData(res);
+                      localStorage.setItem('user', JSON.stringify(res));
+                      //authStatus(认证状态：1-待审核；2-审核不通过；9-已认证)
+                      if(res.authStatus == 1){
+                        _this.$toast('认证信息正在审核！');
+                        _this.companyStepActive = 1;
+                      }else if(res.authStatus == 2 || res.authStatus == 9){
+                         _this.companyStepActive = 2;
+                         if(res.authStatus == 2){
+                            _this.$toast('审核未通过，请修改之后再提交！');
+                         }else if(res.authStatus == 9){
+                            //如果通过了认证，并且带了重定向地址，重定向
+                            if(_this.$route.query && _this.$route.query.redirect){
+                                _this.$router.replace({path: _this.$route.query.redirect});
+                                _this.$toast('已通过认证！');
+                                return;
+                            }
+                            
+                         }
+                      }
+                    }
+                  }
+                })
+              }else{
+                data = JSON.parse(data);
+                this.initData(data);
+              }
+
+          },
+          initData(data){
+              let initData = {};
+              this.companyData = data;
+              this.baseInfo = Object.assign({}, data);
               initData = Object.assign({}, this.baseInfo);
               this.yyzzPic = initData.businessLicenseImgPath;
               this.yyzzPicUState.state = 3;
@@ -258,39 +357,46 @@
               return false;
             }
             if(!this.submitData.orgName){
-              this.$toast('请输入企业名称');
+              this.$toast('请输入公司名称');
               return false;
             }
-            if(!this.submitData.registerAddress){
-              this.$toast('请输入企业注册地址！');
-              return false;
-            }
+            // if(!this.submitData.registerAddress){
+            //   this.$toast('请输入企业注册地址！');
+            //   return false;
+            // }
             if(!this.submitData.organizationCode){
-              this.$toast('请输入社会信用代码！');
+              this.$toast('请输入组织机构代码！');
               return false;
             }
 
-            if(!this.submitData.email || !_common.common_reg.email(this.submitData.email)){
-              this.$toast('请输入正确的联系人邮箱！');
-              return false;
-            }
-            if(!this.submitData.contactPhone || !_common.common_reg.phone(this.submitData.contactPhone)){
-              this.$toast('请输入联系人正确手机号！');
-              return false;
-            }
+            // if(!this.submitData.email || !_common.common_reg.email(this.submitData.email)){
+            //   this.$toast('请输入正确的联系人邮箱！');
+            //   return false;
+            // }
+            // if(!this.submitData.contactPhone || !_common.common_reg.phone(this.submitData.contactPhone)){
+            //   this.$toast('请输入联系人正确手机号！');
+            //   return false;
+            // }
             if(!this.submitData.leader){
               this.$toast('请输入法人姓名！');
               return false;
             }
-            if(!this.submitData.phone || !_common.common_reg.phone(this.submitData.phone)){
-              this.$toast('请输入法人正确手机号！');
+            // if(!this.submitData.phone || !_common.common_reg.phone(this.submitData.phone)){
+            //   this.$toast('请输入法人正确手机号！');
+            //   return false;
+            // }
+            if(!this.submitData.frIdCard || !_common.common_reg.idCard(this.submitData.frIdCard)){
+              this.$toast('请输入法人正确身份证号！');
               return false;
             }
-            if(!this.submitData.frIdCard){
-              this.$toast('请输入法人身份证号！');
+            if(!this.submitData.jbrName){
+              this.$toast('请输入经办人姓名！');
               return false;
             }
-
+            if(!this.submitData.jbrPhone || !_common.common_reg.phone(this.submitData.jbrPhone)){
+              this.$toast('请输入经办人正确手机号！');
+              return false;
+            }
             return true;
           },
           submitInfo(){
@@ -377,5 +483,22 @@
   display: flex;
   justify-content:center;
   align-items:center;
+}
+.realName-page .picAdd-box{
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  line-height: 100px;
+  color: #232333;
+  background: #ddd;
+  position: relative;
+}
+.realName-page .picAdd-box img{
+  width: 100%;
+  max-height: 100%;
+  vertical-align: middle;
+}
+.realName-page input[readonly]{
+  background: #fff;
 }
 </style>

@@ -1,12 +1,13 @@
 <template>
 	<div class="ticketHolder">
 		<van-nav-bar
-		:title="title"
-		right-text="发布"
 		fixed
 		@click-right="onClickRight"
 		class="top-bg"
-		/>
+		>
+			<span slot="title" class="top-bg-title">{{title}}</span>
+			<span slot="right" class="top-bg-title">发布</span>
+		</van-nav-bar>
 		<div class="ticket-search">
 			<van-search
 			style="position:absolute;left: 0;top: 0;width: 100%;"
@@ -20,7 +21,7 @@
 	
 	<van-collapse class="ticket-content-list" v-model="activeName" accordion>
 		<van-collapse-item class="text-left" title="已发布" name="1">
-			<div style="max-height: 350px;overflow:auto;border: 1px solid #ccc;">
+			<div style="max-height: 350px;overflow:auto;overflow-y:scroll;border: 1px solid #ccc;">
 				<van-pull-refresh 
 				v-model="fbListState.isLoading" 
 				@refresh="fbOnRefresh">
@@ -45,19 +46,26 @@
 						<van-col span="18" class="van-ellipsis text-left">承兑人：{{item.acceptor}}</van-col>
 						<van-col span="6">
 							<div>
-								<div v-if="item.cpStatus == 1 || item.cpStatus == 4">
-									<van-tag round v-if="getLastTime(item.dueDate) < 0">
+								<div v-if="item.cpStatus == 1 || item.cpStatus == 4 || item.cpStatus == 5">
+									<van-tag  v-if="getLastTime(item.dueDate) < 0">
 										已过期
 									</van-tag>
-									<van-tag round type="success" v-else-if="item.cpStatus == 1">
-										发布中
+									<van-tag  type="success" v-else-if="item.cpStatus == 1">
+										审核中
 									</van-tag>
-									<van-tag round color="#f2826a" v-else-if="item.cpStatus == 4">
-										报价中
+									<van-tag  type="primary" v-else-if="item.cpStatus == 4">
+										已发布
+									</van-tag>
+									<van-tag  v-else-if="item.cpStatus == 5">
+										审核失败
 									</van-tag>
 								</div>
-								<van-tag round type="danger" v-else-if="item.cpStatus == 2">已成交</van-tag>
-								<van-tag round v-else-if="item.cpStatus == 3">已注销</van-tag>
+
+								<van-tag type="danger" v-else-if="item.cpStatus == 2">撮合成功</van-tag>
+								<van-tag color="#f2826a" v-else-if="item.cpStatus == 6">已成交</van-tag>
+								<van-tag v-else-if="item.cpStatus == 3">已注销</van-tag>
+								<van-tag v-else-if="item.cpStatus == 7">买方违约</van-tag>
+								<van-tag v-else-if="item.cpStatus == 8">卖方违约</van-tag>
 							</div>
 						</van-col>
 					</van-row>
@@ -65,11 +73,15 @@
 						<van-col span="18">
 							<span class="text-left">票面金额：</span>
 							<span v-if="item.cpAmount > 10000">
-								{{item.cpAmount　&& (item.cpAmount/10000).toFixed(2)}} 
+								<span class="price-txt">
+									{{item.cpAmount　&& (item.cpAmount/10000).toFixed(2)}} 
+								</span>
 								<span class="small-font">万元</span>
 							</span>
 							<span v-else>
-								{{item.cpAmount　&& (item.cpAmount).toFixed(2)}} 
+								<span class="price-txt">
+									{{item.cpAmount　&& (item.cpAmount).toFixed(2)}} 
+								</span>
 								<span class="small-font">元</span>
 							</span>
 							
@@ -141,6 +153,23 @@ export default{
 		created(){
 			this.fbOnLoad();
 		},
+		beforeRouteLeave(to, from, next){
+			if(to.name == 'Login' || to.name == 'RealName' || to.name == 'RealNameChange'){
+				next();
+				return;
+			}
+			if(to.name=='Fbpj'){
+				next();
+				return;
+			}
+			if(this.fbListState.detailModelState){
+				this.fbListState.detailModelState = false;
+				next(false);
+				return;
+			}	
+
+			next();
+		},
 		methods:{
 			onClickRight(){
 				this.$router.push({path: '/home/ticketHolder/fbpj'});
@@ -167,7 +196,7 @@ export default{
 					this.fbList = [];//不清空，在滚动至多页的时候，重新刷新会一直触发onload
 				}
 				//查询条件
-				data = Object.assign({}, pageData, {acceptor: this.searchValue});
+				data = Object.assign({}, pageData, {acceptor: this.searchValue, createTimeSort: 0});
 				delete data.total;
 				//获取列表数据
 				_server.getCommercialPaperList({
@@ -211,15 +240,17 @@ export default{
 			fbShowDetail(item){
 				let _this = this;
 				this.fbListState.currentItem = item;
-				_server.getBusinessTicketDetail({
-					_id: item.cpId,
-					success(res){
+				_server.getSelfTicketDetail(
+					item.cpId,	
+				).then((res) =>{
 						if(res.code == 0){
 							_this.fbListState.detailItem = res.data;
 							_this.fbListState.detailModelState = true;
+							
 						}
-					}
-				});
+					}).catch(error => {
+
+					})
 			},
 			detailModelOk(){
 				this.detailModelClose();
@@ -231,6 +262,7 @@ export default{
 			},
 			detailModelClose(){
 				this.fbListState.detailModelState = false;
+				this.$canScroll();
 			}
 
 		}
