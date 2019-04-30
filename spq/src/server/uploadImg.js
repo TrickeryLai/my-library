@@ -224,8 +224,9 @@
         // target.tagName = target.tagName || "IMG";
         // var tagName = target.tagName.toLowerCase();
         var tagName = "IMG".toLowerCase();
+        var imgSrc;
         if (tagName === 'img') {
-            target.src = renderImageToDataURL(this.srcImage, opt, doSquash);
+            target.src = imgSrc = renderImageToDataURL(this.srcImage, opt, doSquash);
         } else if (tagName === 'canvas') {
             renderImageToCanvas(this.srcImage, target, opt, doSquash);
         }
@@ -234,7 +235,7 @@
         }
         if (callback) {
             target.onload = function(){
-                callback();
+                callback(imgSrc);
             }
         }
         if (this.blob) {

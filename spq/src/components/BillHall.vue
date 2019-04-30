@@ -50,7 +50,7 @@
 				</van-col>
 			</div>
 		</van-row>
-		<div style="margin-top: 5px;padding-bottom:50px;">
+		<div style="margin-top: 5px;padding-bottom:50px;overflow-y: scroll;">
 			<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
 				<van-list
 					ref="bscroll"
@@ -71,12 +71,14 @@
 						@click="showDetail(item)"
 						>
 							<template slot="title">
-							<van-row gutter="3" class="van-hairline--bottom" style="overflow: hidden;">
-								<van-col span="14" class="van-ellipsis text-left">
+							<van-row  class="van-hairline--bottom" style="overflow: hidden;">
+								<van-col span="4">
 									<span class="xy-txt" v-if="item.creditRating == 1">优秀</span>
 									<span class="xy-txt" v-else-if="item.creditRating == 2">良好</span>
 									<span class="xy-txt" v-else-if="item.creditRating == 3">一般</span>
 									<span style="color: #eee;padding: 0 2px;">|</span>
+								</van-col>
+								<van-col span="10" class="van-ellipsis text-left">
 									承兑人：{{item.acceptor}}
 								</van-col>
 								<van-col span="5" style="text-align:right;" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)

@@ -358,6 +358,10 @@
 					this.$toast('成交金额不能小于0！');
 					return;
 				}
+				if(parseFloat(this.submit.dealAmount) > this.initData.cpAmount){
+					this.$toast('成交金额不能大于票据金额！');
+					return;
+				}
 
           		this.getCompanyDataInfo().then(res => {
           			localStorage.setItem('user', JSON.stringify(res));

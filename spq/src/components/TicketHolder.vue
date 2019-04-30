@@ -1,5 +1,5 @@
 <template>
-	<div class="ticketHolder">
+<div class="ticketHolder">
 		<van-nav-bar
 		fixed
 		@click-right="onClickRight"
@@ -15,23 +15,23 @@
 			v-model="searchValue"
 			@search="onSearch"
 			>
-			<i class="iconfont icon-search" slot="left-icon"></i>
-		</van-search>
-	</div>
-	
+				<i class="iconfont icon-search" slot="left-icon"></i>
+			</van-search>
+		</div>
 	<van-collapse class="ticket-content-list" v-model="activeName" accordion>
-		<van-collapse-item class="text-left" title="已发布" name="1">
-			<div style="max-height: 350px;overflow:auto;overflow-y:scroll;border: 1px solid #ccc;">
+		<van-collapse-item class="text-left" title="已发布" name="1" style="height: 100%;position: relative;overflow-y:scroll;" >
+			<div style="border: 1px solid #ccc;">
 				<van-pull-refresh 
 				v-model="fbListState.isLoading" 
-				@refresh="fbOnRefresh">
+				@refresh="fbOnRefresh"
+				>
 				<van-list
 				v-model="fbListState.loading"
 				:finished="fbListState.finished"
 				finished-text="没有了"
 				:error.sync="error"
 				error-text="请求失败，点击重新加载"
-				:offset="10"
+				:offset="30"
 				@load="fbOnLoad"
 				>
 				<van-cell
@@ -202,9 +202,6 @@ export default{
 				_server.getCommercialPaperList({
 					data, 	
 				}).then((response) =>{
-					this.error = false;
-					this.fbListState.loading = false;
-					this.fbListState.isLoading = false;	
 					if(response.code == 0){
 						if(_this.fbPageInfo.pageNum > 1){
 							response.list.forEach((item) => {
@@ -213,6 +210,7 @@ export default{
 						}else{
 							this.fbList = response.list;
 						}
+							
 				          //数据全部加载完成
 				          if (this.fbList.length >= response.pageInfo.total) {
 				          	this.fbListState.finished = true;
@@ -220,6 +218,10 @@ export default{
 				          	this.fbListState.finished = false;
 				          }
 				      }
+
+			      	this.error = false;
+					this.fbListState.loading = false;
+					this.fbListState.isLoading = false;	
 				  })
 				.catch((error) => {
 					this.fbListState.isLoading = false;
@@ -229,10 +231,15 @@ export default{
 			},
 			fbOnRefresh(){
 				//获取列表数据
+				this.fbListState.finished = false;
 				this.fbPageInfo.pageNum = 1;
 				this.fbGetData();
 			},
 			fbOnLoad(){
+				
+				if(this.fbListState.finished){
+					return;
+				}
 				this.fbListState.loading = true;//处于加载状态，不触发onLoad
 				this.fbPageInfo.pageNum += 1;
 				this.fbGetData();
@@ -270,6 +277,15 @@ export default{
 	</script>
 
 	<style>
+	.ticketHolder{
+		position: absolute;
+		left: 0;
+		top: -46px;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+        height: 100%;
+	}
 	.ticketHolder .van-collapse-item__content{
 		background-color: #f5f5f5;
 		padding-left: 0;
@@ -285,8 +301,27 @@ export default{
 		z-index: 5;
 	}	
 	.ticketHolder .ticket-content-list{
-		margin-top: 60px;
-		padding-bottom: 50px;
 		background: #f5f5f5;
+		flex: 1;
+		height: 100%;
+		margin-top: 149px;
+		box-sizing: border-box;
+		overflow-y: scroll;
+	}
+	.ticketHolder .van-collapse-item__wrapper{
+		position: absolute;
+		left: 0;
+		top: 0;
+		padding-top:46px;
+		width: 100%;
+		height: 100%;
+		box-sizing: border-box;
+		overflow-y: scroll;
+	}
+	.ticketHolder .van-collapse-item__wrapper{
+		
+	}
+	.ticketHolder .van-collapse-item__title{
+		z-index: 999;
 	}
 	</style>

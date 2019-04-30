@@ -829,6 +829,34 @@ let server = {
         })
       })
     },
+    /**
+     * [checkedDeal 确认交易]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    checkedDeal(data){
+      //id 是cpId imageName 1是我的卖出 0 是我的买入上传
+      let url = 'open-cp/v1/quotedPrice/upload';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          isLoading: true,
+          url,
+          data: data,
+          isdeal: true,
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          return reject(response);
+        })
+      })
+    },
 
 }
 

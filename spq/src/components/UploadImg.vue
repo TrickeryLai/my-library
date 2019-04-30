@@ -19,8 +19,10 @@
 </template>
 
 <script>
+  import EXIF from 'exif-js'
   import MegaPixImage from '@/server/uploadImg'
   import _common from '@/server/index'
+  
   function dataURLtoFile(dataurl, filename) {//将base64转换为文件
     var arr = dataurl.split(','), mime = arr[0].split(':;')[1],
         bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -215,17 +217,24 @@
               var resImg = this.$refs.resultImage;
               // var resImg = document.getElementById("resultImage");
               resImg.file = img;
-              mpImg.render(resImg, { maxWidth: 500, maxHeight: 500, quality: 1 }, function() {
+
+              EXIF.getData(img, function(){
+                var imgData = EXIF.getAllTags(this);
+
+                mpImg.render(resImg, { maxWidth: 500, maxHeight: 500, quality: 1, orientation: imgData.Orientation }, function(src64) {
                   var base64 = getBase64Image(resImg);
                   var base641 = resImg.src;
-                  base64 = dataURLtoFile(base64, _this.fileName);
+                  // base64 = dataURLtoFile(base64, _this.fileName);
+                  base64 = dataURLtoFile(src64, _this.fileName);
 
                   // console.log("base64", base64.length, simpleSize(base64.length), base641.length, simpleSize(base641.length));
                   // base64 = convertBase64UrlToBlob(base64);
                   // _this.uploadBase64str(base64);
 
                   _this.uploadFile(base64);
-              });              
+                }); 
+              })
+                           
           },
           uploadFile(file) {
               var formdata = new FormData();

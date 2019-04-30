@@ -30,7 +30,7 @@
             @uploadPicProgress='yyzzUploadPicFn' /> 
         </div>
       </van-cell-group>
-      <van-cell-group class="realName-content-box" style="display:none;">
+      <van-cell-group class="realName-content-box">
         <h3 class="title van-hairline--bottom">法人身份证</h3>
         <div class="realName-conten-inner">
           <div style="display:inline-block;margin-right: 10px;">
@@ -38,14 +38,14 @@
             uploadUrl = "open-cp/v1/upload"
             @removePic='sfzzRemovePic'
             @uploadPicProgress='sfzzUploadPicFn' />
-            <p class="picTitle">身份证正面 </p>
+            <p class="picTitle"><span class="red-font" style="padding-top: 2px;margin-right: 2px;">*</span>身份证正面 </p>
           </div>
           <div style="display:inline-block;margin-right: 10px;">
             <UploadImg
             uploadUrl = "open-cp/v1/upload"
-            @removePic='sfzzRemovePic'
-            @uploadPicProgress='sfzzUploadPicFn' /> 
-            <p class="picTitle">身份证正面 </p>
+            @removePic='sfzfRemovePic'
+            @uploadPicProgress='sfzfUploadPicFn' /> 
+            <p class="picTitle"><span class="red-font" style="padding-top: 2px;margin-right: 2px;">*</span>身份证反面 </p>
           </div>
         </div>
       </van-cell-group>
@@ -285,6 +285,22 @@
               this.$toast('营业执照正在上传');
               return false;
             }
+            if(this.sfzzPicUState.state == 0 || this.sfzzPicUState.state == 4){
+              this.$toast('请上传身份证正面');
+              return false;
+            }
+            if(this.sfzzPicUState.state == 1){
+              this.$toast('身份证正面正在上传');
+              return false;
+            }
+            if(this.sfzfPicUState.state == 0 || this.sfzfPicUState.state == 4){
+              this.$toast('请上传身份证反面');
+              return false;
+            }
+            if(this.sfzfPicUState.state == 1){
+              this.$toast('身份证反面正在上传');
+              return false;
+            }
             if(!this.submitData.orgName){
               this.$toast('请输入公司名称');
               return false;
@@ -413,6 +429,8 @@
             }
             let data = {
               businessLicenseImgPath: this.yyzzPic,
+              idNoFrontImgPath: this.sfzzPic,
+              idNoBackImgPath: this.sfzfPic,
               companyName: this.submitData.orgName,
               contactEmail: this.submitData.email,
               organizationCode: this.submitData.organizationCode,
@@ -425,7 +443,7 @@
               transactorPhone: this.submitData.jbrPhone,
               contactPhone: this.submitData.contactPhone,
               paymentPassword: this.submitData.paymentPassword,
-              paymentPassword2: this.submitData.paymentPassword2
+              paymentPassword2: this.submitData.paymentPassword2,
             };
 
             _server.getAuthentication(data, (res) =>{

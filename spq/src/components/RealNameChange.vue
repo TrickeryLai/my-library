@@ -48,31 +48,41 @@
         <div class="realName-conten-inner">
          <UploadImg
             v-if="companyData.authStatus != 9"
-            :initPic='common.picUrl + yyzzPic'
+            :initPic='getPicUrl(yyzzPic)'
             uploadUrl = "open-cp/v1/upload"
             @removePic='yyzzRemovePic'
             @uploadPicProgress='yyzzUploadPicFn' /> 
           <div v-else class="picAdd-box">
-            <img :src="common.picUrl + yyzzPic">
+            <img :src="getPicUrl(yyzzPic)">
           </div>
         </div>
       </van-cell-group>
-      <van-cell-group class="realName-content-box" style="display:none;">
+      <van-cell-group class="realName-content-box">
         <h3 class="title van-hairline--bottom">法人身份证</h3>
         <div class="realName-conten-inner">
           <div style="display:inline-block;margin-right: 10px;">
             <UploadImg
+            v-if="companyData.authStatus != 9"
+            :initPic='getPicUrl(sfzzPic)'
             uploadUrl = "open-cp/v1/upload"
             @removePic='sfzzRemovePic'
             @uploadPicProgress='sfzzUploadPicFn' />
-            <p class="picTitle">身份证正面 </p>
+            <div v-else class="picAdd-box">
+              <img :src="getPicUrl(sfzzPic)">
+            </div>
+            <p class="picTitle"><span class="red-font" style="padding-top: 2px;margin-right: 2px;">*</span>身份证正面 </p>
           </div>
           <div style="display:inline-block;margin-right: 10px;">
             <UploadImg
+            v-if="companyData.authStatus != 9"
+            :initPic='getPicUrl(sfzfPic)'
             uploadUrl = "open-cp/v1/upload"
             @removePic='sfzzRemovePic'
             @uploadPicProgress='sfzzUploadPicFn' /> 
-            <p class="picTitle">身份证正面 </p>
+            <div v-else class="picAdd-box">
+              <img :src="getPicUrl(sfzfPic)">
+            </div>
+           <p class="picTitle"><span class="red-font" style="padding-top: 2px;margin-right: 2px;">*</span>身份证反面 </p>
           </div>
         </div>
       </van-cell-group>
@@ -251,6 +261,12 @@
           onClickLeft(){
               window.history.go(-1);
           },
+          getPicUrl(url){
+            if(!url){
+              return ''
+            }
+            return _common.picUrl + url;
+          },
           init(){
               let data = this.$route.query.data, initData = {};
               let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')): '',
@@ -301,6 +317,10 @@
               initData = Object.assign({}, this.baseInfo);
               this.yyzzPic = initData.businessLicenseImgPath;
               this.yyzzPicUState.state = 3;
+              this.sfzzPic = initData.idNoFrontImgPath ? initData.idNoFrontImgPath:'';
+              this.sfzzPicUState.state = initData.idNoFrontImgPath ? 3 : 0;
+              this.sfzfPic = initData.idNoBackImgPath?initData.idNoBackImgPath:'';
+              this.sfzfPicUState.state = initData.idNoBackImgPath ? 3: 0;
 
               this.submitData.orgName = initData.companyName;
               this.submitData.email = initData.contactEmail;
@@ -356,6 +376,22 @@
               this.$toast('营业执照正在上传');
               return false;
             }
+            if(this.sfzzPicUState.state == 0 || this.sfzzPicUState.state == 4){
+              this.$toast('请上传身份证正面');
+              return false;
+            }
+            if(this.sfzzPicUState.state == 1){
+              this.$toast('身份证正面正在上传');
+              return false;
+            }
+            if(this.sfzfPicUState.state == 0 || this.sfzfPicUState.state == 4){
+              this.$toast('请上传身份证反面');
+              return false;
+            }
+            if(this.sfzfPicUState.state == 1){
+              this.$toast('身份证反面正在上传');
+              return false;
+            }
             if(!this.submitData.orgName){
               this.$toast('请输入公司名称');
               return false;
@@ -405,6 +441,8 @@
             }
             let data = {
               businessLicenseImgPath: _common.common_fn.formateUlr(this.yyzzPic),
+              idNoFrontImgPath: this.sfzzPic,
+              idNoBackImgPath: this.sfzfPic,
               companyName: this.submitData.orgName,
               contactEmail: this.submitData.email,
               organizationCode: this.submitData.organizationCode,

@@ -174,10 +174,9 @@
 			show(newV){
 				this.isShow = newV;
 				if(this.isShow){
-            console.log('cpid',this.baseData.cpId);
-				      this.basesData = this.baseData;
-		          this.getData(this.baseData.cpId);
-		          this.pageType = this.type;
+			      	this.basesData = this.baseData;
+		          	this.getData(this.baseData.cpId);
+		          	this.pageType = this.type;
 		        }
 			}
 		},

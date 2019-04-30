@@ -145,6 +145,12 @@
 							style="width: 100%;"
 							@click="change">修改</van-button>
 						</van-col>
+						<van-col span="12" v-if="initData.cpStatus == 2">
+							<van-button
+							type="primary"
+							style="width: 100%;"
+							@click="checkedDeal">确认成交</van-button>
+						</van-col>
 						<!-- <van-col span="12" v-if="(initData.cpStatus == 2">
 							<van-button
 							type="primary"
@@ -243,7 +249,6 @@
 			},
 			showAllPrice(){
 				let calDay = this.getLastTime();//剩余时间
-				console.log(calDay)
 				//查看所有报价信息
 				this.priceListShow = true;
 				this.priceListBaseData = this.initData;
@@ -252,6 +257,29 @@
 				}else{
 					this.priceType = 0;
 				}
+			},
+			checkedDeal(){
+				this.$dialog.confirm({
+					title: '提示',
+					message: '确认成交么？'
+				}).then(() => {
+					//确认验收
+					let data = {
+						id: this.initD.cpId,
+						type: 1,
+						imageName: '02'
+					}
+					_server.checkedDeal(data).then(res => {
+						if(res.code == 0){
+							this.$toast('操作成功！');
+							this.$emit("refresh");
+							this.modelClose();
+						}
+					}).catch(error => {
+
+					})
+				})
+				
 			},
 			dealPrice(price){
 				return _common.common_fn.dealPrice(price);

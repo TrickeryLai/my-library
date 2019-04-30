@@ -185,6 +185,24 @@
               </div>
               <div
                 style="width: 100%;"
+                v-if="(item.quoteStatus == 2)">
+                <van-col span="12">
+                  <van-button
+                    type="primary"
+                    style="width: 100%;"
+                    @click="checkedDeal">确认成交
+                  </van-button>
+                </van-col>
+                <van-col span="12">
+                  <van-button
+                    type="info"
+                    style="width: 100%;"
+                    @click="ok">关闭
+                  </van-button>
+                </van-col>
+              </div>
+              <div
+                style="width: 100%;"
                 v-else>
                 <van-col span="12"
                          v-if="item.quoteStatus == 1 && initData.stringDate >= 0 && (initData.cpStatus == '04')">
@@ -296,6 +314,29 @@
           }
         }, 1000)
       },
+      checkedDeal(){
+        this.$dialog.confirm({
+          title: '提示',
+          message: '确认成交么？'
+        }).then(() => {
+          //确认验收
+          let data = {
+            id: this.initD.cpId,
+            type: 0,
+            imageName: '02'
+          }
+          _server.checkedDeal(data).then(res => {
+            if(res.code == 0){
+              this.$toast('操作成功！');
+              this.$emit("refresh");
+              this.modelClose();
+            }
+          }).catch(error => {
+
+          })
+        })
+        
+      },
       biddingSuccess() {
         //撮合成功
         this.$emit("refresh");
@@ -373,7 +414,6 @@
           message: '确认取消对此票据的报价么？'
         }).then(() => {
           let priceId = this.item.priceId, quoteStatus = this.item.quoteStatus;
-          console.log(quoteStatus != '01')
           if (quoteStatus != '01' && quoteStatus != '04') {
             return;
           }
@@ -397,7 +437,6 @@
         //判断是否验证
         let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : '';
         if (!(user.orgId || user._checked)) {
-
           this.$router.push({path: '/home/realName', query: {redirect: currentPath}});
           this.$toast('请先实名认证！');
           return;
@@ -412,6 +451,10 @@
         }
         if (parseFloat(this.submit.dealAmount) < 0) {
           this.$toast('成交金额不能小于0！');
+          return;
+        }
+        if(parseFloat(this.submit.dealAmount) > this.initData.cpAmount){
+          this.$toast('成交金额不能大于票据金额！');
           return;
         }
         let data = {

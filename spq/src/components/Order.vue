@@ -45,12 +45,12 @@
 					</van-col>
 				</van-row>
 			</transition>
-			<van-collapse-item class="text-left" name="1">
+			<van-collapse-item class="text-left" name="1" style="height: 100%;position: relative;overflow-y:scroll;">
 				<p slot="title">
 					我的买入
 					<span class="blue-font" style="font-size: 12px;" @click.stop="rightClick">({{beginTimeData.value}}&nbsp-&nbsp{{endTimeData.value}})</span>
 				</p>
-				<div style="max-height: 350px;overflow:auto;overflow-y:scroll;border: 1px solid #ccc;">
+				<div style="border: 1px solid #ccc;">
 					<van-pull-refresh 
 					v-model="fbListState.isLoading" 
 					@refresh="fbOnRefresh">
@@ -60,7 +60,7 @@
 					finished-text="没有了"
 					:error.sync="error"
 					error-text="请求失败，点击重新加载"
-					:offset="10"
+					:offset="30"
 					@load="fbOnLoad"
 					>
 					<van-cell
@@ -308,6 +308,7 @@ export default{
 			},
 			fbOnRefresh(){
 				//获取列表数据
+				this.fbListState.finished = false;
 				this.fbPageInfo.pageNum = 1;
 				this.fbGetData();
 			},
@@ -350,6 +351,15 @@ export default{
 	</script>
 
 	<style>
+	.order-page{
+		position: absolute;
+		left: 0;
+		top: -46px;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+        height: 100%;
+	}
 	.order-page .van-collapse-item__content{
 		background-color: #f5f5f5;
 		padding-left: 0;
@@ -365,8 +375,24 @@ export default{
 		z-index: 5;
 	}	
 	.order-page .ticket-content-list{
-		margin-top: 0px;
-		padding-bottom: 50px;
 		background: #f5f5f5;
+		flex: 1;
+		height: 100%;
+		margin-top: 90px;
+		box-sizing: border-box;
+		overflow-y: scroll;
+	}
+	.order-page .van-collapse-item__wrapper{
+		position: absolute;
+		left: 0;
+		top: 0;
+		padding-top:50px;
+		width: 100%;
+		height: 100%;
+		box-sizing: border-box;
+		overflow-y: scroll;
+	}
+	.order-page .van-collapse-item__title{
+		z-index: 999;
 	}
 	</style>
