@@ -4,9 +4,12 @@ import AreaData from '@/server/areaData';
 let protocol = location.protocol || 'http';
 // let protocol = 'http:';
 let common = {
-	ip: '117.71.57.247',
-	port: '3580', //接口端口号
-  xyPort: '3580',//协议端口号
+	// ip: '117.71.57.247',
+  ip: '47.113.2.4',
+	// port: '3580', //接口端口号
+  // xyPort: '3580',//协议端口号
+  port: '5080',
+  xyPort: '5080',
 };
 let xyHeadUrl = protocol + '//' + common.ip + ':' + common.xyPort +'/open-cp/v1/protocol/pdf/';
 
