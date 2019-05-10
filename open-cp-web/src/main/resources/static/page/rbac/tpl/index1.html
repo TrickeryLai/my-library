@@ -1,0 +1,1164 @@
+<!-- index样式 -->
+<style type="text/css">
+.iteam div {
+	height: 30px;
+	width: 100px;
+	background-color: white;
+	border-radius: 30px;
+	text-align: center;
+	line-height: 30px;
+	float: left;
+	margin-left: 0.1PX;
+	margin-right: 0.1in;
+	margin-top: 0.1in;
+	margin-bottom: 0.1in;
+}
+
+.iteam {
+	height: 50px;
+	display: flex;
+	align-items: center;
+	border-bottom: 1px solid #EEEEEE;
+}
+
+input {
+	border: 1px solid #ccc;
+	padding: 7px 0px;
+	border-radius: 3px;
+	padding-left: 5px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+	-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow
+		ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out
+		.15s;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s
+}
+
+input:focus {
+	border-color: #66afe9;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px
+		rgba(102, 175, 233, .6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px
+		rgba(102, 175, 233, .6)
+}
+
+.colorBlock {
+	width: 20px;
+	height: 20px;
+	background: brown;
+}
+
+h5 {
+	margin-right: 20px;
+	width: 100px;
+	margin-left: 30px;
+}
+.icon{
+            display : inline-block;
+            width:7px;
+            height:9px;
+            background-image: url(../assets/images/sort.png);
+            background-position: center center;
+            background-repeat:no-repeat;
+            background-size:cover;
+        }
+        .outer{
+            width: 1210px;
+            height: 500px;
+           // border: 1px solid #cccccc;
+            margin: 0 auto;
+        }
+        .outer-right{
+            width: 1160px;
+            height: 500px;
+           // border: 1px solid #cccccc;
+            //margin: 0 auto;
+            float:right;
+        }
+        .outer-left{
+            width: 50px;
+            height: 500px;
+           // border: 1px solid #cccccc;
+            //margin: 0 auto;
+            float:left;
+            position:relative;
+        }
+        .inner_left{
+            width: 700px;
+            height: 500px;
+            float: left;
+            border: 1px solid #cccccc;
+            background-position: center center;
+            background-repeat:no-repeat;
+            background-size:cover;
+            position:relative;
+
+        }
+        .inner-right{
+            width: 450px;
+            height: 500px;
+            float: right;
+           // border: 1px solid #cccccc;
+        }
+        .inner-right_top{
+            height: 190px;
+        }
+        .tableStyle  {
+            width: 450px;
+
+        }
+        td{
+            border: 1px solid #cccccc;
+           
+
+           white-space:nowrap; /*文本显示不自动换行*/
+
+
+        }
+        tr{
+            //border: 1px solid #cccccc;
+            height:38;
+        }
+        .inner-right_mid{
+            width: 450px;
+            height: 205px;
+            margin-top: 5px;
+            border: 1px solid #cccccc;
+            display: flex;
+        }
+        .inner-right_down{
+        	width: 450px;
+            height: 75px;
+            margin-top: 5px;
+            border: 1px solid #cccccc;
+        
+        }
+        .buttomBtn{
+	        height: 35px;
+			width: 450px;
+			line-height: 35px;
+			background-color: #409eff;
+			border-radius: 10px;
+	        text-align: center;
+	        margin-top:10px;
+	        color:black;
+        
+        }
+        .iconChange{
+            height:100px;
+            width:100px;
+            position:absolute;
+            top:40px;
+            left:40px;
+            border: 1px solid #cccccc;
+        }
+           
+		#frontPic{ 
+		    position:absolute;
+		    z-index:100;
+		    background-position: center center;
+            background-repeat:no-repeat;
+            background-size:cover;
+            background-color:white;
+            width: 700px;
+            height: 500px;}    
+		   
+		#reversePic{ 
+			position:absolute;
+			z-index:80;background:#FF0;
+			background-position: center center;
+            background-repeat:no-repeat;
+            background-size:cover;
+            background-color:white;
+            width: 700px;
+            height: 500px;}
+		   
+		#frontBtn{ position:absolute;z-index:100;width:50px;height:80px;text-align:center; line-height:40px;box-shadow: darkgrey 5px 5px 60px 5px ;border-radius:8px 0px 0px 8px;font-family:微软雅黑;letter-spacing:1px;
+					}    
+		/* div背景色为红色 */    
+		#reverseBtn{ position:absolute;top:80px;z-index:180;background:rgb(145, 166, 242);width:50px;height:80px;text-align:center; line-height:30px;border-radius:6px 0px 0px 6px;box-shadow:darkgrey 5px 5px 60px 5px;}    
+		/* 背景为黄色 */
+</style>
+
+<!-- 模板引擎动态生成整体数据，主要为国际化语言服务 -->
+<script id="globalData_index" type="text/html">
+    <div id="globalData">
+        <!-- 详情框 -->
+		
+        <div id="ticketDetailPage" style="min-height: 650px; min-width:1200px">
+    <!--<div class="iconChange" onclick="changePic()"></div>-->
+    <div class="outer">
+        <div class="outer-left">
+			<div id="frontBtn" onclick="changePic(this.id)">
+			<div style="transform:rotate(-90deg);margin-top:20px;">正&nbsp面</div>
+			</div>
+			<div id="reverseBtn" onclick="changePic(this.id)">
+			<div style="transform:rotate(-90deg);margin-top:20px">反&nbsp面</div>
+			</div>
+		</div>
+        <div class="outer-right">
+            <div class="inner_left" id="leftPic">
+                <div id="frontPic"></div>
+                <div id="reversePic"></div>
+                
+            </div>
+            <div class="inner-right">
+                <div class="inner-right_top">
+                    <table class="tableStyle">
+                        <tr>
+                            <td width="30%">{{acceptor}}</td>
+                            <td width="70%"><span id="acceptor"></span></td>
+                        </tr>
+                        <tr>
+                            <td width="30%">{{cpAmount}}</td>
+                            <td width="70%"><span id="moneyType"></span><span id="cpAmount"></span></td>
+                        </tr>
+                        <tr>
+                            <td width="30%">{{dueDate}}</td>
+                            <td width="70%"><span id="dueDate"></span></td>
+                        </tr>
+                        <tr>
+                            <td width="30%">{{blemish}}</td>
+                            <td width="70%"><span id="blemish"></span></td>
+                        </tr>
+                        <tr>
+                            <td width="30%">{{endorseTimes}}</td>
+                            <td width="70%"><span id="endorseTimes"></span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="inner-right_mid">
+                    <div>
+                        <div style="width:450px;height:50px;border-bottom:1px solid #cccccc;border-right:1px solid #cccccc;padding-top:15px">
+                            <div style="width:240px;height:20px;float:left" onclick="quotationList(sessionStorage.getItem('cpId'))">
+                                <p style="width:100%">买家报价每十万扣款 手动刷新</p>
+                            </div>
+                            <div style="width:50px;height:20px;float:right">
+                                <strong id="second_show" style="color:red;width:50px"></strong>
+                            </div>
+                        </div>
+                        <div style="width:450px;height:150px;border-right:1px solid #cccccc;overflow:auto;">
+                            <span id="waitQuote" style="font-size:20px;line-height:60px;">等待买家报价中....</span>
+							<table class="table table-bordered table-striped " id="quote_data">
+                               
+                                
+                            </table>
+                        </div>
+                    </div>
+                    <div style="width:150px;height:205px;float:right;display:none"></div>
+
+
+                </div>
+                <div class="inner-right_down">
+                    <div style="margin-top:10px;margin-left:20px" id="ticketQuote">
+                        <h>年化利率&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp每十万扣款
+                            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp成交金额
+                        </h>
+                        </br>
+                        <input type="text"  style="width:108px" name="approvalApr" onkeyup="numeration()">&nbsp%&nbsp
+						<input type="text"  style="width:108px" name="deductAmount" onkeyup="deductedOfTenThound()">&nbsp元&nbsp
+                        <input type="text"  style="width:108px" name="turnVolume" onkeyup="tradeVolume()">元
+                    </div>
+                </div>
+                <div class="buttomBtn" onclick="confirmOffer()">确认报价</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+        <!-- 搜索框，数据展示，分页 -->
+        <div class="page-wrap">
+            <div class="row" id='tablebox'  >
+                <div class="col-lg-12">
+
+                    <div class="panel panel-lined table-responsive mb30 ng-scope">
+                        <!-- 选择按钮 -->
+						<div class="iteam" id="divGroup1">
+        					<h5>■ 票据金额</h5>
+        					<div id="underThound" onclick="colorLine1(this.id)">10万以下</div>
+        					<div id="thoundToOneMillion" onclick="colorLine1(this.id)">10-100万</div>
+        					<div id="moreOneMillion" onclick="colorLine1(this.id)">100万以上</div>
+        					<div id="moreFiveMillion" onclick="colorLine1(this.id)">500万以上</div>
+        					<input type="text" placeholder="最低金额(万元)" id="faceValueMin" onblur="regText(this.id)">
+        					<p>-</p>
+        					<input type="text" placeholder="最高金额(万元)" id="faceValueMax" onblur="regText(this.id)">
+        					<span id="searchBtnLineOne" class="btn btn-primary pull-left fa fa-search" onclick="findLineOne()">{{search}}</span>
+   					    </div>
+
+						<div class="iteam" id="divGroup2">
+    						<h5>■ 剩余天数</h5>
+   						 <div id="lessThanNinety" onclick="colorLine2(this.id)">90天内</div>
+    						<div id="ninetyToHundredEighty" onclick="colorLine2(this.id)">90-180天</div>
+   						 <div id="hundredEightyToThreeHundredsixty" onclick="colorLine2(this.id)">180-360天</div>
+  						  <input type="text" placeholder="最少天数" id="daysMin"   onblur="regText(this.id)">
+  						  <p>-</p>
+  						  <input type="text" placeholder="最多天数" id="daysMax"   onblur="regText(this.id)">
+  						  <span id="searchBtnLineTwo" class="btn btn-primary pull-left fa fa-search" onclick="findLineTwo()">{{search}}</span>
+						</div>
+						<div class="iteam" id="divGroup3">
+    						<h5>■ 瑕疵</h5>
+    						<div id="Y" onclick="colorLine3(this.id)">有瑕疵</div>
+    						<div id="N" onclick="colorLine3(this.id)">无瑕疵</div>
+						</div>
+						<div class="iteam" id="divGroup4">
+    						<h5>■ 成交信用</h5>
+    						<div id="excellent" onclick="colorLine4(this.id)">优秀</div>
+    						<div id="well" onclick="colorLine4(this.id)">良好</div>
+    						<div id="ordinary" onclick="colorLine4(this.id)">一般</div>
+						</div>
+
+
+                        <!--票据状态-->
+                      <!--  <div class="iteam" id="divGroup5">
+                            <h5>■ 票据状态</h5>
+                            <div onclick="colorLine5('01',this)">发布</div>
+                            <div onclick="colorLine5('04',this)">报价中</div>
+                            <div onclick="colorLine5('02',this)">成交</div>
+                            <div onclick="colorLine5('03',this)">注销</div>
+                        </div>-->
+
+ 						<!--票据号码-->
+                        <div class="iteam" id="divGroup6">
+                            <h5>■ 票据号码</h5><div style="width:10px"></div>
+                            <input type="text" placeholder="票据号码" id="cpNo">
+        					<span id="searchBtnLineSix" class="btn btn-primary pull-left fa fa-search" onclick="findLineSix()">{{search}}</span>
+                        </div>
+
+						<!--承兑人-->
+                        <div class="iteam" id="divGroup7">
+                            <h5>■ 承兑人</h5><div style="width:10px"></div>
+                            <input type="text" placeholder="承兑人" id="acceptor1">
+        					<span id="searchBtnLineSeven" class="btn btn-primary pull-left fa fa-search" onclick="findLineSeven()">{{search}}</span>
+                        </div>
+						<!--创建时间-->
+                        	<div style="display: flex;border-bottom:1px solid #EEEEEE;height:50px;align-items: center;" id="divGroup8">
+                            <h5>■ 发布时间</h5>
+                            <div class="col-md-3 timeContent">
+ 								<input type="text" class="form-control field" id='startDate' name="startDate" placeholder="起始时间" value=""/>
+   								 -
+   								<input type="text" class="form-control field" id='endDate' name="endDate" placeholder="结束时间" value=""/>
+                                <input type="text" class="none_input" >
+							</div>
+							<span id="searchBtnLineEight" class="btn btn-primary pull-left fa fa-search" onclick="findLineEight()">{{search}}</span>
+                        	</div>
+
+
+
+
+                        <div style="height:15px"></div>
+                        <div class="panel-body">
+                            <table class="table table-bordered table-striped zCheckBox">
+                                <thead class="thead">
+                                <tr>
+                                    <th id="createTimeSort">{{releaseTime}}<i class="icon"></th>
+									<th>{{acceptor}}</th>
+                                    <th>{{blemish}}</th>
+                                    <th id="amountSort">{{cpAmount}}<i class="icon"></th>
+                                    <th id="dueDateSort">{{dueDate}}<i class="icon"></th>
+                                    <th>{{credit}}</th>
+                                <!--    <th>{{cpStatus}}</th>-->
+                                    <th>{{operation}}</th>
+                                </tr>
+                                </thead>
+                                <tbody id="globalDataTbody">
+                                <tr>
+                                    <td colspan="20" style="text-align: center;">{{loading}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!-- #end data table -->
+                            <!-- 分页 -->
+                            <div class="page">
+                                <div class="pager_container" id="Pagination">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+</script>
+
+<!-- 模板引擎动态生成表格数据 -->
+<script id="globalDataList_ticket" type="text/html">
+    {{if list && list.length > 0 }}
+    {{each list as value i}}
+    <tr _id="{{value.cpId}}">
+		<td>{{value.createTime }}</td>
+		<td>{{value.acceptor}}</td>
+        <td>{{value.isDefect | defectType}}</td>
+        <td>{{value.cpAmount | amountFormat}}</td>
+        <td>{{value.dueDate}}
+			{{if value.stringDate >0}}
+                 <span class="badge badge-success">剩余{{value.stringDate }}天</span>
+                {{else}}
+                <span class="badge badge-danger">已失效</span>
+            {{/if}}
+		</td>
+        <td>{{value.creditRating |creditRatingType}}</td>
+      <!--  <td>{{value.cpStatus  | cpStatusFormat}}</td>-->
+        <td style="min-width: 10px;">
+            <span class="btn btn-sm btn-danger" name='详情' onclick = "ticketDetial({{value.cpId}})">我要买</span>
+        </td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr>
+        <td colspan="17" style="text-align: center;">{{1 | noData}}</td>
+    </tr>
+    {{/if}}
+</script>
+
+<script>
+	//根据利率计算额度
+	function numeration(){
+		$.calMoney1("ticketQuote");
+	}
+	//根据扣款计算额度
+	function deductedOfTenThound(){
+		$.getDateByDeduct("ticketQuote");
+	}
+	//根据成交金额计算额度
+	function tradeVolume(){
+		$.getDateByTurnover("ticketQuote");
+	}
+	//正面反面点击事件
+	function changePic(id){
+		if(id=="frontBtn"){
+			$("#reverseBtn").css("background-color","white");
+			$("#frontBtn").css("background-color","rgb(145, 166, 242)");
+			$('#frontPic').css('z-index',100);
+			$('#reversePic').css('z-index',0);
+		}else if(id=="reverseBtn"){
+			$("#frontBtn").css("background-color","white");
+			$("#reverseBtn").css("background-color","rgb(145, 166, 242)");
+			$('#frontPic').css('z-index',0);
+			$('#reversePic').css('z-index',100);
+		}
+		 
+		//$("#leftPic").css("background-image","url(http://114.55.255.160:9180/images/"+"demo.jpg"+")");
+	}
+	
+	function clearQuote(){
+		$("#ticketQuote input[name='approvalApr']").val("");
+		$("#ticketQuote input[name='deductAmount']").val("");
+		$("#ticketQuote input[name='turnVolume']").val("")
+	}
+	//确认报价按钮点击事件
+	function confirmOffer(){
+		 //start = intDiff;
+		 //clearTimeout(countdown);
+		 
+		var data={};
+		if($("#ticketQuote input[name='approvalApr']").val()<0){
+			clearQuote();
+			$("#ticketQuote input[name='approvalApr']").focus();
+			return;
+		}
+		if(isNaN($("#ticketQuote input[name='approvalApr']").val())){
+			clearQuote();
+			$("#ticketQuote input[name='approvalApr']").focus();
+			return;
+		}
+		if(isNaN($("#ticketQuote input[name='deductAmount']").val())){
+			clearQuote();
+			$("#ticketQuote input[name='deductAmount']").focus();
+			return;
+		}
+		if($("#ticketQuote input[name='turnVolume']").val()<0||$("#ticketQuote input[name='turnVolume']").val()>$("#cpAmount").html()){
+			clearQuote();
+			$("#ticketQuote input[name='approvalApr']").focus();
+			return;
+		}
+		if(isNaN($("#ticketQuote input[name='turnVolume']").val())){
+			clearQuote();
+			$("#ticketQuote input[name='turnVolume']").focus();
+			return;
+		}
+		data = $.extend(data, {
+			"cpId":sessionStorage.getItem('cpId')
+		},{"endorseTimes":sessionStorage.getItem('endorseTimes')},
+		{"cpNo":sessionStorage.getItem('cpNo')},
+		{"approvalApr":$("#ticketQuote input[name='approvalApr']").val()},
+		{"deductAmount":$("#ticketQuote input[name='deductAmount']").val()},
+		{"turnVolume":$("#ticketQuote input[name='turnVolume']").val()},{"channel":"01"})
+		if($("#ticketQuote input[name='approvalApr']").val()==""||$("#ticketQuote input[name='approvalApr']").val()==null){
+			return;
+		}
+		$.zAjax({
+			url : project.host() + '/v1/quotedPrice/insertQuotedInfo', 
+			data : data,
+			type : 'post',
+			isString : false,
+			success : function(data) {
+				//console.log(data);
+				//$("#second_show").css("display","none");
+					//layer.closeAll();
+					layer.alert(data.errMsg);
+					quotationList(sessionStorage.getItem('cpId'));
+					$("#ticketQuote input[name='approvalApr']").val("");
+					$("#ticketQuote input[name='deductAmount']").val("");
+					$("#ticketQuote input[name='turnVolume']").val("");
+					//start = intDiff;
+					//count();
+			}
+		})
+	}
+	//倒计时刷新功能
+	var intDiff = parseInt(60);
+	var start = intDiff;
+    var step = -1;
+    var countdown;
+    function count()
+    {
+    	$('#second_show').html('<s></s>'+start+'  秒');
+        start += step;
+        if(start < 0){
+        	quotationList(sessionStorage.getItem('cpId'));
+            start = intDiff;
+        }
+        	
+        countdown=setTimeout("count()",1000);
+    }
+    
+    //查询当前票据报价列表
+    function quotationList(_id){
+    	$("#quote_data").html("");
+    	if (_id) {
+			$.zAjax({
+				url : project.host() + '/v1/quotedPrice/' + _id,
+				isString : false,
+				success : function(quotationList) {
+					//console.log(quotationList);
+					if(quotationList.length==0){
+						$("#waitQuote").css("display","block");
+						$("#quote_data").css("display","none");
+					}else{
+						$("#waitQuote").css("display","none");
+						$("#quote_data").css("display","block");
+					}
+					//var listQuotation=quotationList;
+					var tableHtml;
+					//console.log(quotationList.length);
+					quotationList.forEach(function(quotationList,i){
+						tableHtml += "<tr>";
+			            //tableHtml +=    "<td style='background-color:#e2e2e2'>"+ "公司名称:" +"</td>";
+			            //tableHtml +=    "<td style='background-color:#fcfcfc'>"+ quotationList.companyName +"</td>";
+			            tableHtml +=    "<td style='background-color:#e2e2e2'>"+ "报价金额:" +"</td>";
+			            tableHtml +=    "<td style='background-color:#fcfcfc'>"+ quotationList.turnVolume +"元"+"</td>";
+			            tableHtml +=    "<td style='background-color:#e2e2e2'>"+ "年利率:" +"</td>";
+			            tableHtml +=    "<td style='background-color:#fcfcfc'>"+ quotationList.approvalApr +"%"+"</td>";
+			            tableHtml +=    "<td style='background-color:#e2e2e2'>"+ "报价时间:" +"</td>";
+			            tableHtml +=    "<td style='background-color:#fcfcfc'>"+ quotationList.quoteTime +"</td>";
+			            tableHtml +=    "<td style='background-color:#e2e2e2'>"+ "报价状态:" +"</td>";
+			            if(quotationList.quoteStatus =='01'){
+			            	tableHtml +=    "<td style='background-color:#fcfcfc'>"+"报价"+"</td>";
+			            }
+			            else if(quotationList.quoteStatus =='02'){
+			            	tableHtml +=    "<td style='background-color:#fcfcfc'>"+"撮合成交"+"</td>";
+			            }
+			            else if(quotationList.quoteStatus =='03'){
+			            	tableHtml +=    "<td style='background-color:#fcfcfc'>"+"撮合失败"+"</td>";
+			            }
+			            else if(quotationList.quoteStatus =='04'){
+			            	tableHtml +=    "<td style='background-color:#fcfcfc'>"+"取消"+"</td>";
+			            }
+			            else if(quotationList.quoteStatus =='05'){
+			            	tableHtml +=    "<td style='background-color:#fcfcfc'>"+"拒绝"+"</td>";
+			            }else{
+			            	tableHtml +=    "<td style='background-color:#fcfcfc'>"+""+"</td>";
+			            }
+			           
+			            tableHtml += "</tr>";
+			            $("#quote_data").html(tableHtml);
+					})
+					
+				}
+			});
+		}
+    }
+    
+	//详情按钮点击事件
+	function ticketDetial(_id){
+		$("#ticketQuote input[name='approvalApr']").val("");
+		$("#ticketQuote input[name='deductAmount']").val("");
+		$("#ticketQuote input[name='turnVolume']").val("");
+		$("#acceptor").html("");
+		$("#cpAmount").html("");
+		$("#moneyType").html('');
+		$("#dueDate").html("");
+		$("#blemish").html("");
+		$("#endorseTimes").html("");
+		$("#leftPic").css("display","none");
+		$(".outer-left").css("display","none");
+		$("#second_show").css("display","none");
+		//$("#reverseBtn").css("display","none");
+		
+        layer.open({
+            type: 1,
+            title:"商票信息详情",
+            skin: 'layui-layer-rim', //加上边框
+            area: ['1300px', '700px'], //宽高
+            content: $("#ticketDetailPage"),
+            cancel:function (index,layro) {
+                $("#uploadView").css("display","none");
+                clearTimeout(countdown);
+                start=intDiff;
+                $("#second_show").css("display","none");
+                $("#quote_data").html("");
+                
+            }
+        
+        });
+       
+        if (_id) {
+			$.zAjax({
+				url : project.host() + '/v1/businessTickets/' + _id,
+				isString : false,
+				success : function(result) {
+					//console.log(result);
+					$("#leftPic").css("display","block");
+					//$(".outer-left").css("display","block");
+					//console.log(result);
+					$("#acceptor").html(result.data.acceptor);
+					$("#cpAmount").html(result.data.cpAmount);
+					$("#moneyType").html('￥');
+					$("#dueDate").html(result.data.dueDate+" 剩余天数 "+result.data.stringDate+" 天");
+					$("#blemish").html(result.data.isDefect==1?"有瑕疵":result.data.isDefect==0?"无瑕疵":"");
+					$("#endorseTimes").html(result.data.endorseTimes+" 次");
+					if(result.data.frontBillImg!=""&&result.data.frontBillImg!=null){
+						$("#frontPic").css("background-image","url("+project.host() + '/v1/images/mos/'+result.data.frontBillImg+")");
+						$("#frontPic").css("background-size","contain");
+					}
+					//if(result.data.backBillImg !="" && result.data.backBillImg !=null){
+					//	$("#reversePic").css("background-image","url("+project.host() + '/v1/images/'+result.data.backBillImg+")");
+					//	$("#reversePic").css("background-size","contain");
+					//}
+					$('#frontPic').css('z-index',100);
+					$('#reversePic').css('z-index',0);
+					$("#reverseBtn").css("background-color","white");
+					$("#frontBtn").css("background-color","rgb(145, 166, 242)");
+					sessionStorage.setItem('dueDate',result.data.stringDate);
+					sessionStorage.setItem('endorseTimes',result.data.endorseTimes);
+					sessionStorage.setItem('cpId',result.data.cpId);
+					sessionStorage.setItem('cpNo',result.data.cpNo);
+					sessionStorage.setItem('dueDay',result.data.stringDate);
+					quotationList(sessionStorage.getItem('cpId'));
+					count();
+					$("#second_show").css("display","block");
+				}
+			});
+		}
+	}
+	//定义全局对象
+	var globalData = {
+
+		init : function() {
+			//生成整体数据，主要为国际化语言服务
+			$('#main').prepend(template('globalData_index', $.dataLanguage()));
+
+			//页面初始化默认请求表格数据
+			this.getData1(globalData.data);
+			//调用所有事件
+			this.event();
+
+
+		},
+
+		//定义全局请求参数对象
+		data : {
+			pageNum : 1,
+			pageSize : 10,
+	
+		},
+
+
+		//请求表格数据的函数，参数data
+		getData : function(data) {
+
+			$.zAjax({
+				url : project.host() + '/v1/businessTickets',
+				data : data,
+				type : 'post',
+				isString : false,
+				success : function(data) {
+					var list = data;
+					var total = list.pageInfo.total;
+					/**
+					 * 调用分页方法
+					 * @param obj.page    分页元素
+					 * @param obj.url     接口
+					 * @param obj.tp      模板元素
+					 * @param obj.ele     填充数据元素
+					 * @param obj.data    请求参数
+					 * @param obj.list    请求返回数据
+					 */
+					$.zPageMethod1({
+						page : '#Pagination',
+						url : project.host() + '/v1/businessTickets',
+						tp : 'globalDataList_ticket',
+						ele : '#globalDataTbody',
+						total : total,
+						data : globalData.data,
+						list : list
+					});
+					
+					$('[btnType="list"]').css({'display':"inline-block"});
+				}
+			});
+		},
+		getData1 : function() {
+			$("#ticketDetailPage").css("display","none");
+			var data = globalData.data;
+			data = $.extend(data, {
+				"flaw_id" : sessionStorage.getItem('flaw_id')
+			}, {
+				"faceValueMin" : sessionStorage.getItem('faceValueMin')
+			}, {
+				"faceValueMax" : sessionStorage.getItem('faceValueMax')
+			}, {
+				"daysMin" : sessionStorage.getItem('daysMin')
+			}, {
+				"daysMax" : sessionStorage.getItem('daysMax')
+			}, {
+				"credit_id" : sessionStorage.getItem('credit_id')
+			},{
+				'amountSort':sessionStorage.getItem('amountSort')
+			},{
+				'dueDateSort':sessionStorage.getItem('dueDateSort')
+			},{
+				'createTimeSort':sessionStorage.getItem('createTimeSort')}
+                ,{
+                    'cpNo':sessionStorage.getItem('cpNo')}
+                ,{
+                    'acceptor':sessionStorage.getItem('acceptor')}
+                ,{
+                    'startDate':sessionStorage.getItem('startDate')}
+                ,{
+                    'endDate':sessionStorage.getItem('endDate')}
+				)
+				
+			//console.log("请求参数"+data.daysMin);
+			$.zAjax({
+				url : project.host() + '/v1/businessTickets',
+				data : data,
+				type : 'post',
+				isString : false,
+				success : function(data) {
+					var list = data;
+					var total = list.pageInfo.total;
+					/**
+					 * 调用分页方法
+					 * @param obj.page    分页元素
+					 * @param obj.url     接口
+					 * @param obj.tp      模板元素
+					 * @param obj.ele     填充数据元素
+					 * @param obj.data    请求参数
+					 * @param obj.list    请求返回数据
+					 */
+					$.zPageMethod1({
+						page : '#Pagination',
+						url : project.host() + '/v1/businessTickets',
+						tp : 'globalDataList_ticket',
+						ele : '#globalDataTbody',
+						total : total,
+						data : globalData.data,
+						list : list
+					});
+					$('[btnType="list"]').css({'display':"inline-block"});
+				}
+			});
+		},
+		//回显数据,同时可用于区分新增和（详情修改）的区别
+		getglobalDataDetail : function(_id, ele, view, slef, a) {
+			
+			$('#zCheck li').removeClass('zCheck');
+			$('.zRadioBox').removeClass('active');
+			$(ele).find('.field').val('');
+			//如果_id有效，则是详情或者修改
+
+			$('#zCheck').off().on('click', 'li', checkAll)
+					.removeClass('active');
+			if (_id) {
+				$.zAjax({
+					url : project.host() + '/v1/businessTickets/' + _id,
+					isString : false,
+					success : function(data) {
+						$(ele).find('.field').each(
+								function() {
+									var key = $(this).attr('name');
+									$(this).val(data[key]);
+									
+								});
+						
+						view();
+					}
+				});
+			}
+			//否则是新增
+			else {
+				$('#roleIdsP').show();
+				$('#passwordConent').show();
+				$('[name="orgId"]').val('').removeAttr('disabled');
+				$('[name="orgId"]').next('input[type="hidden"]').val('');
+				view();
+			}
+
+		},
+
+		//详情，新增，修改
+		updateView : function(title, slef, DelName) {
+			//获取当前ID，如果是新增，则没有ID
+			var _id = $(slef).closest('tr').attr("_id");
+
+			//如果用户点击的是删除
+			if (typeof DelName == 'string') {
+				layer.confirm(globalData.delStr(DelName), function() {
+					$.zAjax({
+						url : project.host() + '/v1/users1/' + _id,
+						type : 'DELETE',
+						isString : false,
+						success : function(data) {
+							layer.closeAll();
+
+							layer.msg(lang.getData('delSuccess'), {
+								icon : 1
+							});
+							globalData.getData(globalData.data);
+						}
+					});
+				})
+				return;
+			}
+
+			/**
+			 * 集合新增，修改，详情的方法
+			 * @param1    需展示的title
+			 * @param2    当前按钮本身
+			 * @param3    当前数据id
+			 * @param4    需要验证以及回显数据的表单
+			 * @param5    回显数据方法
+			 * @param7    新增，修改，详情的回调
+			 */
+			$.zUpdateView(title, slef, _id, '#dataView',
+					globalData.getglobalDataDetail, {
+						//新增的回调,同时将传回通过校验的对象参数
+						add : function(data) {
+							$.zAjax({
+								url : project.host() + '/v1/company1s',
+								isString : true,
+								type : 'post',
+								data : data,
+								success : function(data) {
+									layer.closeAll();
+									layer.msg(lang.getData('addSuccess'), {
+										icon : 1
+									});
+									globalData.getData(globalData.data);
+								}
+							});
+						},
+						//编辑的回调,同时将传回通过校验的对象参数
+						edit : function(data) {
+							$.zAjax({
+								url : project.host() + '/v1/company1s/' + _id,
+								isString : true,
+								data : data,
+								type : 'PUT',
+								success : function(data) {
+									layer.closeAll();
+									layer.msg(lang.getData('editSuccess'), {
+										icon : 1
+									});
+									globalData.getData(globalData.data);
+								}
+							});
+						},
+						//详情的回调
+						detail : function() {
+						}
+					});
+		},
+
+		event : function() {
+			// 调用日期插件
+			laydate.render({
+			    elem: '#startDate',
+			    lang:$.getLayDateLang(),
+			});  // 调用日期插件
+			laydate.render({
+			    elem: '#endDate',
+			    lang:$.getLayDateLang(),
+			});
+
+			//排序
+			$('#createTimeSort').click(function() {
+				sessionStorage.setItem('dueDateSort',"");
+				sessionStorage.setItem('amountSort',"");
+				if(sessionStorage.getItem('createTimeSort')==""){
+					sessionStorage.setItem('createTimeSort',"1");
+				}else{
+					sessionStorage.getItem('createTimeSort')=="0"?sessionStorage.setItem('createTimeSort',"1"):sessionStorage.setItem('createTimeSort',"0");
+				}
+				globalData.getData1();
+			})
+			$('#amountSort').click(function() {
+				sessionStorage.setItem('createTimeSort',"");
+				sessionStorage.setItem('dueDateSort',"");
+				if(sessionStorage.getItem('amountSort')==""){
+					sessionStorage.setItem('amountSort',"1");
+				}else{
+					sessionStorage.getItem('amountSort')=="0"?sessionStorage.setItem('amountSort',"1"):sessionStorage.setItem('amountSort',"0");
+				}
+				globalData.getData1();
+			})
+			$('#dueDateSort').click(function() {
+				sessionStorage.setItem('amountSort',"");
+				sessionStorage.setItem('createTimeSort',"");
+				if(sessionStorage.getItem('dueDateSort')==""){
+					sessionStorage.setItem('dueDateSort',"1");
+				}else{
+					sessionStorage.getItem('dueDateSort')=="0"?sessionStorage.setItem('dueDateSort',"1"):sessionStorage.setItem('dueDateSort',"0");
+				}
+				globalData.getData1();
+			})
+
+		}
+	}
+	$(document).ready(function() {
+		//初始化
+		sessionStorage.setItem('faceValue_id', '');
+		sessionStorage.setItem('remainingDays_id', '');
+		sessionStorage.setItem('flaw_id', '');
+		sessionStorage.setItem('credit_id', '');
+		sessionStorage.setItem('faceValueMax', '');
+		sessionStorage.setItem('faceValueMin', '');
+		sessionStorage.setItem('daysMin', '');
+		sessionStorage.setItem('daysMax', '');
+		sessionStorage.setItem('createTimeSort', '');
+		sessionStorage.setItem('cpNo',"");
+		sessionStorage.setItem('acceptor',"");
+		sessionStorage.setItem('cpStatus',"");
+		sessionStorage.setItem('startDate',"");
+		sessionStorage.setItem('endDate',"");
+		//sessionStorage.clear();
+		globalData.init();
+	});
+	function colorLine1(id) {
+		var faceValue_id = "";
+		sessionStorage.setItem('faceValueMax', '');
+		sessionStorage.setItem('faceValueMin', '');
+		if (id !== "") {
+			faceValue_id = id;
+			if ($("#" + id).css("background-color") == "rgb(145, 166, 242)") {
+				$("#" + id).css("background-color", "white");
+				faceValue_id = "";
+				$("#faceValueMin").val('');
+				$("#faceValueMax").val('');
+				//sessionStorage.setItem('faceValue_id','');
+
+			} else {
+				$("#divGroup1 div").css("background-color", "white");//别的div变成白色
+				$("#" + id).css("background-color", "#91a6f2");//被点击的变蓝色
+				$("#faceValueMin").val('');
+				$("#faceValueMax").val('');
+				if (id == "underThound") {
+					$("#faceValueMax").val(10);
+					sessionStorage.setItem('faceValueMin', $("#faceValueMin").val()==""?"":$("#faceValueMin").val()*10000);
+					sessionStorage.setItem('faceValueMax', $("#faceValueMax").val()==""?"":$("#faceValueMax").val()*10000-0.000000001);
+					
+				}
+				if (id == "thoundToOneMillion") {
+					$("#faceValueMax").val(100);
+					$("#faceValueMin").val(10);
+					sessionStorage.setItem('faceValueMin', $("#faceValueMin").val()==""?"":$("#faceValueMin").val()*10000);
+					sessionStorage.setItem('faceValueMax', $("#faceValueMax").val()==""?"":$("#faceValueMax").val()*10000);
+				}
+				if (id == "moreOneMillion") {
+					$("#faceValueMin").val(100);
+					sessionStorage.setItem('faceValueMin', $("#faceValueMin").val()==""?"":$("#faceValueMin").val()*10000+0.000000001);
+					sessionStorage.setItem('faceValueMax', $("#faceValueMax").val()==""?"":$("#faceValueMax").val()*10000);
+				}
+				if (id == "moreFiveMillion") {
+					$("#faceValueMin").val(500);
+					sessionStorage.setItem('faceValueMin', $("#faceValueMin").val()==""?"":$("#faceValueMin").val()*10000+0.000000001);
+					sessionStorage.setItem('faceValueMax', $("#faceValueMax").val()==""?"":$("#faceValueMax").val()*10000);
+				}
+
+			}
+		}
+		sessionStorage.setItem('faceValue_id', faceValue_id);
+		//var data = $.zSearchFn1(obj);
+		//console.log("****************" + data);
+		globalData.getData1();
+		//alert(id);
+		// console.log("line1----"+sessionStorage.getItem('faceValue_id'));
+		//console.log("line2----"+sessionStorage.getItem('remainingDays_id'));
+		// console.log("line3----"+sessionStorage.getItem('flaw_id'));
+
+	}
+
+	function colorLine2(id) {
+		var remainingDays_id = id;
+		sessionStorage.setItem('daysMin', '');
+		sessionStorage.setItem('daysMax', '');
+		if ($("#" + id).css("background-color") == "rgb(145, 166, 242)") {
+			$("#" + id).css("background-color", "white");
+			remainingDays_id = "";
+			$("#daysMin").val('');
+			$("#daysMax").val('');
+
+		} else {
+			$("#divGroup2 div").css("background-color", "white");//别的div变成白色
+			$("#" + id).css("background-color", "#91a6f2");//被点击的变蓝色
+			$("#daysMin").val('');
+			$("#daysMax").val('');
+			if (id == "lessThanNinety") {
+				$("#daysMax").val(89);
+				sessionStorage.setItem('daysMin', $("#daysMin").val());
+				sessionStorage.setItem('daysMax', $("#daysMax").val());
+			}
+			if (id == "ninetyToHundredEighty") {
+				$("#daysMin").val(90);
+				$("#daysMax").val(180);
+				sessionStorage.setItem('daysMin', $("#daysMin").val());
+				sessionStorage.setItem('daysMax', $("#daysMax").val());
+			}
+			if (id == "hundredEightyToThreeHundredsixty") {
+				$("#daysMin").val(180);
+				$("#daysMax").val(360);
+				sessionStorage.setItem('daysMin', $("#daysMin").val());
+				sessionStorage.setItem('daysMax', $("#daysMax").val());
+			}
+
+		}
+		sessionStorage.setItem('remainingDays_id', remainingDays_id);
+		globalData.getData1();
+	}
+
+	function colorLine3(id) {
+		var flaw_id = id;
+		if ($("#" + id).css("background-color") == "rgb(145, 166, 242)") {
+			$("#" + id).css("background-color", "white");
+			flaw_id = "";
+
+		} else {
+			$("#divGroup3 div").css("background-color", "white");//别的div变成白色
+			$("#" + id).css("background-color", "#91a6f2");//被点击的变蓝色
+
+		}
+		if(flaw_id=="Y"){
+			flaw_id='1';
+		}else if(flaw_id=="N"){
+			flaw_id='0';
+		}
+		sessionStorage.setItem('flaw_id', flaw_id);
+		globalData.getData1();
+	}
+	function colorLine4(id) {
+		var credit_id = id;
+		if ($("#" + id).css("background-color") == "rgb(145, 166, 242)") {
+			$("#" + id).css("background-color", "white");
+			credit_id = "";
+		} else {
+			$("#divGroup4 div").css("background-color", "white");//别的div变成白色
+			$("#" + id).css("background-color", "#91a6f2");//被点击的变蓝色
+
+		}
+		if(credit_id=="excellent"){
+			credit_id='1';
+		}else if(credit_id=="well"){
+			credit_id='2';
+		}else if(credit_id=="ordinary"){
+			credit_id='3';
+		}
+		sessionStorage.setItem('credit_id', credit_id);
+		globalData.getData1();
+	}
+
+    function colorLine5(id,_ele) {
+        var cpStatus = id;
+        if ($(_ele).css("background-color") == "rgb(145, 166, 242)") {
+            $(_ele).css("background-color", "white");
+            cpStatus="";
+        } else {
+            $("#divGroup5 div").css("background-color", "white");//别的div变成白色
+            $(_ele).css("background-color", "#91a6f2");//被点击的变蓝色
+
+        }
+
+        sessionStorage.setItem('cpStatus', cpStatus);
+        globalData.getData1();
+    }
+	function findLineOne() {
+		if(!compare("faceValueMin","faceValueMax")){
+			return;
+		}
+		sessionStorage.setItem('faceValue_id', '');
+		$("#divGroup1 div").css("background-color", "white");
+		sessionStorage.setItem('faceValueMin', $("#faceValueMin").val()==""?"":$("#faceValueMin").val()*10000);
+		sessionStorage.setItem('faceValueMax', $("#faceValueMax").val()==""?"":$("#faceValueMax").val()*10000);
+		globalData.getData1();
+	}
+
+	function findLineTwo() {
+		if(!compare("daysMin","daysMax")){
+			return;
+		}
+		sessionStorage.setItem('remainingDays_id', '');
+		$("#divGroup2 div").css("background-color", "white");
+		sessionStorage.setItem('daysMin', $("#daysMin").val());
+		sessionStorage.setItem('daysMax', $("#daysMax").val());
+		globalData.getData1();
+	}
+	//输入框校验
+	function  regText(id){
+        var reg=/^\+?[1-9][0-9]*$/;
+        if(!(reg.test($("#"+id).val()))&&$("#"+id).val()!=""){
+            $("#"+id).val("");
+            $("#"+id).focus();
+            return;
+        }else if(reg.test($("#"+id).val())&&$("#"+id).val()<0){
+            $("#"+id).val("");
+            $("#"+id).focus();
+            return;
+        }
+        
+    }
+	function compare(minId,maxId){
+		var result=true;
+        if($("#"+minId).val()!=""&&$("#"+maxId).val()!=""){
+            if($("#"+minId).val()>$("#"+maxId).val()){
+                $("#"+minId).val("");
+                $("#"+maxId).val("");
+                $("#"+minId).focus();
+                result=false ;
+            }
+        }
+        return result;
+    }
+	//倒计时总秒数量
+	
+	function findLineSix(){
+
+		sessionStorage.setItem('cpNo', $("#cpNo").val());
+		globalData.getData1();
+	}
+	function findLineSeven(){
+		sessionStorage.setItem('acceptor', $("#acceptor1").val());
+		globalData.getData1();
+	}
+	function findLineEight(){
+		
+
+		sessionStorage.setItem('startDate', $("#startDate").val());
+		sessionStorage.setItem('endDate', $("#endDate").val());
+		globalData.getData1();
+	}
+   
+        
+    
+</script>

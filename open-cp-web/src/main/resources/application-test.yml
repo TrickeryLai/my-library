@@ -1,0 +1,13 @@
+
+spring:
+  application:
+    name: open-cp-web
+  cloud:
+    consul:
+      host: 10.24.32.232
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+        prefer-ip-address: true
+        health-check-path: ${server.context-path}/health
+        instance-id: ${spring.application.name}-${spring.cloud.client.ipAddress}

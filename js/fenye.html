@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>fengye</title>
+	<style type="text/css">
+		.arrow{
+			width: 0;
+			border-top: 5px solid green;
+			border-bottom: 5px solid transparent;
+			border-left: 5px solid transparent;
+			border-right: 5px solid transparent;
+		}
+	</style>
+</head>
+<body>
+	<div class="arrow"></div>
+	<div id = 'pagination'>
+		
+	</div>
+</body>
+
+<script type="text/javascript">
+	var data = [{
+		id: 1
+	},{
+		id:2
+	},{
+		id:3
+	},{
+		id:4
+	},{
+		id:5
+	},{
+		id:6
+	}];
+
+	var params = {
+		el: 'pagination',
+		data: data,
+		pageSize: 1,
+		pageNum: 1,
+		showItem: 5,//最多显示多少个
+		callback: function(data){
+
+		}
+	}
+
+	function Fengye(params){
+		this.params = params;
+
+		this.init();
+	}	
+
+	Fengye.prototype = {
+		init: function(){
+			this.initDom();
+			this.event()
+		},
+		event: function(){
+			console.log(document.getElementsByClassName('p-c-btn'));
+
+			Array.prototype.forEach.call(document.getElementsByClassName('p-c-btn'), function(item){
+				console.log(item)
+				item.addEventListener('click',this.btnPageChange)
+			}.bind(this))
+		},
+		btnPageChange: function(e){
+			console.log(e.)
+			var target = e.target, dataType = target.getAttribute('data-type');
+			if(dataType == 'prev'){
+				this.params.pageSize -= 1;
+				this.changePageN(this.params.pageSize);
+			}
+
+			if(dataType == 'next'){
+				this.params.pageSize += 1;
+				this.changePageN(this.params.pageSize);
+			}
+
+			if(dataType == 'next'){
+				this.params.pageSize = target.innerTEXT;
+				this.changePageN(this.params.pageSize);
+			}
+		},
+		changePageN: function(pageN){
+			this.params.pageN = pageN;
+			this.initDom();
+		},
+		getData: function(){
+			var pageSize, pageNum, data, currentData;
+
+			pageSize = this.params.pageSize;
+			pageNum = this.params.pageNum;
+			data = this.params.data;
+
+			currentData = data.slice(pageNum * (pageSize -1), pageNum*pageSize);
+
+			return currentData;
+		},
+		initDom: function(){
+			var data = this.params.data, len = data.length, pageSize = this.params.pageSize, pageNum = this.params.pageNum, totalPageSize = Math.ceil(len/pageSize);
+
+			var str = '';
+
+			if(pageNum == 1){
+				str += '<span class="p-c-btn" style="padding: 5px 8px;border:1px solid #ccc;margin-right:5px;opacity: .5;" data-used= "disabled" data-type="prev"><</span>';
+			}else{
+				str += '<span class="p-c-btn" style="padding: 5px 8px;border:1px solid #ccc;margin-right:5px;" data-type="prev"><</span>';
+			}
+
+			for(var i = 1; i < totalPageSize + 1; i++){
+				if(i == pageNum){
+					str += '<span class="p-c-btn" style="padding: 5px 8px;border:1px solid #541454;background: #541454;color: #fff;" data-type="change">'+i+'</span>';
+				}else{
+					str += '<span class="p-c-btn" data-type="change" style="padding: 5px 8px;border:1px solid #ccc;">'+i+'</span>';
+				}
+			}
+
+			if(pageNum == totalPageSize){
+				str += '<span class="p-c-btn" data-type="next" style="padding: 5px 8px;border:1px solid #ccc;margin-left:5px;opacity: .5;" data-used= "disabled">></span>';
+			}else{
+				str += '<span class="p-c-btn" data-type="next" style="padding: 5px 8px;border:1px solid #ccc;margin-left:5px;">></span>';
+			}
+
+			document.getElementById(this.params.el).innerHTML = str;
+
+			this.params.callback.call(null,this.getData());
+		},
+	}
+
+	new Fengye({
+		el: 'pagination',
+		data: data,
+		pageSize: 1,
+		pageNum: 1,
+		showItem: 5,//最多显示多少个
+		callback: function(data){
+			console.log(data)
+		}
+	})
+
+</script>
+</html>

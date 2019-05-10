@@ -1,0 +1,435 @@
+<!-- 模板引擎动态生成整体数据，主要为国际化语言服务 -->
+<meta http-equiv="pragma" content="no-cache" />
+<script id="globalData_coreMainEdit" type="text/html">
+<div id="globalData">
+
+    <div id='avatarBox' style="display: none;"></div>
+
+    <div id='treeBox' class="tree" style="overflow: auto;">
+      
+    </div>
+    
+    <div style="background: #fff;width: 100%;">
+    <!-- 详情框 -->
+      <div id="dataView" style="display: block;overflow: hidden;width: 50%;margin: 0 auto">
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{companyName}}:</label>
+                  <div class="col-md-8" >
+                      <input type="text" class="form-control field" name="companyName" placeholder="{{companyName}} " value="" disabled='disabled' />
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{organizationCode}}:</label>
+                  <div class="col-md-8" >
+                      <input type="text" class="form-control field" name="organizationCode" placeholder="{{organizationCode}} " value="" disabled='disabled' />
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{legalPerson}}:</label>
+                  <div class="col-md-8" >
+                      <input type="text" class="form-control field" name="legalPerson" placeholder="{{legalPerson}} " value=""  /> 
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{contactPhone}}:</label>
+                  <div class="col-md-8" >
+                      <input type="text" class="form-control field" name="contactPhone" placeholder="{{contactPhone}} " value="" />
+                  </div>
+              </div>
+          </div>
+
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{contactEmail}}:</label>
+                  <div class="col-md-8" >
+                      <input type="text" class="form-control field" name="contactEmail" placeholder="{{contactEmail}} " value=""  />
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{registerCapital}}:</label>
+                  <div class="col-md-8" >
+                      <input type="text" class="form-control field" name="registerCapital" placeholder="{{registerCapital}} " value=""  />
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{registerDate}}:</label>
+                  <div class="col-md-8" >
+                      <input type="text" class="form-control field" id="registerDate" name="registerDate" placeholder="{{registerDate}} " value=""  />
+                  </div>
+              </div>
+          </div>
+
+          <!-- 人员规模-->
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{personnelScale}}:</label>
+                  <div class="col-md-8" >
+                      <select id="personnelScale" name="personnelScale" class="form-control field"></select>
+                  </div>
+              </div>
+          </div>
+
+          <!-- 企业类型（国标） -->
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{enterpriseTypeChn}}:</label>
+                  <div class="col-md-8" >
+                      <!-- <input type="text" class="form-control field" name="enterpriseTypeChn" placeholder="{{enterpriseTypeChn}} " value="" disabled='disabled' /> -->
+                         <select id="enterpriseTypeChn" name="enterpriseTypeChn" class="form-control field"></select>
+                  </div>
+              </div>
+          </div>
+
+           <!-- 企业类型（银监） -->
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{enterpriseTypeBank}}:</label>
+                  <div class="col-md-8" >
+                     <!-- <input type="text" class="form-control field" name="enterpriseTypeBank" placeholder="{{enterpriseTypeBank}} " value="" disabled='disabled' /> -->
+                     <select id="enterpriseTypeBank" name="enterpriseTypeBank" class="form-control field"></select>
+                  </div>
+              </div>
+          </div>
+
+          <!-- 行业 -->
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{industry}}:</label>
+                  <div class="col-md-8" >
+                     <!--  <input type="text" class="form-control field" name="industry" placeholder="{{industry}} " value="" disabled='disabled' /> -->
+ 					<select id="industry" name="industry" class="form-control field"></select>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{registerProvince}}:</label>
+                  <div class="col-md-8" >
+                   <select id="province" name="registerProvince" class="form-control field" onchange="globalData.loadCity(this.value)"></select>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{registerCity}}:</label>
+                  <div class="col-md-8" >
+                     <select id="city" name="registerCity" class="form-control field" onchange="globalData.loadRegion(this.value)"></select>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{registerRegion}}:</label>
+                  <div class="col-md-8" >
+					<select id="region" name="registerRegion" class="form-control field" ></select>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{registerAddress}}:</label>
+                  <div class="col-md-8" >
+                      <textarea name="registerAddress"  style="width: 560px;"  class="form-control field" cols="30" rows="2"  placeholder="{{registerAddress}}"   value=""/> 
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{businessScope}}:</label>
+                  <div class="col-md-8" >
+                      <textarea name="businessScope"  style="width: 560px;"  class="form-control field" cols="30" rows="2"  placeholder="{{businessScope}}"   value=""/> 
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{incomeSource}}:</label>
+                  <div class="col-md-8" >
+                      <textarea name="incomeSource"  style="width: 560px;"  class="form-control field" cols="30" rows="2"  placeholder="{{incomeSource}}"   value=""/> 
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-4 control-label ">{{otherMemo}}:</label>
+                  <div class="col-md-8" >
+                      <textarea name="otherMemo"  style="width: 560px;"  class="form-control field" cols="30" rows="2"  placeholder="{{otherMemo}}"   value=""/> 
+                  </div>
+              </div>
+          </div>
+
+
+
+          <div class="col-md-12" style="margin:20px 0 30px 0;">
+              <div class="form-group">
+                  <div class="col-md-12">
+                      <div style="width:203px;margin: 0 auto">
+                        <span id="confirmBtn" class="btn btn-primary pull-left fa fa-check"> {{coreMainedit}}</span>
+                    </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+</div>
+</script>
+
+<script>
+//定义全局对象
+var globalData={
+  init:function(){
+    //生成整体数据，主要为国际化语言服务
+    $('#main').prepend(template('globalData_coreMainEdit',$.dataLanguage()));
+
+
+    $('#zCheck').off().on('click','li',checkAll).removeClass('active');
+   // this.getOrg(globalData.data);
+   // this.getRole(globalData.data);
+   // alert(common_data.user)
+   // alert(common_data.user.userId);
+    //调用所有事件
+    this.event();
+    this.getglobalDataDetail(common_data.user.userId)
+     debugger;
+    $.zCompositeData(common_params['rbac']['status'],'[name="status"]',true);
+    // $.zCompositeData(common_params['rbac']['sex'],'[name="sex"]',true);
+    // $.zCompositeData(common_params['rbac']['userType'],'[name="userType"]',true);
+    //填充验证
+    $.zCommonReg(reg.email,'[name="email"]');
+    $.zCommonReg(reg.phonenumber,'[name="phonenumber"]');
+
+    $.zSpecialData(common_params['rbac']['sex'],'#dataView [name="sex"]');
+
+    $.inputReg('[name="phonenumber"]','keyup','number')
+
+    for(var i=1;i<7;i++){
+      $('#avatarBox').append('<img src="../assets/images/avatar/avatar_0'+i+'.jpg" />')
+    }
+    
+    // 调用日期插件
+    laydate.render({
+        elem: '#registerDate',
+        lang:$.getLayDateLang(),
+    });
+
+
+  },
+
+  //定义全局请求参数对象
+  data:{
+    pageNum:1,
+    pageSize:10
+  },
+
+  //回显数据,同时可用于区分新增和（详情修改）的区别
+  getglobalDataDetail:function(_id){
+    //如果_id有效，则是详情或者修改
+    if(_id){
+      $.zAjax({
+        url: project.host()+'/v1/coreMainTain' ,
+        isString:false,
+        success: function(data) {
+        	console.log(data);
+          $('#dataView').find('.field').each(function(){
+            var key=$(this).attr('name');
+            $(this).val(data[key]);
+          });
+          //回显下拉列表框的数据
+          //加载字典表对应的类型数据
+          globalData.loadDictTypeData(data.industry,data.enterpriseTypeChn,data.enterpriseTypeBank,data.personnelScale);
+        //加载省市区
+          globalData.loadProvince("100000",data.registerProvince,data.registerCity,data.registerRegion);
+          
+          $('#orgTreeSelect>.choice').html(data.orgName);
+          $('#orgTreeSelect').next('input[type="hidden"]').val(data.orgId);
+          var list=data.roleIds?data.roleIds.split(','):[];
+          list.forEach(function(n,i){
+            $('#zCheck [roleid='+n+']').click();
+          });
+
+          $('#zCheck').off('click').addClass('active');
+        }
+      });
+    }
+  },
+
+  event:function(){
+
+    $('#confirmBtn').click(function(argument) {
+    	alert(1231)
+        $.zAjax({
+            url: project.host()+'/v1/coreMainTain' ,
+            isString:false,
+            success: function(data) {
+            	console.log(data);
+              $('#dataView').find('.field').each(function(){
+                var key=$(this).attr('name');
+                $(this).val(data[key]);
+              });
+              
+              $('#orgTreeSelect>.choice').html(data.orgName);
+              $('#orgTreeSelect').next('input[type="hidden"]').val(data.orgId);
+              var list=data.roleIds?data.roleIds.split(','):[];
+              list.forEach(function(n,i){
+                $('#zCheck [roleid='+n+']').click();
+              });
+
+              $('#zCheck').off('click').addClass('active');
+            }
+          });
+    });
+},
+//加载省
+loadProvince:function(value1,value2,value3,value4){
+	//加载省份
+	  $.zAjax({
+	      url: project.host()+'/v1/areas/levelThree?parentId='+value1, 
+	      isString:false,
+	      type:'GET',
+	      success: function(data) {
+	  		  var str="<option value=''>"+"===请选择省份==="+"</option>':'";
+	  		  data.forEach(function(n,i){
+	  			  if(n.id == value2) {
+	  				  str+="<option selected='selected' value="+n.id+">"+n.name+"</option>";
+	  			  }else {
+	  				str+="<option value="+n.id+">"+n.name+"</option>";
+	  			  }
+	  		  });
+	  		  $('#province').html(str);
+	  		  globalData.loadCity($('#province').val(),value3,value4);
+//	  		  globalData.loadRegion($('#city').val());
+	      }
+	   });
+ },
+
+//加载市
+loadCity:function(value1,value2,value3){
+	  var str="<option value=''>"+"===请选择市==="+"</option>':'";
+	  //加载市
+    $.zAjax({
+        url: project.host()+'/v1/areas/levelThree?parentId='+value1, 
+        isString:false,
+        type:'GET',
+        success: function(data) {
+	  		  data.forEach(function(n,i){
+	  			  if(n.id == value2) {
+	  				  str+="<option selected='selected' value="+n.id+">"+n.name+"</option>";
+	  			  }else {
+	  				  str+="<option value="+n.id+">"+n.name+"</option>";
+	  			  }
+	  		  });
+	  		  $('#city').html(str);
+	  		  globalData.loadRegion($('#city').val(),value3);
+        }
+     });
+	},
+
+  //加载区
+	loadRegion:function(value1,value2){
+		  var str="<option value=''>"+"===请选择区==="+"</option>':'";
+		  //加载区
+	      $.zAjax({
+	          url: project.host()+'/v1/areas/levelThree?parentId='+value1, 
+	          isString:false,
+	          type:'GET',
+	          success: function(data) {
+		  		  data.forEach(function(n,i){
+		  			  if(n.id == value2) {
+		  				  str+="<option selected='selected' value="+n.id+">"+n.name+"</option>";
+		  			  }else {
+		  				  str+="<option value="+n.id+">"+n.name+"</option>";
+		  			  }
+		  		  });
+		  		  $('#region').html(str);
+	          }
+	       });
+	  },
+	
+	loadDictTypeData:function(industry,enterpriseTypeChn,enterpriseTypeBank,personnelScale){
+		debugger;
+		  var str="<option value=''>"+"===请选择==="+"</option>':'";
+		  var str1 = str+"";
+		  var str2 = str+"";
+		  var str3 = str+"";
+		  var str4 = str+"";
+		  
+	      $.zAjax({
+	          url: project.host()+'/v1/dictDatas/queryAll', 
+	          isString:false,
+	          type:'GET',
+	          data:{pageNum:1,pageSize:1500},
+	          success: function(data) {
+	        	  
+	        	  data.forEach(function(n,i){
+	        		  
+			  			if(n.dictType=='001') {
+			  				if(n.dictLabel==industry) {
+			    				str1+="<option selected='selected' value="+n.dictLabel+">"+n.dictValue+"</option>";
+			    			}else{
+			    				str1+="<option value="+n.dictLabel+">"+n.dictValue+"</option>";
+			    			}
+				    	}
+			    		if(n.dictType=='002') {
+			    			if(n.dictLabel==enterpriseTypeChn) {
+			    				str2+="<option selected='selected' value="+n.dictLabel+">"+n.dictValue+"</option>";
+			    			}else{
+			    				str2+="<option value="+n.dictLabel+">"+n.dictValue+"</option>";
+			    			}
+				    	}
+			    		if(n.dictType=='003') {
+			    			if(n.dictLabel==enterpriseTypeBank) {
+			    				str3+="<option selected='selected' value="+n.dictLabel+">"+n.dictValue+"</option>";
+			    			}else{
+			    				str3+="<option value="+n.dictLabel+">"+n.dictValue+"</option>";
+			    			}
+			    		}
+			    		if(n.dictType=='004') {
+			    			if(n.dictLabel==personnelScale) {
+			    				str4+="<option selected='selected' value="+n.dictLabel+">"+n.dictValue+"</option>";
+			    			}else{
+			    				str4+="<option value="+n.dictLabel+">"+n.dictValue+"</option>";
+			    			}
+			    		}
+			  	  });
+			  	  //所属行业
+		    	  $('#industry').html(str1);
+		    	  //企业类型/国标
+		    	  $('#enterpriseTypeChn').html(str2);
+		    	  //企业类型/银监
+		    	  $('#enterpriseTypeBank').html(str3);
+		    	  //人员规模
+		    	  $('#personnelScale').html(str4);
+	          }
+	       });
+	  },
+}
+$(document).ready(function() {
+  //初始化
+    globalData.init();
+});
+
+</script>

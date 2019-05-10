@@ -1,0 +1,563 @@
+<!-- 模板引擎动态生成整体数据，主要为国际化语言服务 -->
+<script id="globalData_role" type="text/html">
+  <div id="globalData">
+      <!-- 详情框 -->
+      <div id="dataView" style="width: 850px;height: 600px;">
+          <div class="col-md-6">
+              <div class="form-group">
+                  <label class="col-md-4 control-label required">{{roleName}}： </label>
+                  <div class="col-md-8">
+                      <input  maxlength="30" type="text" class="form-control field" name="roleName" placeholder="{{roleName}} " value=""/>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-6 common_status">
+              <div class="form-group">
+                  <label class="col-md-4 control-label required">{{status}}：</label>
+                  <div class="col-md-8">
+                      <input class="zSwitch form-control field"  name="status" type="checkbox"  />
+                  </div>
+              </div>
+          </div>
+
+    
+          <div class="col-md-6">
+              <div class="form-group">
+                  <label class="col-md-4 control-label">{{remark}}： </label>
+                  <div class="col-md-8">
+                      <input type="text" class="form-control field" name="remark" placeholder="{{remark}}" value=""/>
+                  </div>
+              </div>
+          </div>
+		<input type="hidden" class="field" name="topOrgId">         
+		<div class="col-md-6">
+              <div class="form-group">
+                  <label class="col-md-4 control-label required">{{orgName}}： </label>
+                  <div class="col-md-8">
+                      <input  maxlength="30" type="text" class="form-control field fieldReadOnly" name="orgName" placeholder="{{orgName}} " value=""/>
+					  <input type="hidden" class="field" name="orgId" class="form-control">                  
+				  </div>
+              </div>
+          </div>
+
+          <div class="col-md-6 common_details">
+              <div class="form-group">
+                  <label class="col-md-4 control-label">{{createTime}}：</label>
+                  <div class="col-md-8">
+                      <input  class="form-control field" name="createTime"  value=""/>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-6 common_details">
+              <div class="form-group">
+                  <label class="col-md-4 control-label">{{createBy}}：</label>
+                  <div class="col-md-8">
+                      <input  class="form-control field" name="createBy"  value=""/>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-6 common_details">
+              <div class="form-group">
+                  <label class="col-md-4 control-label">{{updateTime}}：</label>
+                  <div class="col-md-8">
+                      <input  class="form-control field" name="updateTime"  value=""/>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-6 common_details">
+              <div class="form-group">
+                  <label class="col-md-4 control-label">{{updateBy}}：</label>
+                  <div class="col-md-8">
+                      <input  class="form-control field" name="updateBy"  value=""/>
+                  </div>
+              </div>
+          </div>
+
+
+
+          <div class="col-md-12">
+              <div class="form-group">
+                  <label class="col-md-2 control-label required">{{menuIds}}：</label>
+                  <div class="col-md-10">
+                      <!-- <input type="text" class="form-control field" name="menuIds" placeholder="菜单id " value=""/> -->
+
+                      <div id='menuTree' class="form-control field tree" name="menuIds" 
+                      style="height: 400px;">
+                          
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+
+
+      </div>
+      <!-- 搜索框，数据展示，分页 -->
+      <div class="page-wrap">
+
+          <div class="row" id='tablebox'  >
+              <div class="col-lg-12">
+                  <div class="panel panel-lined table-responsive mb30 ng-scope">
+                      <!-- 搜索框 -->
+                      <div class="panel-body" style="padding-bottom: 0px" id='searchData'>
+                          <div class="col-md-4">
+                              <div class="form-group">
+                                  <label class="col-md-4 control-label">{{roleName}}</label>
+                                  <div class="col-md-8">
+                                      <input type="text" class="form-control field" name="roleName" placeholder="{{roleName}}" value=""/>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-md-4">
+                              <div class="form-group">
+                                  <label class="col-md-4 control-label">{{status}}</label>
+                                  <div class="col-md-8">
+                                      <select name="status" class="form-control field">
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-md-3">
+                              <div class="form-group">
+                                  <div class="col-md-12">
+                                      <div style="width:185px;">
+                                        <span id="searchBtn" class="btn btn-primary pull-left fa fa-search">{{search}}</span>
+                                        <span id="resetBtn" class="btn btn-warning pull-right fa fa-refresh">{{reset}}</span>
+                                    </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+
+                      
+                      <div style="padding: 0 20px;" class="panel-body">
+                        
+                        <!-- 批量删除 -->
+                          <span class="btn btn-sm btn-danger pull-right fa fa-trash-o hoverBtn" id='batchDel' name='批量删除'
+                          btnType='remove'></span>
+                          <!-- 导出 -->
+                          <span class="btn btn-sm btn-primary pull-right fa fa-download hoverBtn" id='Downexcels' name='导出'
+                            btnType='export'></span>
+                            <!-- 新增 -->
+                          <span class="btn btn-sm btn-success pull-right globalData-add fa fa-plus hoverBtn" name='新增'
+                          btnType='add'></span>
+                      </div>
+                      <div class="panel-body">
+                          <table class="table table-bordered table-striped zCheckBox">
+                              <thead class="thead">
+                              <tr>
+                                  <th><span class="zCBox zCheckAll"></span></th>
+                                  <th>{{roleId}}</th>
+								  <th>{{orgName}}</th>
+                                  <th>{{roleName}}</th>
+                                  <th>{{createBy}}</th>
+                                  <th>{{status}}</th>
+                                  <th>{{createTime}}</th>
+                                  <th>{{remark}}</th>
+                                  <th>{{operation}}</th>
+                              </tr>
+                              </thead>
+                              <tbody id="globalDataTbody">
+                              <tr>
+                                  <td colspan="20" style="text-align: center;">{{loading}}</td>
+                              </tr>
+                              </tbody>
+                          </table>
+                      <!-- #end data table -->
+                      <!-- 分页 -->
+                      <div class="page">
+                          <div class="pager_container" id="Pagination">
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</script>
+</div>
+<!-- 模板引擎动态生成表格数据 -->
+<script id="globalDataList_role" type="text/html">
+{{if list && list.length > 0 }}
+{{each list as value i}}
+<tr _id="{{value.roleId}}">
+  <td><span class="zCBox"></span></td>
+  <td>{{value.roleId}}</td>
+  <td>{{value.orgName}}</td>
+  <td>{{value.roleName}}</td>
+  <td>{{value.createBy}}</td>
+  <td>{{value.status | statusFormat}}</td>
+  <td>{{value.createTime}}</td>
+  <td>{{value.remark}}</td>
+  <td style="min-width: 100px;">
+    <span class="btn btn-sm btn-warning editBtn fa fa-edit hoverBtn" name='编辑' btnType='edit'></span>
+    <span class="btn btn-sm btn-info detailBtn fa fa-tags hoverBtn" name='详情' btnType='list'></span>
+    <span class="btn btn-sm btn-danger delBtn fa fa-trash-o hoverBtn" name='删除' btnType='remove'></span>
+
+  </td>
+</tr>
+{{/each}}
+{{else}}
+<tr>
+  <td colspan="17" style="text-align: center;">{{1 | noData}}</td>
+</tr>
+{{/if}}
+</script>
+<script>
+//定义全局对象
+var globalData={
+  name:{
+    zh_cn:'角色',en_us:'Role',zh_cht:'角色'
+  },
+
+  detailStr:function(){
+    return this['name'][lang.getLang()] + lang.getData('list');
+  },
+
+  editStr:function(){
+    return lang.getData('edit') + this['name'][lang.getLang()] ;
+
+  },
+
+  addStr:function(){
+    return lang.getData('add') + this['name'][lang.getLang()] ;
+  },
+
+  delStr:function(name){
+    return lang.getData('delStr');
+  },
+
+
+  init:function(){
+    //生成整体数据，主要为国际化语言服务
+    $('#main').prepend(template('globalData_role',$.dataLanguage()));
+
+    //页面初始化默认请求表格数据
+    this.getData(globalData.data);
+    //调用所有事件
+    this.event();
+
+    this.getMenuTree();
+
+    $.zCompositeData(common_params['rbac']['status'],'#searchData [name="status"]',true);
+
+  },
+
+  //定义全局请求参数对象
+  data:{
+    pageNum:1,
+    pageSize:10
+  },
+
+  treeFn:function(){
+    $(this).toggleClass('active');
+    $(this).closest('div').find('.errMsgSpan').remove();
+    var li=$(this).next('.treemenu').find('li');
+    if($(this).hasClass('active')){
+      var a=$(this).closest('.treemenu').prev('a.treeA').addClass('active')
+      a.closest('.treemenu').prev('a.treeA').addClass('active')
+      li.each(function(){
+          $(this).find('.treeA').addClass('active');
+      });
+    }else{
+      li.each(function(){
+          $ (this).find('.treeA').removeClass('active');
+      });
+    }
+  },
+
+
+  getMenuTree:function(orgId){
+	  var param;
+	  if(typeof(orgId) == 'undefined' || orgId == null || orgId == '') {
+		  param = "";
+	  } else {
+		  param="/?orgId="+orgId;
+	  }
+	  
+	    $.zAjax({
+	      url: project.host()+'/v1/menus/menuTreeData'+param ,
+	      // data:data,
+	      isString:false,
+	      async:false,
+	      success: function(data) {
+
+	        var html=new treeMenu(data).init({
+	            treeType:'menuTree',
+	            pIdKey:'pId',
+	            pIdInit:'0',
+	        });
+	        $('#menuTree').html(html);
+	        $("#menuTree>ul").treemenu({delay:400}).openActive();
+	           
+	       }
+	    });
+
+	  },
+
+  //请求表格数据的函数，参数data
+  getData:function(data){
+    $.zAjax({
+      url: project.host()+'/v1/roles' ,
+      data:data,
+      isString:false,
+      success: function(data) {
+            var list=data;
+            var total = list.pageInfo.total;
+            /**
+            * 调用分页方法
+            * @param obj.page    分页元素
+            * @param obj.url     接口
+            * @param obj.tp      模板元素
+            * @param obj.ele     填充数据元素
+            * @param obj.data    请求参数
+            * @param obj.list    请求返回数据
+            */
+            $.zPageMethod({
+              page:'#Pagination',
+              url:project.host()+'/v1/roles' ,
+              tp:'globalDataList_role',
+              ele:'#globalDataTbody',
+              total:total,
+              data:globalData.data,
+              list:list
+            });
+       }
+    });
+  },
+
+  //回显数据,同时可用于区分新增和（详情修改）的区别
+  getglobalDataDetail:function(_id,ele,view,slef){
+    $('#menuTree [_id]').removeClass('active');
+    $('.tree-opened').removeClass().addClass('tree-closed');
+    $('#menuTree .treemenu').hide();
+    $('#menuTree>.treemenu').show();
+    $(ele).find('.field').val('');
+    //菜单树点击效果
+    $('#menuTree').off().on('click','a.treeA',globalData.treeFn);
+    
+    //当前角色
+    debugger;
+	//当前角色所属部门
+		$.zAjax({
+			type: 'POST',
+	        dataType: "json", 
+			type: 'POST',
+            url: project.host()+'/v1/orgs/getCurrentRoleOrg',
+            isString:true,
+            data: {
+            	currentRole: sessionStorage.getItem('currentRoleId')
+            },
+            success: function(data) {
+            	debugger;
+            	//var menuList=JSON.parse(data);
+            	sessionStorage.setItem('currentRoleOrg',JSON.stringify(data));
+            	//common_data.menu = data;
+            }
+        });	
+    var currentRoleOrg=JSON.parse(sessionStorage.getItem('currentRoleOrg'));
+    debugger;
+    
+    
+    //如果_id有效，则是详情或者修改
+    if(_id){
+      $.zAjax({
+        url: project.host()+'/v1/roles/'+_id ,
+        isString:false,
+        success: function(data) {
+        	debugger;
+          $(ele).find('.field').each(function(){
+            var key=$(this).attr('name');
+            $(this).val(data[key]);
+
+            if(key == 'status'){
+                if(data[key] == '0') {
+                    $(this).prop("checked",true);
+                }else{
+                    $(this).prop("checked",false);
+                }
+            }
+
+
+          });
+          
+          globalData.getMenuTree(data.orgId);
+          
+          var list=data.menuIds?data.menuIds.split(','):[];
+          list.forEach(function(n,i){
+            // console.log(n)
+            $('#menuTree [_id='+n+']').addClass('active');
+          });
+
+          if($(slef).hasClass('detailBtn')){
+              $('#menuTree').off('click');
+          }
+          
+          $('[name="orgName"]').attr('readonly');
+          //$('[name="orgName"]').val(currentRoleOrg.orgName);
+          //$('[name="orgName"]').next('input[type="hidden"]').val(currentRoleOrg.orgId);
+          view();
+        }
+      });
+    }
+    //否则是新增
+    else{
+    	$('[name="orgName"]').attr('readonly');
+        $('[name="orgName"]').val(currentRoleOrg.orgName);
+        $('[name="orgName"]').next('input[type="hidden"]').val(currentRoleOrg.orgId);
+        
+        globalData.getMenuTree(currentRoleOrg.orgId);
+        
+      view();
+        
+    }
+  },
+
+  //详情，新增，修改
+  updateView:function(title,slef,DelName){
+    //获取当前ID，如果是新增，则没有ID
+    var _id=$(slef).closest('tr').attr("_id");
+
+    //如果角色点击的是删除
+    if(DelName && typeof DelName  == 'string'){
+      layer.confirm(globalData.delStr(DelName),function(){
+        $.zAjax({
+          url: project.host()+'/v1/roles/'+_id,
+          type:'DELETE',
+          isString:false,
+          success: function(data) {
+            layer.closeAll();
+              layer.msg(lang.getData('delSuccess'),{icon:1});
+              globalData.getData(globalData.data);      
+          }
+        });
+      })
+      return;
+    }
+    
+    /**
+   * 集合新增，修改，详情的方法
+   * @param1    需展示的title
+   * @param2    当前按钮本身
+   * @param3    当前数据id
+   * @param4    需要验证以及回显数据的表单
+   * @param5    回显数据方法
+   * @param7    新增，修改，详情的回调
+   */
+    $.zUpdateView(title,slef,_id,'#dataView',globalData.getglobalDataDetail,{
+      //新增的回调,同时将传回通过校验的对象参数
+      add:function(data){
+        // console.log(data)
+        // return
+        $.zAjax({
+          url: project.host()+'/v1/roles' , 
+          isString:true,
+          type:'post',
+          data:data,
+          success: function(data) {
+            layer.closeAll();
+            layer.msg(lang.getData('addSuccess'),{icon:1});
+            globalData.getData(globalData.data);
+          }
+        });
+      },
+      //编辑的回调,同时将传回通过校验的对象参数
+      edit:function(data){
+        // console.log(data)
+        // return
+          
+          data['topOrgId']=$('[name="topOrgId"]').val();;
+
+        $.zAjax({
+          url: project.host()+'/v1/roles/'+_id , 
+          isString:true,
+          data:data,
+          type:'PUT',
+          success: function(data) {
+            layer.closeAll();
+            layer.msg(lang.getData('editSuccess'),{icon:1});
+            globalData.getData(globalData.data);
+          }
+        });
+      },
+      //详情的回调
+      detail:function(){
+      }
+    });
+    
+    
+    $('[name="orgName"]').attr('disabled','disabled');
+    
+    
+  },
+
+  event:function(){
+
+    //导出excels
+    $('#Downexcels').click(function(){
+      $.downFile({
+        url:'roles'
+      });  
+    })
+
+
+    //状态选择
+    $('#dataView [name="status"]').click(function(){
+        if($(this).prop("checked")){
+            $(this).val('0');
+        }else{
+            $(this).val('1');
+        }
+    });
+
+    //批量删除
+    $('#batchDel').click(function(){
+      $.batchDel('roles',{nameIndex:2});
+        
+    });
+
+    //搜索按钮事件
+    $('#searchBtn').click(function(){
+      var data=$.zSearchFn(globalData.data,'#searchData .field');
+      globalData.getData(data);
+    });
+
+    //重置按钮事件
+    $('#resetBtn').click(function(){
+      var data=$.zResetFn(globalData.data,'#searchData .field');
+      globalData.getData(data)
+    });
+
+    //新增按钮事件
+    $('.globalData-add').click(function(){
+      globalData.updateView(globalData.addStr(),this);
+    });
+
+    //详情，修改，删除按钮的事件
+    $('#globalDataTbody').on('click','.btn',function(){
+      if($(this).hasClass('detailBtn')){
+        globalData.updateView(globalData.detailStr(),this);
+      }
+      if($(this).hasClass('editBtn')){
+        globalData.updateView(globalData.editStr(),this);
+      }
+      if($(this).hasClass('delBtn')){
+        var name=$(this).closest('tr').find('td:eq(2)').html();
+        globalData.updateView(globalData.delStr(),this,name);
+      }
+
+    });
+
+  }
+}
+$(document).ready(function() {
+  //初始化
+    globalData.init();
+});
+
+</script>

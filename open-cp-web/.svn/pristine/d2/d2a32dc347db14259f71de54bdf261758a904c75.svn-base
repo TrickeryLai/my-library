@@ -1,0 +1,1260 @@
+<!-- 左侧机构数 -->
+<style type="text/css">
+    .orgbox{
+        width: 0px;
+        float: left;
+        background-color: #fff;
+
+        position: absolute;
+        top: 0px;
+        bottom: 45px;
+        z-index: 2;
+        overflow: hidden;
+
+    }
+    .orgbox.show{
+        width: 200px;
+        border: 1px solid #eee;
+    }
+    .orgbox>p{
+        width: 100%;
+        line-height: 50px;
+        text-align: center;
+        font-size: 20px;
+    }
+
+    #tablebox{
+        float: right;
+        -o-transition: all 0.2s ease;
+        -ms-transition: all 0.2s ease;
+        -moz-transition: all 0.2s ease;
+        -webkit-transition: all 0.2s ease;
+        position: absolute;
+        bottom: 0;
+        left:0px;
+        right: 15px;
+        top:0;
+        height: 100%;
+        overflow: auto;
+    }
+
+    #tablebox.add{
+        left:15px;
+
+    }
+</style>
+
+<!-- 模板引擎动态生成整体数据，主要为国际化语言服务 -->
+<script id="globalData_account" type="text/html">
+ <meta http-equiv="pragma" content="no-cache"  />
+    <ul id="myTab" class="nav nav-tabs">
+        <li id="tab1" onclick="changeTab(1)"><a data-toggle="tab">提现银行账户信息</a></li>
+       <li id="tab2" onclick="changeTab(2)"><a data-toggle="tab">签收账户信息</a></li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+
+      <!-- 第一个tab页内容 开始-->
+        <div class="tabpane fade in active" id="tab1_content">
+            <div id="globalData1">
+                <div style="background: #fff;width: 100%;">
+        <!-- 详情框 -->
+        <div id="dataView" style="min-height: 450px;">
+			<div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{accountNo}}：</label>
+                    <div class="col-md-8">
+                        <input maxlength="30" type="text" class="form-control field" name="accountNo" placeholder="{{accountNo}} " value=""/>
+                    </div>
+                </div>
+            </div>
+			<div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{largeAccountNo}}：</label>
+                    <div class="col-md-8">
+                        <input maxlength="30" type="text" class="form-control field" name="largeAccountNo" placeholder="{{largeAccountNo}} " value=""/>
+                    </div>
+                </div>
+            </div>
+			<div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required" >{{accountType}}：</label>
+                    <div class="col-md-8">
+                        <div name="accountType" class=" field" type='specialInput'></div>
+                    </div>
+                </div>
+            </div>
+            
+		<div class="col-md-6">
+              <div class="form-group">
+                  <label class="col-md-4 control-label required">{{bankId}}：</label>
+                  <div class="col-md-8" >
+                   <select id="bank" name="bankId" class="form-control field"></select>
+                  </div>
+              </div>
+          </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{bankSubbranch}}：</label>
+                    <div class="col-md-8">
+                        <input maxlength="30" type="text" class="form-control field" name="bankSubbranch" placeholder="{{bankSubbranch}} " value=""/>
+                    </div>
+                </div>
+            </div>
+			<div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{status}}：</label>
+                    <div class="col-md-8">
+                        <div name="status" class=" field" type='specialInput'></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label class="col-md-4 control-label required">{{bankProvince}}：</label>
+                  <div class="col-md-8" >
+                   <select id="province" name="bankProvince" class="form-control field" onchange="globalData1.loadCity(this.value)"></select>
+                  </div>
+              </div>
+          </div>
+		<div class="col-md-6">
+              <div class="form-group">
+                  <label class="col-md-4 control-label required">{{bankCity}}：</label>
+                  <div class="col-md-8" >
+                   <select id="city" name="bankCity" class="form-control field" ></select>
+                  </div>
+              </div>
+        </div>
+ </div>
+        <!-- 搜索框，数据展示，分页 -->
+        <div class="page-wrap">
+
+            <div class="row" id='tablebox'  >
+                <div class="col-lg-12">
+                    <div class="panel panel-lined table-responsive mb30 ng-scope">
+                        <!-- 搜索框 -->
+                        <div class="panel-body" style="padding-bottom: 0px" id='searchData'>
+
+                           
+                            
+                            
+                        </div>
+
+
+
+                        <div style="padding: 0 20px;" class="panel-body">
+
+                            <!-- 批量删除 
+                            <span class="btn btn-sm btn-danger pull-right fa fa-trash-o hoverBtn" id='batchDel' name='批量删除'
+                                  btnType='remove'></span>-->
+                            <!-- 导出 -->
+                            <span class="btn btn-sm btn-primary pull-right fa fa-download hoverBtn" id='Downexcels' name='导出'
+                                  btnType='export'></span>
+                            <!-- 新增 -->
+                            <span class="btn btn-sm btn-success pull-right globalData1-add fa fa-plus hoverBtn" name='新增'
+                                  btnType='add'></span>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-bordered table-striped zCheckBox">
+                                <thead class="thead">
+                                <tr>
+                                    <th>{{accountNo}}</th>
+                                    <th>{{accountType}}</th>
+                                    <th>{{bankName}}</th>
+                                    <th>{{bankSubbranch}}</th>
+                                    <th>{{status}}</th>
+                                    <th>{{operation}}</th>
+                                </tr>
+                                </thead>
+                                <tbody id="globalDataTbody1">
+                                <tr>
+                                    <td colspan="20" style="text-align: center;">{{loading}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!-- #end data table -->
+                            <!-- 分页 
+                            <div class="page">
+                                <div class="pager_container" id="Pagination1">
+                                </div>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+   </div>
+ </div>
+<!-- 第二个tab页内容 开始-->
+        <div class="tabpane fade in active" id="tab2_content">
+            <div id="globalData2">
+                <div style="background: #fff;width: 100%;">
+        <!-- 详情框 -->
+        <div id="dataViewRe" style="min-height: 450px; display: block;width:1000px" class="layui-layer-wrap">
+			<div class="col-md-6 ">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{accountNo}}：</label>
+                    <div class="col-md-8">
+                        <input maxlength="30" type="text" class="form-control field " name="accountNo" placeholder="{{accountNo}} " value=""/>
+                    </div>
+                </div>
+            </div>
+			<div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{largeAccountNo}}：</label>
+                    <div class="col-md-8">
+                        <input maxlength="30" type="text" class="form-control field " name="largeAccountNo" placeholder="{{largeAccountNo}} " value=""/>
+                    </div>
+                </div>
+            </div>
+			<div class="col-md-6" id="accountInput">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{accountType}}：</label>
+                    <div class="col-md-8">
+                        <div name="accountType" class=" field" type='specialInput'></div>
+                    </div>
+                </div>
+            </div>
+            
+		<div class="col-md-6">
+              <div class="form-group">
+                  <label class="col-md-4 control-label required">{{bankId}}：</label>
+                  <div class="col-md-8" >
+                   <select id="bank1" name="bankId" class="form-control field "></select>
+                  </div>
+              </div>
+          </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{bankSubbranch}}：</label>
+                    <div class="col-md-8">
+                        <input maxlength="30" type="text" class="form-control field " name="bankSubbranch" placeholder="{{bankSubbranch}} " value=""/>
+                    </div>
+                </div>
+            </div>
+			<div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{status}}：</label>
+                    <div class="col-md-8">
+                        <div name="status" class=" field " type='specialInput'></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label class="col-md-4 control-label required">{{bankProvince}}：</label>
+                  <div class="col-md-8" >
+                   <select id="province1" name="bankProvince" class="form-control field " onchange="globalData2.loadCity1(this.value)"></select>
+                  </div>
+              </div>
+          </div>
+		<div class="col-md-6">
+              <div class="form-group">
+                  <label class="col-md-4 control-label required">{{bankCity}}：</label>
+                  <div class="col-md-8" >
+                   <select id="city1" name="bankCity" class="form-control field " ></select>
+                  </div>
+              </div>
+        </div>
+ </div>
+        <!-- 搜索框，数据展示，分页 -->
+        <div class="page-wrap">
+
+            <div class="row" id='tablebox1'  >
+                <div class="col-lg-12">
+                    <div class="panel panel-lined table-responsive mb30 ng-scope">
+                        <!-- 搜索框 -->
+                        <div class="panel-body" style="padding-bottom: 0px" id='searchData1'>
+
+                           
+                            
+                            
+                        </div>
+
+
+
+                        <div style="padding: 0 20px;" class="panel-body">
+
+                            <!-- 批量删除 
+                            <span class="btn btn-sm btn-danger pull-right fa fa-trash-o hoverBtn" id='batchDel1' name='批量删除'
+                                  btnType='remove'></span>-->
+                            <!-- 导出 -->
+                            <span class="btn btn-sm btn-primary pull-right fa fa-download hoverBtn" id='Downexcels1' name='导出'
+                                  btnType='export'></span>
+                            <!-- 新增 -->
+                            <span onclick="globalData2Add(this);" class="btn btn-sm btn-success pull-right globalData2-add fa fa-plus hoverBtn" name='新增'
+                                  btnType='add'></span>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-bordered table-striped zCheckBox">
+                                <thead class="thead">
+                                <tr>
+                                    <th>{{accountNo}}</th>
+                                    <th>{{accountType}}</th>
+                                    <th>{{bankName}}</th>
+                                    <th>{{bankSubbranch}}</th>
+                                    <th>{{status}}</th>
+                                    <th>{{operation}}</th>
+                                </tr>
+                                </thead>
+                                <tbody id="globalDataTbody2">
+                                <tr>
+                                    <td colspan="20" style="text-align: center;">{{loading}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!-- #end data table -->
+                            <!-- 分页 
+                            <div class="page">
+                                <div class="pager_container" id="Pagination2">
+                                </div>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+   </div>
+ </div>
+ </div>
+</script>
+
+<!-- 模板引擎动态生成表格数据 -->
+<script id="globalDataList_AccountList1" type="text/html">
+    {{if list && list.length > 0 }}
+    {{each list as value i}}
+    <tr _id="{{value.accountId}}">
+        <td>{{value.accountNo}}</td>
+        <td>{{value.accountType | accountType1}}</td>
+        <td>{{value.bankName}}</td>
+        <td>{{value.bankSubbranch}}</td>
+        <td>{{value.status | status2}}</td>
+        <td style="min-width: 200px;">
+            <span class="btn btn-sm btn-warning editBtn fa fa-edit hoverBtn" name='编辑' btnType='edit'></span>
+            <span class="btn btn-sm btn-info detailBtn fa fa-tags hoverBtn" name='详情' btnType='list'></span>
+            <span class="btn btn-sm btn-danger delBtn fa fa-trash-o hoverBtn" name='删除' btnType='remove'></span>
+			<span class="btn btn-sm btn-primary" name='设置为签收账户' onclick = "changeAccountType({{value.accountId}},2)">设置为签收账户</span>
+        </td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr>
+        <td colspan="17" style="text-align: center;">{{1 | noData}}</td>
+    </tr>
+    {{/if}}
+</script>
+
+
+<script id="globalDataList_AccountList2" type="text/html">
+       {{if list && list.length > 0 }}
+    {{each list as value i}}
+    <tr _id="{{value.accountId}}">
+        <td>{{value.accountNo}}</td>
+        <td>{{value.accountType | accountType1}}</td>
+        <td>{{value.bankName}}</td>
+        <td>{{value.bankSubbranch}}</td>
+        <td>{{value.status | status2}}</td>
+        <td style="min-width: 200px;">
+            <span  onclick="editAccountInfo({{value.accountId}},this)" class="btn btn-sm btn-warning editBtn fa fa-edit hoverBtn" name='编辑' btnType='edit'></span>
+            <span  onclick="detailAccountInfo({{value.accountId}},this)" class="btn btn-sm btn-info  detailBtn fa fa-tags hoverBtn" name='详情' btnType='list'></span>
+            <span onclick="deleteAccountInfo({{value.accountId}},this)" class="btn btn-sm btn-danger delBtn fa fa-trash-o hoverBtn" name='删除' btnType='remove'></span>
+			<span class="btn btn-sm btn-primary" name='设置为提现账户' onclick = "changeAccountType({{value.accountId}},1)">设置为提现账户</span>
+        </td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr>
+        <td colspan="17" style="text-align: center;">{{1 | noData}}</td>
+    </tr>
+    {{/if}}
+</script>
+<script>
+
+function changeAccountType(accountId,accountType){
+	//alert(accountId+"====="+accountType);
+	var data={};
+	data = $.extend(data,{"accountType":accountType},{"accountId":accountId});
+	if(1==1){
+		 $.zAjax({
+             url: project.host()+'/v1/companyAccount/copyAccount',
+             isString:true,
+             data:data,
+             type:'post',
+             success: function(data) {
+            	 //console.log("修改accuntType"+data.errMsg);
+                layer.closeAll();
+                 layer.msg(data.errMsg); 
+                 //globalData1.getData(globalData1.data);
+             }
+         });
+	}
+}
+
+var accountID;
+function editAccountInfo(id,_ele){
+	//accountID=id;
+	//$('#accountInput').css("display:block");
+	
+	globalData2.updateView(globalData2.editStr(),_ele);
+}
+
+function detailAccountInfo(id,_ele){
+	//accountID=id;
+	//console.log("ele----->"+_ele);
+	 globalData2.updateView(globalData2.detailStr(),_ele);
+	 //alert(globalData2.detailStr());
+	//$(this).addClass("detailBtn");
+	
+	 
+}
+
+function deleteAccountInfo(id,_ele){
+	//accountID=id;
+	//var name="确认删除该条记录？";
+	globalData2.updateView(globalData2.editStr(),_ele,name);
+	
+}
+
+function globalData2Add(_ele){
+	//alert(accountID);
+	 globalData2.updateView(globalData2.addStr(),_ele);
+	 //$('#accountInput').css("display:block");
+     //$('[name="accountType"]').hide();
+     //$('[name="accountTypeLabel"]').hide();
+     $('[name="empty"]').show();
+     $('[name="accountNo"]').removeAttr("disabled");
+     $('[name="largeAccountNo"]').removeAttr("disabled");
+     $('[name="accountType"]').removeAttr("disabled");
+     $('[name="bankId"]').removeAttr("disabled");
+     $('[name="bankSubbranch"]').removeAttr("disabled");
+     $('[name="status"]').removeAttr("disabled");
+     $('[name="status"]').removeAttr("disabled");
+     $('[name="bankProvince"]').removeAttr("disabled");
+     $('[name="bankCity"]').removeAttr("disabled");
+     
+     
+     
+     
+     
+     //$('#dataViewRe .field','#dataViewRe .field').removeAttr("disabled");
+     //加载省市区
+     globalData2.loadProvince1("100000");
+     //加载字典表对应的类型数据
+     //globalData2.loadDictTypeData();
+     globalData2.loadBankName1();
+}
+	
+    //定义tab1全局对象
+    var globalData1={
+        name:{
+            zh_cn:'对公账户',en_us:'AccountNo',zh_cht:'对公账户'
+        },
+
+        detailStr:function(){
+            // return this['name'][lang.getLang()] +'详情&nbsp;<span class="red">只可查看，不可编辑！<span>';
+            return this['name'][lang.getLang()] + lang.getData('list');
+        },
+
+        editStr:function(){
+            // return this['name'][lang.getLang()]+'修改&nbsp;<span class="red">含*的都是必填项！<span>';
+            return lang.getData('edit') + this['name'][lang.getLang()] ;
+
+        },
+
+        addStr:function(){
+            // return this['name'][lang.getLang()]+'新增&nbsp;<span class="red">含*的都是必填项！<span>';
+            return lang.getData('add') + this['name'][lang.getLang()] ;
+        },
+
+
+        delStr:function(name){
+            // return '确认删除该'+ this['name'][lang.getLang()] +':<span class="green">'+name+'</span>?&nbsp;&nbsp;<span class="red">请谨慎操作！</span>';
+
+            return lang.getData('delStr');
+        },
+
+
+        init:function(){
+            //生成整体数据，主要为国际化语言服务
+            $('#main').prepend(template('globalData_account',$.dataLanguage()));
+
+            //页面初始化默认请求表格数据
+            this.getData(globalData1.data);
+            //调用所有事件
+            this.event();
+
+            //this.getOrg(globalData.data);
+           // this.getRole(globalData.data);
+            //填充共同参数
+            //$.zCompositeData(common_params['rbac']['userStatus'],'#searchData [name="status"]',true);
+            // $.zCompositeData(common_params['rbac'].sex,'[name="sex"]',true);
+            // $.zCompositeData(common_params['rbac'].userType,'[name="userType"]',true);
+
+            //填充特殊共同参数
+            $.zSpecialData(common_params['rbac']['status2'],'#dataView [name="status"]');
+            $.zSpecialData(common_params['rbac']['accountType'],'#dataView [name="accountType"]');
+            //$.zSpecialData(common_params['rbac']['sex'],'#dataView [name="sex"]');
+            //$.zSpecialData(common_params['rbac']['userType'],'#dataView [name="userType"]');
+
+
+            //填充验证
+            //$.zCommonReg(reg.email,'#dataView [name="email"]');
+            //$.zCommonReg(reg.phonenumber,'#dataView [name="phonenumber"]');
+            //$.zCommonReg(reg.password,'#dataView [name="password"]');
+
+            // $.inputReg('[name="phonenumber"]','keyup','number')
+
+            // 调用日期插件
+            //laydate.render({
+             //   elem: '#startTime',
+             //   lang:$.getLayDateLang(),
+            //});
+
+
+        },
+      //加载省
+        loadProvince:function(value1,value2,value3,value4,slef) {
+      	//加载省份
+      	  $.zAjax({
+      	      url: project.host()+'/v1/areas/levelThree?parentId='+value1, 
+      	      isString:false,
+      	      type:'GET',
+      	      success: function(data) {
+      		  
+      		  	  var str="";
+      		  	  
+      			  if($(slef).hasClass('detailBtn')){
+      				  str="<option  value=''>"+""+"</option>";
+      	           }else {
+      	        	   str="<option value=''>"+"==请选择省=="+"</option>";
+      	           }
+      			  
+      	  		  data.forEach(function(n,i){
+      	  			  if(n.id == value2) {
+      	  				  str+="<option selected='selected' value="+n.id+">"+n.name+"</option>";
+      	  			  }else {
+      	  				str+="<option value="+n.id+">"+n.name+"</option>";
+      	  			  }
+      	  		  });
+      	  		  $('#province').html(str);
+      	  		  globalData1.loadCity($('#province').val(),value3,value4,slef);
+      	      }
+      	   });
+         },
+        
+        //加载市
+        loadCity:function(value1,value2,value3,slef){
+      	  //加载市
+            $.zAjax({
+                url: project.host()+'/v1/areas/levelThree?parentId='+value1, 
+                isString:false,
+                type:'GET',
+                success: function(data) {
+
+      		  	  var str="";
+      		  	  
+      			  if($(slef).hasClass('detailBtn')){
+      				  str="<option  value=''>"+""+"</option>";
+      	           }else {
+      	        	   str="<option value=''>"+"==请选择市=="+"</option>";
+      	           }
+      			  
+      	  		  data.forEach(function(n,i){
+      	  			  if(n.id == value2) {
+      	  				  str+="<option selected='selected' value="+n.id+">"+n.name+"</option>";
+      	  			  }else {
+      	  				  str+="<option value="+n.id+">"+n.name+"</option>";
+      	  			  }
+      	  		  });
+      	  		  $('#city').html(str);
+      	  		  //globalData1.loadRegion($('#city').val(),value3,slef);
+                }
+             });
+        	},
+        
+          //加载区
+      	
+      	
+      	  
+      	loadBankName:function(value1,slef){
+      		 $.zAjax({
+     	          url: project.host()+'/v1/companyAccount/queryAllBank', 
+     	          isString:false,
+     	          type:'GET',
+     	          data:{pageNum:1,pageSize:1500},
+     	        	 success: function(data) {
+     	        		 
+     	        		 
+     			  	  var str="";
+     			  	  
+     				  if($(slef).hasClass('detailBtn')){
+     					 str="<option  value=''>"+""+"</option>";
+     		           }else {	
+     		        	   str="<option value=''>"+"==请选择银行=="+"</option>";
+     		           }
+     	    	  
+     		  		  data.forEach(function(n,i){
+     		  			 if(n.bankId == value1) {
+     		  				 	str+="<option selected='selected' value="+n.bankId+">"+n.bankName+"</option>";
+     		  			  }else {
+     		  				  str+="<option value="+n.bankId+">"+n.bankName+"</option>";
+     		  			 }
+     		  		  });
+     		  		  $('#bank').html(str);
+     	          }
+     	       });
+     	  },
+
+        //定义全局请求参数对象
+        data:{
+            pageNum:1,
+            pageSize:10000
+        },
+
+        
+
+        
+
+        //请求表格数据的函数，参数data
+        getData:function(data){
+        	data = $.extend(data,{"accountType":"1"});
+            $.zAjax({
+                url: project.host()+'/v1/companyAccount',
+                type : 'post',
+                data:data,
+                isString:false,
+                success: function(data) {
+                    var list=data;
+                    //console.log(list);
+                    var total = list.pageInfo.total;
+                    /**
+                     * 调用分页方法
+                     * @param obj.page    分页元素
+                     * @param obj.url     接口
+                     * @param obj.tp      模板元素
+                     * @param obj.ele     填充数据元素
+                     * @param obj.data    请求参数
+                     * @param obj.list    请求返回数据
+                     */
+                    $.zPageMethod1({
+                        page:'#Pagination1',
+                        url:project.host()+'/v1/companyAccount' ,
+                        tp:'globalDataList_AccountList1',
+                        ele:'#globalDataTbody1',
+                        total:total,
+                        data:globalData1.data,
+                        list:list
+                    });
+                    
+                }
+            });
+        },
+
+        //回显数据,同时可用于区分新增和（详情修改）的区别
+        getglobalDataDetail:function(_id,ele,view,slef){
+            $('#passwordConent').hide();
+            $('#zCheck li').removeClass('zCheck');
+            $('.zRadioBox').removeClass('active');
+            $(ele).find('.field').val('');
+            //如果_id有效，则是详情或者修改
+            $('#zCheck').off().on('click','li',checkAll).removeClass('active');
+            if(_id){
+                $.zAjax({
+                    url: project.host()+'/v1/companyAccount/'+_id ,
+                    isString:false,
+                    success: function(data) {
+                    	//console.log("xiangqing=========="+data);
+                        $(ele).find('.field').each(function(){
+                            var key=$(this).attr('name');
+                            $(this).val(data[key]);
+                            if(key == 'accountType' || key == 'status'){
+                                $('[name='+key+'] .zRadioBox[value='+data[key]+']').addClass('active');
+                                
+                            }
+                            if(key == 'accountType'){
+                            	$('[name='+key+']').after('<span class="maskSpan"></span>');
+                            }
+                            
+                        });
+
+
+                        $('[name="orgId"]').attr('disabled','disabled').val(data.orgName);
+                        $('[name="orgId"]').next('input[type="hidden"]').val(data.orgId);
+                        var list=data.roleIds?data.roleIds.split(','):[];
+                        list.forEach(function(n,i){
+                            $('#zCheck [roleid='+n+']').click();
+                        });
+                        if($(slef).hasClass('detailBtn')){
+                            $('#zCheck').off('click').addClass('active');
+                        }
+                        
+                        if($(slef).hasClass('detailBtn')){
+                            $('#zCheck').off('click').addClass('active');
+                        }
+                        
+                        
+                        //$('[name="accountNo"]').attr('disabled','disabled');
+                        
+                      //加载省市区
+                        globalData1.loadProvince("100000",data.bankProvince,data.bankCity,data.bankRegion,slef);
+                        
+                        globalData1.loadBankName(data.bankId,slef);
+                        
+                        view();
+                    }
+               
+                });
+            }
+            //否则是新增
+            else{
+                $('#roleIdsP').show();
+                $('#passwordConent').show();
+                $('[name="orgId"]').val('').removeAttr('disabled');
+                $('[name="orgId"]').next('input[type="hidden"]').val('');
+                view();
+            }
+
+        },
+
+        //详情，新增，修改
+        updateView:function(title,slef,DelName){
+            //获取当前ID，如果是新增，则没有ID
+            var _id=$(slef).closest('tr').attr("_id");
+			//alert(_id);
+			//title="新增对公账户";
+            //如果用户点击的是删除
+            if(typeof DelName  == 'string'){
+                layer.confirm(globalData1.delStr(DelName),function(){
+                	//alert(globalData1.delStr(DelName));
+                    $.zAjax({
+                        url: project.host()+'/v1/companyAccount/'+_id,
+                        type:'DELETE',
+                        isString:false,
+                        success: function(data) {
+                            layer.closeAll();
+
+                            layer.msg(lang.getData('delSuccess'),{icon:1});
+                            globalData1.getData(globalData1.data);
+                        }
+                    });
+                })
+                return;
+            }
+
+            /**
+             * 集合新增，修改，详情的方法
+             * @param1    需展示的title
+             * @param2    当前按钮本身
+             * @param3    当前数据id
+             * @param4    需要验证以及回显数据的表单
+             * @param5    回显数据方法
+             * @param7    新增，修改，详情的回调
+             */
+            $.zUpdateView(title,slef,_id,'#dataView',globalData1.getglobalDataDetail,{
+                //新增的回调,同时将传回通过校验的对象参数
+                add:function(data){
+                	//console.log("新增数据"+data);
+                    $.zAjax({
+                        url: project.host()+'/v1/companyAccount/insertAccountInfo',
+                        isString:true,
+                        type:'post',
+                        data: data,
+                        success: function(data) {
+                            layer.closeAll();
+                            layer.msg(lang.getData('addSuccess'),{icon:1});
+                            globalData1.getData(globalData1.data);
+                        }
+                    });
+                },
+                //编辑的回调,同时将传回通过校验的对象参数
+                edit:function(data){
+                    $.zAjax({
+                        url: project.host()+'/v1/companyAccount/'+_id ,
+                        isString:true,
+                        data:data,
+                        type:'PUT',
+                        success: function(data) {
+                            layer.closeAll();
+                            layer.msg(lang.getData('editSuccess'),{icon:1});
+                            globalData1.getData(globalData1.data);
+                        }
+                    });
+                },
+                //详情的回调
+                detail:function(){
+                }
+            });
+        },
+
+        event:function(){
+
+
+            //批量删除
+            $('#batchDel').click(function(){
+                $.batchDel('users',{nameIndex:2});
+            })
+
+            //新增按钮事件
+            $('.globalData1-add').click(function(){
+            	 globalData1.updateView(globalData1.addStr(),this);
+                 $('[name="orgCodeDiv"]').hide();
+                 $('[name="empty"]').show();
+                 $('[name="accountNo"]').removeAttr("disabled");
+                 $('[name="largeAccountNo"]').removeAttr("disabled");
+                 $('[name="accountType"]').removeAttr("disabled");
+                 $('[name="bankId"]').removeAttr("disabled");
+                 $('[name="bankSubbranch"]').removeAttr("disabled");
+                 $('[name="status"]').removeAttr("disabled");
+                 $('[name="status"]').removeAttr("disabled");
+                 $('[name="bankProvince"]').removeAttr("disabled");
+                 $('[name="bankCity"]').removeAttr("disabled");
+                 //$('[name="accountNo"]').removeAttr("disabled");
+                 //加载省市区
+                 globalData1.loadProvince("100000");
+                 //加载字典表对应的类型数据
+                 //globalData1.loadDictTypeData();
+                 globalData1.loadBankName();
+            });
+
+            //详情，修改，删除按钮的事件
+            $('#globalDataTbody1').on('click','.btn',function(){
+                var _id=$(this).closest('tr').attr("_id");
+                if($(this).hasClass('detailBtn')){
+                    globalData1.updateView(globalData1.detailStr(),this);
+                }
+                if($(this).hasClass('editBtn')){
+                    globalData1.updateView(globalData1.editStr(),this);
+                }
+                if($(this).hasClass('delBtn')){
+                    var name=$(this).closest('tr').find('td:eq(3)').html();
+                    globalData1.updateView(globalData1.editStr(),this,name);
+                }
+
+                if($(this).hasClass('resetPwdBtn')){
+                    // var name=$(this).closest('tr').find('td:eq(2)').html();
+                    layer.confirm(lang.getData('resetPwdConfirm'),function(){
+                        $.zAjax({
+                            url: project.host()+'/v1/users1/'+_id,
+                            type:'PATCH',
+                            isString:true,
+                            data:{type:'reset'},
+                            success: function(data) {
+                                layer.closeAll();
+                                layer.alert(lang.getData('newPwdToEmail'),{icon:1});
+                                globalData1.getData(globalData1.data);
+                            }
+                        });
+                    })
+                }
+
+            });
+
+        }
+    }
+    
+    
+  //定义tab2全局对象
+var globalData2={
+    		name:{
+                zh_cn:'对公账户',en_us:'AccountNo',zh_cht:'对公账户'
+            },
+
+    detailStr:function(){
+        // return this['name'][lang.getLang()] +'详情&nbsp;<span class="red">只可查看，不可编辑！<span>';
+        return this['name'][lang.getLang()] + lang.getData('list');
+    },
+
+    editStr:function(){
+        // return this['name'][lang.getLang()]+'修改&nbsp;<span class="red">含*的都是必填项！<span>';
+        return lang.getData('edit') + this['name'][lang.getLang()] ;
+
+    },
+
+    addStr:function(){
+        // return this['name'][lang.getLang()]+'新增&nbsp;<span class="red">含*的都是必填项！<span>';
+        return lang.getData('add') + this['name'][lang.getLang()] ;
+    },
+
+
+    delStr:function(name){
+        // return '确认删除该'+ this['name'][lang.getLang()] +':<span class="green">'+name+'</span>?&nbsp;&nbsp;<span class="red">请谨慎操作！</span>';
+
+        return lang.getData('delStr');
+    },
+
+
+    init:function(){
+        //生成整体数据，主要为国际化语言服务
+        //$('#main').prepend(template('globalData_account',$.dataLanguage()));
+		
+        //页面初始化默认请求表格数据
+        this.getData(globalData2.data);
+        //调用所有事件
+        this.event();
+
+        //this.getOrg(globalData.data);
+        // this.getRole(globalData.data);
+        //填充共同参数
+        //$.zCompositeData(common_params['rbac']['userStatus'],'#searchData [name="status"]',true);
+        // $.zCompositeData(common_params['rbac'].sex,'[name="sex"]',true);
+        // $.zCompositeData(common_params['rbac'].userType,'[name="userType"]',true);
+
+        //填充特殊共同参数
+        $.zSpecialData(common_params['rbac']['status2'],'#dataViewRe [name="status"]');
+        $.zSpecialData(common_params['rbac']['accountType'],'#dataViewRe [name="accountType"]');
+        //$.zSpecialData(common_params['rbac']['sex'],'#dataView [name="sex"]');
+        //$.zSpecialData(common_params['rbac']['userType'],'#dataView [name="userType"]');
+
+
+        //填充验证
+        //$.zCommonReg(reg.email,'#dataView [name="email"]');
+        //$.zCommonReg(reg.phonenumber,'#dataView [name="phonenumber"]');
+        //$.zCommonReg(reg.password,'#dataView [name="password"]');
+
+        // $.inputReg('[name="phonenumber"]','keyup','number')
+
+        // 调用日期插件
+        //laydate.render({
+        //   elem: '#startTime',
+        //   lang:$.getLayDateLang(),
+        //});
+
+
+    },
+    //加载省
+    loadProvince1:function(value1,value2,value3,value4,slef) {
+        //加载省份
+        $.zAjax({
+            url: project.host()+'/v1/areas/levelThree?parentId='+value1,
+            isString:false,
+            type:'GET',
+            success: function(data) {
+
+                var str="";
+
+                if($(slef).hasClass('detailBtn')){
+                    str="<option  value=''>"+""+"</option>";
+                }else {
+                    str="<option value=''>"+"==请选择省=="+"</option>";
+                }
+
+                data.forEach(function(n,i){
+                    if(n.id == value2) {
+                        str+="<option selected='selected' value="+n.id+">"+n.name+"</option>";
+                    }else {
+                        str+="<option value="+n.id+">"+n.name+"</option>";
+                    }
+                });
+                $('#province1').html(str);
+                globalData2.loadCity1($('#province1').val(),value3,value4,slef);
+            }
+        });
+    },
+
+    //加载市
+    loadCity1:function(value1,value2,value3,slef){
+        //加载市
+        $.zAjax({
+            url: project.host()+'/v1/areas/levelThree?parentId='+value1,
+            isString:false,
+            type:'GET',
+            success: function(data) {
+
+                var str="";
+
+                if($(slef).hasClass('detailBtn')){
+                    str="<option  value=''>"+""+"</option>";
+                }else {
+                    str="<option value=''>"+"==请选择市=="+"</option>";
+                }
+
+                data.forEach(function(n,i){
+                    if(n.id == value2) {
+                        str+="<option selected='selected' value="+n.id+">"+n.name+"</option>";
+                    }else {
+                        str+="<option value="+n.id+">"+n.name+"</option>";
+                    }
+                });
+                $('#city1').html(str);
+                //globalData2.loadRegion($('#city').val(),value3,slef);
+            }
+        });
+    },
+
+    //加载区
+
+
+
+    loadBankName1:function(value1,slef){
+        $.zAjax({
+            url: project.host()+'/v1/companyAccount/queryAllBank',
+            isString:false,
+            type:'GET',
+            data:{pageNum:1,pageSize:1500},
+            success: function(data) {
+                //console.log("银行信息"+data);
+                var str="";
+
+                if($(slef).hasClass('detailBtn')){
+                    str="<option  value=''>"+""+"</option>";
+                }else {
+                    str="<option value=''>"+"==请选择银行=="+"</option>";
+                }
+
+                data.forEach(function(n,i){
+                    if(n.bankId == value1) {
+                        str+="<option selected='selected' value="+n.bankId+">"+n.bankName+"</option>";
+                    }else {
+                        str+="<option value="+n.bankId+">"+n.bankName+"</option>";
+                    }
+                });
+                $('#bank1').html(str);
+            }
+        });
+    },
+
+    //定义全局请求参数对象
+    data:{
+        pageNum:1,
+        pageSize:10000
+    },
+
+
+
+
+
+    //请求表格数据的函数，参数data
+    getData:function(data){
+        data = $.extend(data,{"accountType":"2"});
+        $.zAjax({
+            url: project.host()+'/v1/companyAccount',
+            type : 'post',
+            data:data,
+            isString:false,
+            success: function(data) {
+                var list=data;
+                //console.log(list);
+                var total = list.pageInfo.total;
+                /**
+                 * 调用分页方法
+                 * @param obj.page    分页元素
+                 * @param obj.url     接口
+                 * @param obj.tp      模板元素
+                 * @param obj.ele     填充数据元素
+                 * @param obj.data    请求参数
+                 * @param obj.list    请求返回数据
+                 */
+                $.zPageMethod1({
+                    page:'#Pagination2',
+                    url:project.host()+'/v1/companyAccount' ,
+                    tp:'globalDataList_AccountList2',
+                    ele:'#globalDataTbody2',
+                    total:total,
+                    data:globalData2.data,
+                    list:list
+                });
+
+            }
+        });
+    },
+
+    //回显数据,同时可用于区分新增和（详情修改）的区别
+    getglobalDataDetail1:function(_id,ele,view,slef){
+        $('#passwordConent').hide();
+        $('#zCheck li').removeClass('zCheck');
+        $('.zRadioBox').removeClass('active');
+        $(ele).find('.field').val('');
+        //如果_id有效，则是详情或者修改
+        $('#zCheck').off().on('click','li',checkAll).removeClass('active');
+        if(_id){
+            $.zAjax({
+                url: project.host()+'/v1/companyAccount/'+_id ,
+                isString:false,
+                success: function(data) {
+                    //console.log("xiangqing=========="+data.bankProvince);
+                    $(ele).find('.field').each(function(){
+                        var key=$(this).attr('name');
+                        $(this).val(data[key]); 
+                        if(key == 'accountType' || key == 'status'){
+                            $('[name='+key+'] .zRadioBox[value='+data[key]+']').addClass('active');
+                        }
+                        if(key == 'accountType'){
+                        	$('[name='+key+']').after('<span class="maskSpan"></span>');
+                        }
+                        
+                    });
+
+
+                    if($(slef).hasClass('detailBtn')){
+                        $('#zCheck').off('click').addClass('active');
+                    }
+
+                    //accountID=undefined;
+                    //$('[name="accountNo"]').attr('disabled','disabled');
+
+                    //加载省市区
+                    globalData2.loadProvince1("100000",data.bankProvince,data.bankCity,data.bankRegion,slef);
+
+                    globalData2.loadBankName1(data.bankId,slef);
+
+                    view();
+                }
+
+            });
+        }
+        //否则是新增
+        else{
+            $('#roleIdsP').show();
+            $('#passwordConent').show();
+            $('[name="orgId"]').val('').removeAttr('disabled');
+            $('[name="orgId"]').next('input[type="hidden"]').val('');
+            view();
+        }
+
+    },
+
+    //详情，新增，修改
+    updateView:function(title,slef,DelName){
+        //获取当前ID，如果是新增，则没有ID
+        //title="新增对公账户";
+	var _id=$(slef).closest('tr').attr("_id");
+        //如果用户点击的是删除
+        if(typeof DelName  == 'string'){
+            layer.confirm(globalData2.delStr(DelName),function(){
+                $.zAjax({
+                    url: project.host()+'/v1/companyAccount/'+_id,
+                    type:'DELETE',
+                    isString:false,
+                    success: function(data) {
+                        layer.closeAll();
+
+                        layer.msg(lang.getData('delSuccess'),{icon:1});
+                        globalData2.getData(globalData2.data);
+                    }
+                });
+            })
+            return;
+        }
+
+        /**
+         * 集合新增，修改，详情的方法
+         * @param1    需展示的title
+         * @param2    当前按钮本身
+         * @param3    当前数据id
+         * @param4    需要验证以及回显数据的表单
+         * @param5    回显数据方法
+         * @param7    新增，修改，详情的回调
+         */
+        $.zUpdateView(title,slef,_id,'#dataViewRe',globalData2.getglobalDataDetail1,{
+            //新增的回调,同时将传回通过校验的对象参数
+            add:function(data){
+            	 //data = $.extend(data,{"accountType":"2"});
+            	 //console.log("title-----"+title);
+                //console.log("新增2"+data);
+                $.zAjax({
+                    url: project.host()+'/v1/companyAccount/insertAccountInfo',
+                    isString:true,
+                    type:'post',
+                    data: data,
+                    success: function(data) {
+                        layer.closeAll();
+                        layer.msg(lang.getData('addSuccess'),{icon:1});
+                        globalData2.getData(globalData2.data);
+                    }
+                });
+            },
+            //编辑的回调,同时将传回通过校验的对象参数
+            edit:function(data){
+                $.zAjax({
+                    url: project.host()+'/v1/companyAccount/'+_id ,
+                    isString:true,
+                    data:data,
+                    type:'PUT',
+                    success: function(data) {
+                        layer.closeAll();
+                        layer.msg(lang.getData('editSuccess'),{icon:1});
+                        globalData2.getData(globalData2.data);
+                    }
+                });
+            },
+            //详情的回调
+            detail:function(){
+            }
+        });
+    },
+
+    event:function(){
+
+
+        //批量删除
+        $('#batchDel').click(function(){
+            $.batchDel('users',{nameIndex:2});
+        })
+
+		
+        //详情，修改，删除按钮的事件
+      /*    $('#globalDataTbody2').on('click','.btn',function(){
+            var _id=$(this).closest('tr').attr("_id");
+            
+            if($(this).hasClass('detailBtn')){
+                globalData2.updateView(globalData2.detailStr(),this);
+            }
+            if($(this).hasClass('editBtn')){
+               globalData2.updateView(globalData2.editStr(),this);
+            }
+            
+            alert(_id);
+            if($(this).hasClass('delBtn')){ 
+                var name=$(this).closest('tr').find('td:eq(3)').html();
+                globalData2.updateView(globalData2.editStr(),this,name);
+            }
+
+            if($(this).hasClass('resetPwdBtn')){
+                // var name=$(this).closest('tr').find('td:eq(2)').html();
+                layer.confirm(lang.getData('resetPwdConfirm'),function(){
+                    $.zAjax({
+                        url: project.host()+'/v1/users1/'+_id,
+                        type:'PATCH',
+                        isString:true,
+                        data:{type:'reset'},
+                        success: function(data) {
+                            layer.closeAll();
+                            layer.alert(lang.getData('newPwdToEmail'),{icon:1});
+                            globalData2.getData(globalData2.data);
+                        }
+                    });
+                })
+            }
+
+        });  */
+
+    }
+}
+    $(document).ready(function() {
+        //初始化
+        globalData1.init();
+        $('#tab2_content').hide();
+    });
+    function changeTab(_id){
+        if(_id==1){
+            $("#tab1_content").css("display","block");
+            $("#tab2_content").css("display","none");
+            $("#tab2").removeClass("active");
+            $("#tab1").addClass("active");
+           // $('#dataViewRe .field').attr('disabled','disabled');
+            globalData1.getData(globalData1.data);
+
+        }else if(_id==2){
+            $("#tab1_content").css("display","none");
+            $("#tab2_content").css("display","block");
+            $("#tab2_content").addClass("in","active");
+            $("#tab2").addClass("active");
+            $("#tab1").removeClass("active");
+            //$('#dataView .field').attr('disabled','disabled');
+            $('#dataViewRe').css("display","none");
+            globalData2.init();
+
+        }
+    }
+</script>

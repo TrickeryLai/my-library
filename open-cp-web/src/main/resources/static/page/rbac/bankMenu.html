@@ -1,0 +1,736 @@
+<!-- 模板引擎动态生成整体数据，主要为国际化语言服务 -->
+<script id="globalData_bankMenu" type="text/html">
+<div id="globalData">
+
+    <div id='menuTree' class=" tree" 
+                    style="height: 400px;display: none;width: 600px;border: none">
+                        
+    </div>
+
+
+    <!-- 详情框 -->
+    <div id="dataView" style="height: 680px;overflow: auto;width: 580px;">
+        <div class="col-md-12 fieldParent">
+            <div class="form-group">
+                <label class="col-md-4 control-label required">{{parentId}}： </label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control field" name="parentId" placeholder="{{parentId}} " for='for-parentId' value=""/>
+                    <input type="hidden" name="for-parentId" class="form-control">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 fieldParent">
+            <div class="form-group">
+                <label class="col-md-4 control-label required">{{menuType}}： </label>
+                <div class="col-md-8">
+                    <!-- <select name="{{menuType}}" class="form-control field">
+                    </select> -->
+
+                    <div name="menuType" class="field" type='specialInput'></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 fieldParent">
+            <div class="form-group">
+                <label class="col-md-4 control-label required">{{menuName}}： </label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control field" name="menuName" placeholder="{{menuName}} " value=""/>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 fieldParent">
+            <div class="form-group">
+                <label class="col-md-4 control-label required">{{menuName_en_us}}： </label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control field" name="menuName_en_us" placeholder="{{menuName_en_us}} " value=""/>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 fieldParent">
+            <div class="form-group">
+                <label class="col-md-4 control-label">{{menuName_zh_cht}}： </label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control field" name="menuName_zh_cht" placeholder="{{menuName_zh_cht}} " value=""/>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 fieldParent common_status"  >
+            <div class="form-group">
+                <label class="col-md-4 control-label required">{{visible}}：</label>
+                <div class="col-md-8">
+                    <!-- <select name="visible" class="form-control field">
+                    </select> -->
+
+                    <input class="zSwitch form-control field zMenu"  name="visible" type="checkbox" value='1'  />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 fieldParent">
+            <div class="form-group">
+                <label class="col-md-4 control-label required">{{menuOrderNum}}： </label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control field" name="orderNum" placeholder="{{menuOrderNum}}" value=""/>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 fieldParent">
+            <div class="form-group">
+                <label class="col-md-4 control-label required">{{menuUrl}} </label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control field" name="url" placeholder="{{menuUrl}}" value=""/>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 fieldParent">
+            <div class="form-group">
+                <label class="col-md-4 control-label required">{{perms}}： </label>
+                <div class="col-md-8">
+                    <select name="perms" class="form-control field">
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 fieldParent">
+            <div class="form-group">
+                <label class="col-md-4 control-label required">{{icon}}： </label>
+                <div class="col-md-8">
+                    <input type="text" class="form-control field" name="icon" placeholder="{{icon}} " readonly="" value=""/>
+
+                    <div id='iconContent' style="">
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 common_details">
+            <div class="form-group">
+                <label class="col-md-4 control-label">{{createTime}}：</label>
+                <div class="col-md-8">
+                    <input  class="form-control field" name="createTime"  value=""/>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 common_details">
+            <div class="form-group">
+                <label class="col-md-4 control-label">{{createBy}}：</label>
+                <div class="col-md-8">
+                    <input  class="form-control field" name="createBy"  value=""/>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 common_details">
+            <div class="form-group">
+                <label class="col-md-4 control-label">{{updateTime}}：</label>
+                <div class="col-md-8">
+                    <input  class="form-control field" name="updateTime"  value=""/>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 common_details">
+            <div class="form-group">
+                <label class="col-md-4 control-label">{{updateBy}}：</label>
+                <div class="col-md-8">
+                    <input  class="form-control field" name="updateBy"  value=""/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- 搜索框，数据展示，分页 -->
+    <div class="page-wrap">
+
+        <div class="row" id='tablebox'  >
+            <div class="col-lg-12">
+                <div class="panel panel-lined table-responsive mb30 ng-scope">
+                    <!-- 搜索框 -->
+                    <div class="panel-body" style="padding-bottom: 0px" id='searchData'>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">{{menuName}}</label>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control field" name="menuName" placeholder="{{menuName}}" value=""/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label class="col-md-4 control-label">{{visible}}</label>
+                                <div class="col-md-8">
+                                    <select name="visible" class="form-control field">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <div style="width:185px;">
+                                      <span id="searchBtn" class="btn btn-primary pull-left fa fa-search">{{search}}</span>
+                                      <span id="resetBtn" class="btn btn-warning pull-right fa fa-refresh">{{reset}}</span>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    
+                    <div style="padding: 0 20px;" class="panel-body">
+                        <!-- 新增 -->
+                        <span class="btn btn-sm btn-success pull-right globalData-add fa fa-plus hoverBtn" name='新增'
+                         btnType='add'></span>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-bordered table-striped zCheckBox" id="bootstrap-table">
+                            <thead class="thead">
+                            <tr>
+                                <!-- <th><span class="zCBox zCheckAll"></span></th> -->
+                                <th>{{menuName}}</th>
+                                <th>{{menuOrderNum}}</th>
+                                <th>{{menuUrl}}</th>
+                                <th>{{menuType}}</th>
+                                <th>{{visible}}</th>
+                                <th>{{operation}}</th>
+                            </tr>
+                            </thead>
+                            <tbody id="globalDataTbody">
+                            <tr>
+                                <td colspan="20" style="text-align: center;">{{loading}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    <!-- #end data table -->
+                    <!-- 分页 -->
+                    <div class="page">
+                        <div class="pager_container" id="Pagination">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</script>
+
+<script>
+
+
+//定义全局对象
+var globalData={
+  name:{
+    zh_cn:'菜单',en_us:'Menu',zh_cht:'菜单'
+  },
+
+  detailStr:function(){
+    return this['name'][lang.getLang()] + lang.getData('list');
+  },
+
+  editStr:function(){
+    return lang.getData('edit') + this['name'][lang.getLang()] ;
+
+  },
+
+  addStr:function(){
+    return lang.getData('add') + this['name'][lang.getLang()] ;
+  },
+
+  delStr:function(name){
+    return lang.getData('delStr');
+  },
+
+
+
+  init:function(){
+    //生成整体数据，主要为国际化语言服务
+    $('#main').prepend(template('globalData_bankMenu',$.dataLanguage()));
+    $('#iconContent').load('rbac/tpl/icon.html');
+
+    //页面初始化默认请求表格数据
+    this.getData(globalData.options);
+    //调用所有事件
+    this.event();
+    this.getMenuTree();
+
+    $.zSpecialData(common_params['rbac']['menu'],'#dataView [name="menuType"]');
+
+    $.zCompositeData(common_params['rbac']['menuStatus'],'#searchData [name="visible"]',true);
+    $.zCompositeData(common_params['rbac']['menuPerms'],'#dataView [name="perms"]',true);
+
+    $.inputReg('#dataView [name="orderNum"]','keyup','number')
+
+    
+
+  },
+
+
+
+  //定义全局请求参数对象
+  data:{
+  },
+
+  options :{
+    id: "menuId",
+    parentId: "parentId",
+    expandAll: false,
+    url: project.host() + "/v1/bankMenus",
+    modalName: "菜单",
+    columns: [{
+        title: lang.getData('menuName'),
+        field: 'menuName',
+        align: "left",
+        formatter: function(value, row, index) {
+            if (row.icon == null || row == "") {
+                return row.menuName;
+            } else {
+                return '<i class="' + row.icon + '"></i> <span class="nav-label">' + row.menuName + '</span>';
+            }
+        }
+    },
+    {
+        field: 'orderNum',
+        title: lang.getData('orderNum'),
+        align: "center"
+    },
+    {
+        field: 'url',
+        title:  lang.getData('menuUrl'),
+        align: "center",
+        formatter: function(value, row, index) {
+          return value?value:'';
+        }
+    },
+    {
+        title:  lang.getData('menuType'),
+        field: 'menuType',
+        align: "center",
+        formatter: function(value, item, index) {
+            // if (value == 'M') {
+            //     return '<span class="label label-success">目录</span>';
+            // }
+            // else if (item.menuType == 'C') {
+            //     return '<span class="label label-primary">菜单</span>';
+            // }
+            // else if (item.menuType == 'F') {
+            //     return '<span class="label label-warning">按钮</span>';
+            // }
+
+            var str='';
+            common_params['rbac']['menu'].forEach(function(n,i){
+                if(n.value == value)str=n.name1?n.name1[lang.getLang()]:n.name[lang.getLang()];
+            });
+            return str
+        }
+    },
+    {
+        field: 'visible',
+        title: lang.getData('visible'),
+        align: "center",
+        formatter: function(value, row, index) {
+            // return value=='0'?'<span class="badge badge-primary">显示</span>':'<span class="badge badge-danger">隐藏</span>';
+            var str='';
+            common_params['rbac']['menuStatus'].forEach(function(n,i){
+                if(n.value == value)str=n.name1?n.name1[lang.getLang()]:n.name[lang.getLang()];
+            });
+            return str
+        }
+    },
+    {
+        field: 'perms',
+        title: lang.getData('perms'),
+        align: "center",
+        formatter: function(value, row, index) {
+            // return value=='0'?'<span class="badge badge-primary">显示</span>':'<span class="badge badge-danger">隐藏</span>';
+            var str='';
+            common_params['rbac']['menuPerms'].forEach(function(n,i){
+                if(n.value == value)str=n.name1?n.name1[lang.getLang()]:n.name[lang.getLang()];
+            });
+            return str
+        }
+    },
+    {
+        title: lang.getData('operation'),
+        width:'180px',
+        align: "center",
+        formatter: function(value, row, index) {
+            var actions = [];
+            actions.push('<span menuId='+row.menuId+' class="btn btn-sm btn-success globalData-add fa fa-plus hoverBtn" name="新增" btnType="add" onclick="globalData.updateView(this)"></span> ');
+            actions.push('<span menuId='+row.menuId+' class="btn btn-sm btn-warning editBtn fa fa-edit hoverBtn" name="编辑" btnType="edit" onclick="globalData.updateView(this)"></span> ');
+            actions.push('<span menuId='+row.menuId+' class="btn btn-sm btn-info detailBtn fa fa-tags hoverBtn" name="详情" btnType="list" onclick="globalData.updateView(this)"></span> ');
+            actions.push('<span menuId='+row.menuId+' class="btn btn-sm btn-danger delBtn fa fa-trash-o hoverBtn" name="删除"" btnType="remove" onclick="globalData.updateView(this)"></span> ');
+
+            return actions.join('');
+        }
+    }]
+  },
+
+   getMenuTree:function(){
+    $.zAjax({
+      url: project.host()+'/v1/bankMenus/menuTreeData' ,
+      // data:data,
+      isString:false,
+      success: function(data) {
+
+        var html=new treeMenu(data).init({
+            treeType:'menuTree',
+            pIdKey:'pId',
+            pIdInit:'0',
+        });
+        $('#menuTree').html(html);
+        $("#menuTree>ul").treemenu({delay:400}).openActive();
+           
+       }
+    });
+
+  },
+
+  menuTypeFn:function(menuType){
+    
+    if(menuType == 'M'){
+      $('[name="url"]').closest('.fieldParent').hide();
+      $('[name="perms"]').closest('.fieldParent').hide();
+      $('[name="perms"]').closest('.fieldParent').hide();
+      // $('[name="menuName"]').attr('placeholder','目录名称');
+      // $('[name="menuName"]').closest('div').prev('label').html('目录名称：');
+      // $('[name="visible"]').closest('div').prev('label').html('目录状态：');
+
+    }else if(menuType == 'C'){
+      $('[name="icon"]').closest('.fieldParent').hide();
+      $('[name="perms"]').closest('.fieldParent').hide();
+      // $('[name="menuName"]').attr('placeholder','菜单名称');
+      // $('[name="menuName"]').closest('div').prev('label').html('菜单名称：');
+      // $('[name="visible"]').closest('div').prev('label').html('菜单状态：');
+
+    }else if(menuType == 'F'){
+      $('[name="url"]').closest('.fieldParent').hide();
+      $('[name="icon"]').closest('.fieldParent').hide();
+      $('[name="perms"]').closest('.fieldParent').show();
+      // $('[name="menuName"]').attr('placeholder','按钮名称');
+      // $('[name="menuName"]').closest('div').prev('label').html('按钮名称：');
+      // $('[name="visible"]').closest('div').prev('label').html('按钮状态：');
+      
+    }
+  },
+
+  
+
+  //请求表格数据的函数，参数data
+  getData:function(options,data){
+    data=data?data:{};
+    options.url= project.host() + "/v1/bankMenus";
+    var url=http_builder_url(options.url, data);
+    options.url=url;
+    $.treeTable.init(options);
+    // setTimeout(function () {
+    //   $.btnPermissions();
+    // },1000);
+  },
+
+  //回显数据,同时可用于区分新增和（详情修改）的区别
+  getglobalDataDetail:function(_id,ele,view){
+    $(ele).find('.field').val('');
+    $('.zRadioBox').removeClass('active');
+    _id=$.trim(_id);
+    //如果_id有效，则是详情或者修改
+    if(_id){
+      $.zAjax({
+        url: project.host()+'/v1/bankMenus/'+_id ,
+        isString:false,
+        success: function(data) {
+
+            // if(data['menuType'] == 'C' && !$('[name="parentId"]').attr('readonly')){
+            //     $('#dataView [name="perms"]').attr('disabled','disabled').after('<s class="maskS"></s>');
+            // }
+            $(ele).find('.field').each(function(){
+                var key=$(this).attr('name');
+                $(this).val(data[key]);
+
+                if(key == 'visible' && !$('[name="parentId"]').attr('readonly')){
+                    if(data[key] == '0') {
+                        $(this).prop("checked",true);
+                    }else{
+                        $(this).prop("checked",false);
+                    }
+                }
+
+                if(key == 'menuType' && !$('[name="parentId"]').attr('readonly')){
+                    $('[name='+key+'] .zRadioBox[value='+data[key]+']').addClass('active');
+                }
+
+            });
+
+            if($('[name="parentId"]').attr('readonly')){
+              $(ele).find('.field').val('');
+              $('[name="visible"]').prop("checked",true).val('0');
+              $('[name="parentId"]').val(data.menuName);
+              $('[name="parentId"]').next('input[type="hidden"]').val(data.menuId);
+            }else{
+              $('[name="parentId"]').val(data.parentName?data.parentName:lang.getData('null'));
+              $('[name="parentId"]').next('input[type="hidden"]').val(data.parentId);
+            }
+
+
+            $('.fieldParent').show();
+            globalData.menuTypeFn(data.menuType);
+
+            view();
+
+        }
+      });
+    }
+    //否则是新增
+    else{
+      view();
+      // setTimeout(()=>{
+      //   $('.zRadioBox:eq(0)').click();
+      // },100);
+      $('[name="visible"]').prop('checked',true).val('0')
+      $('[name="parentId"]').removeAttr('readonly').val(lang.getData('mainDirectory'));
+      $('[name="parentId"]').next('input[type="hidden"]').val('0');
+      
+    }
+
+  },
+
+  //详情，新增，修改
+  updateView:function(slef){
+    var name=$(slef).attr('name'),title='',DelName;
+    //获取当前ID，如果是新增，则没有ID
+    var _id=$(slef).attr('menuId');
+
+    if(name == '新增' && _id){
+        title=globalData.addStr();
+        $('[name="parentId"]').attr('readonly','readonly');
+    }else if(name == '删除'){
+        title=globalData.delStr();
+        DelName='';
+    }else if(name == '编辑'){
+        title=globalData.editStr();
+        $('[name="parentId"]').removeAttr('readonly');
+
+    }else if(name == '详情'){
+        title=globalData.detailStr();
+        
+
+    }else if(!_id){
+        title=globalData.addStr();
+       
+    }
+
+    //如果菜单点击的是删除
+    if(typeof DelName  == 'string'){
+      layer.confirm(globalData.delStr(DelName),function(){
+        $.zAjax({
+          url: project.host()+'/v1/bankMenus/'+_id,
+          type:'DELETE',
+          isString:false,
+          success: function(data) {
+            layer.closeAll();
+            layer.msg(lang.getData('delSuccess'),{icon:1});
+            globalData.getData(globalData.options);      
+          }
+        });
+      })
+      return;
+    }
+    
+    /**
+   * 集合新增，修改，详情的方法
+   * @param1    需展示的title
+   * @param2    当前按钮本身
+   * @param3    当前数据id
+   * @param4    需要验证以及回显数据的表单
+   * @param5    回显数据方法
+   * @param7    新增，修改，详情的回调
+   */
+    $.zUpdateView(title,slef,_id,'#dataView',globalData.getglobalDataDetail,{
+      //新增的回调,同时将传回通过校验的对象参数
+      add:function(data){
+        // console.log(data)
+        // return
+        $.zAjax({
+          url: project.host()+'/v1/bankMenus' , 
+          isString:true,
+          type:'post',
+          data:data,
+          success: function(data) {
+            layer.closeAll();
+            layer.msg(lang.getData('addSuccess'),{icon:1});
+            globalData.getData(globalData.options);
+          }
+        });
+      },
+      //编辑的回调,同时将传回通过校验的对象参数
+      edit:function(data){
+        // console.log(data)
+        // return
+        if(!$('[name="parentId"]').attr('readonly')){
+          $.zAjax({
+            url: project.host()+'/v1/bankMenus/'+_id , 
+            isString:true,
+            data:data,
+            type:'PUT',
+            success: function(data) {
+              layer.closeAll();
+              layer.msg(lang.getData('editSuccess'),{icon:1});
+              globalData.getData(globalData.options);
+            }
+          });
+        }else{
+          $.zAjax({
+            url: project.host()+'/v1/bankMenus' , 
+            isString:true,
+            type:'post',
+            data:data,
+            success: function(data) {
+              layer.closeAll();
+              layer.msg(lang.getData('addSuccess'),{icon:1});
+              globalData.getData(globalData.options);
+            }
+          });
+        }
+        
+      },
+      //详情的回调
+      detail:function(){
+      }
+    });
+  },
+
+  event:function(){
+    //状态选择
+    $('#dataView [name="visible"]').click(function(){
+        if($(this).prop("checked")){
+            $(this).val('0');
+        }else{
+            $(this).val('1');
+        }
+    });
+
+    //选择ICON
+    $('#iconContent').on('click','i',function(){
+      var val=$(this).attr('class');
+      $('[name="icon"]').val(val);
+      $('#iconContent').slideUp();
+    });
+    //ICON效果
+    $('[name="icon"]').click(function(){
+      $('#iconContent').slideToggle();
+    });
+
+    //树点击效果
+    $('#menuTree').on('click','a.treeA',function(){
+      $('a.treeA').removeClass('active');
+      $(this).toggleClass('active');
+
+    })
+
+    //弹出树的弹框
+    $('[name="parentId"]').click(function(){
+      if($(this).attr('readonly'))return;
+      // var val=$('[name="parentId"]').next('input[type="hidden"]').val();
+      var parentId=$('[name="parentId"]').next('input[type="hidden"]').val();
+      if(parentId == '0' && $('[name="parentId"]').val()!= lang.getData('mainDirectory')){
+        layer.alert(lang.getData('notOneMenu'),{icon:2});
+        return;
+      }else{
+        $('#menuTree a.treeA').removeClass('active');
+        $('#menuTree a.treeA').each(function(i,n) {
+          var _id=$(this).attr('_id');
+          if( _id == parentId){
+            var _slef=$(this);
+            _slef.addClass('active');
+            $('#menuTree .tree-opened').removeClass().addClass('tree-opened');
+            $('#menuTree .treemenu').show();
+            var _this=$(this);
+            setTimeout(function(argument) {
+              var top=_this.offset().top - 260;
+              $('#menuTree').animate({'scrollTop':top},400,function(){
+                layer.tips(lang.getData('parMenuIsHere'),_this,{ tips: [1, common_params['rbac'].color.error] })
+              });
+            },700);
+            
+            return;
+          }
+        });
+      }
+      var layerT=$.zOpen({
+        title:lang.getData('changeMenu'),
+        ele:'#menuTree',
+        shade:.1,
+        callback:function(){
+          var _slef=$('#menuTree a.treeA.active');
+          var _id=_slef.attr('_id');
+          var _html=_slef.find('em').html();
+
+          if(_id && _html){
+            $('[name="parentId"]').val(_html);
+            $('[name="parentId"]').next('input[type="hidden"]').val(_id);
+            layer.close(layerT);
+          }else{
+            layer.msg(lang.getData('pleaseChangeMenu'));
+            return false
+          }
+
+        }
+      });
+    });
+
+    //菜单类型选择
+    setTimeout(()=>{
+      $('#dataView [name="menuType"]').on('click','.zRadioBox',function(){
+        $('.fieldParent').show();
+        var val=$(this).attr('value');
+        globalData.menuTypeFn(val);
+      });
+
+    },500);
+    
+
+
+    //搜索按钮事件
+    $('#searchBtn').click(function(){
+      var data=$.zSearchFn(globalData.data,'#searchData .field');
+      globalData.getData(globalData.options,data);
+    });
+
+    //重置按钮事件
+    $('#resetBtn').click(function(){
+      $.zResetFn(globalData.data,'#searchData .field');
+      globalData.getData(globalData.options)
+    });
+
+    //新增按钮事件
+    $('.globalData-add').click(function(){
+      globalData.updateView(this);
+    });
+
+    
+
+  }
+}
+
+
+$(document).ready(function() {
+    //初始化
+    globalData.init();
+});
+
+
+    
+
+  
+</script>

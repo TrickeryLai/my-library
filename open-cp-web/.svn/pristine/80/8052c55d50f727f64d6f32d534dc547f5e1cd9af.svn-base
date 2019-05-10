@@ -1,0 +1,532 @@
+<html>
+<head  id='head'>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <title class="unifTitle"></title>
+    <link rel="shortcut icon" href="../assets/images/logo.jpg">
+    <link media="all" href="../assets/fonts/font-awesome/css/font-awesome.css"type="text/css" rel="stylesheet">
+    <link media="all" href="../assets/css/index.css" type="text/css" rel="stylesheet">
+    <link media="all" href="../assets/css/main.css" type="text/css" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../assets/lib/formSelect/formSelects-v4.css">
+    <link rel="stylesheet" type="text/css" href="../assets/lib/pagination/jquery.pagination.css">
+    <link media="all" href="../assets/css/bc.css" type="text/css" rel="stylesheet">
+
+    <script type="text/javascript">
+        //debugger;
+        //没有登录消息返回登录页
+        var common_data=sessionStorage.getItem('data');
+        if(!common_data)window.location.href = "login.html";
+        //如果设置了取消动画，不加载animate.css
+        if(!sessionStorage.getItem('cancelAnimation')){
+            var link = document.createElement("link");
+            link.setAttribute('rel','stylesheet');
+            link.setAttribute('media','all');
+            link.setAttribute('type','text/css');
+            link.setAttribute('id','animate');
+            link.href="../assets/css/animate.css"
+            document.getElementsByTagName('head')[0].appendChild(link);
+        }
+
+        //如果设置了bootstrap，加载bootstrap.css
+        if(sessionStorage.getItem('bootstrap')){
+            var link = document.createElement("link");
+            link.setAttribute('rel','stylesheet');
+            link.setAttribute('media','all');
+            link.setAttribute('type','text/css');
+            link.setAttribute('id','bootstrap');
+            link.href="../assets/lib/bootstrap/bootstrap.min.css"
+            document.getElementsByTagName('head')[0].appendChild(link);
+        }
+    </script>
+</head>
+
+<body class="theme-one app">
+<header class="site-head clearfix ng-scope animated slideInDown" id="site-head">
+    <div class="nav-head ng-scope" >
+        <a href="javascript:;" class="site-logo">
+          <span class="unifTitle">
+          </span>
+        </a>
+        <span class="nav-trigger fa fa-outdent">
+        </span>
+    </div>
+    <div class="head-wrap clearfix ng-scope">
+
+        <ul class="list-unstyled navbar-right">
+
+            <li style="width:400px;float:left">
+                <div id ="currentRoleLabel" style="margin: 20px 5px;width:130px;float:left"></div>
+                <div class="form-group form-group-lg" style="margin-top: 20px;width:260px;float:left;" id="currentRole">
+                    <!-- <select name="currentRole" id="currentRole" class="form-control field"></select> -->
+                </div>
+            </li>
+
+            <!--<li id='languageContent'>-->
+                <!--<ul >-->
+                    <!--<li onclick='$.changeLanguage(this);' data-lang='zh_cn'>中文简体</li>-->
+                    <!--<li onclick='$.changeLanguage(this);' data-lang='en_us' style="float: right;">English</li>-->
+                    <!--&lt;!&ndash;               <li onclick='$.changeLanguage(this);' data-lang='zh_cht'>中文繁体</li> &ndash;&gt;-->
+                <!--</ul>-->
+            <!--</li>-->
+
+            <!--   <li id='languageContent'>
+                <a href="javascript:;">
+                  <i class="fa fa-language">
+                  </i>
+                </a>
+                <ul id='languageUl'>
+                  <li onclick='$.changeLanguage(this);' data-lang='zh_cn'>中文简体</li>
+                  <li onclick='$.changeLanguage(this);' data-lang='en_us'>English</li>
+                  <li onclick='$.changeLanguage(this);' data-lang='zh_cht'>中文繁体</li>
+                </ul>
+              </li> -->
+
+            <li>
+                <a href="javascript:;"  id='userInfo'>
+
+                </a>
+            </li>
+
+            <li class="dropdown" >
+                <a href="javascript:;" class="user-profile dropdown-toggle" >
+                    <img  alt="admin-pic"  class="avatar" style="display: none;">
+                </a>
+                <div class="panel panel-default dropdown-menu" id='user_info'>
+                    <div class="panel-body">
+                        <figure class="photo left">
+                            <img src="../assets/images/admin.jpg" class="avatar" alt="admin-pic" onclick='window.location.hash="#/user/info"'>
+                            <a href="#/user/info" class="lang" langId='editUser'>
+
+                            </a>
+                        </figure>
+                        <div class="profile-info right">
+                            <p class="user-name">
+
+                            </p>
+                            <p class="user-email" style="width: 130px;overflow: hidden;text-overflow: ellipsis;">
+
+                            </p>
+
+                            <p class="user-phonenumber">
+
+                            </p>
+                            <!--    <a href="javascript:;" class="btn btn-info btn-xs user-phonenumber">
+                                 大神
+                               </a> -->
+                        </div>
+                    </div>
+                    <div class="panel-footer clearfix">
+                        <a href="javascript:" onclick='$.editPwd()' class="btn btn-default btn-sm left lang"  langId='editPwd'>
+
+                        </a>
+                        <a href="javascript:" onclick="$.loginOut()" class="btn btn-info btn-sm right lang"  langId='loginOut'>
+
+                        </a>
+                    </div>
+                </div>
+            </li>
+            <li onclick='$.settingTab()' id='settingTab'>
+                <a href="javascript:;">
+                    <i class="fa fa-gears">
+                    </i>
+                </a>
+            </li>
+        </ul>
+        <!--         <p id='userInfo'>
+                  <span></span>
+                </p> -->
+        <!--         <p id="userInfoRe" style="line-height: 60px;font-size: 13px;float: right;">
+                  <span></span> - <span></span>
+                </p> -->
+    </div>
+</header>
+
+<div class="main-container clearfix">
+    <aside class="nav-wrap ng-scope ps-container animated bounceInLeft overflow" id="site-nav">
+        <div class="form-search ng-scope" >
+            <form id="site-search" class="ng-pristine ng-valid">
+                <input class="form-control lang" placeholder="" type="search" langId='queryContent'>
+                <button type="button" class="fa fa-search">
+                </button>
+                <div class="menuresult" style="display: none;">
+                </div>
+            </form>
+        </div>
+        <div class="theme-settings clearfix ng-scope">
+        </div>
+        <nav class="site-nav clearfix ng-scope"  >
+            <div class="nav-title panel-heading" style="display: none;">
+            </div>
+            <div id='menuList'>
+            </div>
+        </nav>
+
+
+    </aside>
+
+    <div class="content-container ng-scope" id="content">
+        <div class=" page-table-static clearfix ng-scope">
+            <ol class="breadcrumb breadcrumb-small" style="line-height: 50px;padding: 0 15px;margin: 0">
+
+            </ol>
+        </div>
+        <div class="" id="main" >
+
+        </div>
+    </div>
+
+    <footer id="site-foot" class="site-foot clearfix">
+        <p class="left "><span class="copyright"></span> <strong class="unifTitle"></strong></p>
+        <p class="right versionInfo"></p>
+    </footer>
+
+    <a href="javascript:;" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+        <span class="fa fa-angle-double-up"></span>
+    </a>
+</div>
+
+<aside class="control-sidebar" style="position: fixed; max-height: 100%; overflow: auto;max-height: calc(100% - 60px);">
+    <div class="tab-content" id='tabContent'>
+    </div>
+</aside>
+
+
+<div class="pwdbox" id="PwdBox" style="display: none;">
+</div>
+
+<!-- 模板引擎动态生成整体数据，主要为国际化语言服务 -->
+<script id="globalData_PwdBox" type="text/html">
+    <div class="item-cell">
+        <label>{{oldPwd}}：</label>
+        <input type="password" name="password" class="form-control" placeholder="{{pleaseEnter}}{{oldPwd}}" id="oldPasswd">
+    </div>
+    <div class="item-cell">
+        <label>{{newPwd}}：</label>
+        <input type="password" name="password" class="form-control" placeholder="{{pleaseEnter}}{{newPwd}}" id="newPasswd">
+    </div>
+    <div class="item-cell">
+        <label>{{confirm}}{{newPwd}}：</label>
+        <input type="password" name="password" class="form-control" placeholder="{{pleaseEnter}}{{newPwd}}" id="newPasswd2">
+    </div>
+    <div class="item-cell">
+        <label class="notice-event">{{attention}}：</label>
+        <p>1.{{passwordError}}</p>
+        <label>&nbsp</label>
+        <p>2.{{newNotOld}}</p>
+    </div>
+</script>
+<!-- 模板引擎动态生成整体数据，主要为国际化语言服务 -->
+<script id="globalData_tabContent" type="text/html">
+
+    <div class="tab-pane active" id="control-sidebar-setting-tab">
+        <h4 class="control-sidebar-heading">{{LayoutSetting}}</h4>
+
+        <div class="form-group">
+            <label  >
+                <input id='bootstrapCheckbox' type="checkbox" onclick="$.bootstrap()" /> {{usingBootstrapStyle}}
+            </label>
+            <p>{{usingBootstrapStyleStr}}</p>
+        </div>
+
+        <div class="form-group">
+            <label  >
+                <input id='tableStyle' type="checkbox" onclick="$.tableStyle()" />  {{simplifiedTableStyle}}
+            </label>
+            <p>{{simplifiedTableStyleStr}}</p>
+        </div>
+
+
+        <div class="form-group">
+            <label  >
+                <input id='cancelAnimation' type="checkbox" onclick="$.cancelAnimation()" />  {{cancelAnimation}}
+            </label>
+            <p> {{cancelAnimationStr}}</p>
+        </div>
+
+        <div class="form-group" >
+            <label >
+                <input type="checkbox" onclick="$.toggleMenu()"> {{toggleMenu}}
+            </label>
+            <p>{{toggleMenuStr}}</p>
+        </div>
+
+        <div class="form-group">
+            <label >
+                <input id='isTips' type="checkbox"  checked="checked" onclick="$.isTips()"> {{usingTips}}
+            </label>
+            <p>{{usingTipsStr}}</p>
+        </div>
+
+        <div class="form-group">
+            <label >
+                <input id='isTipsColor' type="checkbox"   onclick="$.isTipsColor()"> {{toggleTipsColor}}
+            </label>
+            <p>{{toggleTipsColorStr}}</p>
+        </div>
+
+        <div class="form-group">
+            <label >
+                <input type="checkbox"  onclick="$.toggleRightMain()"> {{toggleRightColumn}}
+            </label>
+            <p>{{toggleRightColumnStr}}</p>
+        </div>
+
+        <div class="form-group">
+            <label >
+                <input type="checkbox" onclick="$.toggleRightTabColor()"> {{toggleBackgroundRightColumn}}
+            </label>
+            <p>{{toggleBackgroundRightColumnStr}}</p>
+        </div>
+
+
+        <h4 class="control-sidebar-heading">{{skin}}</h4>
+
+        <ul class="list-unstyled clearfix" id="skin" >
+            <li  class="ng-pristine ng-untouched ng-valid">
+                <a href="javascript:;">
+              <span class="side-top">
+              </span>
+                    <span class="header">
+              </span>
+                    <span class="side-rest">
+              </span>
+                </a>
+            </li>
+            <li  class="ng-pristine active ng-untouched ng-valid">
+                <a href="javascript:;">
+              <span class="side-top">
+              </span>
+                    <span class="header">
+              </span>
+                    <span class="side-rest">
+              </span>
+                </a>
+            </li>
+            <li  class="ng-pristine ng-untouched ng-valid">
+                <a href="javascript:;">
+              <span class="side-top">
+              </span>
+                    <span class="header">
+              </span>
+                    <span class="side-rest">
+              </span>
+                </a>
+            </li>
+            <li  class="ng-pristine ng-untouched ng-valid">
+                <a href="javascript:;">
+              <span class="side-top">
+              </span>
+                    <span class="header">
+              </span>
+                    <span class="side-rest">
+              </span>
+                </a>
+            </li>
+            <li  class="ng-pristine ng-untouched ng-valid">
+                <a href="javascript:;">
+              <span class="side-top">
+              </span>
+                    <span class="header">
+              </span>
+                    <span class="side-rest">
+              </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</script>
+
+<script src="../assets/lib/jquery-1.10.2.min.js"></script>
+<script src="../assets/lib/jquery.cookie.min.js"></script>
+<script src="../assets/js/common-params.js"></script>
+<script src="../assets/js/common-env.js"></script>
+<script src="../assets/js/common-lang.js"></script>
+<script src="../assets/lib/tree/tree.js"></script>
+<link  href="../assets/lib/tree/tree.css" type="text/css" rel="stylesheet" media="all">
+<script src="../assets/lib/artTemplate/template.js"></script>
+<script src="../assets/js/common-template-fifter.js"></script>
+<script type="text/javascript">
+    //debugger;
+    common_data=JSON.parse(common_data);
+    var menuList;
+    if(sessionStorage.getItem('menu')){
+        menuList=JSON.parse(sessionStorage.getItem('menu'));
+    }else{
+        menuList=common_data.menu;
+    }
+    var html=new treeMenu(menuList).init({
+        treeType:'menu',
+        pIdKey:'pId',
+        pIdInit:'0',
+    });
+    $('#menuList').html(html);
+    $('.user-name').html(common_data.user.userName);
+    $('.user-email').html(common_data.user.email);
+    $('.user-phonenumber').html(common_data.user.phonenumber);
+    $('#userInfo').html(common_data.user.loginName);
+
+
+    //加载当前用户角色
+    var roleList=common_data.roleList;
+    var str='';
+    roleList.forEach(function(n,i){
+        str+='<option value='+n.roleId+'>'+n.orgRole+'</option>'
+    });
+    $('#currentRole').html(str);
+
+    var currentRoleLabel = {
+        zh_cn:'当前机构',en_us:'Current Org',zh_cht:'當前機構'
+    };
+    //debugger;
+    $('#currentRoleLabel').html(currentRoleLabel[lang.getLang()] + ":");
+
+    //var currentRoleId = sessionStorage.getItem('currentRoleId');
+    //当前角色
+    var currentRoleId;
+    if(sessionStorage.getItem('currentRoleId')){
+        currentRoleId=sessionStorage.getItem('currentRoleId');
+    }else{
+        currentRoleId = common_data.user.currentRole;
+        sessionStorage.setItem('currentRoleId', currentRoleId);
+    }
+    if(currentRoleId){
+        $("#currentRole option[value='"+currentRoleId+"']").attr("selected","selected");
+    }
+
+
+
+    $("#currentRole").change(function(){
+        var a= project.host();
+        debugger;
+        var currentRoleId = $(this).children('option:selected').val();
+        sessionStorage.setItem('currentRoleId',currentRoleId);
+        //common_data.user.currentRole = currentRoleId;
+        //重新加载当前角色菜单
+        $.zAjax({
+            type: 'POST',
+            dataType: "json",
+            type: 'POST',
+            url: project.host()+'/v1/menus/getCurrentRoleMenuList',
+            isString:true,
+            data: {
+                currentRole: sessionStorage.getItem('currentRoleId')
+            },
+            success: function(data) {
+                debugger;
+                //var menuList=JSON.parse(data);
+                sessionStorage.setItem('menu',JSON.stringify(data));
+                //common_data.menu = data;
+                //location.reload();
+                window.location.href = "index.html"
+            }
+        });
+
+        $.zAjax({
+            type: 'POST',
+            dataType: "json",
+            type: 'POST',
+            url: project.host()+'/v1/orgs/getCurrentRoleOrg',
+            isString:true,
+            data: {
+                currentRole: sessionStorage.getItem('currentRoleId')
+            },
+            success: function(data) {
+                debugger;
+                //var menuList=JSON.parse(data);
+                sessionStorage.setItem('currentRoleOrg',JSON.stringify(data));
+                //common_data.menu = data;
+            }
+        });
+
+        //window.location.href = "index.html";
+    });
+
+    if(common_data.user.avatar){
+        $('.avatar').attr('src',common_data.user.avatar).show();
+    }else{
+
+        $('.avatar').attr('src','../assets/images/'+(common_data.user.sex == '1' ? 'man' : 'woman')+'.jpg').show();
+    }
+    if(sessionStorage.getItem('lang')){
+        var language=sessionStorage.getItem('lang');
+        if(language == 'zh_cn'){
+            $('#languageContent i').text(' 中文简体');
+        }
+        if(language == 'en_us'){
+            $('#languageContent i').text(' English');
+        }
+        if(language == 'zh_cht'){
+            $('#languageContent i').text(' 中文繁体');
+        }
+
+    }else{
+        $('#languageContent i').text(' 中文简体');
+    }
+</script>
+
+
+<script src="../assets/js/common-fn.js"></script>
+<script src="../assets/js/common-router.js"></script>
+<script src="../assets/js/common-reg.js"></script>
+<!-- <script src="../assets/lib/md5.js"></script> -->
+<script src="../assets/lib/layer/layer.js"></script>
+<script src="../assets/lib/laydate/laydate.js"></script>
+<script src="../assets/lib/formSelect/formSelects-v4.js"></script>
+<script src="../assets/lib/layui/layui.js"></script>
+<script src='../assets/lib/pagination/jquery.pagination.js'></script>
+<script src="../assets/lib/echarts.common.min.js"></script>
+<script type="text/javascript">
+    debugger;
+    template.config("cache",false);
+    $('#PwdBox').html(template('globalData_PwdBox',$.dataLanguage()));
+    $('#tabContent').html(template('globalData_tabContent',$.dataLanguage()));
+    // $('#userInfoRe span:eq(1)').html(
+    //   common_data.user.userType == '00' ? lang.getData('superAdmin') : lang.getData('ordinaryUser')
+    // );
+    $('.lang').each(function (argument) {
+        var _id=$(this).attr('langId');
+        var tagName=$(this).prop("tagName");
+        if(tagName == 'INPUT'){
+            $(this).attr('placeholder',lang[_id][lang.getLang()]);
+            return;
+        };
+        $(this).html(lang[_id][lang.getLang()]);
+    });
+    if(!sessionStorage.getItem('tableStyle')){
+        $('#tableStyle').prop("checked",false);
+    }else{
+        $('#tableStyle').prop("checked",true);
+    }
+    if(sessionStorage.getItem('bootstrap')){
+        $('#bootstrapCheckbox').prop("checked",true);
+    }else{
+        $('#bootstrapCheckbox').prop("checked",false);
+    }
+    if(sessionStorage.getItem('NoTips')){
+        $('#isTips').prop("checked",false);
+        $('#isTipsColor').attr('disabled','disabled');
+    }else{
+        $('#isTips').prop("checked",true);
+    }
+    if(!sessionStorage.getItem('cancelAnimation')){
+        $('#cancelAnimation').prop("checked",false);
+    }else{
+        $('#cancelAnimation').prop("checked",true);
+    }
+ /*   if(sessionStorage.getItem('resetPassword')){
+        setTimeout(function (){$.editPwd({
+            str:lang.getData('firstLoginContent'),
+            btn:lang.getData('confirm')
+        });},1000);
+    }*/
+
+</script>
+<script src="../assets/js/common-event.js"></script>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,770 @@
+<!-- 左侧机构数 -->
+<style type="text/css">
+    .orgbox{
+        width: 0px;
+        float: left;
+        background-color: #fff;
+
+        position: absolute;
+        top: 0px;
+        bottom: 45px;
+        z-index: 2;
+        overflow: hidden;
+
+    }
+    .orgbox.show{
+        width: 200px;
+        border: 1px solid #eee;
+    }
+    .orgbox>p{
+        width: 100%;
+        line-height: 50px;
+        text-align: center;
+        font-size: 20px;
+    }
+
+    #tablebox{
+        float: right;
+        -o-transition: all 0.2s ease;
+        -ms-transition: all 0.2s ease;
+        -moz-transition: all 0.2s ease;
+        -webkit-transition: all 0.2s ease;
+        position: absolute;
+        bottom: 0;
+        left:230px;
+        right: 15px;
+        top:0;
+        height: 100%;
+        overflow: auto;
+    }
+
+    #tablebox.add{
+        left:15px;
+
+    }
+</style>
+
+<!-- 模板引擎动态生成整体数据，主要为国际化语言服务 -->
+<script id="globalData_comUser" type="text/html">
+    <div id="globalData">
+        <div id='treeBox' class="tree" style="overflow: auto;">
+
+        </div>
+
+
+        <!-- 详情框 -->
+        <div id="dataView" style="min-height: 450px;">
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{loginName}}：</label>
+                    <div class="col-md-8">
+                        <input maxlength="30" type="text" class="form-control field fieldReadOnly" name="loginName" placeholder="{{loginName}} " value=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">{{userName}} </label>
+                    <div class="col-md-8">
+                        <input maxlength="30" type="text" class="form-control field" name="userName" placeholder="{{userName}}" value=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{orgId}}：</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control field" name="orgId" for='for-orgId' placeholder="{{orgId}}" value=""/>
+                        <input type="hidden" name="for-orgId" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" id='passwordConent'>
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{password}}：</label>
+                    <div class="col-md-8">
+                        <input type="password" class="form-control field" name="password" placeholder="{{password}}" value=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{email}}：</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control field" name="email" placeholder="{{email}}" value=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">{{phonenumber}}：</label>
+                    <div class="col-md-8">
+                        <input type="text" onkeyup="value=value.replace(/[^\d]/g,'')"  maxlength="11" class="form-control field" name="phonenumber" placeholder="{{phonenumber}}" value=""/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{sex1}}：</label>
+                    <div class="col-md-8">
+                        <!-- <select name="sex" class="form-control field">
+                        </select> -->
+                        <div name="sex" class=" field" type='specialInput'></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 common_status" >
+                <div class="form-group">
+                    <label class="col-md-4 control-label">{{status}}：</label>
+                    <div class="col-md-8">
+                        <!-- <select name="status" class="form-control field">
+                        </select> -->
+
+                        <!-- <input class="zSwitch form-control field"  name="status" type="checkbox"  /> -->
+                        <div name="status" class=" field" type='specialInput'></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-md-4 control-label required">{{userType}}：</label>
+                    <div class="col-md-8">
+                        <!-- <select name="userType" class="form-control field">
+                        </select> -->
+
+                        <div name="userType" class=" field" type='specialInput'></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 common_details">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">{{createTime}}：</label>
+                    <div class="col-md-8">
+                        <input  class="form-control field" name="createTime"  value=""/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 common_details">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">{{createBy}}：</label>
+                    <div class="col-md-8">
+                        <input  class="form-control field" name="createBy"  value=""/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 common_details">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">{{updateTime}}：</label>
+                    <div class="col-md-8">
+                        <input  class="form-control field" name="updateTime"  value=""/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 common_details">
+                <div class="form-group">
+                    <label class="col-md-4 control-label">{{updateBy}}：</label>
+                    <div class="col-md-8">
+                        <input  class="form-control field" name="updateBy"  value=""/>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+        <!-- 搜索框，数据展示，分页 -->
+        <div class="page-wrap">
+
+            <div class="orgbox show box box-main" >
+                <div class="box-header">
+                    <div class="box-title">
+                        <i class="fa icon-grid"></i> {{orgId}}
+                    </div>
+                    <div class="box-tools pull-right">
+                        <a type="button" class="btn btn-box-tool menuItem" href="javascript:;" onclick="location.hash='#/comOrgs'"
+                           title="{{orgId}}">
+                            <i class="fa fa-edit"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id='orgTree' class="tree" style="overflow: auto;height: 100%;"></div>
+            </div>
+
+            <div class="viewFramework-product-navbar-collapse long">
+                <div id="product-navbar-btn" class="product-navbar-collapse-inner">
+                    <p class="icon-img spin"></p>
+                </div>
+            </div>
+
+
+            <div class="row" id='tablebox'  >
+                <div class="col-lg-12">
+                    <div class="panel panel-lined table-responsive mb30 ng-scope">
+                        <!-- 搜索框 -->
+                        <div class="panel-body" style="padding-bottom: 0px" id='searchData'>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">{{loginName}}</label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control field" name="loginName" placeholder="{{loginName}}" value=""/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">{{status}}</label>
+                                    <div class="col-md-8">
+                                        <select name="status" class="form-control field">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">{{phonenumber}}</label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control field" name="phonenumber"
+                                               placeholder="{{phonenumber}}" value=""/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label">创建时间</label>
+                                    <div class="col-md-8 timeContent">
+                                        <input type="text" class="form-control field" id='startTime' name="startTime" placeholder="开始时间" value=""/>
+                                        -
+                                        <input type="text" class="form-control field" id='endTime' name="endTime" placeholder="结束时间" value=""/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <div style="width:185px;">
+                                            <span id="searchBtn" class="btn btn-primary pull-left fa fa-search">{{search}}</span>
+                                            <span id="resetBtn" class="btn btn-warning pull-right fa fa-refresh">{{reset}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div style="padding: 0 20px;" class="panel-body">
+
+                            <!-- 批量删除 -->
+                            <span class="btn btn-sm btn-danger pull-right fa fa-trash-o hoverBtn" id='batchDel' name='批量删除'
+                                  btnType='remove'></span>
+                            <!-- 导出 -->
+                            <span class="btn btn-sm btn-primary pull-right fa fa-download hoverBtn" id='Downexcels' name='导出'
+                                  btnType='export'></span>
+                            <!-- 新增 -->
+                            <span class="btn btn-sm btn-success pull-right globalData-add fa fa-plus hoverBtn" name='新增'
+                                  btnType='add'></span>
+                        </div>
+                        <div class="panel-body">
+                            <table class="table table-bordered table-striped zCheckBox">
+                                <thead class="thead">
+                                <tr>
+                                    <th><span class="zCBox zCheckAll"></span></th>
+                                    <th>{{userId}}</th>
+                                    <th>{{loginName}}</th>
+                                    <th>{{userName}}</th>
+                                    <th>{{orgId}}</th>
+                                    <th>{{phonenumber}}</th>
+                                    <th>{{status}}</th>
+                                    <th>{{createTime}}</th>
+                                    <th>{{operation}}</th>
+                                </tr>
+                                </thead>
+                                <tbody id="globalDataTbody">
+                                <tr>
+                                    <td colspan="20" style="text-align: center;">{{loading}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!-- #end data table -->
+                            <!-- 分页 -->
+                            <div class="page">
+                                <div class="pager_container" id="Pagination">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</script>
+
+<!-- 模板引擎动态生成表格数据 -->
+<script id="globalDataList_user" type="text/html">
+    {{if list && list.length > 0 }}
+    {{each list as value i}}
+    <tr _id="{{value.userId}}">
+        <td><span class="zCBox"></span></td>
+        <td>{{value.userId}}</td>
+        <td>{{value.loginName}}</td>
+        <td>{{value.userName}}</td>
+        <td>{{value.orgName}}</td>
+        <td>{{value.phonenumber}}</td>
+        <td>{{value.status | userStatusFormat}}</td>
+        <td>{{value.createTime}}</td>
+        <td style="min-width: 200px;">
+            <span class="btn btn-sm btn-warning editBtn fa fa-edit hoverBtn" name='编辑' btnType='edit'></span>
+            <span class="btn btn-sm btn-info detailBtn fa fa-tags hoverBtn" name='详情' btnType='list'></span>
+            <span class="btn btn-sm btn-primary resetPwdBtn fa fa-key hoverBtn" name='密码重置' btnType='resetPwd'></span>
+            <span class="btn btn-sm btn-danger delBtn fa fa-trash-o hoverBtn" name='删除' btnType='remove'></span>
+
+        </td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr>
+        <td colspan="17" style="text-align: center;">{{1 | noData}}</td>
+    </tr>
+    {{/if}}
+</script>
+
+<script>
+
+
+    //定义全局对象
+    var globalData={
+        name:{
+            zh_cn:'用户',en_us:'User',zh_cht:'用戶'
+        },
+
+        detailStr:function(){
+            // return this['name'][lang.getLang()] +'详情&nbsp;<span class="red">只可查看，不可编辑！<span>';
+            return this['name'][lang.getLang()] + lang.getData('list');
+        },
+
+        editStr:function(){
+            // return this['name'][lang.getLang()]+'修改&nbsp;<span class="red">含*的都是必填项！<span>';
+            return lang.getData('edit') + this['name'][lang.getLang()] ;
+
+        },
+
+        addStr:function(){
+            // return this['name'][lang.getLang()]+'新增&nbsp;<span class="red">含*的都是必填项！<span>';
+            return lang.getData('add') + this['name'][lang.getLang()] ;
+        },
+
+
+        delStr:function(name){
+            // return '确认删除该'+ this['name'][lang.getLang()] +':<span class="green">'+name+'</span>?&nbsp;&nbsp;<span class="red">请谨慎操作！</span>';
+
+            return lang.getData('delStr');
+        },
+
+
+        init:function(){
+            //生成整体数据，主要为国际化语言服务
+            $('#main').prepend(template('globalData_comUser',$.dataLanguage()));
+
+            //页面初始化默认请求表格数据
+            this.getData(globalData.data);
+            //调用所有事件
+            this.event();
+
+            this.getOrg(globalData.data);
+            //this.getRole(globalData.data);
+            //填充共同参数
+            $.zCompositeData(common_params['rbac']['userStatus'],'#searchData [name="status"]',true);
+            // $.zCompositeData(common_params['rbac'].sex,'[name="sex"]',true);
+            // $.zCompositeData(common_params['rbac'].userType,'[name="userType"]',true);
+
+            //填充特殊共同参数
+            $.zSpecialData(common_params['rbac']['userStatus'],'#dataView [name="status"]');
+            $.zSpecialData(common_params['rbac']['sex'],'#dataView [name="sex"]');
+            $.zSpecialData(common_params['rbac']['userType'],'#dataView [name="userType"]');
+
+
+            //填充验证
+            $.zCommonReg(reg.email,'#dataView [name="email"]');
+            $.zCommonReg(reg.phonenumber,'#dataView [name="phonenumber"]');
+            $.zCommonReg(reg.password,'#dataView [name="password"]');
+
+            // $.inputReg('[name="phonenumber"]','keyup','number')
+
+            // 调用日期插件
+            laydate.render({
+                elem: '#startTime',
+                lang:$.getLayDateLang(),
+            });
+
+
+        },
+
+        //定义全局请求参数对象
+        data:{
+            pageNum:1,
+            pageSize:10
+        },
+
+        getRole:function(data){
+            $.zAjax({
+                url: project.host()+'/v1/roles' ,
+                data:data,
+                isString:false,
+                success: function(data) {
+                    var roleList=data.list;
+                    var str="<li class='zCheckAll zCBox'><span>"+lang.getData('checkall')+"</span><i></i></li>";
+                    $('#zCheck').html('').html(str);
+                    for(var i=0;i<roleList.length;i++){
+                        $('#zCheck').append("<li class='zCBox'></li>");
+                        $('#zCheck>li:last').append("<span>"+roleList[i].roleName+"</span><i></i>").attr('roleId',roleList[i].roleId);
+                    }
+                }
+            });
+        },
+
+        getOrg:function(data,isOrg){
+            $.zAjax({
+                url: project.host()+'/v1/comOrgs/orgTreeData' ,
+                // data:data,
+                isString:false,
+                success: function(data) {
+
+                    var html=new treeMenu(data).init({
+                        treeType:'orgTree',
+                        pIdKey:'pId',
+                        pIdInit:'0',
+                    });
+                    $('#treeBox').html(html);
+                    $("#treeBox>ul").treemenu({delay:400}).openActive();
+                    if(isOrg)return;
+                    $('#orgTree').html(html);
+                    $("#orgTree>ul").treemenu({delay:400}).openActive();
+
+                }
+            });
+        },
+
+        //请求表格数据的函数，参数data
+        getData:function(data){
+            $.zAjax({
+                url: project.host()+'/v1/comUsers' ,
+                data:data,
+                isString:false,
+                success: function(data) {
+                    var list=data;
+                    var total = list.pageInfo.total;
+                    /**
+                     * 调用分页方法
+                     * @param obj.page    分页元素
+                     * @param obj.url     接口
+                     * @param obj.tp      模板元素
+                     * @param obj.ele     填充数据元素
+                     * @param obj.data    请求参数
+                     * @param obj.list    请求返回数据
+                     */
+                    $.zPageMethod({
+                        page:'#Pagination',
+                        url:project.host()+'/v1/comUsers' ,
+                        tp:'globalDataList_user',
+                        ele:'#globalDataTbody',
+                        total:total,
+                        data:globalData.data,
+                        list:list
+                    });
+                }
+            });
+        },
+
+        //回显数据,同时可用于区分新增和（详情修改）的区别
+        getglobalDataDetail:function(_id,ele,view,slef){
+            $('#passwordConent').hide();
+            $('#zCheck li').removeClass('zCheck');
+            $('.zRadioBox').removeClass('active');
+            $(ele).find('.field').val('');
+            //如果_id有效，则是详情或者修改
+
+            $('#zCheck').off().on('click','li',checkAll).removeClass('active');
+            if(_id){
+                $.zAjax({
+                    url: project.host()+'/v1/comUsers/'+_id ,
+                    isString:false,
+                    success: function(data) {
+                        $(ele).find('.field').each(function(){
+                            var key=$(this).attr('name');
+                            $(this).val(data[key]);
+                            if(key == 'sex' || key == 'userType' || key == 'status'){
+                                $('[name='+key+'] .zRadioBox[value='+data[key]+']').addClass('active');
+                            }
+                            if(key == 'userType'){
+                                if(data[key] == '00'){
+                                    $('#roleIdsP').hide();
+                                }else{
+                                    $('#roleIdsP').show();
+                                }
+                            }
+                        });
+
+
+                        $('[name="orgId"]').attr('disabled','disabled').val(data.orgName);
+                        $('[name="orgId"]').next('input[type="hidden"]').val(data.orgId);
+                        var list=data.roleIds?data.roleIds.split(','):[];
+                        list.forEach(function(n,i){
+                            $('#zCheck [roleid='+n+']').click();
+                        });
+                        if($(slef).hasClass('detailBtn')){
+                            $('#zCheck').off('click').addClass('active');
+                        }
+                        view();
+                        
+                        
+                        //如果是新增或修改，用户类型只能是超级管理员
+                        //debugger;//step: 4
+                        	
+                    }
+                });
+            }
+            //否则是新增
+            else{
+                $('#roleIdsP').show();
+                $('#passwordConent').show();
+                $('[name="orgId"]').val('').removeAttr('disabled');
+                $('[name="orgId"]').next('input[type="hidden"]').val('');
+                view();
+                
+            	//debugger;//step: 0
+            }
+            
+            //debugger;//step: 1
+        },
+
+        //详情，新增，修改
+        updateView:function(title,slef,DelName){
+            //获取当前ID，如果是新增，则没有ID
+            var _id=$(slef).closest('tr').attr("_id");
+
+            //如果用户点击的是删除
+            if(typeof DelName  == 'string'){
+                layer.confirm(globalData.delStr(DelName),function(){
+                    $.zAjax({
+                        url: project.host()+'/v1/comUsers/'+_id,
+                        type:'DELETE',
+                        isString:false,
+                        success: function(data) {
+                            layer.closeAll();
+
+                            layer.msg(lang.getData('delSuccess'),{icon:1});
+                            globalData.getData(globalData.data);
+                        }
+                    });
+                })
+                return;
+            }
+
+            /**
+             * 集合新增，修改，详情的方法
+             * @param1    需展示的title
+             * @param2    当前按钮本身
+             * @param3    当前数据id
+             * @param4    需要验证以及回显数据的表单
+             * @param5    回显数据方法
+             * @param7    新增，修改，详情的回调
+             */
+            $.zUpdateView(title,slef,_id,'#dataView',globalData.getglobalDataDetail,{
+                //新增的回调,同时将传回通过校验的对象参数
+                add:function(data){
+                    $.zAjax({
+                        url: project.host()+'/v1/comUsers' ,
+                        isString:true,
+                        type:'post',
+                        data:data,
+                        success: function(data) {
+                            layer.closeAll();
+                            layer.msg(lang.getData('addSuccess'),{icon:1});
+                            globalData.getData(globalData.data);
+                        }
+                    });
+                },
+                //编辑的回调,同时将传回通过校验的对象参数
+                edit:function(data){
+                    $.zAjax({
+                        url: project.host()+'/v1/comUsers/'+_id ,
+                        isString:true,
+                        data:data,
+                        type:'PUT',
+                        success: function(data) {
+                            layer.closeAll();
+                            layer.msg(lang.getData('editSuccess'),{icon:1});
+                            globalData.getData(globalData.data);
+                        }
+                    });
+                },
+                //详情的回调
+                detail:function(){
+                }
+            });
+            
+            debugger;//step: 3
+            $('[name="userType"]').after('<span class="maskSpan"></span>');
+            $('[name="userType"] [value="00"]').addClass('active');
+            $('[name="userType"]').val('00');
+            
+        },
+
+        event:function(){
+
+            //导出excels
+            $('#Downexcels').click(function(){
+                $.downFile({
+                    url:'comUsers'
+                });
+            })
+
+            //批量删除
+            $('#batchDel').click(function(){
+                $.batchDel('comUsers',{nameIndex:2});
+            })
+
+            //左侧机构树点击筛选
+            $('#orgTree').on('click','a.treeA',function(){
+                $('#orgTree a.treeA').removeClass('active');
+                $(this).addClass('active');
+                var _id=$(this).attr('_id');
+                var data=$.zSearchFn(globalData.data,'#searchData .field');
+                globalData.getData($.extend(data,{orgId:_id}));
+            })
+
+            //新增和修改选择机构树
+            $('#treeBox').on('click','a.treeA',function(){
+                $('#treeBox a.treeA').removeClass('active');
+                $(this).addClass('active');
+            })
+
+            //机构树弹框，包括回显机构树选中状态
+            $('[name="orgId"]').click(function(){
+                if($(this).attr('disabled'))return;
+                var val=$('[name="orgId"]').next('input[type="hidden"]').val();
+                if(val == ''){
+                    globalData.getOrg(globalData.data,1);
+                }else{
+                    $('#treeBox a.treeA').removeClass('active');
+                    $('#treeBox a.treeA').each(function(i,n) {
+                        var _id=$(this).attr('_id');
+                        if( _id == val){
+                            var _slef=$(this);
+                            _slef.addClass('active');
+                            $('#treeBox .tree-opened').removeClass().addClass('tree-opened');
+                            $('#treeBox .treemenu').show();
+                            var _this=$(this);
+                            setTimeout(function(argument) {
+                                var top=_this.offset().top - 260;
+                                $('#treeBox').animate({'scrollTop':top},400,function(){
+                                    layer.tips('选中的机构在这里！',_this,{ tips: [1, common_params['rbac']['color']['error'] ] })
+                                });
+                            },700);
+                            return;
+                        }
+                    });
+                }
+
+                var layerT=$.zOpen({
+                    title:lang.getData('changeOrg'),
+                    ele:'#treeBox',
+                    shade:.1,
+                    callback:function(){
+                        var _slef=$('#treeBox a.treeA.active');
+                        var _id=_slef.attr('_id');
+                        var _html=_slef.html();
+
+                        if(_id && _html){
+                            $('[name="orgId"]').val(_html);
+                            $('[name="orgId"]').next('input[type="hidden"]').val(_id);
+                            $('[name="orgId"]').closest('div').find('.errMsgSpan').remove();
+                            layer.close(layerT);
+                        }else{
+                            layer.msg(lang.getData('pleaseChangeOrg'));
+                            return false
+                        }
+
+                    }
+                });
+            });
+
+
+            //搜索按钮事件
+            $('#searchBtn').click(function(){
+                var data=$.zSearchFn(globalData.data,'#searchData .field');
+                globalData.getData(data);
+            });
+
+            //重置按钮事件
+            $('#resetBtn').click(function(){
+                globalData.data.orgId=undefined;
+                var data=$.zResetFn(globalData.data,'#searchData .field');
+                globalData.getOrg(globalData.data);
+                globalData.getData(data)
+            });
+
+            //新增按钮事件
+            $('.globalData-add').click(function(){
+                globalData.updateView(globalData.addStr(),this);
+            });
+
+            //详情，修改，删除按钮的事件
+            $('#globalDataTbody').on('click','.btn',function(){
+                var _id=$(this).closest('tr').attr("_id");
+                if($(this).hasClass('detailBtn')){
+                    globalData.updateView(globalData.detailStr(),this);
+                }
+                if($(this).hasClass('editBtn')){
+                    globalData.updateView(globalData.editStr(),this);
+                }
+                if($(this).hasClass('delBtn')){
+                    var name=$(this).closest('tr').find('td:eq(3)').html();
+                    globalData.updateView(globalData.editStr(),this,name);
+                }
+
+                if($(this).hasClass('resetPwdBtn')){
+                    // var name=$(this).closest('tr').find('td:eq(2)').html();
+                    layer.confirm(lang.getData('resetPwdConfirm'),function(){
+                        $.zAjax({
+                            url: project.host()+'/v1/comUsers/'+_id,
+                            type:'PATCH',
+                            isString:true,
+                            data:{type:'reset'},
+                            success: function(data) {
+                                layer.closeAll();
+                                layer.alert(lang.getData('newPwdToEmail'),{icon:1});
+                                globalData.getData(globalData.data);
+                            }
+                        });
+                    })
+                }
+
+            });
+
+            //左侧机构树展开收起
+            $('#product-navbar-btn').click(function(){
+                $(this).find('p').toggleClass('spin');
+                $('.viewFramework-product-navbar-collapse').toggleClass('long');
+                $('.orgbox').toggleClass('show');
+                $('#tablebox').toggleClass('add');
+            });
+        }
+    }
+    $(document).ready(function() {
+        //初始化
+        globalData.init();
+    });
+
+</script>
