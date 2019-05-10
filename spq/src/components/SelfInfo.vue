@@ -7,31 +7,117 @@
 		<span slot="title" class="top-bg-title">{{title}}</span>
 	</van-nav-bar>
 	<div class="selfInfo-top">
-		<img :src="bgImg" style="position: absolute;left:0; top:0; width: 100%;height: 100%;">
+		<!-- <img :src="bgImg" style="position: absolute;left:0; top:0; width: 100%;height: 100%;"> -->
 		<div style="position: absolute;left:0;top:0;width: 100%;height: 100%;">
-			<div class="checked-icon" v-if="!this.baseInfo.authStatus" @click="goChecked">
+			<div class="checked-icon" v-if="!baseInfo.authStatus" @click="goChecked">
 				<span class="point"></span>未认证
 			</div>
-			<div class="checked-icon active-d" v-if="this.baseInfo.authStatus == 1" @click="goChecked" >
+			<div class="checked-icon active-d" v-if="baseInfo.authStatus == 1" @click="goChecked" >
 				<span class="point"></span>待审核
 			</div>
-			<div class="checked-icon active-n" v-if="this.baseInfo.authStatus == 2" @click="goChecked" >
+			<div class="checked-icon active-n" v-if="baseInfo.authStatus == 2" @click="goChecked" >
 				<span class="point"></span>审核未通过
 			</div>
-			<div class="checked-icon active-c" v-if="this.baseInfo.authStatus == 9" @click="goChecked" >
+			<div class="checked-icon active-c" v-if="baseInfo.authStatus == 9" @click="goChecked" >
 				<span class="point"></span>已认证
 			</div>
 			<div class="selfInfo-center">
-				<div class="selfInfo-header" @click="gotoBaseInfo"><i class="iconfont icon-mine"></i></div>
+				<van-row>
+					<van-col>
+						<div class="selfInfo-header" @click="gotoBaseInfo"><i class="iconfont icon-mine"></i></div>
 				<!-- <p class="baseInfo-row">{{this.baseInfo.loginName}}</p> -->
-				<p v-if="baseInfo.createBy" class="baseInfo-row"><i class="iconfont icon-mine1"></i>&nbsp{{this.baseInfo.createBy}}</p>
-				<p style="text-align: center;font-size:22px;" v-if="baseInfo.orgName || orgName" class="baseInfo-row baseInfo-org" v-html="overTxt(baseInfo.orgName||orgName)"></p>
+					</van-col>
+					<van-col class="text-left" offset="1" style="padding-top:15px;">
+						<p v-if="baseInfo.createBy" class="baseInfo-row"><i class="iconfont icon-mine1"></i>&nbsp{{baseInfo.createBy}}</p>
+						<van-rate
+							style="display: inline-block;vertical-align: -3px;"
+							allow-half
+							readonly
+							color="#c00"
+							void-icon="star"
+							void-color="#eee"
+							v-model="baseInfo.creditRating"
+						></van-rate>
+					</van-col>
+					
+					
+				</van-row>
+				<van-row>
+					<van-col span="24">
+						<!-- <p style="text-align: center;font-size:20px;" class="baseInfo-row baseInfo-org van-ellipsis">{{overTxt("企业企业企业企业企业企业企业企业企业企业企业企业")}}</p> -->
+						<p style="text-align: center;font-size:20px;" v-if="baseInfo.orgName || orgName" class="baseInfo-row baseInfo-org van-ellipsis" v-html="overTxt(baseInfo.orgName||orgName)"></p>
+					</van-col>
+				</van-row>
 				<!-- <p v-html="overTxt('企业企业企业企业企业企业企业企业企业企业')"></p> -->
 			</div>
 		</div>
+		<div class="base-deal-info">
+			<div class="base-deal-info-box">
+				<van-row>
+					<van-col span="8" class="base-deal-info-inner">
+						<p>0</p>
+						<h3 class="selfInfo-box-title">交易中的票据</h3>
+					</van-col>
+					<van-col span="8" class="base-deal-info-inner">
+						<p>0</p>
+						<h3 class="selfInfo-box-title">我发布的票据</h3>
+					</van-col>
+					<van-col span="8" class="base-deal-info-inner">
+						<p>0</p>
+						<h3 class="selfInfo-box-title">完成的交易</h3>
+					</van-col>
+				</van-row>
+			</div>
+			
+		</div>
 	</div>
-	<div style="padding: 220px 10px 50px;">
-		<van-row class="selfInfo-box">
+	<div style="padding: 250px 10px 50px;">
+		<div style="padding-top: 0px;text-align: left;">
+			<van-cell class="van-hairline--bottom" @click="safeFn">
+				<span slot="title">
+					<i class="iconfont icon-lock title-icon-sy"></i>
+					安全设置
+				</span>
+				<i slot="right-icon" class="iconfont icon-next"></i>
+			</van-cell>
+		</div>
+		<div style="padding-top: 0px;text-align: left;">
+			<van-cell class="van-hairline--bottom" @click="bankFn">
+				<span slot="title">
+					<i class="iconfont icon-yinhangqia title-icon-sy"></i>
+					银行账户设置
+				</span>
+				<i slot="right-icon" class="iconfont icon-next"></i>
+			</van-cell>
+		</div>
+		<div style="padding-top: 0px;text-align: left;">
+			<van-cell class="van-hairline--bottom" @click="gotoRealName">
+				<span slot="title">
+					<i class="iconfont icon-safety-certificate title-icon-sy"></i>
+					实名认证
+				</span>
+				<i slot="right-icon" class="iconfont icon-next"></i>
+			</van-cell>
+		</div>
+		<div style="padding-top: 0px;text-align: left;">
+			<van-cell class="van-hairline--bottom" @click="xyFn">
+				<span slot="title">
+					<i class="iconfont icon-gongdan title-icon-sy"></i>
+					平台规则与协议
+				</span>
+				<i slot="right-icon" class="iconfont icon-next"></i>
+			</van-cell>
+		</div>
+		<div style="padding-top: 0px;text-align: left;margin-top: 10px;">
+			<van-cell class="van-hairline--bottom" @click="gotoCaculate">
+				<span slot="title">
+					<i class="iconfont icon-caculater title-icon-sy"></i>
+					计算器
+				</span>
+				<i slot="right-icon" class="iconfont icon-next"></i>
+			</van-cell>
+		</div>
+		<!-- <van-row class="selfInfo-box">
 			<van-col 
 			span="12"
 			>
@@ -100,7 +186,7 @@
 					</van-col>
 				</div>
 			</van-col>
-		</van-row>
+		</van-row> -->
 	</div>
 <van-dialog
 v-model="show"
@@ -163,12 +249,12 @@ export default{
     				return str;
     			}
     			let strR, len = str.length;
-    			if(len < 10){
+    			if(len < 20){
     				return str;
     			}else{
-    				str = str.substring(0, 16);
-    				strR = str.substring(0, parseInt(str.length/3)) + '<br/>' + str.substring(parseInt(str.length/3), str.length);
-    				if(len > 16){
+    				str = str.substring(0, 30);
+    				strR = str.substring(0, parseInt(str.length/2)) + '<br/>' + str.substring(parseInt(str.length/2), str.length);
+    				if(len > 20){
     					strR += '...';
     				}
     				return strR
@@ -188,6 +274,7 @@ export default{
     				success(res){
     					if(res){
     						_this.baseInfo = res;
+    						_this.baseInfo.creditRating = 6 - _this.baseInfo.creditRating;
     						localStorage.setItem('user', JSON.stringify(res));
     						_this.initData();
     					}
@@ -248,12 +335,8 @@ export default{
 		top: 45px;
 		width: 100%;
 		height: 200px;
-		background: -moz-linear-gradient(left, #1E90FF 0%, #00BFFF 100%);
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1E90FF), color-stop(100%,#00BFFF));
-		background: -webkit-linear-gradient(left, #1E90FF 0%,#00BFFF 100%);
-		background: -o-linear-gradient(left, #1E90FF 0%,#00BFFF 100%);
-		background: -ms-linear-gradient(left, #1E90FF 0%,#00BFFF 100%);
-		background: linear-gradient(to right, #1E90FF 0%,#00BFFF 100%);
+		background: gray;
+		z-index:99;
 	}
 	.checked-icon{
 		position: absolute;
@@ -265,7 +348,7 @@ export default{
 		font-size: 12px;
 		background-color: rgba(0, 0, 0 , .3);
 		transform: scale(.8);
-		border-color: #1989fa;	
+		border-color: #c00;	
 	}
 	.checked-icon .point{
 		display:inline-block;
@@ -273,27 +356,27 @@ export default{
 		height: 10px;
 		margin-right: 3px;
 		border-radius: 50%;
-		background-color: rgba(255, 255, 255);
+		background-color: #fff;
 	}
 	.checked-icon.active-c, .checked-icon.active-d{
 		color: #fff;
 		border: 1px solid #fff;
 	}
 	.checked-icon.active-c{
-		border: 1px solid #1989fa;
+		
 	}
 	.checked-icon.active-n .point{
 		background-color: red;
 	}
 	.checked-icon.active-c .point{
-		background-color: #1989fa;
+		background-color: #c00;
 	}
 	.selfInfo-center{
-		width: 80%;
+		width: 70%;
 		text-align: center;
 		position: absolute;
-		left: 50%;
-		top: 20px;
+		left: 60%;
+		top: 30px;
 		transform: translate(-50%);
 	}
 	.selfInfo-header{
@@ -356,5 +439,43 @@ export default{
 		-webkit-box-orient:vertical;
 		overflow:hidden; 
 		text-overflow: ellipsis;
+	}
+	.base-deal-info{
+		position: absolute;
+		left:0;
+		bottom:0;
+		width: 100%;
+		transform: translateY(50%);
+
+	}
+	.base-deal-info-box{
+		margin: 0 10px;
+		background: #fff;
+		padding: 20px 10px;
+		border-radius: 10px 10px 0 0;
+		border: 1px solid #eee;
+	}
+	.base-deal-info-inner{
+		font-size: 18px;
+		text-align: center;
+		position: relative;
+	}
+	.base-deal-info-inner:not(:nth-last-child(1)):after{
+		content: '';
+		width: 2px;
+		height: 50px;
+		background:#c00;
+		display: inline-block;
+		position: absolute;
+		right: -5px;
+		opacity: .1;
+		top:50%;
+		transform: translate(50%,-50%);
+	}
+	.base-deal-info-inner p{
+		color: #cc0000;
+	}
+	.title-icon-sy{
+		color: #c00;
 	}
 	</style>

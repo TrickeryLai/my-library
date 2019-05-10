@@ -9,8 +9,14 @@
 		<div class="model-content" @touchmove.stop>
 			<div style="height: 100%;overflow:auto;overflow-y:scroll;">
 				<van-cell-group class="van-hairline--bottom">
-				<h3 class="title">票据详情</h3>
+				<h3 class="model-head-title">票据详情</h3>
 				<van-cell-group>
+					<van-row class="detail-row">
+						<van-col class="detail-row-left" span="6">票据类型</van-col>
+						<van-col class="detail-row-right" span="18">
+							<van-tag color="#c00">商票</van-tag>
+						</van-col>
+					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">承兑人</van-col>
 						<van-col class="detail-row-right" span="18">{{initData.acceptor}}</van-col>
@@ -33,18 +39,32 @@
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">到期时间</van-col>
-						<van-col class="detail-row-right" span="18">{{initData.dueDate}}</van-col>
+						<van-col class="detail-row-right" span="18">
+							{{commonFn.formatterTime(new Date(initData.dueDate), 'yyyy年MM月dd日')}}
+							<span style="text-align:right;font-size: 14px;" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)</span>
+						</van-col>
 					</van-row>
 					<van-row class="detail-row" v-if="initData.actualTime">
 						<van-col class="detail-row-left" span="6">成交日期</van-col>
-						<van-col class="detail-row-right" span="18">{{initData.actualTime}}</van-col>
+						<van-col class="detail-row-right" span="18">
+							{{commonFn.formatterTime(new Date(initData.actualTime), 'yyyy年MM月dd日')}}
+						</van-col>
 					</van-row>
 					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">成交信用</van-col>
 						<van-col class="detail-row-left" span="18">
-							<van-tag mark type="success" v-if="initData.creditRating == 1">优秀</van-tag>
+							<!-- <van-tag mark type="success" v-if="initData.creditRating == 1">优秀</van-tag>
 							<van-tag mark type="primary" v-else-if="initData.creditRating == 2">良好</van-tag>
-							<van-tag mark type="danger" v-else-if="initData.creditRating == 3">一般</van-tag>
+							<van-tag mark type="danger" v-else-if="initData.creditRating == 3">一般</van-tag> -->
+							<van-rate
+								style="display: inline-block;vertical-align: -3px;"
+								allow-half
+								readonly
+								color="#f44"
+								void-icon="star"
+								void-color="#eee"
+								v-model="initData.creditRating"
+							></van-rate>
 						</van-col>
 					</van-row>
 					<!-- <van-row class="detail-row">
@@ -76,7 +96,7 @@
 				</van-cell-group>
 			</van-cell-group>
 			<van-cell-group class="" style="padding-bottom: 50px;">
-				<h3 class="title">报价信息</h3>
+				<h3 class="model-head-title">报价信息</h3>
 				<van-cell-group>
 					<van-row>
 						<van-col span="24" @click="getbuyPrice">
@@ -159,7 +179,7 @@
 						v-if="initData.cpStatus == '04'"
 						type="info"
 						style="width: 100%;height: 100%;"
-						@click="okFn">我要买</van-button>
+						@click="okFn">确认报价</van-button>
 					<van-button
 						v-if="initData.cpStatus == '02'"
 						type="primary"
@@ -204,6 +224,7 @@
 		components:{PriceList},
 		data(){
 			return {
+				commonFn: _common.common_fn,
 				finished:true,
 				isPreviewPic: false,
 				show: this.showState,
@@ -230,6 +251,7 @@
 			showState(newValue, oldValue){
 				this.show = newValue;
 				if(newValue){
+					this.transformRate();
 					this.setTimeoutFn();
 					this.getbuyPrice();
 					this.submit.yearRate = '';
@@ -254,6 +276,9 @@
 			touchmove(e){
 				// e.stopPropagation();
 				//阻止 touchmove事件触发组件的touchmove事件，防止拖动报错
+			},
+			transformRate(rate){
+				this.initData.creditRating = 6 - this.initData.creditRating;
 			},
 			setTimeoutFn(){
 				//如果不是报价状态，则可用取消查询
@@ -450,24 +475,6 @@
 </script>
 
 <style scoped>
-
-.title{
-	padding: 10px;
-	text-align: left;
-	color: #000;
-	font-weight: normal;
-	font-size: 16px;
-}
-.title::before{
-	content: '';
-	display: inline-block;
-	width: 8px;
-	height: 8px;
-	border-radius: 50%;
-	background: #0079f3;
-	vertical-align: 1px;
-	margin-right: 7px;
-}
 .model-content{
 	text-align: left;
   	height: 100%;

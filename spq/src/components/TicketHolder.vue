@@ -1,14 +1,14 @@
 <template>
 <div class="ticketHolder">
-		<van-nav-bar
+		<!-- <van-nav-bar
 		fixed
 		@click-right="onClickRight"
 		class="top-bg"
 		>
 			<span slot="title" class="top-bg-title">{{title}}</span>
 			<span slot="right" class="top-bg-title">发布</span>
-		</van-nav-bar>
-		<div class="ticket-search">
+		</van-nav-bar> -->
+		<!-- <div class="ticket-search">
 			<van-search
 			style="position:absolute;left: 0;top: 0;width: 100%;"
 			placeholder="请输入承兑人搜索"
@@ -17,7 +17,7 @@
 			>
 				<i class="iconfont icon-search" slot="left-icon"></i>
 			</van-search>
-		</div>
+		</div> -->
 	<van-collapse class="ticket-content-list" v-model="activeName" accordion>
 		<van-collapse-item class="text-left" title="已发布" name="1" style="height: 100%;position: relative;overflow-y:scroll;" >
 			<div style="border: 1px solid #ccc;">
@@ -127,6 +127,7 @@ import _common from '@/server/index'
 import TicketHolderListDetail from '@/components/TicketHolderListDetail'
 export default{
 	name: 'TicketHolder',
+	props:['modelState'],
 	components:{TicketHolderListDetail},
 	data(){
 		return {
@@ -150,8 +151,21 @@ export default{
 				}
 			}
 		},
-		created(){
+		watch: {
+			modelState(newValue, oldValue) {
+				if(!newValue){
+					this.detailModelClose();
+				}
+			}
+		},
+		mounted(){
 			this.fbOnLoad();
+		},
+		created(){
+			
+		},
+		destoryed(){
+			
 		},
 		beforeRouteLeave(to, from, next){
 			if(to.name == 'Login' || to.name == 'RealName' || to.name == 'RealNameChange'){
@@ -253,6 +267,9 @@ export default{
 						if(res.code == 0){
 							_this.fbListState.detailItem = res.data;
 							_this.fbListState.detailModelState = true;
+
+							//通知外部窗口关闭
+							_this.$emit('modelChange', true);
 							
 						}
 					}).catch(error => {
@@ -270,6 +287,9 @@ export default{
 			detailModelClose(){
 				this.fbListState.detailModelState = false;
 				this.$canScroll();
+
+				//通知外部窗口关闭
+				this.$emit('modelChange', false);
 			}
 
 		}
@@ -280,7 +300,7 @@ export default{
 	.ticketHolder{
 		position: absolute;
 		left: 0;
-		top: -46px;
+		top: 0px;
 		width: 100%;
 		display: flex;
 		flex-direction: column;
@@ -295,7 +315,7 @@ export default{
 	.ticketHolder .ticket-search{
 		position: fixed;
 		left: 0;
-		top: 45px;
+		top: 90px;
 		width: 100%;
 		height: 50px;
 		z-index: 5;
@@ -304,7 +324,7 @@ export default{
 		background: #f5f5f5;
 		flex: 1;
 		height: 100%;
-		margin-top: 149px;
+		margin-top: 48px;
 		box-sizing: border-box;
 		overflow-y: scroll;
 	}

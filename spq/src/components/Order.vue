@@ -1,13 +1,13 @@
 <template>
 	<div class="order-page">
-		<van-nav-bar
+		<!-- <van-nav-bar
 		fixed
 		class="top-bg"
 		@click-right="rightClick"
 		>
 			<span slot="title" class="top-bg-title">{{title}}</span>
 			<span slot="right" class="top-bg-title">{{rightText}}</span>
-		</van-nav-bar>
+		</van-nav-bar> -->
 		<div class="">
 			<!-- <van-search
 			style="position:absolute;left: 0;top: 0;width: 100%;"
@@ -48,7 +48,7 @@
 			<van-collapse-item class="text-left" name="1" style="height: 100%;position: relative;overflow-y:scroll;">
 				<p slot="title">
 					我的买入
-					<span class="blue-font" style="font-size: 12px;" @click.stop="rightClick">({{beginTimeData.value}}&nbsp-&nbsp{{endTimeData.value}})</span>
+					<span class="base-font-color" style="font-size: 12px;" @click.stop="rightClick">({{beginTimeData.value}}&nbsp-&nbsp{{endTimeData.value}})</span>
 				</p>
 				<div style="border: 1px solid #ccc;">
 					<van-pull-refresh 
@@ -61,6 +61,7 @@
 					:error.sync="error"
 					error-text="请求失败，点击重新加载"
 					:offset="30"
+					style="height: 100%;"
 					@load="fbOnLoad"
 					>
 					<van-cell
@@ -72,10 +73,12 @@
 					>
 					<template slot="title">
 						<van-row>
-							<van-col span="24" class="van-ellipsis text-left">票据号：<span style="font-size:16px;">{{item.cpNo}}</span></van-col>
+							<van-col span="24" class="van-ellipsis text-left">票据号：
+								<div style="font-size:16px;" class="van-ellipsis black-font">{{item.cpNo}}</div>
+							</van-col>
 						</van-row>
 						<van-row>
-							<van-col span="18">
+							<van-col span="19">
 								<span class="text-left">我的竞价金额：</span>
 								<!-- <span v-if="item.turnVolume > 10000">
 									<span class="price-txt">{{item.turnVolume && (item.turnVolume/10000).toFixed(2)}}</span> 
@@ -87,7 +90,7 @@
 								</span>
 								
 							</van-col>
-							<van-col span="6">
+							<van-col span="5">
 								<div style="text-align: right;">
 									<van-tag round  type="primary" v-if="item.quoteStatus == 1">
 										报价中
@@ -156,6 +159,7 @@ import _common from '@/server/index'
 import OrderDetail from '@/components/OrderDetail'
 export default{
 	name: 'Order',
+	props:['modelState'],
 	components:{OrderDetail},
 	data(){
 		return {
@@ -196,6 +200,13 @@ export default{
 		created(){
 			this.fbOnLoad();
 
+		},
+		watch: {
+			modelState(newValue, oldValue) {
+				if(!newValue){
+					this.detailModelClose();
+				}
+			}
 		},
 		beforeRouteLeave(to, from, next){
 			if(to.name == 'Login' || to.name == 'RealName' || to.name == 'RealNameChange'){
@@ -326,6 +337,9 @@ export default{
 						if(res.code == 0){
 							_this.fbListState.detailItem = res.data;
 							_this.fbListState.detailModelState = true;
+
+							//通知外部窗口打开
+							_this.$emit('modelChange', true);
 						}
 					}
 				});
@@ -341,6 +355,9 @@ export default{
 			detailModelClose(){
 				this.$canScroll();
 				this.fbListState.detailModelState = false;
+
+				//通知外部窗口关闭
+				this.$emit('modelChange', false);
 			},
 			formatter(type, value) {
 				return _common.common_fn.formatter(type, value);
@@ -354,7 +371,7 @@ export default{
 	.order-page{
 		position: absolute;
 		left: 0;
-		top: -46px;
+		top: 0px;
 		width: 100%;
 		display: flex;
 		flex-direction: column;
@@ -378,7 +395,7 @@ export default{
 		background: #f5f5f5;
 		flex: 1;
 		height: 100%;
-		margin-top: 90px;
+		margin-top: 48px;
 		box-sizing: border-box;
 		overflow-y: scroll;
 	}

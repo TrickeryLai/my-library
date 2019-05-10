@@ -19,6 +19,7 @@ import AddBankCard from '@/components/AddBankCard'
 import BankDetailInfo from '@/components/BankDetailInfo'
 import ChangeAccount from '@/components/ChangeAccount'
 import ForgetPassword from '@/components/ForgetPassword'
+import OdPage from '@/components/OdPage'
 
 import PushPage from '@/components/PushPage';
 
@@ -51,6 +52,15 @@ let routerData = {
         isNChecked: false,//是否需要认证权限
       },
       component: BillHall
+    },
+    {
+      path: '/home/odPage',
+      name: 'OdPage',
+      meta:{
+        isLogin: true,//是否需要登录权限
+        isNChecked: true,//是否需要认证权限
+      },
+      component: OdPage
     },
     {
       path: '/home/ticketHolder',

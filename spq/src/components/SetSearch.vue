@@ -9,7 +9,7 @@
       <div class="model-content setSearch-model" @touchmove.stop >
         <div style="padding-bottom: 60px;">
           <van-cell-group class="van-hairline--bottom">
-            <h3 class="title">承兑人</h3>
+            <h3 class="model-head-title">承兑人</h3>
             <van-field 
             	v-model="searchData.acceptor"
             	clearable 
@@ -17,7 +17,7 @@
             />
           </van-cell-group>
           <van-cell-group class="van-hairline--bottom">
-            <h3 class="title">票据号码</h3>
+            <h3 class="model-head-title">票据号码</h3>
             <van-field 
             	v-model="searchData.cpNo" 
             	placeholder="请输入票据号码"
@@ -27,7 +27,7 @@
             	/>
           </van-cell-group>
           <van-cell-group class="van-hairline--bottom">
-            <h3 class="title">发布时间</h3>
+            <h3 class="model-head-title">发布时间</h3>
             <van-row>
         		<van-field 
         			class="my-input"
@@ -48,7 +48,7 @@
            
           </van-cell-group>
           <van-cell-group class="van-hairline--bottom">
-            <h3 class="title">票面金额</h3>
+            <h3 class="model-head-title">票面金额</h3>
             <van-tag
             	class="my-tag"	
               	v-for="(item, index) in amountType"
@@ -75,7 +75,7 @@
             </div>
           </van-cell-group>
           <van-cell-group class="van-hairline--bottom">
-            <h3 class="title">剩余天数</h3>
+            <h3 class="model-head-title">剩余天数</h3>
             <van-tag
               class="my-tag"
               v-for="(item, index) in dayType"
@@ -100,7 +100,7 @@
             </div>
           </van-cell-group>
           <van-cell-group class="van-hairline--bottom">
-            <h3 class="title">瑕疵</h3>
+            <h3 class="model-head-title">瑕疵</h3>
             <van-tag
               class="my-tag"
               v-for="(item, index) in perfectType"
@@ -110,7 +110,7 @@
             >{{item.name}}</van-tag>
           </van-cell-group>
           <van-cell-group>
-            <h3 class="title">成交信用</h3>
+            <h3 class="model-head-title">成交信用</h3>
             <van-tag
               class="my-tag"
               v-for="(item, index) in dealType"
@@ -120,7 +120,7 @@
             >{{item.name}}</van-tag>
           </van-cell-group>
           <van-cell-group v-if="false">
-            <h3 class="title">票据状态</h3>
+            <h3 class="model-head-title">票据状态</h3>
             <van-tag
               class="my-tag"
               v-for="(item, index) in cpStatus"

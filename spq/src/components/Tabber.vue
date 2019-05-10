@@ -1,9 +1,9 @@
 <template>
 	<div>
 		<router-view/>	
-		<van-tabbar v-model="active">
+		<van-tabbar v-model="active" active-color = "#c00">
 			<van-tabbar-item to="/home/billHall">
-				大厅
+				票库
 				<i
 				slot="icon"
 				slot-scope="props"
@@ -11,17 +11,8 @@
 				>
 				</i>
 			</van-tabbar-item>
-			<van-tabbar-item icon="column" to="/home/ticketHolder">
-				票方
-				<i
-				slot="icon"
-				slot-scope="props"
-				class="iconfont icon-ticket"
-				>
-				</i>
-			</van-tabbar-item>
-			<van-tabbar-item icon="orders-o" to="/home/order">
-				资方
+			<van-tabbar-item icon="orders-o" to="/home/odPage">
+				订单
 				<i
 				slot="icon"
 				slot-scope="props"
@@ -63,16 +54,12 @@
 					this.active = 0;
 					return;
 				}
-				if(now.path.indexOf('ticketHolder') >= 0) {
+				if(now.path.indexOf('odPage') >= 0) {
 					this.active = 1;
 					return;
 				}
-				if(now.path.indexOf('order') >= 0) {
-					this.active = 2;
-					return;
-				}
 				if(now.path.indexOf('selfInfo') >= 0) {
-					this.active = 3;
+					this.active = 2;
 					return;
 				}
 			}

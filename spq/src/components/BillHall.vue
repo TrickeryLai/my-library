@@ -6,12 +6,34 @@
 		class="top-bg"
 		>
 			<span slot="title" class="top-bg-title">{{title}}</span>
-			<span slot="right" class="top-bg-title">筛选</span>
+			<span slot="right" class="top-bg-title">我要发布</span>
 		</van-nav-bar>
 		<div class="list-wrap">
 			<van-row class="nav-top">
 				<div class="top-search-box">
-				<van-col span="8">
+				<van-col span="7">
+					<div @click="sortPublish">
+							发布时间
+						<span class="rant-arrow">
+							<i 
+							class="iconfont icon-arrowup" :class="{'rant-active': sortState.createTimeSort === 0}"
+							name="arrow-up"/>
+							<i class="iconfont icon-arrowdownb" :class="{'rant-active': sortState.createTimeSort === 1}"
+							name="arrow-down"/>
+						</span>
+					</div>
+				</van-col>
+				<van-col span="7">
+					<div @click="sortEndTime">
+							到期日
+						<span class="rant-arrow">
+							<i class="iconfont icon-arrowup" :class="{'rant-active': sortState.dueDateSort === 0}" name="arrow-up"/>
+							<i class="iconfont icon-arrowdownb" :class="{'rant-active': sortState.dueDateSort === 1}"
+							name="arrow-down"/>
+						</span>
+					</div>
+				</van-col>
+				<van-col span="7">
 					<div @click="sortAmount">
 						票面金额
 						<span class="rant-arrow">
@@ -26,26 +48,9 @@
 						</span>
 					</div>
 				</van-col>
-				<van-col span="8">
-					<div @click="sortPublish">
-							发布时间
-						<span class="rant-arrow">
-							<i 
-							class="iconfont icon-arrowup" :class="{'rant-active': sortState.createTimeSort === 0}"
-							name="arrow-up"/>
-							<i class="iconfont icon-arrowdownb" :class="{'rant-active': sortState.createTimeSort === 1}"
-							name="arrow-down"/>
-						</span>
-					</div>
-				</van-col>
-				<van-col span="8">
-					<div @click="sortEndTime">
-							到期日
-						<span class="rant-arrow">
-							<i class="iconfont icon-arrowup" :class="{'rant-active': sortState.dueDateSort === 0}" name="arrow-up"/>
-							<i class="iconfont icon-arrowdownb" :class="{'rant-active': sortState.dueDateSort === 1}"
-							name="arrow-down"/>
-						</span>
+				<van-col span="3">
+					<div @click="serachClick" style="margin-left: -13px;font-weight:bold;" class="base-font-color">
+							筛选
 					</div>
 				</van-col>
 			</div>
@@ -68,10 +73,75 @@
 						:key="index"
 						:title="index"
 						style="margin-bottom: 5px;box-shadow: 1px 1px 0px 1px #ccc;"
-						@click="showDetail(item)"
 						>
 							<template slot="title">
-							<van-row  class="van-hairline--bottom" style="overflow: hidden;">
+
+								<div @click="showDetail(item)" style="position: absolute;right:15px;bottom: 10px;z-index: 10;">
+									<van-button type="success" size="small" v-if="item.cpStatus == 1">审核中</van-button>
+									<van-button type="danger" size="small" v-else-if="item.cpStatus == 2">撮合成功</van-button>
+									<van-button v-else-if="item.cpStatus == 3" size="small">已注销</van-button>
+									<van-button type="info" size="small" v-else-if="item.cpStatus == 4">票据详情</van-button>
+									<van-button type="success" size="small" v-else-if="item.cpStatus == 6">已成交</van-button>
+									<van-button size="small" v-else-if="item.cpStatus == 7">买方违约</van-button>
+									<van-button size="small" v-else-if="item.cpStatus == 8">卖方违约</van-button>
+								</div>
+										
+								<van-row class="van-hairline--bottom text-left">
+									<van-col span="24" class="van-ellipsis">
+										承兑人：{{item.acceptor}}
+									</van-col>
+								</van-row>
+								<van-row class="van-hairline--bottom text-left">
+									<van-col span="24">
+										票据金额：
+										<span v-if="item.cpAmount > 10000" class="black-font text-left">
+											<span class="price-txt">
+												{{item.cpAmount && dealPrice((item.cpAmount/10000).toFixed(2))}}
+											</span>
+											<span class="small-font">万元</span>
+										</span>
+										<span v-else class="black-font text-left">
+											<span  class="price-txt">{{item.cpAmount && dealPrice((item.cpAmount).toFixed(2))}}
+											</span>
+											<span class="small-font">元</span>
+										</span>
+									</van-col>
+								</van-row>
+								<van-row class="van-hairline--bottom text-left">
+									<van-col span="24">
+										发布时间：
+										<span class="black-font">{{commonFn.formatterTime(new Date(item.createTime), 'yyyy年MM月dd日')}}</span>
+									</van-col>
+								</van-row>
+								<van-row class="van-hairline--bottom text-left">
+									<van-col span="24">
+										到期时间：
+										<span>
+											<span class="black-font">
+												{{commonFn.formatterTime(new Date(item.dueDate), 'yyyy年MM月dd日')}}
+											</span>
+											<span style="text-align:right;" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)
+											</span>
+										</span>
+									</van-col>
+								</van-row>
+								<van-row class="van-hairline--bottom text-left">
+									<van-col span="24">
+										评级：
+										<span>
+											<van-rate
+												style="display: inline-block;vertical-align: -3px;"
+												allow-half
+												readonly
+												color="#f44"
+												void-icon="star"
+												void-color="#eee"
+												v-model="item.creditRating"
+											></van-rate>
+										</span>
+									</van-col>
+								</van-row>
+							<!-- <van-row  class="van-hairline--bottom" style="overflow: hidden;">
 								<van-col span="4">
 									<span class="xy-txt" v-if="item.creditRating == 1">优秀</span>
 									<span class="xy-txt" v-else-if="item.creditRating == 2">良好</span>
@@ -92,22 +162,12 @@
 									<van-tag v-else-if="item.cpStatus == 7">买方违约</van-tag>
 									<van-tag v-else-if="item.cpStatus == 8">卖方违约</van-tag>
 								</van-col>
-							</van-row>
-							<van-row style="margin-top: 5px;">
-								<van-col v-if="item.cpAmount > 10000" span="9" class="black-font text-left">
-									<span class="price-txt">
-										{{item.cpAmount && dealPrice((item.cpAmount/10000).toFixed(2))}}
-									</span>
-									<span class="small-font">万元</span>
-								</van-col>
-								<van-col v-else span="9" class="black-font text-left">
-									<span  class="price-txt">{{item.cpAmount && dealPrice((item.cpAmount).toFixed(2))}}
-									</span>
-									<span class="small-font">元</span>
-								</van-col>
+							</van-row> -->
+							<!-- <van-row style="margin-top: 5px;">
+								
 								<van-col span="8" class="black-font">{{spliceTime(item.createTime)}}</van-col>
 								<van-col span="7" class="black-font">{{item.dueDate}}</van-col>
-							</van-row>
+							</van-row> -->
 					</template>
 				</van-cell>
 			</van-list>
@@ -170,7 +230,7 @@ import _common from '@/server/index'
   	},
   	data() {
   		return {
-  			title: '交易大厅',
+  			title: '票据库',
 	        finished: false,//是否已经加载完成
 	        error: false,
 	        isLoading: false,
@@ -194,6 +254,7 @@ import _common from '@/server/index'
 		      	pageSize: 10,
 		      	total: 0,
 	      	},
+	      	commonFn:_common.common_fn,
       		list: []
   		}
 	},
@@ -228,6 +289,14 @@ import _common from '@/server/index'
 	},
 	methods: {
 		onClickRight() {
+			this.$router.push({path: '/home/ticketHolder/fbpj'});
+		},
+		transformRate(rate){
+			this.list.forEach((item) => {
+				item.creditRating = 6 - item.creditRating;
+			});
+		},
+		serachClick() {
 			this.$noScroll();
 			this.searchModelState = true;
 			this.loading = true;
@@ -300,13 +369,14 @@ import _common from '@/server/index'
 	        			this.list = response.list;
 
 	        		}
-	            //数据全部加载完成
-	            if (this.list.length >= response.pageInfo.total) {
-	            	this.finished = true;
-	            } else {
-	            	this.finished = false;
-	            }
-	        }
+		            //数据全部加载完成
+		            if (this.list.length >= response.pageInfo.total) {
+		            	this.finished = true;
+		            } else {
+		            	this.finished = false;
+		            }
+		        }
+		        this.transformRate();
 	    	}).catch((error) => {
 		    	this.error = true;
 		    	this.isGetData = false;
@@ -428,7 +498,7 @@ import _common from '@/server/index'
 .icon-arrowdownb:before {
 	content: "\E6CE";
 	position: absolute;
-	top: -2px;
+	top: -4px;
 	left: 0;
 }
 

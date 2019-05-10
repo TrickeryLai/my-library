@@ -79,6 +79,9 @@
     color: #000;
     font-size: 16px;
   }
+  .base-font-color{
+    color :#c00;
+  }
   .small-font{
     font-size: 12px;
     transform: scale(0.8);
@@ -109,7 +112,7 @@
     position: relative;
   }
   .rant-active {
-    color: #0079f3;
+    color: #c00;
   }
   .w-35p{
     width: 35%;
@@ -130,5 +133,21 @@
     color: #232333;
     font-weight: 900;
   }
-
+  .model-head-title{
+    padding: 10px;
+    text-align: left;
+    color: #000;
+    font-weight: normal;
+    font-size: 16px;
+  }
+  .model-head-title::before{
+    content: '';
+    display: inline-block;
+    width: 5px;
+    height: 15px;
+    border-radius: 50px;
+    background: #c00;
+    vertical-align: -2px;
+    margin-right: 7px;
+  }
   </style>

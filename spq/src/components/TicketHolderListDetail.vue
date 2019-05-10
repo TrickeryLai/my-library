@@ -8,7 +8,7 @@
 		<div class="model-content">
 			<div style="height: 100%;overflow:auto;overflow-y:scroll;">
 				<van-cell-group class="van-hairline--bottom">
-					<h3 class="title">票据详情</h3>
+					<h3 class="model-head-title">票据详情</h3>
 					<van-cell-group>
 						<van-row class="detail-row">
 							<van-col class="detail-row-left" span="6">承兑人</van-col>
@@ -55,9 +55,18 @@
 						<van-row class="detail-row">
 							<van-col class="detail-row-left" span="6">成交信用</van-col>
 							<van-col class="detail-row-left" span="18">
-								<van-tag mark type="success" v-if="initData.creditRating == 1">优秀</van-tag>
+								<!-- <van-tag mark type="success" v-if="initData.creditRating == 1">优秀</van-tag>
 								<van-tag mark type="primary" v-else-if="initData.creditRating == 2">良好</van-tag>
-								<van-tag mark type="danger" v-else-if="initData.creditRating == 3">一般</van-tag>
+								<van-tag mark type="danger" v-else-if="initData.creditRating == 3">一般</van-tag> -->
+								<van-rate
+									style="display: inline-block;vertical-align: -3px;"
+									allow-half
+									readonly
+									color="#f44"
+									void-icon="star"
+									void-color="#eee"
+									v-model="initData.creditRating"
+								></van-rate>
 							</van-col>
 						</van-row>
 						<!-- <van-row class="detail-row">
@@ -89,7 +98,7 @@
 					</van-cell-group>
 				</van-cell-group>
 				<van-cell-group v-if="item.cpStatus == 2 || item.cpStatus == 3 || item.cpStatus == 4 || item.cpStatus == 6" class="van-hairline--bottom" style="padding-bottom: 60px;">
-					<h3 class="title">报价信息</h3>
+					<h3 class="model-head-title">报价信息</h3>
 					<van-cell-group>
 						<van-row>
 							<van-col span="24" @click="getbuyPrice">
@@ -215,6 +224,7 @@
 			showState(newValue, oldValue){
 				this.show = newValue;
 				if(newValue){
+					this.transformRate();
 					this.setTimeoutFn();
 					this.getbuyPrice();
 					if(this.initData.cpStatus == 2){
@@ -241,6 +251,9 @@
 						this.getbuyPrice();
 					}
 				}, 1000)
+			},
+			transformRate(rate){
+				this.initData.creditRating = 6 - this.initData.creditRating;
 			},
 			biddingSuccess(){
 				//撮合成功

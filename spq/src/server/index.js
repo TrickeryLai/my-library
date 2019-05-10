@@ -1,3 +1,5 @@
+//通用配置 && 通用方法
+//
 
 import AreaData from '@/server/areaData';
 
@@ -5,11 +7,16 @@ let protocol = location.protocol || 'http';
 // let protocol = 'http:';
 let common = {
 	// ip: '117.71.57.247',
-  ip: '47.113.2.4',
+ 
 	// port: '3580', //接口端口号
   // xyPort: '3580',//协议端口号
-  port: '5080',
-  xyPort: '5080',
+  //  // ip: '47.113.2.4',//生产
+  // port: '5080',
+  // xyPort: '5080',
+
+  ip: '117.71.57.247',//测试
+  port: '3580',
+  xyPort: '3580'
 };
 let xyHeadUrl = protocol + '//' + common.ip + ':' + common.xyPort +'/open-cp/v1/protocol/pdf/';
 
@@ -162,13 +169,20 @@ let commonUrl = {
      * @return {[type]}      [description]
      */
     formatterTime(t = new Date(), type = 'yyyy年MM月dd日'){
-        let date ='', time = new Date(t), yyyy, MM, dd;
+        let date ='', time = new Date(t), yyyy, MM, dd, hh, mm, ss;
         yyyy = time.getFullYear();
         MM = this.addZero((time.getMonth() + 1));
         dd = this.addZero(time.getDate());
+
+        hh = this.addZero(time.getHours());
+        mm = this.addZero(time.getMinutes());
+        ss = this.addZero(time.getSeconds());
         type = type.replace('yyyy', yyyy);
         type = type.replace('MM', MM);
         type = type.replace('dd', dd);
+        type = type.replace('hh', hh);
+        type = type.replace('mm', mm);
+        type = type.replace('ss', ss);
         return type;
     },
     /**
