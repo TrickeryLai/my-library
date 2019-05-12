@@ -30,103 +30,541 @@
   <link media="all" href="../assets/fonts/font-awesome/css/font-awesome.css"type="text/css" rel="stylesheet">
   <link media="all" href="../assets/css/index.css" type="text/css" rel="stylesheet" />
   <link media="all" href="../assets/css/main.css" type="text/css" rel="stylesheet">
+ <style>
+     *{
+         font-family: '微软雅黑';
+         margin: 0;
+         padding: 0;
+         font-size: 14px;
+     }
+     ul li{
+         list-style: none;
+     }
+     .base-width{
+         width: 1024px;
+         margin:0 auto;
+     }
+      .base-bg-color{
+          background: #c00;
+          color: #fff;
+      }
+     .base-font-color{
+         color: #c00;
+     }
+     .header{
+         padding: 5px 0;
+         font-size: 10px!important;
+         position: fixed;
+         left: 0;
+         top: 0;
+         width: 100%;
+         z-index: 999;
+     }
+     .fl{
+         float: left;
+     }
+     .fr{
+         float: right;
+     }
+     .clear:after{
+         content: '';
+         width: 0;
+         height: 0;
+         display:block;
+         line-height: 0;
+         clear: both;
+     }
+     .m-l-10px{
+         margin-left: 10px;
+     }
+     .nav{
+         height: 60px;
+         line-height: 60px;
+         position: fixed;
+         left:0;
+         top: 32px;
+         width: 100%;
+         z-index: 999;
+         background: #fff;
+     }
+     .nav .logo{
+         width: 200px;
+         text-align: center;
+         border: 1px solid #ccc;
+     }
+     .nav ul{
+         position: relative;
+     }
+     .nav ul li{
+         float: left;
+         list-style: none;
+         font-size: 16px;
+         margin: 0px 25px;
+         cursor: pointer;
+         transition: all .3s;
+     }
+     .nav ul li.active{
+         color :#c00;
+     }
+     .nav .nav-line{
+         width: 60px;
+         background :#c00;
+         height: 3px;
+         position: absolute;
+         bottom: 10px;
+         left: 10px;
+         margin: 0;
+     }
+     .content-top{
+         margin-top: 93px;
+         height: 455px;
+         border: 1px solid #c00;
+         position: relative;
+         background: #eee;
+     }
+     .content-top-img{
+         position: absolute;
+         left: 0;
+         top: 0;
+         width: 100%;
+         height: 100%;
+     }
+     .content-top-img li{
+         display: none;
+     }
+     .img-point-tabs{
+         position: absolute;
+         left: 50%;
+         bottom: 50px;
+         z-index: 10;
+         transform: translateX(-50%);
+     }
+     .img-point-tabs li{
+         width: 25px;
+         height: 10px;
+         background: #fff;
+         margin: 10px;
+         border-radius: 20px;
+         transition: all .3s;
+         float: left;
+         cursor: pointer;
+     }
+     .img-point-tabs li.active{
+         width: 40px;
+         background: #c00;
+     }
+     .content-top-inner{
+         height: 100%;
+         position: relative;
+     }
+     .content-top-i-l{
+
+     }
+     .content-top-i-r{
+         position: absolute;
+         right: 20px;
+         top: 50%;
+         transform: translateY(-50%);
+         background: #fff;
+         padding: 20px;
+         width: 250px;
+         border: 1px solid #ddd;
+     }
+     .content-top-i-r input{
+        margin: 10px 0;
+         border: 1px solid #ccc;
+     }
+     .cap-input-box{
+           overflow: hidden;
+     }
+     .captcha-input{
+         width: 65%;
+     }
+     .captcha-img{
+         width: 35%;
+         height: 37px;
+         border: 1px solid #ddd;
+         margin: 10px 0;
+         margin-left: -1px;
+     }
+     .login-txt{
+         padding: 0 10px;
+     }
+     .login-txt span{
+         cursor:pointer;
+         color: #4f6bd7;
+         transition: all .3s;
+     }
+     .login-txt span:hover{
+         color: #5974d9;
+     }
+     .login-btn{
+         background: #c00;
+         width: 100%;
+         color: #fff;
+         border: 1px solid #b00;
+     }
+     .login-btn:link, .login-btn:visited, .login-btn:hover, .login-btn:active{
+         background: #a00;
+         color:#fff;
+         border: 1px solid #a00;
+     }
+     .get-mg-btn{
+         background: #c00;
+         font-size: 12px;
+         color: #fff;
+         border: 1px solid #c00;
+     }
+     .login-tab{
+          
+     }
+     .login-tab li{
+         padding: 10px;
+         border-bottom: 3px solid #666;
+         cursor: pointer;
+         transition: all .3s;
+     }
+     .login-tab li.active{
+         color: #fff;
+         border-bottom: 3px solid #c00;
+         background:#c00;
+     }
+     .myCount{
+         transition: all .3s;
+         margin-right: 20px;
+         position: relative;
+         z-index: 999;
+     }
+     .myCount h3{
+         font-weight: bold;
+         font-weight: bolder;
+         font-size: 18px;
+         border: 1px solid #CCC;
+         box-shadow: 0px 1px 1px 0px #ccc;
+         cursor: pointer;
+         padding: 0 30px;
+         margin: 0;
+         height: 60px;
+         line-height: 60px;
+     }
+     .myCount:hover h3{
+         color: #c00;
+         text-shadow: 1px 1px 1px #fff;
+     }
+     .myCount .detail-list{
+         height: 0;
+         position: absolute;
+         left:0;
+         top: 60px;
+         width: 100%;
+         transition: all .1s;
+         overflow: hidden;
+         background: #fff;
+
+     }
+     .myCount .detail-list ul {
+         padding: 10px 0;
+
+     }
+     .myCount .detail-list li{
+         padding: 10px 10%;
+         margin: 0;
+         width: 100%;
+     }
+     .myCount .detail-list li:hover{
+         background: #f5f5f5;
+     }
+     .myCount:hover .detail-list{
+         height: 200px;
+     }
+     .content-main{
+
+     }
+     .content-main .content-main-title{
+         font-size: 20px;
+         letter-spacing: 5px;
+     }
+     .content-main .content-main-title:before{
+         content: '';
+         display: inline-block;
+         width: 5px;
+         height: 20px;
+         background: #c00;
+         border-radius: 100px;
+         vertical-align: -2px;
+         margin-right: 6px;
+     }
+     .content-main .content-main-table th{
+         background: #ccc;
+     }
+     .footer{
+         background: #c00;
+         color: #fff;
+         font-size: 18px;
+     }
+     .footer-head-title{
+         font-size: 22px;
+         font-weight: normal;
+         display:inline-block;
+         padding: 0 10px;
+         color: #fff!important;
+     }
+     .footer-head-title:after{
+         content: '';
+         display: block;
+         width: 100%;
+         height: 3px;
+         background: #fff;
+         border-radius: 50px;
+         margin-top: 10px;
+     }
+     .footer .tel{
+         font-size: 28px;
+         font-weight: normal;
+     }
+     .footer-a{
+         color: #29CC17;
+         margin: 0 10px;
+     }
+     .footer-bottom{
+         background:#a00;
+         text-align: center;
+         padding: 5px;
+     }
+     .active{
+         color: #c00;
+     }
+
+     button[disabled='disabled']{
+         opacity: .6;
+     }
+ </style>
  </head>
- <body id="app" class="app theme-one body-full" style="background: url(../assets/images/bg.jpg) center no-repeat;
-    background-size: auto 100%;">
+ <body id="app" class="app theme-one body-full">
 
-    <header class="site-head clearfix ng-scope animated slideInDown" >
-      <div class="nav-head ng-scope" style="background: #fff;box-shadow: inset -1px 0 1px #fff;" >
-        <a href="javascript:;" class="site-logo" style="color: #000;">
-          <span class="unifTitle">
+ <!--[if lt IE 8]>
 
-          </span>
-
-        </a>
-<!--         <span class="nav-trigger fa fa-outdent">
-        </span> -->
-      </div>
-
-
-       <div class="head-wrap clearfix ng-scope">
-        <ul class="list-unstyled navbar-right">
-          <li id='languageContent'>
-            <ul >
-              <li onclick='$.changeLanguage(this);' data-lang='zh_cn'>中文简体</li>
-              <li onclick='$.changeLanguage(this);' data-lang='en_us' style="float: right;">English</li>
-<!--               <li onclick='$.changeLanguage(this);' data-lang='zh_cht'>中文繁体</li> -->
+ <![endif]-->
+        <header class="base-bg-color header">
+            <div class="base-width clear">
+                  <div class="fl">
+                      <i class="fa fa-phone"></i>
+                      客服电话：400-963-100
+                  </div>
+                    <div class="fr m-l-10px">
+                        <i class="fa fa-asterisk"></i>
+                        关于我们
+                    </div>
+            </div>
+        </header>
+        <nav class="nav base-width clear">
+            <div class="logo fl">商票之家</div>
+            <ul class="fl clear" id="navTabs">
+                <li>首页</li>
+                <li>我要买</li>
+                <li class="nav-line" id="navLine"></li>
             </ul>
-          </li>
-        </ul>
-      </div>
-    </header>
+            <div class="fr myCount">
+                <h3>
+                    我的账户
+                </h3>
+                <div class="detail-list">
+                    <ul>
+                        <li>代售票源</li>
+                        <li>了解更多</li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="content-top">
+            <ul class="content-top-img" id="contentTopImg">
+                <li>
+                    图片1
+                </li>
+                <li>
+                    图片2
+                </li>
+                <li>
+                    图片3
+                </li>
+            </ul>
+            <ul class="img-point-tabs" id="imgPointTabs">
+                <li class="active"></li>
+                <li></li>
+                <li></li>
+            </ul>
+            <div class="base-width content-top-inner clear">
+                 <div class="content-top-i-l fl">
 
-  <div class="main-container clearfix">
-   <!-- ngInclude: 'views/nav.html' -->
+                 </div>
+                 <div class="content-top-i-r">
+                     <div>
+                         <ul class="clear login-tab" id="loginTabs">
+                             <li class="fl active">账号登陆</li>
+                             <li class="fl">手机号登陆</li>
+                         </ul>
+                         <ul id="loginTabsContent">
+                             <li style="display:none;" id="nameLogin">
+                                 <input class="form-control" autocomplete="off" placeholder="请输入账号" value="" type="text" id='mcode' />
+                                 <input class="form-control" autocomplete="off" placeholder="请输入密码" value="" type="password" id='password' />
+                                 <div class="cap-input-box clear">
+                                     <input class="form-control fl captcha-input" placeholder="" id='vcode'  />
+                                     <img class="fl captcha-img" src="" id='captcha' onclick='getCaptcha()'/>
+                                 </div>
 
-   <!-- ngView:  -->
-   <div class="content-container ng-scope" id="content" >
-    <div class="page page-auth clearfix ng-scope" style="margin-top: 110px;">
-     <div class="auth-container" >
-      <!-- site logo -->
-      <h1 class="site-logo h2 mb15" style="font-size: 47px"><a href="javascript:" class="unifTitle" style="color: #fff;"> &nbsp;</a></h1>
-      <h3 class="text-normal h4 text-center" style="color: #d7d1d1;font-size: 20px" id='loginTo'></h3>
-      <div class="form-container" style="background: #fff;padding: 50px 30px 35px 30px;max-width: 500px;border-radius: 5px;">
-       <form class="form-horizontal ng-pristine ng-valid" >
+                                 <p class="clear blue-font login-txt" ><span>立即注册</span><span class="fr">忘记密码？</span></p>
+                                 <button type="button" id="loginBtn" class="btn btn-lg login-btn w-100p">立即登录</button>
+                             </li>
+                             <li style="display:none;" id="phoneLogin">
+                                 <input type="password" style="display:none;">
+                                 <input class="form-control" autocomplete="off" placeholder="请输入手机号" value="" type="text" id='phone' />
+                                 <div class="cap-input-box clear">
+                                     <input class="form-control fl captcha-input" placeholder="请输入短信验证码" id='vcode2'  />
+                                     <button class="fl captcha-img get-mg-btn" id='getMsg'>获取验证码</button>
+                                 </div>
 
-       <!--  <div class="form-group form-group-lg" style="margin-bottom: 25px;">
-        	<select name="orgId" id="orgId" class="form-control field"></select>
-        </div>    -->
+                                 <p class="clear blue-font login-txt" ><span>立即注册</span><span class="fr">忘记密码？</span></p>
+                                 <button type="button" class="btn btn-lg login-btn w-100p">立即登录</button>
+                             </li>
+                         </ul>
+                     </div>
+                 </div>
+            </div>
+        </div>
+        <div class="content-main">
+            <div class="base-width">
+                <h3 class="content-main-title">最新票据</h3>
+                <table class="table content-main-table table-bordered table-striped">
+                    <tr>
+                        <th>发布时间</th>
+                        <th>票面金额</th>
+                        <th>承兑人</th>
+                        <th>到期时间</th>
+                        <th>每十万扣款</th>
+                        <th>年利率</th>
+                    </tr>
+                    <tbody id="contentMainTBody">
+                         <tr>
+                             <td>2019-05-17</td>
+                             <td>100.00万元</td>
+                             <td>甘肃省昊嘉信息有限公司</td>
+                             <td>2020-05-07(剩余117天)</td>
+                             <td>8,000元</td>
+                             <td>1%</td>
+                         </tr>
+                         <tr>
+                             <td>2019-05-17</td>
+                             <td>100.00万元</td>
+                             <td>甘肃省昊嘉信息有限公司</td>
+                             <td>2020-05-07(剩余117天)</td>
+                             <td>8,000元</td>
+                             <td>1%</td>
+                         </tr>
+                         <tr>
+                             <td>2019-05-17</td>
+                             <td>100.00万元</td>
+                             <td>甘肃省昊嘉信息有限公司</td>
+                             <td>2020-05-07(剩余117天)</td>
+                             <td>8,000元</td>
+                             <td>1%</td>
+                         </tr>
+                         <tr>
+                             <td>2019-05-17</td>
+                             <td>100.00万元</td>
+                             <td>甘肃省昊嘉信息有限公司</td>
+                             <td>2020-05-07(剩余117天)</td>
+                             <td>8,000元</td>
+                             <td>1%</td>
+                         </tr><tr>
+                             <td>2019-05-17</td>
+                             <td>100.00万元</td>
+                             <td>甘肃省昊嘉信息有限公司</td>
+                             <td>2020-05-07(剩余117天)</td>
+                             <td>8,000元</td>
+                             <td>1%</td>
+                         </tr>
 
-        <div class="form-group form-group-lg" style="margin-bottom: 25px;">
-         <input class="form-control" autocomplete="off" placeholder="" value="" type="text" id='mcode' />
-        </div>
-        <div class="form-group form-group-lg"  style="margin-bottom: 25px;">
-         <input class="form-control" autocomplete="off" placeholder="" type="password" id='password' />
-        </div>
-        <div class="form-group form-group-lg" style="position: relative;margin-bottom: 25px;" >
-         <input class="form-control" placeholder="" id='vcode'  />
-         <img src="" id='captcha' onclick='getCaptcha()' style="position: absolute;
-    top: 0px;
-    right: 0px;
-    height: 44px;
-    cursor: pointer;
-    border: 1px solid #ddd;"/>
-        </div>
+                         <tr>
+                             <td>2019-05-17</td>
+                             <td>100.00万元</td>
+                             <td>甘肃省昊嘉信息有限公司</td>
+                             <td>2020-05-07(剩余117天)</td>
+                             <td>8,000元</td>
+                             <td>1%</td>
+                         </tr>
+                         <tr>
+                             <td>2019-05-17</td>
+                             <td>100.00万元</td>
+                             <td>甘肃省昊嘉信息有限公司</td>
+                             <td>2020-05-07(剩余117天)</td>
+                             <td>8,000元</td>
+                             <td>1%</td>
+                         </tr>
+                         <tr>
+                             <td>2019-05-17</td>
+                             <td>100.00万元</td>
+                             <td>甘肃省昊嘉信息有限公司</td>
+                             <td>2020-05-07(剩余117天)</td>
+                             <td>8,000元</td>
+                             <td>1%</td>
+                         </tr>
+                         <tr>
+                             <td>2019-05-17</td>
+                             <td>100.00万元</td>
+                             <td>甘肃省昊嘉信息有限公司</td>
+                             <td>2020-05-07(剩余117天)</td>
+                             <td>8,000元</td>
+                             <td>1%</td>
+                         </tr>
 
-        <div class="clearfix">
-         <!-- <a href="forget-pass.html" class="right small">忘记密码？</a> -->
+
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="clearfix mb15">
-         <button type="button" id='loginBtn' class="btn btn-lg btn-w120 btn-primary text-uppercase"
-         style="width: 40%; margin-left:27px;"></button>
-         <button type="button" id='registerBtn' class="btn btn-lg btn-w120 btn-primary text-uppercase"
-         style="width: 40%; margin-left:27px;"></button>
-         <div style="margin-left:27px;margin-top:7px;" class="layui-col-md3" ><a href="javascript:void(0)" onclick="forgetPassword()" class="a_none">忘记密码？</a></div>
-         <!-- <div class="ui-checkbox ui-checkbox-primary mt15 right">
-          <label> <input type="checkbox" />
-           <span>记住登录</span>
-         </label>
-         </div>  -->
-        </div>
-        <div class="clearfix text-center" style="margin-top: 35px">
-          <p class="left "> <strong class="unifTitle"></strong> <span class="copyright"></span></p>
-          <p class="right versionInfo"></p>
-        </div>
-       </form>
-      </div>
-     </div>
-     <!-- #end auth-wrap -->
-    </div>
-   </div>
-   <!-- <footer id="site-foot" class="site-foot clearfix">  -->
-    <!-- <p class="left "><span class="copyright"></span> <strong class="unifTitle"></strong></p>
-    <p class="right versionInfo"></p>  -->
-   <!-- </footer>  -->
-  </div>
+        <footer class="footer">
+            <div class=" base-width">
+                <h3 class="footer-head-title">
+                    联系我们
+                </h3>
+                <div>
+                    <p>客服热线：<tel class="tel">400-700-889</tel> （工作时间 9:00 - 18:30）</p>
+                    <p><span style="letter-spacing: 14px">地址</span>：深圳市深圳市深圳市深圳市</p>
+                    <p><span style="letter-spacing: 4px">Email</span>：spzj@sz.com</p>
+                    <p><span>友情链接</span>：<a href="#" class="footer-a">维恩贝特</a>|<a href="#" class="footer-a">维恩贝特</a>|<a href="#" class="footer-a">维恩贝特</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="clearfix text-center">
+                    <p> <strong class="unifTitle"></strong> <span class="copyright"></span></p>
+                    <p class="versionInfo"></p>
+                </div>
+            </div>
+        </footer>
+
   <!-- Set this in dist index.html -->
   <!-- !End -->
 
   <script type="text/javascript">
+
+  jQuery.extend( jQuery.easing,
+      {
+          easeOutExpo: function (x, t, b, c, d) {
+              return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
+          },
+          easeOutBounce: function (x, t, b, c, d) {
+              if ((t/=d) < (1/2.75)) {
+                  return c*(7.5625*t*t) + b;
+              } else if (t < (2/2.75)) {
+                  return c*(7.5625*(t-=(1.5/2.75))*t + .75) + b;
+              } else if (t < (2.5/2.75)) {
+                  return c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b;
+              } else {
+                  return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
+              }
+          },
+      });
+
 
     $.zAjax({
       url: project.host()+'/v1/index/platformName' ,
@@ -275,6 +713,45 @@
 		window.location.href = "forgetPassword.html"
     }
 
+    function getData(){
+        var data = {
+            faceValue_id: '',//票据金额 underThound 10万以下  thoundToOneMillion 10-100万  moreOneMillion  100万以上   moreFiveMillion  500万以上
+            faceValueMin: '',
+            faceValueMax: '',
+            remainingDays_id: '',//剩余天数 lessThanNinety 90天内   ninetyToHundredEighty 90-180天   hundredEightyToThreeHundredsixty 180-360天
+            daysMin: '',
+            daysMax: '',
+            flaw_id: '',//瑕疵  Y 有   N 无
+            credit_id: '',//excellent 优秀   well 良好 ordinary 一般
+            pageSize: 1,
+            pageNum: 10,
+            dueDateSort: '',
+            createTimeSort: '',
+            amountSort: '',
+            onlyShow: '' ,
+            cpStatus: '',//票据状态
+        },
+        url = '/v1/businessTickets';
+
+        $.zAjax({
+            url: project.host() + url,
+            data:data,
+            success: function(data) {
+                var str = '';
+                if(data.code == 0){
+
+                    data.list.forEach(function(item){
+
+                    });
+                    $("#contentMainTBody").html(str);
+                }else{
+                    layer.msg(data.errMsg);
+                }
+
+            }
+        });
+    }
+
     $(document).ready(function() {
         /*enter键登录*/
         document.onkeydown = function(event){
@@ -288,6 +765,77 @@
             }
         };
 
+        //获取列表数据
+        // getData();
+        //导航效果
+        var navTabs = $("#navTabs"), navLine = $("#navLine");
+        var navTabsO = navTabs.offset(), navLineW = navLine.width();
+        $("#navTabs").on('mouseenter','li', function(){
+             var targetOffset = $(this).offset(), targetW = $(this).width();
+             $("#navLine").animate({
+                 left: Math.abs(targetOffset.left - navTabsO.left) + (targetW - navLineW )/2 + 'px'
+             },100, 'easeOutBounce')
+        })
+            .on('mouseleave', 'li', function(){
+            $("#navLine").finish();
+        });
+
+        // 初始化登录方式 ,切换登录方式
+        $("#loginTabs").find('li').eq(0).addClass('active').siblings('li').removeClass('active');
+        $("#loginTabsContent").find("li").eq(0).addClass('show').siblings('ul').removeClass('show');
+        $("#loginTabs").on('click' , 'li', function(item){
+            var index= $(this).index();
+            $(this).addClass('active').siblings('li').removeClass('active');
+            $("#loginTabsContent").find("li").eq(index).addClass('show').siblings('li').removeClass('show');
+
+        });
+
+        //图片切换
+
+
+        var imgPointTabsli = $("#imgPointTabs li"), contentTopImgli = $("#contentTopImg li");
+        var setImgFn = function(n){
+            imgPointTabsli.eq(n).addClass('active').siblings('li').removeClass('active');
+            contentTopImgli.eq(n).fadeIn().siblings('li').hide();
+        };
+        setImgFn(0);
+
+        var imgTabsIntervalN = 0, imgTabsInterval = setInterval(function(){
+
+            imgTabsIntervalN += 1;
+            if(imgTabsIntervalN >= imgPointTabsli.length){
+                imgTabsIntervalN = 0;
+            }
+            setImgFn(imgTabsIntervalN);
+        }, 3000);
+
+
+        imgPointTabsli.on('click', function(){
+            $(this).addClass('active').siblings('li').removeClass('active');
+            contentTopImgli.eq($(this).index()).fadeIn().siblings('li').hide();
+            clearInterval(imgTabsInterval);
+            imgTabsInterval = setInterval(function(){
+                imgTabsIntervalN += 1;
+                setImgFn(imgTabsIntervalN);
+            }, 3000);
+        });
+
+        //获取短信验证码
+        $("#getMsg").on('click', function(){
+            var n = 60, _this = this, interval;
+
+            $(_this).html('' + n + '秒后获取').attr('disabled', 'disabled');
+
+            interval = setInterval(function(){
+                n -= 1;
+                $(_this).html('' + n + '秒后获取').attr('disabled', 'disabled');
+
+                if(n <= 0){
+                    clearInterval(interval);
+                    $(_this).html('获取验证码').removeAttr('disabled');
+                }
+            }, 1000)
+        });
 
     });
 

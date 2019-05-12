@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b248414f-6fbb-4a89-bf61-4b9e5870e851" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/spq/src/components/DetailList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/components/DetailList.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spq/src/components/Fbpj.vue" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/components/Fbpj.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spq/src/components/PriceList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/components/PriceList.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spq/src/router/routerData.js" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/router/routerData.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spq/src/server/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/spq/src/server/server.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/open-cp-web/src/main/resources/static/page/loginOld.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/open-cp-web/src/main/resources/static/page/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/open-cp-web/src/main/resources/static/page/login.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -21,50 +19,50 @@
     <session id="-947536814">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="11" />
+          <entry key="project.closed" value="13" />
           <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.10" value="4" />
+          <entry key="project.open.time.10" value="6" />
           <entry key="project.open.time.11" value="2" />
-          <entry key="project.open.time.13" value="1" />
+          <entry key="project.open.time.13" value="2" />
           <entry key="project.open.time.4" value="1" />
           <entry key="project.open.time.406" value="1" />
           <entry key="project.open.time.5" value="1" />
-          <entry key="project.opened" value="11" />
+          <entry key="project.opened" value="14" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
         <counts>
-          <entry key="ESLintLanguageService" value="10" />
+          <entry key="ESLintLanguageService" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="conf" value="1" />
+          <entry key="conf" value="2" />
           <entry key="css" value="1" />
-          <entry key="html" value="1" />
-          <entry key="js" value="11" />
-          <entry key="vue" value="35" />
+          <entry key="html" value="4" />
+          <entry key="js" value="12" />
+          <entry key="vue" value="36" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="CSS" value="1" />
-          <entry key="HTML" value="1" />
-          <entry key="JavaScript" value="11" />
-          <entry key="PLAIN_TEXT" value="1" />
-          <entry key="Vue.js" value="35" />
+          <entry key="HTML" value="4" />
+          <entry key="JavaScript" value="12" />
+          <entry key="PLAIN_TEXT" value="2" />
+          <entry key="Vue.js" value="36" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="html" value="7" />
+          <entry key="html" value="8458" />
           <entry key="js" value="609" />
           <entry key="vue" value="5804" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="HTML" value="7" />
+          <entry key="HTML" value="8458" />
           <entry key="JavaScript" value="609" />
           <entry key="Vue.js" value="5804" />
         </counts>
@@ -74,55 +72,40 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/src/components/TicketHolder.vue">
+        <entry file="file://$USER_HOME$/Desktop/nginx-1.15.10/conf/nginx.conf">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="286">
-              <caret line="52" column="74" selection-start-line="52" selection-start-column="74" selection-end-line="52" selection-end-column="74" />
+            <state relative-caret-position="493">
+              <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/open-cp-web/src/main/resources/static/page/login.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="298">
+              <caret line="302" column="25" selection-start-line="302" selection-start-column="25" selection-end-line="302" selection-end-column="25" />
+              <folding>
+                <element signature="n#nav#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#style#0;n#li#0;n#ul#1;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#li#1;n#ul#1;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#li#1;n#ul#1;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#p#1;n#div#0;n#div#0;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#p#2;n#div#0;n#div#0;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="e#11028#11429#0" />
+                <element signature="e#11470#11853#0" />
+                <element signature="e#11965#14696#0" />
+                <element signature="e#14764#14822#0" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/src/components/PriceList.vue">
+        <entry file="file://$PROJECT_DIR$/open-cp-web/src/main/resources/static/page/rbac/accountManage.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="237" column="51" lean-forward="true" selection-start-line="237" selection-start-column="51" selection-end-line="237" selection-end-column="51" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/src/server/server.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="501">
-              <caret line="531" column="41" selection-start-line="531" selection-start-column="41" selection-end-line="531" selection-end-column="41" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/src/components/Fbpj.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="615" column="21" lean-forward="true" selection-start-line="615" selection-start-column="21" selection-end-line="615" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/src/router/routerData.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="725">
-              <caret line="46" column="27" selection-start-line="46" selection-start-column="27" selection-end-line="46" selection-end-column="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/src/components/TicketHolderListDetail.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1015">
-              <caret line="35" column="22" selection-start-line="35" selection-start-column="22" selection-end-line="35" selection-end-column="22" />
+            <state relative-caret-position="300">
+              <caret line="156" column="76" lean-forward="true" selection-start-line="156" selection-start-column="76" selection-end-line="156" selection-end-column="76" />
             </state>
           </provider>
         </entry>
@@ -130,35 +113,31 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spq/src/components/BillHall.vue">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-814">
-              <caret line="78" column="50" selection-start-line="78" selection-start-column="50" selection-end-line="78" selection-end-column="50" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/spq/src/components/DetailList.vue">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="501">
-              <caret line="317" column="31" selection-start-line="317" selection-start-column="31" selection-end-line="317" selection-end-column="31" />
+            <state relative-caret-position="257">
+              <caret line="357" column="36" selection-start-line="357" selection-start-column="18" selection-end-line="357" selection-end-column="36" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/src/components/OrderDetail.vue">
+        <entry file="file://$PROJECT_DIR$/spq/src/server/server.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1305">
-              <caret line="45" column="48" selection-start-line="45" selection-start-column="48" selection-end-line="45" selection-end-column="48" />
+            <state relative-caret-position="474">
+              <caret line="196" column="41" selection-start-line="196" selection-start-column="15" selection-end-line="196" selection-end-column="41" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spq/src/components/SetSearch.vue">
+        <entry file="file://$PROJECT_DIR$/open-cp-web/src/main/resources/static/page/loginOld.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7018">
-              <caret line="242" column="10" selection-start-line="242" selection-start-column="10" selection-end-line="242" selection-end-column="10" />
+            <state relative-caret-position="428">
+              <caret line="113" column="15" lean-forward="true" selection-start-line="110" selection-start-column="8" selection-end-line="113" selection-end-column="14" />
+              <folding>
+                <element signature="n#style#0;n#img#0;n#div#2;n#form#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#5;n#form#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="e#7230#9961#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -167,28 +146,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>business</find>
-      <find>buy</find>
-      <find>buyPrice</find>
-      <find>deal</find>
-      <find>loading</find>
-      <find>model-content</find>
-      <find>frIdCard</find>
-      <find>submitData.frIdCard</find>
-      <find>票据列表</find>
-      <find>getBusinessTickets</find>
-      <find>Toast</find>
-      <find>yinhang</find>
-      <find>gouxuan</find>
-      <find>RadioGroup</find>
-      <find>realName-box-row</find>
-      <find>card-box</find>
-      <find>ticket-content-list</find>
-      <find>ticket-search</find>
-      <find>value</find>
-      <find>rightClick</find>
-      <find>rightC</find>
-      <find>rightText</find>
       <find>submitData</find>
       <find>choseCpStatus</find>
       <find>ok</find>
@@ -197,6 +154,28 @@
       <find>console</find>
       <find>biddingFn</find>
       <find>image</find>
+      <find>cap-input-box</find>
+      <find>loginTabsContent</find>
+      <find>content-top-img</find>
+      <find>line</find>
+      <find>myC</find>
+      <find>myCoun</find>
+      <find>myCount</find>
+      <find>detail-list</find>
+      <find>loginM</find>
+      <find>captcha</find>
+      <find>loginMethod</find>
+      <find>mcode</find>
+      <find>login-btn</find>
+      <find>list</find>
+      <find>getBusinessTickets</find>
+      <find>getOrg</find>
+      <find>table</find>
+      <find>dueDateSort</find>
+      <find>tel</find>
+      <find>footer-head-title</find>
+      <find>loginBtn</find>
+      <find>footer-bottom</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -231,6 +210,7 @@
         <option value="$PROJECT_DIR$/spq/src/components/Fbpj.vue" />
         <option value="$PROJECT_DIR$/spq/src/router/routerData.js" />
         <option value="$PROJECT_DIR$/spq/src/components/DetailList.vue" />
+        <option value="$PROJECT_DIR$/open-cp-web/src/main/resources/static/page/login.html" />
       </list>
     </option>
   </component>
@@ -253,7 +233,7 @@
       <path value="$PROJECT_DIR$/vueProject/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="260" />
     <option name="y" value="20" />
     <option name="width" value="1400" />
@@ -274,13 +254,63 @@
             <path>
               <item name="new" type="b2602c69:ProjectViewProjectNode" />
               <item name="new" type="462c0819:PsiDirectoryNode" />
-              <item name="spq" type="462c0819:PsiDirectoryNode" />
+              <item name="open-cp-web" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="new" type="b2602c69:ProjectViewProjectNode" />
+              <item name="new" type="462c0819:PsiDirectoryNode" />
+              <item name="open-cp-web" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="new" type="b2602c69:ProjectViewProjectNode" />
+              <item name="new" type="462c0819:PsiDirectoryNode" />
+              <item name="open-cp-web" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="new" type="b2602c69:ProjectViewProjectNode" />
+              <item name="new" type="462c0819:PsiDirectoryNode" />
+              <item name="open-cp-web" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="new" type="b2602c69:ProjectViewProjectNode" />
+              <item name="new" type="462c0819:PsiDirectoryNode" />
+              <item name="open-cp-web" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="new" type="b2602c69:ProjectViewProjectNode" />
+              <item name="new" type="462c0819:PsiDirectoryNode" />
+              <item name="open-cp-web" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="page" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="new" type="b2602c69:ProjectViewProjectNode" />
+              <item name="new" type="462c0819:PsiDirectoryNode" />
+              <item name="open-cp-web" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="page" type="462c0819:PsiDirectoryNode" />
+              <item name="rbac" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="new" type="b2602c69:ProjectViewProjectNode" />
               <item name="new" type="462c0819:PsiDirectoryNode" />
               <item name="spq" type="462c0819:PsiDirectoryNode" />
-              <item name="config" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="new" type="b2602c69:ProjectViewProjectNode" />
@@ -341,6 +371,11 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
   </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\workspace\mydemo01\new\open-cp-web\src\main\resources\static\page" />
+    </key>
+  </component>
   <component name="RunDashboard">
     <option name="ruleStates">
       <list>
@@ -374,14 +409,18 @@
       <workItem from="1555419528377" duration="4784000" />
       <workItem from="1555589348064" duration="281000" />
       <workItem from="1556544613922" duration="2853000" />
+      <workItem from="1557577347665" duration="308000" />
+      <workItem from="1557623781571" duration="11964000" />
+      <workItem from="1557656849993" duration="5337000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="29572000" />
+    <option name="totallyTimeSpent" value="47181000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24973656" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -546,10 +585,34 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1450">
           <caret line="63" column="23" selection-start-line="63" selection-start-column="23" selection-end-line="63" selection-end-column="23" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#140#161#0" expanded="true" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/components/TicketHolder.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1508">
+          <caret line="52" column="74" selection-start-line="52" selection-start-column="74" selection-end-line="52" selection-end-column="74" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/components/PriceList.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6815">
+          <caret line="236" column="49" selection-start-line="236" selection-start-column="49" selection-end-line="236" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/components/Fbpj.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17690">
+          <caret line="615" column="15" selection-start-line="615" selection-start-column="15" selection-end-line="615" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/router/routerData.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="783">
+          <caret line="47" column="27" selection-start-line="47" selection-start-column="27" selection-end-line="47" selection-end-column="27" />
         </state>
       </provider>
     </entry>
@@ -574,59 +637,69 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/spq/src/components/DetailList.vue">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1342">
+          <caret line="342" column="31" selection-start-line="342" selection-start-column="31" selection-end-line="342" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$USER_HOME$/Desktop/nginx-1.15.10/conf/nginx.conf">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="493">
-          <caret line="17" column="65" lean-forward="true" selection-start-line="17" selection-start-column="65" selection-end-line="17" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/components/TicketHolder.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="52" column="74" selection-start-line="52" selection-start-column="74" selection-end-line="52" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/components/PriceList.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="237" column="51" lean-forward="true" selection-start-line="237" selection-start-column="51" selection-end-line="237" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/server/server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="501">
-          <caret line="531" column="41" selection-start-line="531" selection-start-column="41" selection-end-line="531" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/components/Fbpj.vue">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="615" column="21" lean-forward="true" selection-start-line="615" selection-start-column="21" selection-end-line="615" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/router/routerData.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="725">
-          <caret line="46" column="27" selection-start-line="46" selection-start-column="27" selection-end-line="46" selection-end-column="27" />
+          <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spq/src/components/BillHall.vue">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-814">
-          <caret line="78" column="50" selection-start-line="78" selection-start-column="50" selection-end-line="78" selection-end-column="50" />
+        <state relative-caret-position="257">
+          <caret line="357" column="36" selection-start-line="357" selection-start-column="18" selection-end-line="357" selection-end-column="36" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spq/src/components/DetailList.vue">
+    <entry file="file://$PROJECT_DIR$/spq/src/server/server.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="501">
-          <caret line="317" column="31" selection-start-line="317" selection-start-column="31" selection-end-line="317" selection-end-column="31" />
+        <state relative-caret-position="474">
+          <caret line="196" column="41" selection-start-line="196" selection-start-column="15" selection-end-line="196" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/open-cp-web/src/main/resources/static/page/rbac/accountManage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="156" column="76" lean-forward="true" selection-start-line="156" selection-start-column="76" selection-end-line="156" selection-end-column="76" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/open-cp-web/src/main/resources/static/page/loginOld.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="428">
+          <caret line="113" column="15" lean-forward="true" selection-start-line="110" selection-start-column="8" selection-end-line="113" selection-end-column="14" />
+          <folding>
+            <element signature="n#style#0;n#img#0;n#div#2;n#form#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#5;n#form#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#7230#9961#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/open-cp-web/src/main/resources/static/page/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="298">
+          <caret line="302" column="25" selection-start-line="302" selection-start-column="25" selection-end-line="302" selection-end-column="25" />
+          <folding>
+            <element signature="n#nav#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#li#0;n#ul#1;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#li#1;n#ul#1;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#li#1;n#ul#1;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#p#1;n#div#0;n#div#0;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#p#2;n#div#0;n#div#0;n#footer#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#11028#11429#0" />
+            <element signature="e#11470#11853#0" />
+            <element signature="e#11965#14696#0" />
+            <element signature="e#14764#14822#0" />
+          </folding>
         </state>
       </provider>
     </entry>
