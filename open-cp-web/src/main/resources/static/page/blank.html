@@ -17,7 +17,13 @@
     
       //没有登录消息返回登录页
       var common_data=sessionStorage.getItem('data');
-      if(!common_data)window.location.href = "login.html";
+      if(!common_data){
+        window.location.href = "login.html";
+        if(parent.window.iframeGotoLogin){
+          parent.window.iframeGotoLogin();
+        }
+        // return;
+      }
       //如果设置了取消动画，不加载animate.css
       if(!sessionStorage.getItem('cancelAnimation')){
         var link = document.createElement("link");

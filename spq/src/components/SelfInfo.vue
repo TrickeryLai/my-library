@@ -23,12 +23,12 @@
 			</div>
 			<div class="selfInfo-center">
 				<van-row>
-					<van-col>
+					<van-col span="6">
 						<div class="selfInfo-header" @click="gotoBaseInfo"><i class="iconfont icon-mine"></i></div>
 				<!-- <p class="baseInfo-row">{{this.baseInfo.loginName}}</p> -->
 					</van-col>
-					<van-col class="text-left" offset="1" style="padding-top:15px;">
-						<p v-if="baseInfo.createBy" class="baseInfo-row"><i class="iconfont icon-mine1"></i>&nbsp{{baseInfo.createBy}}</p>
+					<van-col class="text-left" offset="1" span="17">
+						<p v-if="baseInfo.createBy" class="baseInfo-row">{{baseInfo.createBy}}</p>
 						<van-rate
 							style="display: inline-block;vertical-align: -3px;"
 							allow-half
@@ -38,6 +38,8 @@
 							void-color="#eee"
 							v-model="baseInfo.creditRating"
 						></van-rate>
+						<!-- <p style="text-align: center;font-size:18px;" class="baseInfo-row baseInfo-org van-ellipsis">{{overTxt("企业企业企业企业企业企业企业企业企业企业企业企业")}}</p> -->
+						<p style="text-align: left;font-size:20px;" v-if="baseInfo.orgName || orgName" class="baseInfo-row baseInfo-org van-ellipsis" v-html="overTxt(baseInfo.orgName||orgName)"></p>
 					</van-col>
 					
 					
@@ -45,13 +47,13 @@
 				<van-row>
 					<van-col span="24">
 						<!-- <p style="text-align: center;font-size:20px;" class="baseInfo-row baseInfo-org van-ellipsis">{{overTxt("企业企业企业企业企业企业企业企业企业企业企业企业")}}</p> -->
-						<p style="text-align: center;font-size:20px;" v-if="baseInfo.orgName || orgName" class="baseInfo-row baseInfo-org van-ellipsis" v-html="overTxt(baseInfo.orgName||orgName)"></p>
+						<!-- <p style="text-align: center;font-size:20px;" v-if="baseInfo.orgName || orgName" class="baseInfo-row baseInfo-org van-ellipsis" v-html="overTxt(baseInfo.orgName||orgName)"></p> -->
 					</van-col>
 				</van-row>
 				<!-- <p v-html="overTxt('企业企业企业企业企业企业企业企业企业企业')"></p> -->
 			</div>
 		</div>
-		<div class="base-deal-info">
+		<div class="base-deal-info" style="display: none;">
 			<div class="base-deal-info-box">
 				<van-row>
 					<van-col span="8" class="base-deal-info-inner">
@@ -375,8 +377,8 @@ export default{
 		width: 70%;
 		text-align: center;
 		position: absolute;
-		left: 60%;
-		top: 30px;
+		left: 50%;
+		top: 50px;
 		transform: translate(-50%);
 	}
 	.selfInfo-header{

@@ -194,7 +194,7 @@
               </div>
               <div
                 style="width: 100%;"
-                v-if="(item.quoteStatus == 2)">
+                v-if="(item.quoteStatus == 2) && (item.buyBankImg == '01')">
                 <van-col span="12">
                   <van-button
                     type="primary"
@@ -282,6 +282,7 @@
         refreshPriceState: false,
         hasBuyPrice: false,
         buyPrice: '',
+        buyPriceItem: {},
         buyPriceText: '买家最新报价'
       }
     },
@@ -328,13 +329,15 @@
         this.initData.creditRating = 6 - this.initData.creditRating;
       },
       checkedDeal(){
+
+        console.log(this.buyPriceItem);
         this.$dialog.confirm({
           title: '提示',
           message: '确认成交么？'
         }).then(() => {
           //确认验收
           let data = {
-            id: this.initD.cpId,
+            id: this.buyPriceItem.priceId,
             type: 0,
             imageName: '02'
           }
@@ -343,6 +346,7 @@
               this.$toast('操作成功！');
               this.$emit("refresh");
               this.modelClose();
+              this.$router.push({path: '/home/rate', query:{cpNo: this.initData.cpNo}});
             }
           }).catch(error => {
 
@@ -384,6 +388,7 @@
                         }
                       })
               _this.buyPrice = result[0].turnVolume;
+              _this.buyPriceItem = result[0];
             }else{
                       _this.buyPrice = res[0].turnVolume; 
             }
@@ -466,8 +471,13 @@
           this.$toast('成交金额不能小于0！');
           return;
         }
-        if(parseFloat(this.submit.dealAmount) > this.initData.cpAmount){
+        if(parseFloat(this.submit.dealAmount) > parseFloat(this.initData.cpAmount)){
           this.$toast('成交金额不能大于票据金额！');
+          return;
+        }
+
+        if(parseFloat(this.submit.yearRate) > parseFloat(this.initData.approvalApr)){
+          this.$toast('年化利率不能大于卖家出售的年化利率！');
           return;
         }
         let data = {

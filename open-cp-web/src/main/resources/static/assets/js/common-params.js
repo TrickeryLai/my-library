@@ -36,12 +36,14 @@ var project={
     //
     // web_ip:'http://127.0.0.1',
     web_ip:'http://117.71.57.247',
+    // web_ip:'http://192.168.16.61',
     //本地端口,指开发人员启动tomcat后浏览器的端口，
     web_port:'3000',
     //接口地址的端口
    // web_api_port:'8891',
     // web_api_port:'8890',
     web_api_port:'3580',
+    // web_api_port:'8180',
 
     //蔡老板
     // web_ip:'http://192.168.98.16:8082',

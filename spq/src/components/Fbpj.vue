@@ -618,11 +618,22 @@ import _common from '@/server/index'
           getOcrData(data){
             _server.getOcrData(data).then(response => {
                 if(response.code == 0){
+
+                  //如果都无法识别
+                  if(!response.data.cpNo && !response.data.acceptor && !response.data.money){
+                    this.pjzPic = '';
+                    this.$toast('请上传更清晰的图片以供系统识别！');
+                    return;
+                  }
+
                   if(response.data.cpNo){
                     this.submitData.cpNo = response.data.cpNo;
                   }
                   if(response.data.acceptor){
                     this.submitData.acceptor = response.data.acceptor;
+                  }
+                  if(response.data.money){
+                    this.submitData.cpAmount = response.data.money;
                   }
                 }
             }).catch(error => {
@@ -668,8 +679,8 @@ import _common from '@/server/index'
               this.$toast('请输入正确的票据金额！');
               return false;
             }
-            if(this.submitData.cpAmount < 50000 || this.submitData.cpAmount > 50000000){
-              this.$toast('票据金额应在 5万 - 5000万之间！');
+            if(this.submitData.cpAmount < 10000 || this.submitData.cpAmount > 50000000){
+              this.$toast('票据金额应在 1万 - 5000万之间！');
               return false;
             }
 
@@ -686,8 +697,27 @@ import _common from '@/server/index'
               this.$toast('请输入承兑人！');
               return false;
             }
+           
+            if(!/^(0|[1-9]\d*)?$/.test(this.bsValue)){
+              this.$toast('请输入正确的背书次数');
+              return false;
+            }
             if(!this.sell.approvalApr || !this.sell.turnVolume || !this.sell.deductAmount){
-              this.$toast('请填写报价信息！');
+              this.$toast('请填写发布信息！');
+              return false;
+            }
+
+            // if(this.sell.approvalApr < 0 && this.sell.approvalApr  > 100){
+            //   this.$toast('年化利率应在0-100%之间！');
+            //   return false;
+            // }
+
+            if(parseFloat(this.sell.turnVolume) < 0){
+              this.$toast('发布金额不能小于 0！');
+              return false;
+            }
+            if(parseFloat(this.sell.turnVolume) > parseFloat(this.submitData.cpAmount)){
+              this.$toast('发布金额不能大于票据金额！');
               return false;
             }
             return true;

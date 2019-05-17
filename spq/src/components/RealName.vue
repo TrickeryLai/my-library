@@ -25,6 +25,7 @@
         <h3 class="title van-hairline--bottom">营业执照</h3>
         <div class="realName-conten-inner">
          <UploadImg
+            :initPic = "getPicUrl(yyzzPic)"
             uploadUrl = "open-cp/v1/upload"
             @removePic='yyzzRemovePic'
             @uploadPicProgress='yyzzUploadPicFn' /> 
@@ -36,12 +37,14 @@
           <div style="display:inline-block;margin-right: 10px;">
             <UploadImg
             uploadUrl = "open-cp/v1/upload"
+            :initPic = "getPicUrl(sfzzPic)"
             @removePic='sfzzRemovePic'
             @uploadPicProgress='sfzzUploadPicFn' />
             <p class="picTitle"><span class="red-font" style="padding-top: 2px;margin-right: 2px;">*</span>身份证正面 </p>
           </div>
           <div style="display:inline-block;margin-right: 10px;">
             <UploadImg
+            :initPic = "getPicUrl(sfzfPic)"
             uploadUrl = "open-cp/v1/upload"
             @removePic='sfzfRemovePic'
             @uploadPicProgress='sfzfUploadPicFn' /> 
@@ -67,8 +70,8 @@
               v-reset-page
               required
               clearable
-              label="组织机构代码："
-              placeholder="组织机构代码"
+              label="统一社会信用代码："
+              placeholder="统一社会信用代码"
             />
             <van-field
             v-model.trim="submitData.email"
@@ -115,6 +118,7 @@
             v-reset-page
             type="phone"
             clearable
+            required
             label="手机号："
             placeholder="法人手机号"
             />
@@ -154,6 +158,7 @@
               v-model.trim="submitData.jbrIdCard"
               v-reset-page
               clearable
+              required
               label="身份证号："
               placeholder="经办人身份证号"
             />
@@ -209,7 +214,8 @@
               active: 0,
               zIndex: 999,
               submitData:{
-
+                orgName: '',
+                organizationCode: ''
               },
               yyzzPic: '',
               yyzzPicUState: {
@@ -243,6 +249,12 @@
               this.$toast('请先实名认证！');
             }
           },
+          getPicUrl(url){
+            if(!url){
+              return '';
+            }
+            return _common.picUrl + url;
+          },
           yyzzRemovePic(){
               this.yyzzPicUState.state = 0;
               this.yyzzPic = '';
@@ -251,8 +263,28 @@
               //营业执照上传
               this.yyzzPicUState.state = data.state;
               if(data.state == 3){
-                  this.yyzzPic = data.imgData.data
+                  this.yyzzPic = data.imgData.data;
+                  this.getBusinessLicenesOcrData({imageName: data.imgData.data});
               }
+          },
+          getBusinessLicenesOcrData(data){
+              _server.getOcrBusinesslicenseData(data).then(response => {
+                if(response.code == 0){
+                    if(!response.data.name && !response.data.creditCode){
+                        this.yyzzPic = '';
+                        this.$toast('请上传更清晰的营业执照图片以供系统识别！');
+                        return;
+                    }
+
+                    if(response.data.name){
+                      this.submitData.orgName = response.data.name;
+                    }
+
+                    if(response.data.creditCode){
+                      this.submitData.organizationCode = response.data.creditCode;
+                    }
+                }
+              })
           },
           //身份证正面
           sfzzRemovePic(){
@@ -262,8 +294,29 @@
           sfzzUploadPicFn(data){
               this.sfzzPicUState.state = data.state;
               if(data.state == 3){
-                  this.sfzzPic = data.imgData.data
+                  this.sfzzPic = data.imgData.data;
+                  this.getIdCardOcrData({imageName: data.imgData.data});
               }
+          },
+
+          getIdCardOcrData(data){
+              _server.getOcrIdCardData(data).then(response => {
+                if(response.code == 0){
+                    if(!response.data.name && !response.data.idNo){
+                        this.sfzzPic = '';
+                        this.$toast('请上传更清晰的身份证正面图片以供系统识别！');
+                        return;
+                    }
+
+                    if(response.data.name){
+                      this.submitData.leader = response.data.name;
+                    }
+
+                    if(response.data.idNo){
+                      this.submitData.frIdCard = response.data.idNo;
+                    }
+                }
+              })
           },
           //身份证反面
           sfzfRemovePic(){
@@ -274,7 +327,21 @@
               this.sfzfPicUState.state = data.state;
               if(data.state == 3){
                   this.sfzfPic = data.imgData.data;
+                  this.getIdCardBackOcrData({imageName: data.imgData.data});
               }
+          },
+
+          getIdCardBackOcrData(data){
+              _server.getOcrIdBackCardData(data).then(response => {
+                if(response.code == 0){
+                    if(!response.data.name && !response.data.idNo && !response.data.effectiveDate && !response.data.errorMessage && !response.data.expiredDate && !response.data.organ){
+                        this.sfzfPic = '';
+                        this.$toast('请上传更清晰的身份证反面图片以供系统识别！');
+                        return;
+                    }
+
+                }
+              })
           },
           submitDataCheck(){
             if(this.yyzzPicUState.state == 0 || this.yyzzPicUState.state == 4){
@@ -306,7 +373,7 @@
               return false;
             }
             if(!this.submitData.organizationCode){
-              this.$toast('请输入组织机构代码！');
+              this.$toast('请输入统一社会信用代码！');
               return false;
             }
 
@@ -322,10 +389,10 @@
               this.$toast('请输入法人姓名！');
               return false;
             }
-            // if(!this.submitData.phone || !_common.common_reg.phone(this.submitData.phone)){
-            //   this.$toast('请输入法人正确手机号！');
-            //   return false;
-            // }
+            if(!this.submitData.phone || !_common.common_reg.phone(this.submitData.phone)){
+              this.$toast('请输入法人正确手机号！');
+              return false;
+            }
             if(!this.submitData.frIdCard || !_common.common_reg.idCard(this.submitData.frIdCard)){
               this.$toast('请输入法人正确身份证号！');
               return false;
@@ -336,6 +403,10 @@
             }
             if(!this.submitData.jbrPhone || !_common.common_reg.phone(this.submitData.jbrPhone)){
               this.$toast('请输入经办人正确手机号！');
+              return false;
+            }
+            if(!this.submitData.jbrIdCard || !_common.common_reg.idCard(this.submitData.jbrIdCard)){
+              this.$toast('请输入经办人正确身份证号！');
               return false;
             }
             if(!this.submitData.paymentPassword){

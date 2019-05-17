@@ -31,7 +31,7 @@
             <van-col span="16" class="baseInfo-box-right">{{baseInfo.companyName || '-'}}</van-col>
         </van-row>
         <van-row class="baseInfo-box-row">
-            <van-col span="8" class="baseInfo-box-left">组织机构代码:</van-col>
+            <van-col span="8" class="baseInfo-box-left">统一社会信用代码:</van-col>
             <van-col span="16" class="baseInfo-box-right">{{baseInfo.organizationCode || '-'}}</van-col>
         </van-row>
         <van-row class="baseInfo-box-row">

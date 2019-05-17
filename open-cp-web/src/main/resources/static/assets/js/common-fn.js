@@ -171,9 +171,10 @@ $.extend({
                         project.i++;
                     }else if(String(data.code) == '200013'){
                         params.success(data);
-                    } else{
-                        params.success(data);
-                        // layer.alert(data.errMsg?data.errMsg:'',{title:lang.getData('errorMsg'),icon:2});
+                    }else if(params.url && params.url.indexOf("/v1/login")!=-1){
+                    	params.success(data);
+                    }else{
+                       layer.alert(data.errMsg?data.errMsg:'',{title:lang.getData('errorMsg'),icon:2});
                     }
                 }else{
                     params.success(data);
@@ -651,7 +652,7 @@ $.extend({
         $("#"+_ele+" input[name='deductAmount']").val(parseFloat(money_10).toFixed(8))
     },
     //票据上传图片控件
-    uploadBillImg:function(_ele,_src,_none,_o){
+    uploadBillImg:function(_ele,_src,_none,_o,callback){
         var token;
         if(window.common_data)token=common_data.token;
         layui.use('upload', function() {
@@ -660,7 +661,8 @@ $.extend({
             upload.render({
                 elem: _ele
                 ,url:project.host()+'/v1/upload'
-                ,headers:{Authorization:'Bearer '+token,lang:lang.getLang()}
+                ,headers:{Authorization:'Bearer '+token,lang:lang.getLang()},
+                size: 1024*5
                 ,before: function(obj){
                     //预读本地文件示例，不支持ie8
                     obj.preview(function(index, file, result){
@@ -670,7 +672,6 @@ $.extend({
                     });
                 }
                 ,done: function(res){
-
                     //上传成功
                     if(res.code == 0){
                     	if(_o){
@@ -686,9 +687,58 @@ $.extend({
                         _input.val(res.data);
                         // alert(_input.attr("name"));
 
+                        if(callback){
+                            callback(res.data);
+                        }
                         return layer.msg('上传成功');
                     }else{
                     	  return layer.msg(res.errMsg);
+                    }
+
+                }
+                ,error: function(){
+                    //演示失败状态，并实现重传
+
+                    layer.msg("上传失败");
+                }
+            });
+        });
+
+    },
+    //图片上传--增加回调
+    uploadBillImg2:function(_ele,_src,_none, callback){
+        var token;
+        if(window.common_data)token=common_data.token;
+        layui.use('upload', function() {
+            var $ = layui.jquery
+                , upload = layui.upload;
+            upload.render({
+                elem: _ele
+                ,url:project.host()+'/v1/upload'
+                ,headers:{Authorization:'Bearer '+token,lang:lang.getLang()},
+                size: 1024*5
+                ,before: function(obj){
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result){
+                        //回显图片
+                        $(_src).attr('src', result); //图片链接（base64）
+                        $(_none).addClass("none_block");
+                    });
+                }
+                ,done: function(res){
+
+                    //上传成功
+                    if(res.code == 0){
+                        var _input = $(_ele).children("input");
+                        _input.val(res.data);
+                        // alert(_input.attr("name"));
+
+                        if(callback){
+                            callback(res.data);
+                        }
+                        return layer.msg('上传成功');
+                    }else{
+                          return layer.msg(res.errMsg);
                     }
 
                 }
@@ -711,7 +761,22 @@ $.extend({
                 'imageName':imageName
             },
             success: function(data) {
+
+                if(!data.data.acceptor && !data.data.cpNo && !data.data.money){
+
+                    layer.msg('请上传更清晰的图片以供系统识别！');
+                    //清除上传的图片
+                    $("#"+_id).find('.img_up_parents').eq(0).find('input').eq(0).val('');
+                    $("#"+_id).find('.img_up_parents').eq(0).find('img').removeAttr('src');
+                    $("#"+_id).find('.img_up_parents').eq(0).find('.img_up').removeClass('none_block');
+
+                }
+
                 Object.getOwnPropertyNames(data.data).forEach(function(key){
+                    if(key == 'money'){
+                        $("#"+_id+" input[name='cpAmount']").val(data.data[key]);
+                        return;
+                    }
                     $("#"+_id+" input[name='"+key+"']").val(data.data[key]);
                     if(key=='dueDate'){
                         var diffDays = $.dateDiff($.calNowDate(),data.data[key]);
@@ -730,11 +795,9 @@ $.extend({
 
         var aDate, oDate1, oDate2, iDays;
         aDate = sDate1.split("-");
-        console.log(""+aDate[1] + '-' + aDate[2] + '-' + aDate[0]);
         oDate1 = new Date(aDate[0] + '-' + aDate[1] + '-' + aDate[2]);  //转换为yyyy-MM-dd格式
         aDate = sDate2.split("-");
         oDate2 = new Date(aDate[0] + '-' + aDate[1] + '-' + aDate[2]);
-        console.log(oDate1+"--------->"+oDate2)
         iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24); //把相差的毫秒数转换为天数
 
         return iDays;  //返回相差天数
@@ -745,7 +808,9 @@ $.extend({
         var month=myDate.getMonth()+1;
         var date=myDate.getDate();
 
-        var now=year+'-'+getNow(month)+"-"+getNow(date);
+        month = month < 0? '0' + month: month;
+        date = date < 0 ? '0' + date: date;
+        var now=year+'-'+(month)+"-"+(date);
         return now;
     },
     addImageCard:function (_o,_ele) {
@@ -1035,6 +1100,16 @@ $.extend({
     //修改密码
     editPwd:function(params){
         params=params?params:{};
+
+        if($("#oldPasswd")){
+            $("#oldPasswd").val('');
+        }
+        if($("#newPasswd")){
+            $("#newPasswd").val('');
+        }
+        if($("#newPasswd2")){
+            $("#newPasswd2").val('');
+        }
         var layerT=$.zOpen({
             title:params.str?params.str:lang.getData('editPwd'),
             ele:'#PwdBox',
@@ -1106,6 +1181,9 @@ $.extend({
             },
             btn2:function(){
                 layer.close(layerT);
+            },
+            end: function(){
+                params.end && params.end()
             }
         })
 

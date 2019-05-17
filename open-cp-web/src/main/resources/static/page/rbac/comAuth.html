@@ -23,6 +23,7 @@
         border-bottom: 1px solid #ddd;
         padding: 10px 15px;
         margin-bottom: 10px;
+        font-weight: bold;
     }
     .globalData_comAuth_title:before{
         content: '';
@@ -32,6 +33,9 @@
         display: inline-block;
         margin-right: 5px;
         vertical-align: 3px;
+    }
+    .uploadImg-tips{
+        display: none;
     }
     label.speci.Required:before{
         top: 3px;
@@ -51,32 +55,33 @@
         <div>
             <h3 class="globalData_comAuth_title">企业基本信息</h3>
             <div class="col-md-12">
-                <div class="col-md-2 common_details imgLabel">
-                    <div class="form-group">
-                        <label class="control-label required speci">营业执照：</label>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="layui-upload layui-row" id="businessLicense">
-                        <div class="img_up_parents layui-col-md3 uploadImg1" >
-                            <input type="hidden" class="field" value="" name ="businessLicenseImgPath" id='businessLicenseImgPath'>
-                            <div class="img_up">
-                                <i class="layui-icon" style="font-size: 50px;margin-left: 10px"></i>
-                                <label style="display: block">上传营业执照图片</label>
-                            </div>
-                            <img class="layui-upload-img" id="businessLicenseCheck2">
+                <div class="col-md-12">
+                    <div class="col-md-2 common_details imgLabel">
+                        <div class="form-group">
+                            <label class="control-label required speci">营业执照：
+                                <p class="uploadImg-tips" style="font-size: 12px;color:#c00;">（请上传5M以内图片）</p>
+                            </label>
                         </div>
                     </div>
-                    <div class="layui-row" style="margin-left: 80px;">
-                        <div  class="layui-col-md3" >营业执照<a href="javascript:void(0)" onclick="showImg(2)" class="a_none">示例</a></div>
+                    <div class="col-md-6">
+                        <div class="layui-upload layui-row" id="businessLicense">
+                            <div class="img_up_parents layui-col-md3 uploadImg1" >
+                                <input type="hidden" class="field" value="" name ="businessLicenseImgPath" id='businessLicenseImgPath'>
+                                <div class="img_up">
+                                    <i class="layui-icon" style="font-size: 50px;margin-left: 10px"></i>
+                                    <label style="display: block">上传营业执照图片</label>
+                                </div>
+                                <img class="layui-upload-img" id="businessLicenseCheck2">
+                            </div>
+                        </div>
+                        <div class="layui-row" style="margin-left: 80px;">
+                            <div  class="layui-col-md3" >营业执照<a href="javascript:void(0)" onclick="showImg(2)" class="a_none">示例</a></div>
+                        </div>
+                        <div class="layui-row"  id="businessLicenseCheck">
+                            <img class="layui-upload-img" onclick ="businessLicenseCheck()"/>
+                        </div>
                     </div>
-                    <div class="layui-row"  id="businessLicenseCheck">
-                        <img class="layui-upload-img" onclick ="businessLicenseCheck()"/>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-12">
+                </div>  
                 <div class="col-md-12 fieldParent">
                     <div class="form-group">
                         <label class="col-md-2 control-label required">{{companyName}}： </label>
@@ -105,7 +110,7 @@
                 </div>
                 <div class="col-md-12 fieldParent">
                     <div class="form-group">
-                        <label class="col-md-2 control-label required">{{organizationCode}}： </label>
+                        <label class="col-md-2 control-label required">统一社会信用代码： </label>
                         <div class="col-md-6">
                             <input maxlength=50 type="text" autocomplete="off" class="form-control field" name="organizationCode" placeholder="{{organizationCode}} "  value=""/>
                         </div>
@@ -118,7 +123,139 @@
                             <input type="text"  autocomplete="off" class="form-control field fieldReadOnly" name="creditRating" placeholder="{{creditRating}} "  value=""/>
                         </div>
                     </div>
-                </div>   
+                </div> 
+                <div class="col-md-12 fieldParent">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label required">{{paymentPassword}}： </label>
+                        <div class="col-md-6">
+                            <input type="text" class="none_input" >
+                            <input maxlength=20 type="password" autocomplete="off" class="form-control field" name2="paymentPassword" placeholder="{{paymentPassword}} "  value=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 fieldParent">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label required">{{paymentPassword2}}： </label>
+                        <div class="col-md-6">
+                            <input type="text" class="none_input" >
+                            <input maxlength=20 type="password" autocomplete="off" class="form-control field" name2="paymentPassword2" placeholder="{{paymentPassword2}} "  value=""/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h3 class="globalData_comAuth_title">法人信息</h3>
+            <div class="col-md-12">
+                <div class="col-md-2 common_details imgLabel">
+                    <div class="form-group ">
+                        <label class="control-label required speci">
+                            身份证正面：
+                            <p class="uploadImg-tips" style="font-size: 12px;color:#c00;">（请上传5M以内图片）</p>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="layui-upload layui-row" id="idNoFront">
+                        <div class="img_up_parents layui-col-md3 uploadImg2" >
+                            <input type="hidden" class="field" value="" name ="idNoFrontImgPath" id='idNoFrontImgPath'>
+                            <div class="img_up">
+                                <i class="layui-icon" style="font-size: 50px;margin-left: 10px"></i>
+                                <label style="display: block">上传身份证正面图片</label>
+                            </div>
+                            <img class="layui-upload-img" id="idNoFrontCheck2">
+                        </div>
+                    </div>
+                    <div class="layui-row"  id="idNoFrontCheck">
+                        <img class="layui-upload-img" onclick ="idNoFrontCheck()"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-2 common_details imgLabel">
+                    <div class="form-group ">
+                        <label class="control-label required speci">
+                            身份证反面：
+                            <p class="uploadImg-tips" style="font-size: 12px;color:#c00;">（请上传5M以内图片）</p>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="layui-upload layui-row" id="idNoBack">
+                        <div class="img_up_parents layui-col-md3 uploadImg3" >
+                            <input type="hidden" class="field" value="" name ="idNoBackImgPath" id='idNoBackImgPath'>
+                            <div class="img_up">
+                                <i class="layui-icon" style="font-size: 50px;margin-left: 10px"></i>
+                                <label style="display: block">上传身份证反面图片</label>
+                            </div>
+                            <img class="layui-upload-img" id="idNoBackCheck2">
+                        </div>
+                    </div>
+                    <div class="layui-row"  id="idNoBackCheck">
+                        <img class="layui-upload-img" onclick ="idNoBackCheck()"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-12 fieldParent">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label required">{{legalPerson}}： </label>
+                        <div class="col-md-6">
+                            <input maxlength=15 type="text" autocomplete="off" class="form-control field" name="legalPerson" placeholder="{{legalPerson}} " value=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 fieldParent">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label required">{{legalPersonIdNo}}：</label>
+                        <div class="col-md-6">
+                            <input maxlength="18" type="text" autocomplete="off" class="form-control field" name="legalPersonIdNo" placeholder="{{legalPersonIdNo}} " value=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 fieldParent">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label required">{{legalPersonPhone}}： </label>
+                        <div class="col-md-6">
+                            <input maxlength="11" type="text" autocomplete="off" class="form-control field" name="legalPersonPhone" placeholder="{{legalPersonPhone}} "  value=""/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="globalData_comAuth_title">经办人信息</h3>
+            <div class="col-md-12">
+                <div class="col-md-12 fieldParent">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label required">{{transactor}}： </label>
+                        <div class="col-md-6">
+                            <input maxlength=15 type="text" autocomplete="off" class="form-control field" name="transactor" placeholder="{{transactor}} " value=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 fieldParent">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label required">{{transactorIdNo}}：</label>
+                        <div class="col-md-6">
+                            <input maxlength="18" type="text" autocomplete="off" class="form-control field" name="transactorIdNo" placeholder="{{transactorIdNo}} " value=""/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 fieldParent">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label required">{{transactorPhone}}： </label>
+                        <div class="col-md-6">
+                            <input maxlength="11" type="text" autocomplete="off" class="form-control field" name="transactorPhone" placeholder="{{transactorPhone}} "  value=""/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <h3 class="globalData_comAuth_title">其他信息</h3>
+            <div class="col-md-12">
                 <div class="col-md-12 fieldParent">
                     <div class="form-group">
                         <label class="col-md-2 control-label">{{contactPhone}}：</label>
@@ -251,132 +388,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12 fieldParent">
-                    <div class="form-group">
-                        <label class="col-md-2 control-label required">{{paymentPassword}}： </label>
-                        <div class="col-md-6">
-                            <input type="text" class="none_input" >
-                            <input maxlength=20 type="password" autocomplete="off" class="form-control field" name2="paymentPassword" placeholder="{{paymentPassword}} "  value=""/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 fieldParent">
-                    <div class="form-group">
-                        <label class="col-md-2 control-label required">{{paymentPassword2}}： </label>
-                        <div class="col-md-6">
-                            <input type="text" class="none_input" >
-                            <input maxlength=20 type="password" autocomplete="off" class="form-control field" name2="paymentPassword2" placeholder="{{paymentPassword2}} "  value=""/>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-            
-        </div>
-        <div>
-            <h3 class="globalData_comAuth_title">法人信息</h3>
-            <div class="col-md-12">
-                <div class="col-md-2 common_details imgLabel">
-                    <div class="form-group ">
-                        <label class="control-label required speci">身份证正面：</label>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="layui-upload layui-row" id="idNoFront">
-                        <div class="img_up_parents layui-col-md3 uploadImg2" >
-                            <input type="hidden" class="field" value="" name ="idNoFrontImgPath" id='idNoFrontImgPath'>
-                            <div class="img_up">
-                                <i class="layui-icon" style="font-size: 50px;margin-left: 10px"></i>
-                                <label style="display: block">上传身份证正面图片</label>
-                            </div>
-                            <img class="layui-upload-img" id="idNoFrontCheck2">
-                        </div>
-                    </div>
-                    <div class="layui-row"  id="idNoFrontCheck">
-                        <img class="layui-upload-img" onclick ="idNoFrontCheck()"/>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="col-md-2 common_details imgLabel">
-                    <div class="form-group ">
-                        <label class="control-label required speci">身份证反面：</label>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="layui-upload layui-row" id="idNoBack">
-                        <div class="img_up_parents layui-col-md3 uploadImg3" >
-                            <input type="hidden" class="field" value="" name ="idNoBackImgPath" id='idNoBackImgPath'>
-                            <div class="img_up">
-                                <i class="layui-icon" style="font-size: 50px;margin-left: 10px"></i>
-                                <label style="display: block">上传身份证反面图片</label>
-                            </div>
-                            <img class="layui-upload-img" id="idNoBackCheck2">
-                        </div>
-                    </div>
-                    <div class="layui-row"  id="idNoBackCheck">
-                        <img class="layui-upload-img" onclick ="idNoBackCheck()"/>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="col-md-12 fieldParent">
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">{{legalPerson}}： </label>
-                        <div class="col-md-6">
-                            <input maxlength=15 type="text" autocomplete="off" class="form-control field" name="legalPerson" placeholder="{{legalPerson}} " value=""/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 fieldParent">
-                    <div class="form-group">
-                        <label class="col-md-2 control-label required">{{legalPersonIdNo}}：</label>
-                        <div class="col-md-6">
-                            <input maxlength="18" type="text" autocomplete="off" class="form-control field" name="legalPersonIdNo" placeholder="{{legalPersonIdNo}} " value=""/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 fieldParent">
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">{{legalPersonPhone}}： </label>
-                        <div class="col-md-6">
-                            <input maxlength="11" type="text" autocomplete="off" class="form-control field" name="legalPersonPhone" placeholder="{{legalPersonPhone}} "  value=""/>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
-
-        <div>
-            <h3 class="globalData_comAuth_title">经办人信息</h3>
-            <div class="col-md-12">
-                <div class="col-md-12 fieldParent">
-                    <div class="form-group">
-                        <label class="col-md-2 control-label required">{{transactor}}： </label>
-                        <div class="col-md-6">
-                            <input maxlength=15 type="text" autocomplete="off" class="form-control field" name="transactor" placeholder="{{transactor}} " value=""/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 fieldParent">
-                    <div class="form-group">
-                        <label class="col-md-2 control-label">{{transactorIdNo}}：</label>
-                        <div class="col-md-6">
-                            <input maxlength="18" type="text" autocomplete="off" class="form-control field" name="transactorIdNo" placeholder="{{transactorIdNo}} " value=""/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12 fieldParent">
-                    <div class="form-group">
-                        <label class="col-md-2 control-label required">{{transactorPhone}}： </label>
-                        <div class="col-md-6">
-                            <input maxlength="11" type="text" autocomplete="off" class="form-control field" name="transactorPhone" placeholder="{{transactorPhone}} "  value=""/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
         
 
 		<!--<div name="orgCodeDiv" class="col-md-6 fieldParent" style="width: 550px;height: 70px;">
@@ -428,11 +441,8 @@
         </div>-->
 		
 
-		
-		
-
-		<div style="width: 100%">
-			<div class="clearfix mb15" >
+		<div class="col-md-12">
+			<div class="clearfix mb15" style="text-align:center;width: 100%;">
         		<button type="button" id='authBtn' class="btn btn-lg btn-w120 btn-primary text-uppercase" style="width: 30%;margin-top:10px;"></button>
         	</div>
 			<div class="clearfix mb15" style="text-align:center;">
@@ -476,13 +486,96 @@ var globalData={
   init:function(){
 
 	var _paramsArr =$.packageUploadStr("businessLicense","uploadImg1");
-    $.uploadBillImg(_paramsArr[0],_paramsArr[1],_paramsArr[2]);
+    $.uploadBillImg2(_paramsArr[0],_paramsArr[1],_paramsArr[2], function(res){
+        //营业执照上传成功之后，进行识别处理
+       
+        $.zAjax({
+            url: project.host()+'/v1/ocr/businesslicense',
+            type:'post',
+            data:{
+                'imageName': res
+            },
+            success: function(data){
+                if(data.code == 0){
+                    if(!data.data.name && !data.data.creditCode){
+                        $("#businessLicenseImgPath").val('');
+                        $("#businessLicenseCheck2").removeAttr('src');
+                        layer.msg('请上传更清晰的营业执照图片以供系统识别！');
+                        return;
+                    }
+
+                    //识别成功填入相关信息
+                    $("input[name='companyName']").val(data.data.name);
+                    $("input[name='organizationCode']").val(data.data.creditCode);
+                }else{
+                    layer.msg(data.errMsg);
+                    $("#businessLicenseImgPath").val('');
+                    $("#businessLicenseCheck2").removeAttr('src');
+                }
+                
+
+            }
+        })
+    });
 
     var _paramsArr2 =$.packageUploadStr("idNoFront","uploadImg2");
-    $.uploadBillImg(_paramsArr2[0],_paramsArr2[1],_paramsArr2[2]);
+    $.uploadBillImg2(_paramsArr2[0],_paramsArr2[1],_paramsArr2[2], function(res){
+        //法人身份证上传校验
+        //
+       
+        $.zAjax({
+            url: project.host()+'/v1/ocr/idcardfront',
+            type:'post',
+            data:{
+                'imageName': res
+            },
+            success: function(data){
+                if(data.code == 0){
+                    if(!data.data.name && !data.data.idNo){
+                        $("#idNoFrontImgPath").val('');
+                        $("#idNoFrontCheck2").removeAttr('src');
+                        layer.msg('请上传更清晰的法人身份证正面图片以供系统识别！');
+                        return;
+                    }
+
+                    //识别成功填入相关信息
+                    $("input[name='legalPerson']").val(data.data.name);
+                    $("input[name='legalPersonIdNo']").val(data.data.idNo);
+                }else{
+                     layer.msg(data.errMsg);
+                     $("#idNoFrontImgPath").val('');
+                        $("#idNoFrontCheck2").removeAttr('src');
+                }
+                
+            }
+        })
+    });
 
     var _paramsArr3 =$.packageUploadStr("idNoBack","uploadImg3");
-    $.uploadBillImg(_paramsArr3[0],_paramsArr3[1],_paramsArr3[2]);
+    $.uploadBillImg2(_paramsArr3[0],_paramsArr3[1],_paramsArr3[2], function(res){
+        $.zAjax({
+            url: project.host()+'/v1/ocr/idcardback',
+            type:'post',
+            data:{
+                'imageName': res
+            },
+            success: function(data){
+                if(data.code == 0){
+                    if(!data.data.name && !data.data.idNo && !data.data.effectiveDate && !data.data.errorMessage && !data.data.expiredDate && !data.data.organ){
+                        $("#idNoBackImgPath").val('');
+                        $("#idNoBackCheck2").removeAttr('src');
+                        layer.msg('请上传更清晰的法人身份证反面图片以供系统识别！');
+                        return;
+                    }
+                }else{
+                     layer.msg(data.errMsg);
+                     $("#idNoBackImgPath").val('');
+                    $("#idNoBackCheck2").removeAttr('src');
+                }
+                
+            }
+        })
+    });
 
 
     //生成整体数据，主要为国际化语言服务
@@ -536,6 +629,24 @@ var globalData={
 		$('#saveBtn').html(lang.getData('saveBtn'));
 		$('#authBtn').html(lang.getData('authBtn'));
 		$('#cancelBtn').html(lang.getData('cancel'));
+
+
+
+        //test
+        
+        // $('#authBtn').parent().siblings().hide();
+        // $('#businessLicenseCheck').hide().siblings().show();
+        // $('#idNoFrontCheck').hide().siblings().show();
+        // $('#idNoBackCheck').hide().siblings().show();
+        // $('[name="oldPaymentPassword"]').parent().parent().parent().hide();
+        // $('[name="creditRating"]').parent().parent().parent().hide();
+
+        // $('[name="authStatus"]').parent().parent().parent().hide();
+        // $('[name="authNoPassCause"]').parent().parent().parent().hide();
+
+        // $('.imgLabel').show();
+                
+        // return;
 	if(authStatus == '9'){//认证通过后，查看，修改页面
 		//alert(1);
 		this.getCompanyInfo(orgId);
@@ -544,6 +655,7 @@ var globalData={
 		$('[name="authNoPassCause"]').parent().parent().parent().hide();
 	}else if((!authStatus) || "null"==authStatus){//认证信息未提交前，新增页面
 		//alert(2);
+        $(".uploadImg-tips").show();
 		$('#authBtn').parent().siblings().hide();
 		$('#businessLicenseCheck').hide().siblings().show();
 		$('#idNoFrontCheck').hide().siblings().show();
@@ -838,6 +950,7 @@ var globalData={
 
 		//详情
 		detailPage: function(){
+            $(".uploadImg-tips").hide();
 			$('#dataView .field,#dataViewRe .field').attr('disabled','disabled');
 	        $('.common_status,.common_details').show();
 	        $('.common_onlyadd').hide();

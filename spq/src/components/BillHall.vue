@@ -4,7 +4,9 @@
 		fixed
 		@click-right="onClickRight"
 		class="top-bg"
-		>
+		style="background: #fff;"
+		>	
+			<img :src="logoImg" slot="left" style="width:70px;height: 45px;vertical-align:-30px;">
 			<span slot="title" class="top-bg-title">{{title}}</span>
 			<span slot="right" class="top-bg-title">我要发布</span>
 		</van-nav-bar>
@@ -55,8 +57,9 @@
 				</van-col>
 			</div>
 		</van-row>
-		<div style="margin-top: 5px;padding-bottom:50px;overflow-y: scroll;">
-			<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+		<div style="overflow-y: hidden;" :style="scrollH">
+			<div style="height: 100%;overflow-y:scroll;">
+				<van-pull-refresh v-model="isLoading" @refresh="onRefresh">
 				<van-list
 					ref="bscroll"
 					v-model="loading"
@@ -66,6 +69,7 @@
 					error-text="请求失败，点击重新加载"
 					:offset=20
 					@load="onLoad"
+					style="padding-bottom:50px;margin-top: 5px;"
 					>
 						<van-cell
 
@@ -76,11 +80,11 @@
 						>
 							<template slot="title">
 
-								<div @click="showDetail(item)" style="position: absolute;right:15px;bottom: 10px;z-index: 10;">
+								<div @click="showDetail(item)" style="position: absolute;right:15px;top: 10px;z-index: 10;">
 									<van-button type="success" size="small" v-if="item.cpStatus == 1">审核中</van-button>
 									<van-button type="danger" size="small" v-else-if="item.cpStatus == 2">撮合成功</van-button>
 									<van-button v-else-if="item.cpStatus == 3" size="small">已注销</van-button>
-									<van-button type="info" size="small" v-else-if="item.cpStatus == 4">票据详情</van-button>
+									<van-button style="background:#c00;border-color:#c00;color:#fff;" size="small" v-else-if="item.cpStatus == 4">票据详情</van-button>
 									<van-button type="success" size="small" v-else-if="item.cpStatus == 6">已成交</van-button>
 									<van-button size="small" v-else-if="item.cpStatus == 7">买方违约</van-button>
 									<van-button size="small" v-else-if="item.cpStatus == 8">卖方违约</van-button>
@@ -104,6 +108,14 @@
 											<span  class="price-txt">{{item.cpAmount && dealPrice((item.cpAmount).toFixed(2))}}
 											</span>
 											<span class="small-font">元</span>
+										</span>
+									</van-col>
+								</van-row>
+								<van-row class="van-hairline--bottom text-left">
+									<van-col span="24">
+										年化利率：
+										<span class="black-font">
+											{{item.approvalApr}}%
 										</span>
 									</van-col>
 								</van-row>
@@ -168,10 +180,12 @@
 								<van-col span="8" class="black-font">{{spliceTime(item.createTime)}}</van-col>
 								<van-col span="7" class="black-font">{{item.dueDate}}</van-col>
 							</van-row> -->
-					</template>
-				</van-cell>
-			</van-list>
-		</van-pull-refresh>
+						</template>
+					</van-cell>
+				</van-list>
+			</van-pull-refresh>
+			</div>
+			
 	</div>
 </div>
 <DetailList
@@ -194,6 +208,8 @@ import SetSearch from '@/components/SetSearch'
 import DetailList from '@/components/DetailList'
 import _server from '@/server/server'
 import _common from '@/server/index'
+
+import logoImg from '@/assets/logo.jpg'
 
 
 //01-待发布；02-成交中；03-注销;04-发布中;05-审核失败;06-已成交;
@@ -230,6 +246,10 @@ import _common from '@/server/index'
   	},
   	data() {
   		return {
+  			scrollH:{
+  				height: '400px'
+  			},
+  			logoImg: logoImg,
   			title: '票据库',
 	        finished: false,//是否已经加载完成
 	        error: false,
@@ -263,6 +283,8 @@ import _common from '@/server/index'
 	},
 	created(){
 		this.$canScroll();
+	 	window.addEventListener('resize', this.getHeight);
+      	this.getHeight()
 	},
 	beforeRouteLeave(to, from, next){
 		if(to.name == 'Login' || to.name == 'RealName' || to.name == 'RealNameChange'){
@@ -291,6 +313,11 @@ import _common from '@/server/index'
 		onClickRight() {
 			this.$router.push({path: '/home/ticketHolder/fbpj'});
 		},
+      	getHeight(){
+        	var scrollH = window.screen.height;
+
+        	this.scrollH.height = scrollH - 200 + 'px';
+      	},
 		transformRate(rate){
 			this.list.forEach((item) => {
 				item.creditRating = 6 - item.creditRating;
@@ -453,7 +480,6 @@ import _common from '@/server/index'
         this.getData(this.searchData);
     },
     modelOk(data) {
-    	console.log(data);
     	this.$canScroll();
     	this.isGetingData = false;
     	let searchData = {
@@ -480,6 +506,7 @@ import _common from '@/server/index'
     modelClose() {
     	this.$canScroll();
     	this.searchModelState = false;
+    	this.loading = false;
     }
 }
 }
@@ -511,6 +538,7 @@ import _common from '@/server/index'
 .list-wrap {
 	padding-top: 38px;
 	background: #f5f5f5;
+	overflow: hidden;
 }
 
 .nav-top {

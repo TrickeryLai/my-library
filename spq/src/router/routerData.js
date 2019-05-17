@@ -20,6 +20,7 @@ import BankDetailInfo from '@/components/BankDetailInfo'
 import ChangeAccount from '@/components/ChangeAccount'
 import ForgetPassword from '@/components/ForgetPassword'
 import OdPage from '@/components/OdPage'
+import Rate from '@/components/Rate'
 
 import PushPage from '@/components/PushPage';
 
@@ -187,6 +188,15 @@ let routerData = {
         isNChecked: true,
       },
       component: ChangeAccount
+    },
+    {
+      path: '/home/rate',
+      name: 'Rate',
+      meta:{
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: Rate
     }
 
     ]

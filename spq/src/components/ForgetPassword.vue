@@ -9,9 +9,13 @@
 			<span slot="title" class="top-bg-title">{{title}}</span>
 			<i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
 		</van-nav-bar>
-		<div :style="{backgroundImage:'url('+topImg+')'}"
-  	style="height:90px;margin: 20px 0px 10px;background-position:center;background-size:cover;background-repeat: no-repeat;"></div>
-		<van-row>
+<!-- 		<div :style="{backgroundImage:'url('+topImg+')'}"
+  	style="height:90px;margin: 20px 0px 10px;background-position:center;background-size:cover;background-repeat: no-repeat;"></div> -->
+  		<div style="height:90px;border-radius: 5px;margin:0 auto;background: #c00;color:#fff;font-family: '黑体'">
+			<p style="font-weight: bold;font-size:28px;letter-spacing: 5px;padding-top:15px;">商票之家</p>
+			<p style="margin-top:5px;letter-spacing: 3px;">您的票据融资首选</p>
+		</div>
+		<!-- <van-row>
 			<van-col span="1" class="red-font" style="padding-top: 12px;">*</van-col>
 			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
 				<i class="iconfont icon-mine"></i>
@@ -26,7 +30,7 @@
 				:error="registerError.loginName"
 				type="text" />
 			</van-col>
-		</van-row>
+		</van-row> -->
 		<van-row >
 			<van-col span="1" class="red-font" style="padding-top: 12px;">*</van-col>
 			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
@@ -61,7 +65,7 @@
 			>
 				<van-button
 					size="small"
-					style="font-size: 12px;width: 100%;height: 34px;background:#011629;border-color: #011629;color: #fff;"
+					style="font-size: 12px;width: 100%;height: 34px;background:#c00;border-color: #c00;color: #fff;"
 					@click="getSmsCaptcha"
 					:disabled="getSmsAgainTime != 61"
 				>
@@ -124,7 +128,7 @@
 	<div class="login-bottom">
 		<van-button 
 		@click="registerFn"
-		style="width: 100%;border-radius: 100px;background:#011629;border-color: #011629;color: #fff;"
+		style="width: 100%;border-radius: 100px;background:#c00;border-color: #c00;color: #fff;"
 		>确认</van-button>
 		<p style="padding: 5px;">已有账号，<span class="blue-font" @click="gotoLogin">立即登录</span></p>
 	</div>
@@ -177,11 +181,11 @@ export default{
 			window.history.go(-1);
 		},
 		checkLoginMessage(){
-			if(!this.register.loginName){
-				this.registerError.loginName = true;
-				this.$toast('请输入需要找回密码的用户名！');
-				return false;
-			}
+			// if(!this.register.loginName){
+			// 	this.registerError.loginName = true;
+			// 	this.$toast('请输入需要找回密码的用户名！');
+			// 	return false;
+			// }
 			if(!this.register.phone || !_common.common_reg.phone(this.register.phone)){ 
 				this.registerError.phone = true;
 		        this.$toast('请输入正确的手机号！');
@@ -223,17 +227,17 @@ export default{
 			}, 1000)
 		},
 		getSmsCaptcha(){
-			if(!this.register.loginName){
-				this.$toast('请输入要找回密码的用户名！');
-				return;
-			}
+			// if(!this.register.loginName){
+			// 	this.$toast('请输入要找回密码的用户名！');
+			// 	return;
+			// }
 			if(!this.register.phone || !_common.common_reg.phone(this.register.phone)){
 				this.$toast('请先输入正确的手机号！');
 				return;
 			}
 			
 			//获取短信验证码
-			_server.getSmsCaptcha(this.register.phone, this.register.loginName).then(res => {
+			_server.getSmsCaptcha1({phoneNumber: this.register.phone, type: '003'}).then(res => {
 				if(res.errMsg){
 					this.$toast(res.errMsg);
 				}else{
@@ -251,7 +255,7 @@ export default{
 				return;
 			}
 			data = {
-					loginName: this.register.loginName,
+					// loginName: this.register.loginName,
 					password: this.register.password, 
 					phoneNumber: this.register.phone, 
 					captchaCode: this.register.code, 

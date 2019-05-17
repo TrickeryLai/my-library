@@ -78,7 +78,7 @@ h5 {
 	width: 100px;
 	margin-left: 30px;
 }
-.icon{
+.iconAr{
             display : inline-block;
             width:7px;
             height:9px;
@@ -208,7 +208,15 @@ h5 {
 		#frontBtn{ position:absolute;z-index:100;width:50px;height:80px;text-align:center; line-height:40px;box-shadow: darkgrey 5px 5px 60px 5px ;border-radius:8px 0px 0px 8px;font-family:微软雅黑;letter-spacing:1px;
 					}    
 		/* div背景色为红色 */    
-		#reverseBtn{ position:absolute;top:80px;z-index:180;background:rgb(145, 166, 242);width:50px;height:80px;text-align:center; line-height:30px;border-radius:6px 0px 0px 6px;box-shadow:darkgrey 5px 5px 60px 5px;}    
+		#reverseBtn{ position:absolute;top:80px;z-index:180;background:rgb(145, 166, 242);width:50px;height:80px;text-align:center; line-height:30px;border-radius:6px 0px 0px 6px;box-shadow:darkgrey 5px 5px 60px 5px;}  
+
+        .rate_wrap_star{
+            font-size: 22px;
+            cursor: pointer;
+        }
+        .rate_wrap_star i.active{
+            color: #c00;
+        }  
 		/* 背景为黄色 */
 </style>
 <!-- 模板引擎动态生成整体数据，主要为国际化语言服务 -->
@@ -235,6 +243,7 @@ h5 {
                     <thead class="thead">
                     <tr>
                         <th >{{companyName}}</th>
+                        <th>年化利率</th>
                         <th>{{quoteTurnVolume}}</th>
                         <th>{{quoteTime}}</th>
                         <th >{{matchTime}}</th>
@@ -292,11 +301,11 @@ h5 {
                             <table class="table table-bordered table-striped zCheckBox">
                                 <thead class="thead">
                                 <tr>
-                                    <th id="createTimeSort">{{releaseTime}}<i class="icon"></th>
+                                    <th id="createTimeSort">{{releaseTime}}<i class="iconAr"></th>
 									<th>{{acceptor}}</th>
                                     <th>{{cpDefect}}</th>
-                                    <th id="amountSort">{{cpAmount}}<i class="icon"></th>
-                                    <th id="dueDateSort">{{dueDate}}<i class="icon"></th>
+                                    <th id="amountSort">{{cpAmount}}<i class="iconAr"></th>
+                                    <th id="dueDateSort">{{dueDate}}<i class="iconAr"></th>
                                     <th >{{actualTime}}</th>
                                     <th >{{cpStatus}}</th>
                                     <th>{{operation}}</th>
@@ -319,6 +328,8 @@ h5 {
                 </div>
             </div>
         </div>
+
+        <div id="dataViewss"></div>
 </div>
 </script>
 
@@ -377,7 +388,7 @@ h5 {
 
            <!-- <span class="btn btn-sm btn-info fa fa-cloud-upload hoverBtnAll" btnAlltype="uploadSaleImg" name="returnBtn" onclick="uploadPicBox({{value.cpId}})" ></span>-->
             {{if value.saleSureImg == '01'}}
-              <span class="btn btn-sm btn-primary"  onclick = "sureTrade({{value.cpId}})">确认交易</span>
+              <span class="btn btn-sm btn-primary"  onclick = "sureTrade({{value.cpId}}, '{{value.cpNo}}')">确认交易</span>
             {{/if}}
             {{/if}}
         </td>
@@ -394,6 +405,7 @@ h5 {
     {{each list as value i}}
     <tr _id="{{value.priceId}}">
 		<td>{{value.companyName }}</td>
+        <td>{{value.approvalApr}}%</td>
 		<td>{{value.turnVolume}}</td>
         <td>{{value.quoteTime}}</td>
         <td>{{value.matchTime}}</td>
@@ -417,7 +429,98 @@ h5 {
     {{/if}}
 </script>
 
+<script type="text/html" id="rate_wrap">
+    <div style="padding: 20px 20px 50px;">
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-md-4" style="text-align:right;">
+                评价：
+            </div>
+            <div class="col-md-8 rate_wrap_star" style="color: #eee" id="rate_wrap_star">
+                <i class="fa fa-star active"></i>
+                <i class="fa fa-star active"></i>
+                <i class="fa fa-star active"></i>
+                <i class="fa fa-star active"></i>
+                <i class="fa fa-star active"></i>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4" style="text-align:right;">
+                其他信息：
+            </div>
+            <div class="col-md-8">
+                <textarea class="form-control"></textarea>
+            </div>
+        </div>
+        
+        
+    </div>
+</script>
 
+<script type="text/html" id="ticketDetailSale">
+    <div style="padding: 0 20px 20px;font-size: 16px;">
+        <div style="margin-bottom:20px;">
+            <img src="{{frontBillImg}}" style="width: 150px;max-height: 150px;margin-right:5px;margin-bottom: 5px;" onclick="showPhoto('{{frontBillImg}}')">
+            <img src="{{backBillImg}}" style="width: 150px;max-height: 150px;margin-right:5px;margin-bottom: 5px;" onclick="showPhoto('{{backBillImg}}')">
+            {{if imageList && imageList.length > 0}}
+            {{each imageList as value i}}
+            <img src="{{value.imageName}}" style="width: 150px;max-height: 150px;margin-right:5px;margin-bottom: 5px;" onclick="showPhoto('{{value.imageName}}')">
+            {{/each}}
+            {{/if}}
+        </div>
+        <div>
+            <h3 style="color: #232333;margin-bottom: 10px;">基本信息</h3>
+            <div>
+                <div class="clear" style="padding:5px">
+                    <div style="width: 50%;" class="fl">
+                        <span style="width: 30%;color:#232333;">承兑人：</span>
+                        <span style="width: 70%;word-break: break-all;">{{acceptor}}</span>
+                    </div>
+                    <div style="width: 50%;" class="fl">
+                        <span style="width: 30%;color:#232333;">到期日：</span>
+                        <span style="width: 70%;">{{dueDate}}</span>
+                        <span style="color: #c00">(剩余{{dateDiff}}天)</span>
+                    </div>
+                </div>
+                <div class="clear" style="padding:5px">
+                    <div style="width: 50%;" class="fl">
+                        <span style="width: 30%;color:#232333;">票面金额：</span>
+                        <span style="width: 70%;color: #c00;font-size: 20px;">{{cpAmount}}元</span>
+                    </div>
+                    <div style="width: 50%;" class="fl">
+                        <span style="width: 30%;color:#232333;">背书次数：</span>
+                        <span style="width: 70%;">{{endorseTimes}}</span>
+                    </div>
+                </div>
+                <div class="clear" style="padding:5px">
+                    <div style="width: 50%;" class="fl">
+                        <span style="width: 30%;color:#232333;">票据号码：</span>
+                        <span style="width: 70%;word-break: break-all;">{{cpNo}}</span>
+                    </div>
+                    <div style="width: 50%;" class="fl">
+                        <span style="width: 30%;color:#232333;">票据瑕疵：</span>
+                        <span style="width: 70%;word-break: break-all;">{{cpDefect}}</span>
+                    </div>
+                </div>
+                <div class="clear" style="padding:5px">
+                    <p style="color:#232333;margin-bottom: 5px;">卖出价：</p>
+                    <div style="width: 33.33%;" class="fl">
+                        <span style="color:#232333;margin-bottom: 5px;">每十万扣款:</span>
+                        <span>{{deductAmount}}元</span>
+                    </div>
+                    <div style="width: 33.33%;" class="fl">
+                        <span style="color:#232333;margin-bottom: 5px;">年化利率:</span>
+                        <span>{{approvalApr}}%</span>
+                    </div>
+                    <div style="width: 33.33%;" class="fl">
+                        <span style="color:#232333;margin-bottom: 5px;">金额:</span>
+                        <span>{{turnVolume}}元</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</script>
 
 <script>
 
@@ -426,8 +529,70 @@ h5 {
     var qute_dueDate = '';
     var qute_cpStatus = '';
 
+
+    function iframeGotoLogin(){
+        layer.closeAll();
+
+        layer.alert('请重新登录',
+            function(){
+                    sessionStorage.removeItem('data');
+                    location.href='login.html';
+                });
+                setTimeout(function (argument) {
+                    sessionStorage.removeItem('data');
+                    location.href='login.html';
+                },5000);
+    }
+
+     function rateFn(cpNo){
+        var clickIndex = 5;
+        $("#dataViewss").html(template("rate_wrap", {}));
+
+        $("#dataViewss .rate_wrap_star i").on('click', function(){
+            var index = $(this).index();
+            clickIndex = index + 1;
+            $("#dataViewss .rate_wrap_star i").removeClass('active');
+            for(var i = 0; i <= index; i++){
+                $("#dataViewss .rate_wrap_star i").eq(i).addClass('active');
+            }
+        })
+        $.zOpen({
+            title: '评价',
+            ele: "#dataViewss",
+            btn:['确认'],
+            callback: function(){
+
+                $.zAjax({
+                    url:  project.host()+'/v1/comment',
+                    type: 'post',
+                    isString: true,
+                    data: {
+                        cpNo: $.trim(cpNo),
+                        score: clickIndex,
+                        createTime: new Date().getTime(),
+                        remark: $.trim($("#dataViewss textarea").val())
+                    },
+                    success: function(res){
+                        if(res.code == 0){
+                            layer.closeAll();
+                            layer.msg('评价成功！');
+                        }else{
+                            layer.msg(res.errMsg);
+                        }
+                    } 
+                })
+                
+            },
+            end: function(){
+                $("#dataViewss").html('');
+            }
+        })
+    }
+
     //确认交易按钮，需要弹出框询问是否同意交易
-    function sureTrade(cpId) {
+    function sureTrade(cpId, cpNo) {
+
+
         layer.confirm('您即将确认此笔交易', {
             btn: ['确认','取消'] //按钮
         }, function(){
@@ -446,6 +611,8 @@ h5 {
                         layer.closeAll();
                         layer.msg("已确认",{icon:1});
                         globalData.getData();
+
+                        rateFn(cpNo)
                     }else{
                         layer.closeAll();
                         layer.msg(data.errMsg,{icon:1});
@@ -585,16 +752,25 @@ h5 {
 
     }
     function delCpId(_id) {
-        $.zAjax({
-            url: project.host()+'/v1/commercialPaper/paper/'+_id ,
-            isString:true,
-            type:'delete',
-            success: function(data) {
-                layer.closeAll();
-                layer.msg(lang.getData('cancelSucess'),{icon:1});
-                globalData.getData();
-            }
-        });
+
+        layer.confirm('取消发布会影响信用评价,是否确认取消发布?',
+        {
+           btn: ['确认', '取消'], 
+        },
+        function(){
+            $.zAjax({
+                url: project.host()+'/v1/commercialPaper/paper/'+_id ,
+                isString:true,
+                type:'delete',
+                success: function(data) {
+                    layer.closeAll();
+                    layer.msg(lang.getData('cancelSucess'),{icon:1});
+                    globalData.getData();
+                }
+            });
+        }
+        )
+       
     }
     //编辑
     function editCpInfo(_id) {
@@ -608,15 +784,72 @@ h5 {
             content: 'blank.html#/cpPublish?type=edit&cpId='+_id
         });
     }
+
+    function showPhoto(img){
+        layer.photos({
+            photos: {
+              "title": "",
+              "id": 1234,
+              "start": 0,
+              "data": [
+                {
+                  "alt": "票据图片",
+                  "pid": 1003,
+                  "src": img,
+                  "thumb": ""
+                }
+              ]
+            }
+            ,anim: 5,
+            id:123
+        });
+    }
     function showCpInfo(_id) {
-        layer.open({
-            title: '查看商票',
-            anim: 5,
-            type: 2,
-            area: ['100%', '100%'],
-            fixed: false, //不固定
-            maxmin: false,
-            content: 'blank.html#/cpPublish?type=show&source=my&cpId='+_id
+        // layer.open({
+        //     title: '查看商票',
+        //     anim: 5,
+        //     type: 2,
+        //     area: ['100%', '100%'],
+        //     fixed: false, //不固定
+        //     maxmin: false,
+        //     content: 'blank.html#/cpPublish?type=show&source=my&cpId='+_id
+        // });
+        $.zAjax({
+            url: project.host()+'/v1/commercialPaper/paper/'+_id ,
+            type:'get',
+            success: function(data) {
+                if(data.code == 0){
+                    data.data.frontBillImg = project.host() + '/v1/images/' + data.data.frontBillImg;
+                    data.data.backBillImg = project.host() + '/v1/images/' + data.data.backBillImg;
+                    data.data.dateDiff = $.dateDiff($.calNowDate() ,data.data.dueDate);
+                    data.data.cpAmount = $.zFormatMoney(data.data.cpAmount);
+                    data.data.turnVolume = $.zFormatMoney(data.data.turnVolume);
+                    data.data.deductAmount = $.zFormatMoney(data.data.deductAmount);
+
+                    data.data.imageList.forEach(function(item){
+                        item.imageName = project.host() + '/v1/images/' + item.imageName;
+                    })
+                    $("#dataViewss").html(template('ticketDetailSale', data.data));
+                    layer.open({
+                        title: '查看商票',
+                        anim: 5,
+                        type: 1,
+                        area: ['800px', '500px'],
+                        btn:['确认'],
+                        callback: function(){
+                            layer.closeAll();
+                        },
+                        fixed: true, //不固定
+                        maxmin: false,
+                        // content: 'blank.html#/cpPublish?type=show&cpId='+_id,
+                        content: $("#dataViewss"),
+                        end: function(){
+                            $("#dataViewss").html('')
+                        }
+                    });
+                }
+                
+            }
         });
     }
     function showImg(_img,name,_cpId) {

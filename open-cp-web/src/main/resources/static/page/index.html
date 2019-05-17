@@ -40,14 +40,27 @@
             document.getElementsByTagName('head')[0].appendChild(link);
         }
     </script>
+
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1efaeb8a243bcc7f8a0cbe9123c5f2b8";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
 </head>
 
 <body class="theme-one app">
 <header class="site-head clearfix ng-scope animated slideInDown" id="site-head">
     <div class="nav-head ng-scope" >
-        <a href="javascript:;" class="site-logo">
+       <!--  <a href="javascript:;" class="site-logo">
           <span class="unifTitle">
           </span>
+        </a> -->
+        <a href="javascript:;">
+            <img src="../assets/images/logo.jpg" style="height: 100%;">
         </a>
         <span class="nav-trigger fa fa-outdent">
         </span>
@@ -356,6 +369,8 @@
     }else{
         menuList=common_data.menu;
     }
+
+    // console.log(menuList)
     var html=new treeMenu(menuList).init({
         treeType:'menu',
         pIdKey:'pId',

@@ -51,7 +51,7 @@
         title: '订单',
         active: '0',
         tabsH: {
-          height: '450px'
+          height: '400px'
         },
         ticketModelState: false,
         orderModelState: false,
@@ -74,7 +74,7 @@
       }
     },
     beforeRouteLeave(to, from, next){
-      if(to.name == 'Login' || to.name == 'RealName' || to.name == 'RealNameChange'){
+      if(to.name == 'Login' || to.name == 'RealName' || to.name == 'RealNameChange' || to.name == 'Rate'){
         next();
         return;
       }
@@ -112,7 +112,7 @@
       getHeight(){
         var scrollH = window.screen.height;
 
-        this.tabsH.height = scrollH - 150 + 'px';
+        this.tabsH.height = scrollH - 195 + 'px';
       },
       TicketModelChange(state){
         this.ticketModelState = state;

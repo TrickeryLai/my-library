@@ -35,11 +35,45 @@ let server = {
    * @param  {Function} callback [description]
    * @return {[type]}            [description]
    */
-  getSmsCaptcha(phoneNumber, loginName){
+  getSmsCaptcha(phoneNumber, loginName, type){
     let url = 'open-cp/v1/smsCaptcha/?phoneNumber=' + phoneNumber;
 
     if(loginName){
       url += '&loginName=' + loginName;
+    }
+    if(type){
+      url += '&type=' + type;
+    }
+    return new Promise((resolve, reject) => {
+      Axios.get({
+        url: url,
+        }).then((response) => {
+
+          return resolve(response);
+              //请求成功返回的数据
+              if(response.captchaKey){
+                callback && callback(response);
+              }else{
+                response.errMsg && Toast(response.errMsg);
+                }
+            })
+        .catch((error) => {
+          return reject(error);
+        });
+    })
+  },
+  /**
+   * [getSmsCaptcha1 获取验证码]
+   * @param  {[type]} phoneNumber [description]
+   * @param  {[type]} loginName   [description]
+   * @param  {[type]} type        [description]
+   * @return {[type]}             [description]
+   */
+  getSmsCaptcha1(obj){
+    let url = 'open-cp/v1/smsCaptcha/?';
+
+    for(let key in obj){
+      url += `${key}=${obj[key]}&`;
     }
     return new Promise((resolve, reject) => {
       Axios.get({
@@ -857,6 +891,115 @@ let server = {
         })
       })
     },
+    /**
+     * [submitComment 提交评价]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    submitComment(data){
+      let url = 'open-cp/v1/comment';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          isLoading: true,
+          url,
+          data: data,
+        }).then((response) => {
+            if(response.code == 0 || response.code == 110008){
+              return resolve(response);
+            }else{
+              response.errMsg && Toast(response.errMsg);
+              return reject(response);
+            }
+        }).catch(error => {
+          return reject(error);
+        });
+      })
+      
+    },
+
+    /**
+     * [getOcrCompanyData 识别营业执照图片]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    getOcrBusinesslicenseData(data){
+      let url = 'open-cp/v1/ocr/businesslicense';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          isLoading: true,
+          url,
+          data: data,
+          isdeal: true,
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          return reject(response);
+        })
+      })
+    },
+    /**
+     * [getOcrIdCardData 识别身份证正面]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    getOcrIdCardData(data){
+      let url = 'open-cp/v1/ocr/idcardfront';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          isLoading: true,
+          url,
+          data: data,
+          isdeal: true,
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          return reject(response);
+        })
+      })
+    },
+    /**
+     * [getOcrIdBackCardData 身份证反面]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    getOcrIdBackCardData(data){
+      let url = 'open-cp/v1/ocr/idcardback';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          isLoading: true,
+          url,
+          data: data,
+          isdeal: true,
+        }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            // callback && callback(response);
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+        }).catch(error => {
+          return reject(response);
+        })
+      })
+    },
+
 
 }
 

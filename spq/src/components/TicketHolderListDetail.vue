@@ -154,7 +154,7 @@
 							style="width: 100%;"
 							@click="change">修改</van-button>
 						</van-col>
-						<van-col span="12" v-if="initData.cpStatus == 2">
+						<van-col span="12" v-if="(initData.cpStatus == 2) && (initData.saleSureImg == '01')">
 							<van-button
 							type="primary"
 							style="width: 100%;"
@@ -223,6 +223,9 @@
 		watch: {
 			showState(newValue, oldValue){
 				this.show = newValue;
+				this.submit.yearRate = '';
+				this.submit.reduceAmount = '';
+				this.submit.dealAmount = '';
 				if(newValue){
 					this.transformRate();
 					this.setTimeoutFn();
@@ -278,7 +281,7 @@
 				}).then(() => {
 					//确认验收
 					let data = {
-						id: this.initD.cpId,
+						id: this.initData.cpId,
 						type: 1,
 						imageName: '02'
 					}
@@ -287,6 +290,7 @@
 							this.$toast('操作成功！');
 							this.$emit("refresh");
 							this.modelClose();
+							this.$router.push({path: '/home/rate', query:{cpNo: this.initData.cpNo}})
 						}
 					}).catch(error => {
 
@@ -369,7 +373,7 @@
 				//注销
 			 	this.$dialog.confirm({
 					title: '确认注销',
-					message: '确认注销此票据么？'
+					message: '取消发布会影响信用评价,是否确认取消发布?'
 				}).then(() => {
 					let cpId = this.initData.cpId, cpStatus = this.initData.cpStatus;
 					if(cpStatus != 4){

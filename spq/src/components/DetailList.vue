@@ -34,6 +34,10 @@
 						<van-col class="detail-row-right" span="18">{{initData.cpAmount && dealPrice(initData.cpAmount.toFixed(2))}}元</van-col>
 					</van-row>
 					<van-row class="detail-row">
+						<van-col class="detail-row-left" span="6">年化利率</van-col>
+						<van-col class="detail-row-right" span="18">{{initData.approvalApr}}%</van-col>
+					</van-row>
+					<van-row class="detail-row">
 						<van-col class="detail-row-left" span="6">背书次数</van-col>
 						<van-col class="detail-row-right" span="18">{{initData.endorseTimes}}次</van-col>
 					</van-row>
@@ -121,7 +125,7 @@
 					<van-row style="background: #f5f5f5;">
 						<van-col span="24" class="buy-price">
 							<span v-if="hasBuyPrice">
-								{{dealPrice(buyPrice && buyPrice.toFixed(2))}}元
+								{{dealPrice(buyPrice.turnVolume && buyPrice.turnVolume.toFixed(2))}}元&nbsp({{buyPrice.approvalApr}}%)
 							</span>
 			              	<span v-else>
 			                	等待买家报价
@@ -237,11 +241,12 @@
 				submit: {
 					yearRate:'',//年化利率
 					reduceAmount:'',//每十万扣款
+					dealAmount: ''
 				},
 				refreshPriceState: false,//刷新价格开关
 				buyPrice: '',
         		hasBuyPrice: false,
-        		buyPriceText: '买家最新报价',
+        		buyPriceText: '买家最高报价',
         		imagePreview: '',
 			}
 		},
@@ -249,20 +254,21 @@
 		watch: {
 			
 			showState(newValue, oldValue){
+
 				this.show = newValue;
+				this.submit.yearRate = '';
+				this.submit.reduceAmount = '';
+				this.submit.dealAmount = '';
 				if(newValue){
 					this.transformRate();
 					this.setTimeoutFn();
 					this.getbuyPrice();
-					this.submit.yearRate = '';
-					this.submit.reduceAmount = '';
-					this.submit.dealAmount = '';
 					// this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
 					this.imgs = this.initData.frontBillImg?[_common.mosPicUrl + this.initData.frontBillImg]: [];
 					if(this.initData.cpStatus == 2){
 						this.buyPriceText = '撮合成交价';
 					}else{
-						this.buyPriceText = '买家最新报价';
+						this.buyPriceText = '买家最高报价';
 					}
 				}else{
 					clearInterval(this.timerOut);
@@ -315,7 +321,7 @@
 		        _server.getQuotedPrice({
 		          _id,
 		          success(res){
-		          	let result;
+		          	let result, hig = {turnVolume: 0};
 	            	_this.refreshPriceState = false;
 		            if(res && res.length > 0){
 	              		_this.hasBuyPrice = true;
@@ -325,9 +331,16 @@
 	              					return item;
 	              				}
 	              			})
-							_this.buyPrice = result[0].turnVolume;
+							_this.buyPrice = result[0];
 						}else{
-              				_this.buyPrice = res[0].turnVolume;	
+              				
+              				res.forEach((item) => {
+              					if(hig.turnVolume <= item.turnVolume){
+              						hig = item;
+              					}
+              				})
+
+              				_this.buyPrice = hig;	
 						}
 		            	
 		            }else{
@@ -383,8 +396,13 @@
 					this.$toast('成交金额不能小于0！');
 					return;
 				}
-				if(parseFloat(this.submit.dealAmount) > this.initData.cpAmount){
+				if(parseFloat(this.submit.dealAmount) > parseFloat(this.initData.cpAmount)){
 					this.$toast('成交金额不能大于票据金额！');
+					return;
+				}
+
+				if(parseFloat(this.submit.yearRate) > parseFloat(this.initData.approvalApr)){
+					this.$toast('年化利率不能大于卖家出售的年化利率！');
 					return;
 				}
 

@@ -54,9 +54,6 @@
      .header{
          padding: 5px 0;
          font-size: 10px!important;
-         position: fixed;
-         left: 0;
-         top: 0;
          width: 100%;
          z-index: 999;
      }
@@ -83,9 +80,6 @@
      .nav{
          height: 60px;
          line-height: 60px;
-         position: fixed;
-         left:0;
-         top: 32px;
          width: 100%;
          z-index: 999;
          background: #fff;
@@ -119,8 +113,7 @@
          margin: 0;
      }
      .content-top{
-         margin-top: 93px;
-         height: 540px;
+         height: 650px;
          position: relative;
          background: #eee;
          min-width: 1200px;
@@ -217,8 +210,8 @@
          top: 50%;
          transform: translateY(-50%);
          background: #fff;
-         padding: 80px 40px;
-         width: 380px;
+         padding: 120px 100px;
+         width: 500px;
          border: 1px solid #ddd;
      }
      .content-top-i-r input{
@@ -400,16 +393,10 @@
      }
      .showPicShowBtn{
         display: inline-block;
-        padding: 5px 34px;
-        border: 1px solid #c00;
-        color: #c00;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: all .3s;
-     }
-     .showPicShowBtn:hover{
+        padding: 5px 15px;
         background: #c00;
-        color: #fff!important;
+        border-radius: 5px;
+        color: #fff;
      }
      button[disabled='disabled']{
          opacity: .6;
@@ -452,13 +439,6 @@
                 <div class="fl">
                     <span>您的票据融资首选</span>
                 </div>
-                <ul class="fl clear" id="navTabs">
-                    <li>首页</li>
-                    <li id="gotoBillHall">票据库</li>
-                    <li id="gotoIndex">我要买</li>
-                    <li id="gotoPublish">我要发布</li>
-                    <li class="nav-line" id="navLine"></li>
-                </ul>
                 <!-- <div class="fr myCount">
                     <h3>
                         我的账户
@@ -481,25 +461,6 @@
                     </div>
                     <!-- <img src="../assets/images/lb1.png"> -->
                 </li>
-                <li class="sp">
-                    <div class="content-top-img-title">
-                        <p class="content-top-img-title-t">商票之家</p>
-                        <p>您的票据融资首选</p>
-                    </div>
-                    <!-- <img src="../assets/images/lb2.png"> -->
-                </li>
-                <li class="sep">
-                    <div class="content-top-img-title">
-                        <p class="content-top-img-title-t">商票之家</p>
-                        <p>您的票据融资首选</p>
-                    </div>
-                    <!-- <img src="../assets/images/lb3.png"> -->
-                </li>
-            </ul>
-            <ul class="img-point-tabs" id="imgPointTabs">
-                <li class="active"></li>
-                <li></li>
-                <li></li>
             </ul>
             <div class="base-width content-top-inner clear">
                  <div class="content-top-i-l fl">
@@ -541,36 +502,7 @@
                  </div>
             </div>
         </div>
-        <div class="content-main">
-            <div class="base-width">
-                <h3 class="content-main-title">最新票据</h3>
-                <table class="table content-main-table table-bordered table-striped">
-                    <tr>
-                        <th>发布时间</th>
-                        <th>票面金额</th>
-                        <th>承兑人</th>
-                        <th>到期时间</th>
-                        <th>每十万扣款</th>
-                        <th>年利率</th>
-                    </tr>
-                    <tbody id="contentMainTBody">
-                        <tr><td>暂无</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
         <footer class="footer">
-            <div class=" base-width">
-                <h3 class="footer-head-title">
-                    联系我们
-                </h3>
-                <div>
-                    <p>客服热线：<tel class="tel">123-123-123</tel> （工作时间 9:00 - 18:30）</p>
-                    <p><span style="letter-spacing: 14.5px">地址</span>：深圳市前海深港合作区前湾一路1号</p>
-                    <p><span style="letter-spacing: 4.5px">Email</span>：85124202@qq.com</p>
-                    <p><span>友情链接：</span><a target="_blank" href="http://www.vivebest.com/" class="footer-a">维恩贝特</a>|<a class="footer-a" target="_blank" href="https://www.tydic.com/">天源迪科</a></p>
-                </div>
-            </div>
             <div class="footer-bottom">
                 <div class="clearfix text-center">
                     <p style="margin: 0;"> <strong class="unifTitle" style="font-size:12px;"></strong> <span class="copyright" style="font-size:12px;"></span></p>
@@ -810,42 +742,32 @@
             }
         };
 
-        function modelShowPicTip(){
-            var n = Math.ceil(Math.random()*5);
-            var url = '../assets/images/loginTip'+n+'.jpg';
-
-            var str = '<div style="width: 100%;"><div style="margin:0 auto;background:url(\' '+url+'\') no-repeat;background-position:center;background-size: cover;width: 400px;height: 330px;"></div><div style="width: 100%;text-align: center;margin-top:5px;"><p style="color: #c00;">请完成注册和企业实名认证后，进行此操作，谢谢！</p><span class="showPicShowBtn" id="showPicShowBtn">确认</span></div></div>';
-
-            $("#dataView1").html(str);
-
-            $("#dataView1").on('click', '#showPicShowBtn', function(){
-                layer.closeAll();
-                window.location.href = 'loginBase.html';
-            })
-            layer.open({
-                type: 1,
-                title: false,
-                content: $('#dataView1'),
-                area: ['400px', '400px'],
-                end: function(){
-                    $("#dataView1").html('');
-                }
-            });
-        }
-
         //跳转至发布页
         $("#gotoPublish").on('click', function(){
+            layer.alert('请完成注册和企业实名认证后，进行此操作，谢谢！');
             // 
-            modelShowPicTip();
+            // var url = '../assets/images/loginTip1.jpg';
+
+            // var str = '<div style="width: 100%;"><div style="margin:0 auto;background:url(\' '+url+'\') no-repeat;background-position:center;background-size: cover;width: 400px;height: 330px;"></div><div><span class="showPicShowBtn">确认</span></div></div>';
+
+            // $("#dataView1").html(str)
+            // layer.open({
+            //     type: 1,
+            //     title: false,
+            //     content: $('#dataView1'),
+            //     area: ['400px', '400px'],
+            //     // end: function(){
+            //     //     $("#dataView1").html('');
+            //     // }
+            // });
             // window.location.href = 'index.html#/cpPublish';
         })
 
         //跳转至首页
         //跳转至发布页
         $("#gotoIndex").on('click', function(){
-            modelShowPicTip();
-            // layer.alert('请完成注册和企业实名认证后，进行此操作，谢谢！');
-            // window.location.href = 'loginBase.html';
+            layer.alert('请完成注册和企业实名认证后，进行此操作，谢谢！');
+            // window.location.href = 'index.html#/index';
         })
 
         //跳转至票据库
@@ -1035,21 +957,6 @@
     $('#password').attr('placeholder',lang.getData('inputPwd'));
     $('#vcode').attr('placeholder',lang.getData('inputVcode'));
     //$('#vcode').attr('placeholder',lang.getData('inputOrgCode'));
-    if(sessionStorage.getItem('lang')){
-        var language=sessionStorage.getItem('lang');
-        if(language == 'zh_cn'){
-          $('#languageContent i').text(' 中文简体');
-        }
-        if(language == 'en_us'){
-          $('#languageContent i').text(' English');
-        }
-        if(language == 'zh_cht'){
-          $('#languageContent i').text(' 中文繁体');
-        }
-
-      }else{
-        $('#languageContent i').text(' 中文简体');
-      }
   </script>
  </body>
 </html>

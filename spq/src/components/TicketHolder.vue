@@ -265,7 +265,8 @@ export default{
 					item.cpId,	
 				).then((res) =>{
 						if(res.code == 0){
-							_this.fbListState.detailItem = res.data;
+							// _this.fbListState.detailItem = res.data;
+							_this.fbListState.detailItem = item;
 							_this.fbListState.detailModelState = true;
 
 							//通知外部窗口关闭

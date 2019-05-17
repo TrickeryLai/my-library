@@ -23,6 +23,13 @@
         display: block;
         width: 266px;
     }
+    .rate_wrap_star{
+        font-size: 22px;
+        cursor: pointer;
+    }
+    .rate_wrap_star i.active{
+        color: #c00;
+    }
 </style>
 <!-- 模板引擎动态生成整体数据，主要为国际化语言服务 -->
 <script id="globalData_index" type="text/html">
@@ -47,7 +54,6 @@
         <div class="page-wrap">
             <div class="row" id='tablebox'  >
                 <div class="col-lg-12">
-
 
                     <div class="panel panel-lined table-responsive mb30 ng-scope">
                         <!-- 搜索框 -->
@@ -111,6 +117,7 @@
                 </div>
             </div>
         </div>
+        <div id="dataView" style="width: auto;"></div>
     </div>
     </div>
 </script>
@@ -137,7 +144,7 @@
                     <span class="btn btn-sm btn-info fa fa-cloud-upload hoverBtnAll" btnAlltype="uploadBuyImg" name="returnBtn" onclick="uploadPicBox({{value.priceId}})" ></span>
                 {{/if}}-->
             {{if value.buyBankImg == '01'}}
-              <span class="btn btn-sm btn-primary"  onclick = "sureTrade({{value.priceId}})">确认交易</span>
+              <span class="btn btn-sm btn-primary"  onclick = "sureTrade({{value.priceId}},' {{value.cpNo}}')">确认交易</span>
             {{/if}}
             {{/if}}
         </td>
@@ -155,11 +162,159 @@
 
 </script>
 
+<script type="text/html" id="rate_wrap">
+    <div style="padding: 20px 20px 50px;">
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-md-4" style="text-align:right;">
+                评价：
+            </div>
+            <div class="col-md-8 rate_wrap_star" style="color: #eee" id="rate_wrap_star">
+                <i class="fa fa-star active"></i>
+                <i class="fa fa-star active"></i>
+                <i class="fa fa-star active"></i>
+                <i class="fa fa-star active"></i>
+                <i class="fa fa-star active"></i>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4" style="text-align:right;">
+                其他信息：
+            </div>
+            <div class="col-md-8">
+                <textarea class="form-control"></textarea>
+            </div>
+        </div>
+        
+        
+    </div>
+</script>
+
+<script type="text/html" id="ticketDetail">
+    <div style="padding: 0 20px 20px;font-size: 16px;">
+        <div style="margin-bottom:20px;">
+            <img src="{{frontBillImg}}" style="width: 150px;max-height: 150px;" onclick="showPhoto('{{frontBillImg}}')">
+        </div>
+        <div>
+            <h3 style="color: #232333;margin-bottom: 10px;">基本信息</h3>
+            <div>
+                <div class="clear" style="padding:5px">
+                    <div style="width: 50%;" class="fl">
+                        <span style="width: 30%;color:#232333;">承兑人：</span>
+                        <span style="width: 70%;word-break: break-all;">{{acceptor}}</span>
+                    </div>
+                    <div style="width: 50%;" class="fl">
+                        <span style="width: 30%;color:#232333;">到期日：</span>
+                        <span style="width: 70%;">{{dueDate}}</span>
+                        <span style="color: #c00">(剩余{{dateDiff}}天)</span>
+                    </div>
+                </div>
+                <div class="clear" style="padding:5px">
+                    <div style="width: 50%;" class="fl">
+                        <span style="width: 30%;color:#232333;">票面金额：</span>
+                        <span style="width: 70%;color: #c00;font-size: 20px;">{{cpAmount}}元</span>
+                    </div>
+                    <div style="width: 50%;" class="fl">
+                        <span style="width: 30%;color:#232333;">背书次数：</span>
+                        <span style="width: 70%;">{{endorseTimes}}</span>
+                    </div>
+                </div>
+                <div class="clear" style="padding:5px">
+                    <div style="width: 50%;" class="fl">
+                        <span style="width: 30%;color:#232333;">票据号码：</span>
+                        <span style="width: 70%;word-break: break-all;">{{cpNo}}</span>
+                    </div>
+                    <div style="width: 50%;" class="fl">
+                        <span style="width: 30%;color:#232333;">票据瑕疵：</span>
+                        <span style="width: 70%;word-break: break-all;">{{cpDefect}}</span>
+                    </div>
+                </div>
+                <div class="clear" style="padding:5px">
+                    <p style="color:#232333;margin-bottom: 5px;">卖出价：</p>
+                    <div style="width: 33.33%;" class="fl">
+                        <span style="color:#232333;margin-bottom: 5px;">每十万扣款:</span>
+                        <span>{{deductAmount}}元</span>
+                    </div>
+                    <div style="width: 33.33%;" class="fl">
+                        <span style="color:#232333;margin-bottom: 5px;">年化利率:</span>
+                        <span>{{approvalApr}}%</span>
+                    </div>
+                    <div style="width: 33.33%;" class="fl">
+                        <span style="color:#232333;margin-bottom: 5px;">金额:</span>
+                        <span>{{turnVolume}}元</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</script>
+
 <script>
 
+    //iframe 跳转时候，登录过期，则提示重新登录
+    function iframeGotoLogin(){
+        layer.closeAll();
+
+        layer.alert('请重新登录',
+            function(){
+                    sessionStorage.removeItem('data');
+                    location.href='login.html';
+                });
+                setTimeout(function (argument) {
+                    sessionStorage.removeItem('data');
+                    location.href='login.html';
+                },5000);
+    }
+
+    function rateFn(cpNo){
+        var clickIndex = 5;
+        $("#dataView").html(template("rate_wrap", {}));
+
+        $("#dataView .rate_wrap_star i").on('click', function(){
+            var index = $(this).index();
+            clickIndex = index + 1;
+            $("#dataView .rate_wrap_star i").removeClass('active');
+            for(var i = 0; i <= index; i++){
+                $("#dataView .rate_wrap_star i").eq(i).addClass('active');
+            }
+        })
+        $.zOpen({
+            title: '评价',
+            ele: "#dataView",
+            btn:['确认'],
+            callback: function(){
+
+                $.zAjax({
+                    url:  project.host()+'/v1/comment',
+                    type: 'post',
+                    isString: true,
+                    data: {
+                        cpNo: $.trim(cpNo),
+                        score: clickIndex,
+                        // createTime: new Date().getTime(),
+                        createPerson: 'createPerson',
+                        remark: $.trim($("#dataView textarea").val())
+                    },
+                    success: function(res){
+                        if(res.code == 0){
+                            layer.closeAll();
+                            layer.msg('评价成功！');
+                        }else{
+                            layer.msg(res.errMsg);
+                        }
+                    } 
+                })
+                
+            },
+            close: function(){
+                $("#dataView").html('');
+            }
+        })
+    }
 
     //确认交易按钮，需要弹出框询问是否同意交易
-    function sureTrade(priceId) {
+    function sureTrade(priceId, cpNo) {
+        
         layer.confirm('您即将确认此笔交易', {
             btn: ['确认','取消'] //按钮
         }, function(){
@@ -179,6 +334,9 @@
                         layer.msg("已确认",{icon:1});
                         var data=$.zResetFn(globalData.data,'#searchData .field');
                         globalData.getData(data);
+
+                        //弹出评价
+                        rateFn(cpNo);
                     }else{
                         layer.closeAll();
                         layer.msg(data.errMsg,{icon:1});
@@ -255,16 +413,60 @@
         });
     }
 
-    function editCpInfo(_id) {
-        layer.open({
-            title: '查看商票',
-            anim: 5,
-            type: 2,
-            area: ['100%', '100%'],
-            fixed: false, //不固定
-            maxmin: false,
-            content: 'blank.html#/cpPublish?type=show&cpId='+_id
+    function showPhoto(img){
+        layer.photos({
+            photos: {
+              "title": "",
+              "id": 1234,
+              "start": 0,
+              "data": [
+                {
+                  "alt": "票据正面图片",
+                  "pid": 1003,
+                  "src": img,
+                  "thumb": ""
+                }
+              ]
+            }
+            ,anim: 5,
+            id:123
         });
+    }
+
+    function editCpInfo(_id) {
+         $.zAjax({
+            url: project.host()+'/v1/commercialPaper/paper/'+_id ,
+            type:'get',
+            success: function(data) {
+                if(data.code == 0){
+                    data.data.frontBillImg = project.host() + '/v1/images/mos/' + data.data.frontBillImg;
+                    data.data.dateDiff = $.dateDiff($.calNowDate() ,data.data.dueDate);
+                    data.data.cpAmount = $.zFormatMoney(data.data.cpAmount);
+                    data.data.turnVolume = $.zFormatMoney(data.data.turnVolume);
+                    data.data.deductAmount = $.zFormatMoney(data.data.deductAmount);
+                    $("#dataView").html(template('ticketDetail', data.data));
+                    layer.open({
+                        title: '查看商票',
+                        anim: 5,
+                        type: 1,
+                        btn:['确认'],
+                        callback: function(){
+                            layer.closeAll();
+                        },
+                        area: ['800px', '500px'],
+                        fixed: true, //不固定
+                        maxmin: false,
+                        // content: 'blank.html#/cpPublish?type=show&cpId='+_id,
+                        content: $("#dataView"),
+                        end: function(){
+                            $("#dataView").html('');
+                        }
+                    });
+                }
+                
+            }
+        });
+       
     }
 
     //定义全局对象

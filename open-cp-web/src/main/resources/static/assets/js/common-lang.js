@@ -605,7 +605,7 @@ var lang={
     },
 
     twoPwdCannotBeTheSame:{
-      zh_cn:'两次密码不能相同！',en_us:'The two password cannot be the same!',zh_cht:'兩次密碼不能相同！',
+      zh_cn:'两次密码不相同！',en_us:'The two password not the same!',zh_cht:'兩次密碼不相同！',
     },
 
     changePwdSuss:{

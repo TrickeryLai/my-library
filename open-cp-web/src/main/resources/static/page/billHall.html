@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="description" content="Appboard - Admin Template with Angularjs" />
+  <meta name="keywords" content="appboard, webapp, admin, dashboard, template, ui" />
+  <meta name="author" content="solutionportal" />
+     <meta name="renderer" content="webkit" />
+     <script src="../assets/lib/jquery-1.10.2.min.js"></script>
+  <script src="../assets/lib/jquery.cookie.min.js"></script>
+  <script src="../assets/lib/md5.js"></script>
+  <script src="../assets/js/common-lang.js"></script>
+  <script src="../assets/js/common-params.js"></script>
+  <script src="../assets/js/common-fn.js"></script>
+  <script src="../assets/js/common-env.js"></script>
+<!--   <script src="../assets/lib/common.js"></script>
+  <script src="../assets/lib/common.js"></script> -->
+  <script src="../assets/lib/layer/layer.js"></script>
+
+  <!-- <base href="/"> -->
+  <title class="unifTitle"></title>
+  <!-- Icons -->
+  <!-- Set this in dist folder in index.html file -->
+  <!-- Match Media polyfill for IE9 -->
+  <!--[if IE 9]><!-->
+
+  <!--<![endif]-->
+  <link media="all" href="../assets/fonts/font-awesome/css/font-awesome.css"type="text/css" rel="stylesheet">
+  <link media="all" href="../assets/css/index.css" type="text/css" rel="stylesheet" />
+  <link media="all" href="../assets/css/main.css" type="text/css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="../assets/lib/pagination/jquery.pagination.css">
+
+  <script src="../assets/lib/artTemplate/template.js"></script>
+  <script src="../assets/js/common-template-fifter.js"></script>
+  <script src='../assets/lib/pagination/jquery.pagination.js'></script>
+  <script src="../assets/lib/layer/layer.js"></script>
+  <script src="../assets/lib/laydate/laydate.js"></script>
+ <style>
+     *{
+         font-family: '黑体';
+         margin: 0;
+         padding: 0;
+         font-size: 14px;
+     }
+     ul li{
+         list-style: none;
+     }
+     .base-width{
+         width: 1200px;
+         margin:0 auto;
+     }
+      .base-bg-color{
+          background: #c00;
+          color: #fff;
+      }
+     .base-font-color{
+         color: #c00;
+     }
+     .header{
+         padding: 5px 0;
+         font-size: 10px!important;
+         position: fixed;
+         left: 0;
+         top: 0;
+         width: 100%;
+         z-index: 999;
+     }
+     .header div{
+        font-size: 16px!important;
+     }
+     .fl{
+         float: left;
+     }
+     .fr{
+         float: right;
+     }
+     .clear:after{
+         content: '';
+         width: 0;
+         height: 0;
+         display:block;
+         line-height: 0;
+         clear: both;
+     }
+     .m-l-10px{
+         margin-left: 10px;
+     }
+     .nav{
+         height: 60px;
+         line-height: 60px;
+         position: fixed;
+         left:0;
+         top: 32px;
+         width: 100%;
+         z-index: 999;
+         background: #fff;
+     }
+     .nav .logo{
+         width: 110px;
+         text-align: center;
+     }
+     .nav ul{
+         position: relative;
+     }
+     .nav ul li{
+         float: left;
+         list-style: none;
+         color: #232333;
+         font-size: 24px;
+         margin: 0px 25px;
+         cursor: pointer;
+         transition: all .3s;
+     }
+     .nav ul li.active{
+         color :#c00;
+     }
+     .nav .nav-line{
+         width: 60px;
+         background :#c00;
+         height: 3px;
+         position: absolute;
+         bottom: 10px;
+         left: 130px;
+         margin: 0;
+     }
+     .content-top{
+         margin-top: 93px;
+         height: 470px;
+         position: relative;
+         background: #eee;
+         min-width: 1200px;
+
+     }
+     .img-point-tabs{
+         position: absolute;
+         left: 50%;
+         bottom: 50px;
+         z-index: 10;
+         transform: translateX(-50%);
+     }
+     .img-point-tabs li{
+         width: 25px;
+         height: 10px;
+         background: #fff;
+         margin: 10px;
+         border-radius: 20px;
+         transition: all .3s;
+         float: left;
+         cursor: pointer;
+     }
+     .img-point-tabs li.active{
+         width: 40px;
+         background: #c00;
+     }
+     .content-main{
+        margin-top: 120px;
+        min-height: 500px;
+        overflow:hidden;
+     }
+     .content-main .content-main-title{
+         font-size: 22px;
+         letter-spacing: 5px;
+     }
+     .content-main .content-main-title:before{
+         content: '';
+         display: inline-block;
+         width: 5px;
+         height: 20px;
+         background: #c00;
+         border-radius: 100px;
+         vertical-align: -2px;
+         margin-right: 6px;
+     }
+     .content-main .content-main-table th{
+         background: #800;
+         color: #fff;
+         font-size: 16px;
+     }
+     .footer{
+         background: #c00;
+         color: #fff;
+         font-size: 18px;
+     }
+     .footer-head-title{
+         font-size: 22px;
+         font-weight: normal;
+         display:inline-block;
+         padding: 0 10px;
+         color: #fff!important;
+     }
+     .footer-head-title:after{
+         content: '';
+         display: block;
+         width: 100%;
+         height: 3px;
+         background: #fff;
+         border-radius: 50px;
+         margin-top: 10px;
+     }
+     .footer .tel{
+         font-size: 28px;
+         font-weight: normal;
+     }
+     .footer-a{
+         color: #fff;
+         margin: 0 10px;
+     }
+     .footer-a:hover{
+        color: #eee;
+     }
+     .footer-bottom{
+         background:#a00;
+         text-align: center;
+         padding: 5px;
+     }
+     .active{
+         color: #c00;
+     }
+     .mt-10px{
+        margin-top: 10px;
+     }
+     .search-title{
+        font-size:18px;
+        font-weight: normal;
+        width: 120px;
+     }
+     .search-title:before{
+        content: '';
+        display:inline-block;
+        width: 10px;
+        height: 10px;
+        background:#c00;
+        vertical-align: 2px;
+        margin-right: 5px;
+     }
+     .search-list{
+        margin-top: 2px;
+     }
+     .search-list-item{
+        margin: 0 5px;
+        padding: 3px 5px;
+        font-size: 16px;
+        border-radius: 3px;
+        cursor:pointer;
+     }
+     .search-list-item.active{
+        background: #c00;
+        color: #fff;
+     }
+     .search-list-input{
+        border: 1px solid #999;
+        padding: 3px 5px;
+     }
+     .search-item{
+        margin-bottom: 10px;
+     }
+     .search-btn{
+        background: #c00;
+        color: #fff;
+        border: 1px solid #c00;
+        padding: 3px 5px;
+        border-radius: 5px;
+     }
+     .search-box{
+        position: relative;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        overflow:hidden;
+     }
+     .search-box-arrow{
+        position: absolute;
+        left: 50%;
+        bottom: 10px;
+        font-size: 20px;
+        cursor:pointer;
+        color: #c00;
+        width: 20px;
+        height:20px;
+        display: inline-block;
+        /*width: 0px;
+        height: 0px;
+        font-size: 0;*/
+        /*border: 10px solid #c00;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-top: 10px solid transparent;*/
+     }
+     .search-box-arrow.active{
+       /* border: 10px solid #c00;
+        bottom: 10px;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid transparent;*/
+     }
+     .pager_container .current{
+        background: #c00;
+        border-color: #c00;
+     }
+     .showPicShowBtn{
+        display: inline-block;
+        padding: 5px 15px;
+        border: 1px solid #c00;
+        color: #c00;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all .3s;
+     }
+     .showPicShowBtn:hover{
+        background: #c00;
+        color: #fff!important;
+     }
+     button[disabled='disabled']{
+         opacity: .6;
+     }
+ </style>
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?1efaeb8a243bcc7f8a0cbe9123c5f2b8";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+ </head>
+ <body id="app" class="app theme-one body-full">
+
+ <!--[if lt IE 8]>
+
+ <![endif]-->
+        <header class="base-bg-color header">
+            <div class="base-width clear">
+                  <div class="fl">
+                      <i class="fa fa-phone"></i>
+                      客服电话：123-123-123
+                  </div>
+                    <!-- <div class="fr m-l-10px">
+                        <i class="fa fa-asterisk"></i>
+                        关于我们
+                    </div> -->
+            </div>
+        </header>
+        <nav class="nav  clear">
+            <div class="base-width">
+                <div class="logo fl">
+                    <img style="height: 60px;" src="../assets/images/logo.jpg">
+                </div>
+                <div class="fl">
+                    <span>您的票据融资首选</span>
+                </div>
+                <ul class="fl clear" id="navTabs">
+                    <li id="gotoLogin">首页</li>
+                    <li>票据库</li>
+                    <li id="gotoIndex">我要买</li>
+                    <li id="gotoPublish">我要发布</li>
+                    <li class="nav-line" id="navLine"></li>
+                </ul>
+                <!-- <div class="fr myCount">
+                    <h3>
+                        我的账户
+                    </h3>
+                    <div class="detail-list">
+                        <ul>
+                            <li>代售票源</li>
+                            <li>了解更多</li>
+                        </ul>
+                    </div>
+                </div> -->
+            </div>
+        </nav>
+        <div class="content-main">
+            <div class="base-width clearfix">
+                <div style="padding-bottom: 20px;overflow: hidden;">
+                    <div class="search-box" id="searchBox">
+                        <div class="clearfix search-item">
+                            <div class="left search-title">票据金额：</div>
+                            <div class="left search-list" id="amountList">
+                                <span id='' class="search-list-item">全部</span>
+                                <span id="underThound" class="search-list-item">10万以下</span>
+                                <span id="thoundToOneMillion" class="search-list-item">10-100万</span>
+                                <span id="moreOneMillion" class="search-list-item">100万以上</span>
+                                <span id="moreFiveMillion" class="search-list-item">500万以上</span>
+                                <input class="search-list-input" type="text" name="" placeholder="最低金额" value="" id="faceValueMin">
+                                <span>&nbsp-&nbsp</span>
+                                <input id="faceValueMax" class="search-list-input" type="text" name="" placeholder="最高金额" value="">
+                                <button type="button" class="search-btn" onclick="globalData.getData()">搜索</button>
+                            </div>
+                        </div>
+                        <div class="clearfix search-item">
+                            <div class="left search-title">剩余天数：</div>
+                            <div class="left search-list" id="lastTimeList">
+                                <span id='' class="search-list-item">全部</span>
+                                <span id="lessThanNinety" class="search-list-item">90天内</span>
+                                <span id="ninetyToHundredEighty" class="search-list-item">90-180天</span>
+                                <span id="hundredEightyToThreeHundredsixty" class="search-list-item">180-360天</span>
+                                <input class="search-list-input" type="text" name="" placeholder="最少天数" value="" id="daysMin">
+                                <span>&nbsp-&nbsp</span>
+                                <input class="search-list-input" type="text" name="" placeholder="最多天数" value="" id="daysMax">
+                                 <button type="button" class="search-btn" onclick="globalData.getData()">搜索</button>
+                            </div>
+                        </div>
+                        <div class="clearfix search-item">
+                            <div class="left search-title">瑕疵：</div>
+                            <div class="left search-list" id='xcList'>
+                                <span id='' class="search-list-item">全部</span>
+                                <span id="Y" class="search-list-item">有瑕疵</span>
+                                <span id="N" class="search-list-item">无瑕疵</span>
+                            </div>
+                        </div>
+                        <div class="clearfix search-item">
+                            <div class="left search-title">信用：</div>
+                            <div class="left search-list" id='xyList'>
+                                <span id='' class="search-list-item">全部</span>
+                                <span id="excellent" class="search-list-item">优秀</span>
+                                <span id="well" class="search-list-item">良好</span>
+                                <span id="ordinary" class="search-list-item">一般</span>
+                            </div>
+                        </div>
+                        <div class="clearfix search-item">
+                            <div class="left search-title">票据号码：</div>
+                            <div class="left search-list">
+                               <input class="search-list-input" type="text" name="" placeholder="请输入票据号码" value="" id="cpNo" style="width: 300px;">
+                                <button type="button" class="search-btn" onclick="globalData.getData()">搜索</button>
+                            </div>
+                        </div>
+                        <div class="clearfix search-item">
+                            <div class="left search-title">承兑人：</div>
+                            <div class="left search-list">
+                               <input class="search-list-input" type="text" name="" placeholder="请输入承兑人" value="" id="acceptor1" style="width: 300px;">
+                                <button type="button" class="search-btn" onclick="globalData.getData()">搜索</button>
+                            </div>
+                        </div>
+                        <div class="clearfix search-item">
+                            <div class="left search-title">发布时间：</div>
+                            <div class="left search-list">
+                               <input class="search-list-input" type="text" name="" id='startDate' name="startDate" placeholder="起始时间" value="" readonly="">
+                               &nbsp-&nbsp
+                              <input class="search-list-input" type="text" name="" id='endDate' name="endDate" placeholder="结束时间" value="" readonly="">
+                                <button type="button" class="search-btn" onclick="globalData.getData()">搜索</button>
+                            </div>
+                        </div>
+                        <span class="search-box-arrow" id="get"><i class="fa fa-angle-double-up"></i><i class="fa fa-angle-double-down" style="display:none;"></i></span>
+                    </div>
+                </div>
+                
+                <table class="table content-main-table table-bordered table-striped">
+                    <tr>
+                        <th>发布时间</th>
+                        <th>票面金额</th>
+                        <th>承兑人</th>
+                        <th>到期时间</th>
+                        <th>每十万扣款</th>
+                        <th>年利率</th>
+                    </tr>
+                    <tbody id="contentMainTBody">
+                        <tr><td>暂无</td></tr>
+                    </tbody>
+                </table>
+                <div class="page">
+                    <div class="pager_container" id="Pagination">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class=" base-width">
+                <h3 class="footer-head-title">
+                    联系我们
+                </h3>
+                <div>
+                    <p>客服热线：<tel class="tel">123-123-123</tel> （工作时间 9:00 - 18:30）</p>
+                    <p><span style="letter-spacing: 14.5px">地址</span>：深圳市前海深港合作区前湾一路1号</p>
+                    <p><span style="letter-spacing: 4.5px">Email</span>：85124202@qq.com</p>
+                    <p><span>友情链接</span>：<a target="_blank" href="http://www.vivebest.com/" class="footer-a">维恩贝特</a>|<a class="footer-a" target="_blank" href="https://www.tydic.com/">天源迪科</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="clearfix text-center">
+                    <p style="margin: 0;"> <strong class="unifTitle" style="font-size:12px;"></strong> <span class="copyright" style="font-size:12px;"></span></p>
+                    <!-- <p class="versionInfo"></p> -->
+                </div>
+            </div>
+        </footer>
+        <div id="dataView1"></div>
+
+  <!-- Set this in dist index.html -->
+  <!-- !End -->
+
+  <script type="text/html" id="contentMainTBody_w">
+    {{if list && list.length > 0 }}
+    {{each list as value i}}
+    <tr _id="{{value.cpId}}">
+        <td>{{value.createTime }}</td>
+        <td>{{value.cpAmount | amountFormat}}元</td>
+        <td>{{value.acceptor}}</td>
+        <td>{{value.dueDate}}
+        </td>
+        <td>{{value.deductAmount}}元</td>
+        <td>{{value.approvalApr}}%</td>
+        
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr>
+        <td colspan="17" style="text-align: center;">{{1 | noData}}</td>
+    </tr>
+    {{/if}}
+  </script>
+
+  <script type="text/javascript">
+
+  jQuery.extend( jQuery.easing,
+      {
+          easeOutExpo: function (x, t, b, c, d) {
+              return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
+          },
+          easeOutBounce: function (x, t, b, c, d) {
+              if ((t/=d) < (1/2.75)) {
+                  return c*(7.5625*t*t) + b;
+              } else if (t < (2/2.75)) {
+                  return c*(7.5625*(t-=(1.5/2.75))*t + .75) + b;
+              } else if (t < (2.5/2.75)) {
+                  return c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b;
+              } else {
+                  return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
+              }
+          },
+      });
+
+
+    $.zAjax({
+      url: project.host()+'/v1/index/platformName' ,
+      dataType: "json",
+      type:'GET',
+      isString:false,
+      success: function(data) {
+        if(!data.title)return;
+        sessionStorage.setItem('unifTitle',data.title);
+        sessionStorage.setItem('copyright',data.copyright);
+        sessionStorage.setItem('versionInfo',data.versionInfo);
+        $('.unifTitle').html(data.title);
+        $('.copyright').html(data.copyright);
+        $('.versionInfo').html(data.versionInfo);
+
+      }
+    });
+
+    template.config("cache",false);
+
+
+    var globalData = {
+        init: function(){
+            // 调用日期插件
+            laydate.render({
+                elem: '#startDate',
+                lang:$.getLayDateLang(),
+            });  // 调用日期插件
+            laydate.render({
+                elem: '#endDate',
+                lang:$.getLayDateLang(),
+            });
+            globalData.getData();
+            $("#contentMainTBody").html(template('contentMainTBody_w', {}));
+            this.event();
+        },
+        initData: {
+            searchData: {
+
+            },
+            amount:{
+                '':{
+                    min: '',
+                    max: ''
+                },
+                underThound: {
+                    min: 0,
+                    max: 100000
+                },
+                thoundToOneMillion:{
+                    min: 100000,
+                    max: 1000000
+                },
+                moreOneMillion: {
+                    min: 1000000,
+                    max:　''
+                },
+                moreFiveMillion: {
+                    min: 5000000,
+                    max: ''
+                }
+            },
+            time:{
+                '':{
+                    min: '',
+                    max: ''
+                },
+                lessThanNinety: {
+                    min: 0,
+                    max: 90
+                },
+                ninetyToHundredEighty: {
+                    min: 90,
+                    max: 180
+                },
+                hundredEightyToThreeHundredsixty:{
+                    min: 180,
+                    max: 360
+                }
+            }
+        },
+        data:{
+            pageSize: 10,
+            pageNum: 1
+        },
+
+        event: function(){
+            //金额选择
+            $("#amountList .search-list-item").on('click', function(){
+                globalData.initData.searchData.faceValue_id = $(this).attr('id');
+                $(this).addClass('active').siblings('.search-list-item').removeClass('active');
+                $("#faceValueMin").val(globalData.initData.amount[$(this).attr('id')].min);
+                $("#faceValueMax").val(globalData.initData.amount[$(this).attr('id')].max);
+            });
+
+            //时间选择
+            $("#lastTimeList .search-list-item").on('click', function(){
+                globalData.initData.searchData.remainingDays_id = $(this).attr('id');
+                $(this).addClass('active').siblings('.search-list-item').removeClass('active');
+                $("#daysMin").val(globalData.initData.time[$(this).attr('id')].min);
+                $("#daysMax").val(globalData.initData.time[$(this).attr('id')].max);
+            })
+
+            //瑕疵
+            $("#xcList .search-list-item").on('click', function(){
+                globalData.initData.searchData.flaw_id = $(this).attr('id');
+                $(this).addClass('active').siblings('.search-list-item').removeClass('active');
+
+                globalData.getData();
+            })  
+
+            //信用
+             $("#xyList .search-list-item").on('click', function(){
+                globalData.initData.searchData.credit_id = $(this).attr('id');
+                $(this).addClass('active').siblings('.search-list-item').removeClass('active');
+
+                globalData.getData();
+            })  
+
+             $("#get").on('click', function(){
+                $(this).toggleClass('active');
+                if(!$(this).hasClass('active')){
+                    $(this).find('i').hide().eq(0).show();
+                    $("#searchBox").finish().animate({
+                        height:'320px'
+                    })
+                }else{
+                    $(this).find('i').hide().eq(1).show();
+                    // $(this).find('i').eq(0).addClass('fa fa-angle-double-down').removeClass('fa fa-angle-double-up')
+                    $("#searchBox").finish().animate({
+                        height:'200px'
+                    })
+                }
+             })
+        },
+
+        getData: function(dt){
+
+            dt = dt || globalData.data;
+            var data = {
+                faceValue_id: '',//票据金额 underThound 10万以下  thoundToOneMillion 10-100万  moreOneMillion  100万以上   moreFiveMillion  500万以上
+                faceValueMin: $("#faceValueMin").val(),
+                faceValueMax: $("#faceValueMax").val(),
+                remainingDays_id: '',//剩余天数 lessThanNinety 90天内   ninetyToHundredEighty 90-180天   hundredEightyToThreeHundredsixty 180-360天
+                daysMin: $("#daysMin").val(),
+                daysMax: $("#daysMax").val(),
+                flaw_id: '',//瑕疵  Y 有   N 无
+                credit_id: '',//excellent 优秀   well 良好 ordinary 一般
+                cpNo: $("#cpNo").val(),
+                acceptor: $("#acceptor1").val(),
+                startDate:  $("#startDate").val(),
+                endDate: $("#endDate").val(),
+                pageSize: 10,
+                pageNum: 1,
+                dueDateSort: '',
+                createTimeSort: '',
+                amountSort: '',
+            },
+            url = '/v1/businessTickets';
+
+            data = $.extend(data, globalData.initData.searchData, dt);
+
+            $.zAjax({
+                url: project.host() + url,
+                type: 'post',
+                data:data,
+                success: function(data) {
+                    var str = '';
+                    if(data.code == 0){
+                        // data.list.forEach(function(item){
+                        //     str += '<tr><td>'+item.updateTime+'</td><td>'+item.acceptor+'</td><td>'+$.zFormatMoney(item.cpAmount)+'元</td><td>'+item.dueDate+'</td><td>'+$.zFormatMoney(item.deductAmount)+'元</td><td>'+item.approvalApr+'%</td></tr>'
+                        // });
+                        // $("#contentMainTBody").html(str);
+                        // console.log(data)
+                        // $("#contentMainTBody").html(template('contentMainTBody_w'), data);
+
+                        var list = data;
+                        var total = list.pageInfo.total;
+                    /**
+                     * 调用分页方法
+                     * @param obj.page    分页元素
+                     * @param obj.url     接口
+                     * @param obj.tp      模板元素
+                     * @param obj.ele     填充数据元素
+                     * @param obj.data    请求参数
+                     * @param obj.list    请求返回数据
+                     */
+                        $.zPageMethod1({
+                            page : '#Pagination',
+                            url : project.host() + '/v1/businessTickets',
+                            tp : 'contentMainTBody_w',
+                            ele : '#contentMainTBody',
+                            total : total,
+                            data : globalData.data,
+                            list : list
+                        });
+                    }else{
+                        layer.msg(data.errMsg);
+                    }
+
+                }
+            });
+        },
+
+    }
+
+    function colorLine1(_id){
+        if(!id){
+            return;
+        }
+
+
+    }
+
+    $(document).ready(function() {
+
+
+        globalData.init();
+
+        function modelShowPicTip(){
+            var n = Math.ceil(Math.random()*5);
+            var url = '../assets/images/loginTip'+n+'.jpg';
+
+            var str = '<div style="width: 100%;"><div style="margin:0 auto;background:url(\' '+url+'\') no-repeat;background-position:center;background-size: cover;width: 400px;height: 330px;"></div><div style="width: 100%;text-align: center;margin-top:5px;"><p style="color: #c00;">请完成注册和企业实名认证后，进行此操作，谢谢！</p><span class="showPicShowBtn" id="showPicShowBtn">确认</span></div></div>';
+
+            $("#dataView1").html(str);
+
+            $("#dataView1").on('click', '#showPicShowBtn', function(){
+                layer.closeAll();
+                window.location.href = 'loginBase.html';
+            })
+            layer.open({
+                type: 1,
+                title: false,
+                content: $('#dataView1'),
+                area: ['400px', '400px'],
+                end: function(){
+                    $("#dataView1").html('');
+                }
+            });
+        }
+        //跳转至发布页
+        $("#gotoPublish").on('click', function(){
+            // layer.alert('请完成注册和企业实名认证后，进行此操作，谢谢！');
+            modelShowPicTip();
+            // window.location.href = 'index.html#/cpPublish';
+        })
+
+        //跳转至首页
+        //跳转至发布页
+        $("#gotoIndex").on('click', function(){
+            // layer.alert('请完成注册和企业实名认证后，进行此操作，谢谢！');
+            modelShowPicTip();
+            // window.location.href = 'index.html#/index';
+        })
+
+        $("#gotoLogin").on('click', function(){
+            window.location.href = 'login.html';
+        })
+
+        //导航效果
+       
+        $("#navTabs").on('mouseenter','li', function(){
+             var navTabs = $("#navTabs"), navLine = $("#navLine");
+             var navTabsO = navTabs.offset(), navLineW = navLine.width();
+             var targetOffset = $(this).offset(), targetW = $(this).width();
+             $("#navLine").animate({
+                 left: Math.abs(targetOffset.left - navTabsO.left) + (targetW - navLineW )/2 + 'px'
+             },100, 'easeOutBounce')
+        })
+            .on('mouseleave', 'li', function(){
+            $("#navLine").finish().animate({
+                left: '130px'
+            })
+        });
+
+    });
+
+  </script>
+ </body>
+</html>

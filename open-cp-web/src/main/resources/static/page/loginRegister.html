@@ -32,6 +32,31 @@
 	    left: 5px;
 	    top: 12px;
 		}
+    .captcha-img{
+         height: 36.5px;
+         border: 1px solid #ddd;
+         margin-left: -1px;
+     }
+    .get-mg-btn{
+         background: #c00;
+         font-size: 12px;
+         color: #fff;
+         border: 1px solid #c00;
+     }
+      .login-btn{
+         background: #c00;
+         width: 100%;
+         color: #fff;
+         border: 1px solid #b00;
+     }
+     .login-btn:link, .login-btn:visited, .login-btn:hover, .login-btn:active{
+         background: #a00;
+         color:#fff;
+         border: 1px solid #a00;
+     }
+      input[disabled]{
+         opacity: .6;
+     }
     </style>
  </head>
  <body id="app" class="app theme-one body-full" style="background: url(../assets/images/bg1.jpg) center repeat;
@@ -53,11 +78,11 @@
        <div class="head-wrap clearfix ng-scope">
         <ul class="list-unstyled navbar-right">
           <li id='languageContent'>
-            <ul >
+            <!-- <ul >
               <li onclick='$.changeLanguage(this);' data-lang='zh_cn'>中文简体</li>
               <li onclick='$.changeLanguage(this);' data-lang='en_us' style="float: right;">English</li>
-<!--               <li onclick='$.changeLanguage(this);' data-lang='zh_cht'>中文繁体</li> -->
-            </ul>
+
+            </ul> -->
           </li>
         </ul>
       </div>
@@ -140,9 +165,8 @@
             <div class="form-group">
                 <label class="col-md-4 control-label required" id="phoneNumber" style="margin-bottom: 8px;"> </label>
                 <span style="position: absolute; color: #f00; top: 12px;">*</span>
-                <div class="col-md-8">
-                    <input type="text" class="form-control field" name="phoneNumber" placeholder="请输入您的手机号" value=""/>
-                	<input type="button" id="btn" value="获取短信验证码" onclick="getSmsCaptcha(this)" />
+                <div class="col-md-8 clearfix">
+                  <input type="text" class="form-control field" name="phoneNumber" placeholder="请输入您的手机号" value=""/>
                 </div>
             </div>
         </div>
@@ -151,12 +175,15 @@
                 <label class="col-md-4 control-label required" id="smsCaptcha" style="margin-bottom: 8px;"> </label>
                 <span style="position: absolute; color: #f00; top: 12px;">*</span>
                 <div class="col-md-8">
-                    <input type="text" class="form-control field" name="smsCaptcha" placeholder="请输入短信验证码" value=""/>
-                	<input type="hidden" class="form-control field" name="smsCaptchaKey" value=""/>
+                  <div style="width: 65%" class="left">
+                     <input type="text" class="form-control field" name="smsCaptcha" placeholder="请输入短信验证码" value=""/>
+                    <input type="hidden" class="form-control field" name="smsCaptchaKey" value=""/>
+                  </div> 
+                  <input style="width: 35%" type="button" id="btn" class="captcha-img get-mg-btn" onclick="getSmsCaptcha(this)" value="请输入验证码" />
                 </div>
             </div>
         </div>
-        <div class="col-md-12 fieldParent">
+        <!-- <div class="col-md-12 fieldParent">
             <div class="form-group">
                 <label class="col-md-4 control-label required" id="email" style="margin-bottom: 8px;"> </label>
                 <span style="position: absolute; color: #f00; top: 12px;">*</span>
@@ -164,7 +191,7 @@
                     <input type="text" class="form-control field" name="email" placeholder="请输入您的邮箱" value=""/>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <div class="col-md-12 fieldParent">
             <div class="form-group">
@@ -178,8 +205,8 @@
         </div>
 
         <div class="clearfix mb15">
-         <button type="button" id='registerBtn' class="btn btn-lg btn-w120 btn-primary text-uppercase" style="width: 40%; margin-left:27px;"></button>
-         <button type="button" id='cancelBtn' class="btn btn-lg btn-w120 btn-primary text-uppercase" style="width: 40%; margin-left:27px;"></button>
+         <button type="button" id='registerBtn' class="btn btn-lg btn-w120 login-btn text-uppercase" style="width: 40%; margin-left:27px;"></button>
+         <button type="button" id='cancelBtn' class="btn btn-lg btn-w120 login-btn text-uppercase" style="width: 40%; margin-left:27px;"></button>
         </div>
        </form>
       </div>
@@ -218,7 +245,6 @@
         // data:data,
         isString:false,
         success: function(data) {
-        	debugger;
           var str='data:image/jpg;base64,'+data.captchaImage;
           $('#captcha').attr('src',str);
           $('#captcha').attr('_id',data.captchaKey);
@@ -293,11 +319,12 @@
             layer.tips(lang.getData('inviteCodeNotNull'), '[name="inviteCode"]',{ tips: [2, '#5974d9'] });
             return;
         } */
-    	var email = $.trim($('[name="email"]').val());
-    	if (email == "" && email.length == 0) {
-            layer.tips(lang.getData('email'), '[name="email"]',{ tips: [2, '#5974d9'] });
-            return;
-        }
+    	// var email = $.trim($('[name="email"]').val());
+    	// if (email == "" && email.length == 0) {
+     //        layer.tips(lang.getData('email'), '[name="email"]',{ tips: [2, '#5974d9'] });
+     //        return;
+     //    }
+     var email = '';
 
     	var verificationCode = $.trim($('[name="verificationCode"]').val());
     	if (verificationCode == "" && verificationCode.length == 0) {
@@ -336,11 +363,11 @@
     		return;
         }
 
-    	reg = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
-    	if(!reg.test(email)){
-    		layer.tips(lang.getData('emailError'), '[name="email"]',{ tips: [2, '#5974d9'] });
-    		return;
-        }
+    	// reg = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
+    	// if(!reg.test(email)){
+    	// 	layer.tips(lang.getData('emailError'), '[name="email"]',{ tips: [2, '#5974d9'] });
+    	// 	return;
+     //    }
     	//var index=layer.load(2);
       $.zAjax({
            type: 'POST',
@@ -463,28 +490,37 @@
 			layer.tips(lang.getData('phonenumberError'), '[name="phoneNumber"]',{ tips: [2, '#5974d9'] });
 			return;
 	    }
-    	settime(obj);
+    	
 
         $.zAjax({
 			url: project.host()+'/v1/smsCaptcha/?phoneNumber=' + phoneNumber,
 			// data:data,
 			isString:false,
 			success: function(data) {
-				$('[name="smsCaptchaKey"]').val(data.smsCaptchaKey);
+        if(data.code){
+
+        }else{
+          settime(obj);
+        }
+        if(data.smsCaptchaKey){
+
+				  $('[name="smsCaptchaKey"]').val(data.smsCaptchaKey);
+        }
 			}
         });
 
       }
 	function settime(obj) {
+
 		if (countdown == 0) {
 			obj.removeAttribute("disabled");    
-			obj.value="免费获取验证码";
+			obj.value="获取验证码";
 			countdown = 60;
 			return;
 		} else {
 			obj.setAttribute("disabled", true);
 			obj.value="重新发送(" + countdown + ")";
-			countdown--;
+			countdown -= 1;
 		}
     	setTimeout(function() {
     	    settime(obj)

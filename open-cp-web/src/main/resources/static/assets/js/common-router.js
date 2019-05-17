@@ -9,7 +9,7 @@
         self.key = '/';
         self.error = 404;
         window.onhashchange = function(){
-            self.reload()
+            self.reload();
         }
         $("a").click(function(e){
             if(e.target.classList.contains("active")){
@@ -126,7 +126,8 @@
     Router.prototype.reload = function(){
         let common_data=sessionStorage.getItem('data');
         common_data = JSON.parse(common_data);
-        let authStatus = sessionStorage.getItem("authStatus_"+common_data.user.userId);
+
+        let authStatus = sessionStorage.getItem("authStatus_"+common_data.user.userId) || common_data.user.authStatus;
         let self = this,
             hash = window.location.hash.replace('#'+ self.key,'').split('?')[0],
             addr = hash.split('?')[0],
@@ -140,9 +141,9 @@
             // cb = getCb(addr,self.hashList);
         }
             //此处为了调试路由bug
-            console.log(hash);
-        console.log(cb);
-        console.log(self);
+        //     console.log(hash);
+        // console.log(cb);
+        // console.log(self);
         if(cb){
             let arr = hash.split('/');
             arr.shift();

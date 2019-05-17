@@ -55,7 +55,7 @@ h5 {
 	width: 100px;
 	margin-left: 30px;
 }
-.icon{
+.iconAr{
             display : inline-block;
             width:7px;
             height:9px;
@@ -130,7 +130,7 @@ h5 {
         }
         .inner-right_down{
         	width: 450px;
-            height: 75px;
+            height: 100px;
             margin-top: 5px;
             border: 1px solid #cccccc;
         
@@ -200,7 +200,7 @@ h5 {
 		</div>
         <div class="outer-right">
             <div class="inner_left" id="leftPic">
-                <div id="frontPic"></div>
+                <div id="frontPic" onclick="globalData.showPic('#frontPic')"></div>
                 <div id="reversePic"></div>
                 
             </div>
@@ -253,6 +253,9 @@ h5 {
                 </div>
                 <div class="inner-right_down">
                     <div style="margin-top:10px;margin-left:20px" id="ticketQuote">
+                        <div id="hightLest">
+                            
+                        </div>
                         <h>年化利率&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp每十万扣款
                             &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp成交金额
                         </h>
@@ -322,14 +325,14 @@ h5 {
  						<!--票据号码-->
                         <div class="iteam" id="divGroup6">
                             <h5>■ 票据号码</h5><div style="width:10px"></div>
-                            <input type="text" placeholder="票据号码" id="cpNo">
+                            <input type="text" placeholder="请输入票据号码" id="cpNo">
         					<span id="searchBtnLineSix" class="btn btn-primary pull-left fa fa-search" onclick="findLineSix()">{{search}}</span>
                         </div>
 
 						<!--承兑人-->
                         <div class="iteam" id="divGroup7">
                             <h5>■ 承兑人</h5><div style="width:10px"></div>
-                            <input type="text" placeholder="承兑人" id="acceptor1">
+                            <input type="text" placeholder="请输入承兑人" id="acceptor1">
         					<span id="searchBtnLineSeven" class="btn btn-primary pull-left fa fa-search" onclick="findLineSeven()">{{search}}</span>
                         </div>
 						<!--创建时间-->
@@ -352,11 +355,12 @@ h5 {
                             <table class="table table-bordered table-striped zCheckBox">
                                 <thead class="thead">
                                 <tr>
-                                    <th id="createTimeSort">{{releaseTime}}<i class="icon"></th>
+                                    <th id="createTimeSort">{{releaseTime}}<i class="iconAr"></th>
 									<th>{{acceptor}}</th>
                                     <th>{{blemish}}</th>
-                                    <th id="amountSort">{{cpAmount}}<i class="icon"></th>
-                                    <th id="dueDateSort">{{dueDate}}<i class="icon"></th>
+                                    <th id="amountSort">{{cpAmount}}<i class="iconAr"></th>
+                                    <th>年化利率</th>
+                                    <th id="dueDateSort">{{dueDate}}<i class="iconAr"></th>
                                     <th>{{credit}}</th>
                                 <!--    <th>{{cpStatus}}</th>-->
                                     <th>{{operation}}</th>
@@ -391,6 +395,7 @@ h5 {
 		<td>{{value.acceptor}}</td>
         <td>{{value.isDefect | defectType}}</td>
         <td>{{value.cpAmount | amountFormat}}</td>
+        <td>{{value.approvalApr}}%</td>
         <td>{{value.dueDate}}
 			{{if value.stringDate >0}}
                  <span class="badge badge-success">剩余{{value.stringDate }}天</span>
@@ -410,6 +415,14 @@ h5 {
         <td colspan="17" style="text-align: center;">{{1 | noData}}</td>
     </tr>
     {{/if}}
+</script>
+
+<script type="text/html" id="hightLest_wrap">
+    {{if approvalApr}}
+    <div>
+        <p style="margin-bottom: 5px;">最高价：<span style="color:#c00;">{{approvalApr}}%&nbsp({{deductAmount}}元/十万)</span></p>
+    </div>
+    {{/if}} 
 </script>
 
 <script>
@@ -451,24 +464,25 @@ h5 {
 	function confirmOffer(){
 		 //start = intDiff;
 		 //clearTimeout(countdown);
-		 
 		var data={};
-		if($("#ticketQuote input[name='approvalApr']").val()<0){
+		if($("#ticketQuote input[name='approvalApr']").val()<0 || $("#ticketQuote input[name='approvalApr']").val()>100){
 			clearQuote();
 			$("#ticketQuote input[name='approvalApr']").focus();
 			return;
 		}
+
 		if(isNaN($("#ticketQuote input[name='approvalApr']").val())){
 			clearQuote();
 			$("#ticketQuote input[name='approvalApr']").focus();
 			return;
 		}
+
 		if(isNaN($("#ticketQuote input[name='deductAmount']").val())){
 			clearQuote();
 			$("#ticketQuote input[name='deductAmount']").focus();
 			return;
 		}
-		if($("#ticketQuote input[name='turnVolume']").val()<0||$("#ticketQuote input[name='turnVolume']").val()>$("#cpAmount").html()){
+		if($("#ticketQuote input[name='turnVolume']").val()<0||parseFloat($("#ticketQuote input[name='turnVolume']").val())>parseFloat($("#cpAmount").html())){
 			clearQuote();
 			$("#ticketQuote input[name='approvalApr']").focus();
 			return;
@@ -478,6 +492,13 @@ h5 {
 			$("#ticketQuote input[name='turnVolume']").focus();
 			return;
 		}
+
+        //如果报价年利率高于买家年利率，提示
+        if(parseFloat($("#ticketQuote input[name='approvalApr']").val()) > globalData.initData.currentItem.approvalApr){
+            layer.msg('报价年化利率不能高于卖家年化利率！');
+            return;
+        }
+
 		data = $.extend(data, {
 			"cpId":sessionStorage.getItem('cpId')
 		},{"endorseTimes":sessionStorage.getItem('endorseTimes')},
@@ -541,9 +562,13 @@ h5 {
 						$("#quote_data").css("display","block");
 					}
 					//var listQuotation=quotationList;
-					var tableHtml;
+					var tableHtml, hightLest = {turnVolume: 0};
 					//console.log(quotationList.length);
 					quotationList.forEach(function(quotationList,i){
+
+                        if(hightLest.turnVolume <= quotationList.turnVolume){
+                            hightLest = quotationList;
+                        }
 						tableHtml += "<tr>";
 			            //tableHtml +=    "<td style='background-color:#e2e2e2'>"+ "公司名称:" +"</td>";
 			            //tableHtml +=    "<td style='background-color:#fcfcfc'>"+ quotationList.companyName +"</td>";
@@ -576,6 +601,7 @@ h5 {
 			            $("#quote_data").html(tableHtml);
 					})
 					
+                    // $("#hightLest").html(template('hightLest_wrap', hightLest));
 				}
 			});
 		}
@@ -619,6 +645,15 @@ h5 {
 				url : project.host() + '/v1/businessTickets/' + _id,
 				isString : false,
 				success : function(result) {
+                    //修改为显示票据的年化利率相关
+                    var hightLest = {
+                        approvalApr: result.data.approvalApr,
+                        deductAmount: result.data.deductAmount
+                    }
+                    $("#hightLest").html(template('hightLest_wrap', hightLest));
+
+                    globalData.initData.currentItem = result.data;
+
 					//console.log(result);
 					$("#leftPic").css("display","block");
 					//$(".outer-left").css("display","block");
@@ -631,6 +666,7 @@ h5 {
 					$("#endorseTimes").html(result.data.endorseTimes+" 次");
 					if(result.data.frontBillImg!=""&&result.data.frontBillImg!=null){
 						$("#frontPic").css("background-image","url("+project.host() + '/v1/images/mos/'+result.data.frontBillImg+")");
+                        $("#frontPic").attr('layer-src', project.host() + '/v1/images/mos/'+result.data.frontBillImg);
 						$("#frontPic").css("background-size","contain");
 					}
 					//if(result.data.backBillImg !="" && result.data.backBillImg !=null){
@@ -667,6 +703,10 @@ h5 {
 
 
 		},
+
+        initData: {
+            currentItem: {}
+        },
 
 		//定义全局请求参数对象
 		data : {
@@ -883,6 +923,32 @@ h5 {
 					});
 		},
 
+        showPic: function(_id){
+            // if(!_id){
+            //     return;
+            // }
+            var src = $(_id).attr('layer-src');
+             //查看图片弹窗
+                layer.photos({
+                    photos: {
+                        "title": "",
+                        "id": 123,
+                        "start": 0,
+                        "data": [
+                            {
+                                "alt":"票据正面图",
+                                "pic": 666,
+                                "src": src,
+                                "thumb": ""
+                            }
+                        ]
+                    },
+                    anim: 5,
+                    id:123
+                });
+           
+        },
+
 		event : function() {
 			// 调用日期插件
 			laydate.render({
@@ -925,7 +991,6 @@ h5 {
 				}
 				globalData.getData1();
 			})
-
 		}
 	}
 	$(document).ready(function() {

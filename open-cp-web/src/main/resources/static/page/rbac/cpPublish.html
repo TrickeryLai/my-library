@@ -105,10 +105,10 @@
                     <label class="col-md-4 control-label required">{{endorseTimes}}：</label>
                     <div class="col-md-8">
                         <div class="layui-btn-group">
+                            <button class="layui-btn layui-btn-primary" onclick="addTime(0,this)">0</button>
                             <button class="layui-btn layui-btn-primary" onclick="addTime(1,this)">1</button>
                             <button class="layui-btn layui-btn-primary" onclick="addTime(2,this)">2</button>
                             <button class="layui-btn layui-btn-primary" onclick="addTime(3,this)">3</button>
-                            <button class="layui-btn layui-btn-primary" onclick="addTime(4,this)">4</button>
                         </div>
                         <input type="text" style="width:40%;display: inline-block;" onkeyup="value=value.replace(/[^0-9]/g,'')" class="form-control field" name="endorseTimes" placeholder="{{endorseTimes}} " value=""/>
                     </div>
@@ -146,10 +146,10 @@
                             <span style="display: inline-block;width: 5%">%</span>
                         </div>
                         <div class="col-md-4">
-                            <input readonly="true" type="text" class="form-control field " name="deductAmount" placeholder="{{deducted}} " value=""/>
+                            <input type="text" class="form-control field " name="deductAmount" placeholder="{{deducted}} " value=""/>
                         </div>
                         <div class="col-md-4">
-                            <input readonly="true"  type="text" class="form-control field " name="turnVolume" placeholder="{{turnVolume}} " value=""/>
+                            <input type="text" class="form-control field " name="turnVolume" placeholder="{{turnVolume}} " value=""/>
                         </div>
 
                     </div>
@@ -238,10 +238,10 @@
                     <label class="col-md-4 control-label required">{{endorseTimes}}：</label>
                     <div class="col-md-8">
                         <div class="layui-btn-group">
+                            <button class="layui-btn layui-btn-primary" onclick="addTime(0,this)">0</button>
                             <button class="layui-btn layui-btn-primary" onclick="addTime(1,this)">1</button>
                             <button class="layui-btn layui-btn-primary" onclick="addTime(2,this)">2</button>
                             <button class="layui-btn layui-btn-primary" onclick="addTime(3,this)">3</button>
-                            <button class="layui-btn layui-btn-primary" onclick="addTime(4,this)">4</button>
                         </div>
                         <input type="text" style="width:40%;display: inline-block;" onkeyup="value=value.replace(/[^0-9]/g,'')"  class="form-control field" name="endorseTimes" placeholder="{{endorseTimes}} " value=""/>
                     </div>
@@ -280,10 +280,10 @@
                             <span style="display: inline-block;width: 5%">%</span>
                         </div>
                         <div class="col-md-4">
-                            <input readonly="true" type="text" class="form-control field " name="deductAmount" placeholder="{{deducted}} " value=""/>
+                            <input  type="text" class="form-control field " name="deductAmount" placeholder="{{deducted}} " value=""/>
                         </div>
                         <div class="col-md-4">
-                            <input readonly="true"  type="text" class="form-control field " name="turnVolume" placeholder="{{turnVolume}} " value=""/>
+                            <input type="text" class="form-control field " name="turnVolume" placeholder="{{turnVolume}} " value=""/>
                         </div>
 
                     </div>
@@ -320,6 +320,9 @@
                     <option value="质押">质押</option>
                     <option value="小贷">小贷</option>
                     <option value="金融">金融</option>
+                    <option value='其他'>
+                        其他
+                    </option>
                 </select>
             </div>
         </div>
@@ -433,6 +436,60 @@
 
 
 <script>
+    //根据扣款计算额度
+    function deductedOfTenThound(id){
+        var _ele = id;
+
+         //每十万扣款 approvalApr
+        var deductAmount = $("#"+_ele+" input[name='deductAmount']").val();
+        //天数
+        // var diffDays = sessionStorage.getItem('dueDay');
+        var diffDays = parseFloat($("#" + _ele).find(".diffDays")[0].innerHTML);
+        if(isNaN(deductAmount)){
+            return;
+        }
+        if(isNaN(diffDays)){
+            return;
+        }
+        //年化利率计算
+        var approvalApr=deductAmount/100000/diffDays*360*100;
+        $("#"+_ele+" input[name='approvalApr']").val(parseFloat(approvalApr).toFixed(8));
+
+        approvalApr=parseFloat(approvalApr).toFixed(8);
+        //票据金额
+        // var cpAmount = $("#cpAmount").html();
+        var cpAmount = $("#"+_ele+" input[name='cpAmount']").val();
+        if( isNaN(cpAmount)){
+            return ;
+        }
+        var turnVolume = cpAmount -approvalApr/100/360*diffDays*cpAmount;
+        $("#"+_ele+" input[name='turnVolume']").val(parseFloat(turnVolume).toFixed(8))
+    }
+    //根据成交金额计算额度
+    function tradeVolume(id){
+        
+        var _ele = id;
+
+        //每十万扣款 approvalApr
+        var turnVolume = $("#"+_ele+" input[name='turnVolume']").val();
+        //天数
+        var diffDays = parseFloat($("#" + _ele).find(".diffDays")[0].innerHTML);
+        if(isNaN(turnVolume)){
+            return;
+        }
+        if(isNaN(diffDays)){
+            return;
+        }
+      //票据金额
+        var cpAmount = $("#"+_ele+" input[name='cpAmount']").val();
+        var approvalApr=(1-turnVolume/cpAmount)*100*360/diffDays;
+        $("#"+_ele+" input[name='approvalApr']").val(parseFloat(approvalApr).toFixed(8))
+        //利息
+        var day_rate = (approvalApr/100)/360;
+        var day_money =  day_rate*diffDays;
+        var money_10  = day_money*100000;
+        $("#"+_ele+" input[name='deductAmount']").val(parseFloat(money_10).toFixed(8))
+    }
 
     var uploadContext =["globalData1"];
 
@@ -456,7 +513,7 @@
 
         var imageList = editCp["imageList"];
         for (var i=0;i<imageList.length;i++){
-            console.log(imageList[i]["imageName"]);
+            // console.log(imageList[i]["imageName"]);
             //初始化
             var temp ={};
             var datetime = "uploadImg"+new Date().getTime();
@@ -556,7 +613,7 @@
         for(var i=0;i<uploadContext.length;i++){
             var mon = $("#"+uploadContext[i]+" input[name='cpAmount']").val();
             if(checkRate(mon)){
-                money = money+parseInt(mon);
+                money = money+parseFloat(mon);
             }
         }
         num =uploadContext.length;
@@ -601,7 +658,7 @@
 
 
         var _paramsArr =$.packageUploadStr(_id_global,"uploadImg1")
-        $.uploadBillImg(_paramsArr[0],_paramsArr[1],_paramsArr[2]);
+        $.uploadBillImg(_paramsArr[0],_paramsArr[1],_paramsArr[2], _id_global);
         var o ={id:_id_global,temp:"uploadImgInfo",imgId:"uploadImg2"}
         var _paramsArr2 =$.packageUploadStr(_id_global,"uploadImg2")
         $.uploadBillImg(_paramsArr2[0],_paramsArr2[1],_paramsArr2[2],o);
@@ -625,6 +682,15 @@
 
         $("#"+_id_global+" input[name='approvalApr']").bind('input propertychange',function(){
             $.calMoney(_id_global);
+        });
+        //根据扣款计算
+        $("#"+_id_global+" input[name='deductAmount']").bind('input propertychange',function(){
+            // $.calMoney(_id_global);
+            deductedOfTenThound(_id_global);
+        });
+        //根据成交金额计算
+        $("#"+_id_global+" input[name='turnVolume']").bind('input propertychange',function(){
+            tradeVolume(_id_global);
         });
         $("#"+_id_global+" input[name='cpAmount']").bind('input propertychange',function(){
             $.calMoney(_id_global);
@@ -726,6 +792,15 @@
             $("#globalData1 input[name='approvalApr']").bind('input propertychange',function(){
                 $.calMoney("globalData1");
             });
+            //根据扣款计算
+            $("#globalData1 input[name='deductAmount']").bind('input propertychange',function(){
+                // $.calMoney(_id_global);
+                deductedOfTenThound("globalData1");
+            });
+            //根据成交金额计算
+            $("#globalData1 input[name='turnVolume']").bind('input propertychange',function(){
+                tradeVolume("globalData1");
+            });
             $("#globalData1 input[name='cpAmount']").bind('input propertychange',function(){
                 $.calMoney("globalData1");
                 calStatis();
@@ -806,8 +881,29 @@
                 var temp = [];
                 for(var i = 0 ;i<_len;i++){
                     var a =  $.zAllValidate("#"+uploadContext[i],"img");
+                    
                     if(!a){
                         return ;
+                    }
+
+                    if(!a.frontBillImg){
+                        layer.msg('请上传票据正面')
+                        return;
+                    }
+
+                    if(!a.backBillImg){
+                        layer.msg('请上传票据反面')
+                        return;
+                    }
+
+                    if(parseFloat(a.approvalApr) < 0){
+                        layer.msg('年化利率不能小于0')
+                        return;
+                    }
+
+                    if(parseFloat(a.approvalApr) > 100){
+                        layer.msg('年化利率不能大于100%')
+                        return;
                     }
                     temp.push(a);
                 }
@@ -834,6 +930,7 @@
                     return ;
                 }
 
+
                 buer["cpCommercialPaperInfos"]= temp;
                 buer["channel"] = "01";
                 buer["buyerId"] = buyerId;
@@ -843,23 +940,27 @@
                     type:'post',
                     data:buer,
                     success: function(data) {
-                        layer.closeAll();
-
-
-                        layer.alert('发布成功', {
-                           closeBtn: 0
-                        }, function(){
+                        if(data.code == 0){
                             layer.closeAll();
-                            layer.open({
-                                type: 1,
-                                title:"关注公众号,获取最新信息",
-                                area: ['500px', '500px'],
-                                content: '<div style="text-align: center"><img src="../assets/images/weixin.jpg" width="" /></div>',
-                                cancel: function(){
-                                    window.location.href ="#/mySales";
-                                }
+
+                            layer.alert('发布成功', {
+                               closeBtn: 0
+                            }, function(){
+                                layer.closeAll();
+                                layer.open({
+                                    type: 1,
+                                    title:"关注公众号,获取最新信息",
+                                    area: ['500px', '500px'],
+                                    content: '<div style="text-align: center"><img src="../assets/images/weixin.jpg" width="" /></div>',
+                                    cancel: function(){
+                                        window.location.href ="#/mySales";
+                                    }
+                                });
                             });
-                        });
+                        }else{
+                            layer.msg(data.errMsg);
+                        }
+                       
 
                     }
                 });

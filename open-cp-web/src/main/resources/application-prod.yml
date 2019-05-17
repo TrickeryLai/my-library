@@ -6,7 +6,7 @@ spring:
     name: open-cp-web
   cloud:
     consul:
-      host: 192.168.151.49
+      host: 192.168.1.5
       port: 8500
       discovery:
         service-name: ${spring.application.name}
