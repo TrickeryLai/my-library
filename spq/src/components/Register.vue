@@ -26,7 +26,7 @@
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model.trim="register.loginName"
-				placeholder="请输入用户名"
+				placeholder="请输入6-20位字母、数字的用户名"
 				:error="registerError.loginName"
 				type="text" />
 			</van-col>
@@ -40,7 +40,7 @@
 				<PasswordI
 					autocomplete="new-password"
 					v-model.trim="register.password"
-					placeholder="请输入密码"
+					placeholder="请输入6-15位字母、数字的密码"
 				/>
 				<!-- <van-field 
 				autocomplete="new-password"
@@ -69,7 +69,7 @@
 				type="password" /> -->
 			</van-col>
 		</van-row>
-		<van-row >
+		<!-- <van-row >
 			<van-col span="1" class="red-font" style="padding-top: 12px;">*</van-col>
 			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
 				<i class="iconfont icon-link"></i>
@@ -82,7 +82,7 @@
 				v-model.trim="register.email" placeholder="请输入邮箱"
 				type="email" />
 			</van-col>
-		</van-row>
+		</van-row> -->
 		<van-row >
 			<van-col span="1" class="red-font" style="padding-top: 12px;">*</van-col>
 			<van-col span="2" style="background: #eee;height: 36px;line-height: 36px;">
@@ -91,6 +91,8 @@
 			<van-col span="21">
 				<van-field 
 				v-reset-page
+				pattern="[0-9]*"
+				maxlength="11"
 				class="van-hairline--surround register-input"
 				style="display:inline-block;margin:0;padding:0;" 
 				v-model.trim="register.phone" placeholder="请输入手机号"
@@ -151,10 +153,22 @@
 			</van-col>
 		
 		</van-row>
+		<van-row>
+			<p class="template-line">
+				<van-checkbox style="display: inline-block;vertical-align: -4px;" v-model="checked">我已阅读</van-checkbox>
+				<span
+				class="template-item" 
+				v-for="(item, i) in templateData"
+				v-if="item.name.indexOf('平台服务协议') >= 0 "
+				@click="previewPdf(item)"
+				>《{{item.name && item.name.split('.pdf')[0]}}》</span>
+			</p>
+		</van-row>
 		<div class="login-bottom">
 			<van-button 
 			@click="registerFn"
 			style="width: 100%;border-radius: 100px;background:#c00;border-color: #c00;color: #fff;"
+			:disabled="!checked"
 			>确认</van-button>
 			<p style="padding: 5px;">已有账号，<span class="blue-font" @click="gotoLogin">立即登录</span></p>
 		</div>
@@ -182,17 +196,20 @@ export default{
 			getSmsAgainTime: 61,
 			getCaptchaState: false,
 			smsCaptchaTxt: '获取验证码',
+			checked: false,
 			register: {
 				password: ""
 			},
 			registerError:{
 				loginName: false,
 				password: false
-			}
+			},
+			templateData:[],
 		}
 	},
 	created(){
 		this.changeCodePic();
+		this.getTemplate();
 	},
 	watch:{
 		'register.code'(newV){
@@ -206,10 +223,32 @@ export default{
 		onClickLeft(){
 			window.history.go(-1);
 		},
+		getTemplate(){
+			_server.queryAgreeTamplate({
+				pageNum:1,
+        		pageSize:10,
+        		type:2,
+			}).then(response => {
+				if(response.code == 0){
+					this.templateData = response.list;
+				}else{
+					this.$toast(response.errMsg);
+				}
+			})
+		},
+		previewPdf(item){
+			window.open(_common.pdfUrl + item.sourceUrl);
+			return;
+			this.$router.push({path: '/previewPdf', query: {pdfUrl: _common.pdfUrl + item.sourceUrl, title: item.name}});
+		},
 		checkLoginMessage(){
 			if(!this.register.loginName){
 				this.registerError.loginName = true;
 				this.$toast('请输入用户名！');
+				return false;
+			}
+			if(!_common.common_reg.loginName(this.register.loginName)){
+				this.$toast('用户名应为6-20位的字母、数字！');
 				return false;
 			}
 			if(!this.register.password || !this.register.password2){
@@ -217,21 +256,25 @@ export default{
 				this.$toast('请输入密码！');
 				return false;
 			}
+			if(!_common.common_reg.password(this.register.password)){
+				this.$toast('密码应为6-20位的字母、数字！');
+				return false;
+			}
 			if(this.register.password !== this.register.password2){
 				this.registerError.password = true;
 				this.$toast('两次输入密码不一致！');
 				return false;
 			}
-			if(!this.register.email){
-				this.registerError.email = true;
-				this.$toast('请输入邮箱！');
-				return false;
-			}
+			// if(!this.register.email){
+			// 	this.registerError.email = true;
+			// 	this.$toast('请输入邮箱！');
+			// 	return false;
+			// }
 			
-		    if (!_common.common_reg.email(this.register.email)) {
-		     	this.$toast('邮箱格式不正确！');
-				return false;
-		    }
+		  //   if (!_common.common_reg.email(this.register.email)) {
+		  //    	this.$toast('邮箱格式不正确！');
+				// return false;
+		  //   }
 		    if(!this.register.smsCaptcha){
 		    	this.$toast('请输入短信验证码！');
 		    	return false;
@@ -335,6 +378,17 @@ export default{
 </script>
 
 <style scoped>
+.template-line{
+	font-size: 14px;
+}
+.checked-active{
+    color: #409eff;
+ }    
+.template-item{
+	font-size: 14px;
+    border-bottom: 1px solid #465c91;
+    color:#465c91;
+}
 .register-content{
 	background: #f5f5f5;
 	border-radius: 5px;

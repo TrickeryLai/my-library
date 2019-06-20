@@ -85,6 +85,8 @@
 					</van-col>
 					<van-col span="22">
 						<van-field 
+						pattern="[0-9]*"
+						maxlength="11"
 						v-reset-page
 						class="van-hairline--surround register-input"
 						style="display:inline-block;margin:0;padding:0;" 
@@ -141,8 +143,8 @@
 					</van-col>
 				</van-row>
 	  		</div>
-			<p class="text-right deep-blue-font" >
-				<span @click="gotoFindWord">忘记密码？</span>
+			<p class="clear deep-blue-font" >
+				<span @click="gotoFindUserName" class="fl">忘记用户名？</span><span @click="gotoFindWord" class="fr">忘记密码？</span>
 			</p>
 			<div class="login-bottom">
 				<!-- <van-button 
@@ -204,7 +206,8 @@ export default{
 	created(){
 		// window.location.href = '#';
 		this.changeCodePic();
-		this.initData()
+		this.initData();
+		console.log(this)
 	},
 	watch:{
 		'register.code'(newV){
@@ -258,10 +261,6 @@ export default{
 					return false;
 				}
 			}
-			
-
-			
-
 			return true;
 		},
 		loginFn(){
@@ -302,7 +301,10 @@ export default{
 					// localStorage.setItem('loginData', JSON.stringify(loginData));
 					localStorage.setItem('token', response.token);
 					localStorage.setItem('user', JSON.stringify(response.user));
+					localStorage.setItem('loginData', JSON.stringify(response));
+
 					localStorage.setItem('userId', JSON.stringify(response.user.userId));
+					localStorage.setItem('phonenumber', JSON.stringify(response.user.phonenumber));
 					this.$router.replace({path});
             	//注册成功
                 }else if(response.code == 110008){
@@ -317,10 +319,13 @@ export default{
 
 		},
 		gotoRegister(){
-			this.$router.replace({path: 'register'})
+			this.$router.replace({path: 'register'});
 		},
 		gotoFindWord(){
-			this.$router.replace({path: '/forgetPassword'})
+			this.$router.replace({path: '/forgetPassword'});
+		},
+		gotoFindUserName(){
+			this.$router.replace({path: '/forgetUserName'});
 		},
 		changeCodePic(){
 			if(this.getCaptchaState){

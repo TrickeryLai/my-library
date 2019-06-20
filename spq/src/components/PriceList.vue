@@ -87,13 +87,13 @@
 			</van-row>
 			<van-row>
 				<van-col span="8">竞价年利率</van-col>
-				<van-col span="16">{{item.approvalApr}} %</van-col>
+				<van-col span="16">{{item.approvalApr && (item.approvalApr - 0).toFixed(4)}} %</van-col>
 			</van-row>
 			<van-row>
 				<van-col span="8">竞价每十万扣款</van-col>
 				<van-col span="16">{{item.deductAmount}}&nbsp元</van-col>
 			</van-row>
-			<van-row>
+			<!-- <van-row>
 				<van-col span="8">状态</van-col>
 				<van-col span="16">
 					<van-tag 
@@ -119,21 +119,21 @@
 					v-if="item.quoteStatus == '05'"
 					>拒绝</van-tag>
 				</van-col>
-			</van-row>
-			<van-row v-if="pageType == 1 && item.quoteStatus == '01'">
+			</van-row> -->
+			<van-row v-if="pageType == 1">
 				<van-col span="12">
 					<van-button 
 						@click="refuseFn(item)"
 						size="mini" 
 						type="danger"
-					>拒绝</van-button>
+					>拒绝报价</van-button>
 				</van-col>
 				<van-col span="12">
 					<van-button
-						@click="biddingFn(item)" 
+						@click="getSellCoast(item)" 
 						size="mini" 
 						type="info"
-					>撮合</van-button>
+					>接受报价</van-button>
 				</van-col>
 			</van-row>
 		</div>
@@ -161,7 +161,7 @@
 				isShow: this.show,
 				pageType: this.type,
 				list:[],
-        basesData: this.baseData,
+        		basesData: this.baseData,
 				isTable: false,
 				pageData:{
 					pageSize: 5,
@@ -174,8 +174,9 @@
 			show(newV){
 				this.isShow = newV;
 				if(this.isShow){
+					console.log(this.baseData);
 			      	this.basesData = this.baseData;
-		          	this.getData(this.baseData.cpId);
+		          	this.getData(this.baseData.ordNo);
 		          	this.pageType = this.type;
 		        }
 			}
@@ -198,24 +199,51 @@
 		            }
 	          	})
 			},
-			biddingFn(item){
-				let dia;
-				dia = this.$dialog.confirm({
-					title: '确认撮合',
-					message: '确认撮合该笔报价么？'
-				}).then(() =>{
-					this.biddingSubmit(item);
+			getSellCoast(item){
+				//查询卖家的相关金额
+				_server.sellerCosts({
+					ordNo: this.baseData.ordNo,
+					priceId: item.priceId
+				}).then(res =>{
+					if(res.code == 0){
+						let data = res.data;
+						this.$dialog.confirm({
+							title: '确认撮合',
+							message: '保证金：' + data.securityDeposit + '元<br/>手续费：'+data.fee +'元<br/>票面金额：'+data.cpAmt+'元<br/>利息：'+data.discountInterest+'元',
+						}).then(() => {
+							this.biddingFn(item);
+						}).catch(()=>{
 
-				}).catch(()=>{
+						})
+					}else{
+						this.$toast(res.errMsg);
+					}
+					
+				}).catch(error => {
 
 				})
 				
+				
+			},
+			biddingFn(item){
+				this.biddingSubmit(item);
+				return;
+				// let dia;
+				// dia = this.$dialog.confirm({
+				// 	title: '确认撮合',
+				// 	message: '确认撮合该笔报价么？'
+				// }).then(() =>{
+				// 	this.biddingSubmit(item);
+
+				// }).catch(()=>{
+
+				// })
+				
 			},
 			biddingSubmit(item, isSure = 'no'){
-
 				//撮合
 				let data = {
-					cpId: item.cpId,
+					ordNo: this.baseData.ordNo,
 					priceId: item.priceId,
 					priceCount: this.list.length,
 					isSure
@@ -234,22 +262,27 @@
 						}).then(() => {
 							_this.biddingSubmit(item, 'yes');
 						}).catch(()=>{
-							_this.getData(_this.baseData.cpId);
+							_this.getData(_this.baseData.ordNo);
 						})
 					}
 				})
 			},
+
 			refuseFn(item){
 				this.$dialog.confirm({
 					title: '确认拒绝',
 					message: '确认拒绝该笔报价么？'
 				}).then(() => {
 					//拒绝
-					_server.refuseQuotedPric(item.priceId).then(response => {
+					_server.refuseCosts({
+						ordNo: this.baseData.ordNo,
+						priceId: item.priceId
+					}).then(response => {
 						if(response.code == 0){
 							this.$toast('操作成功！');
 							this.isShow = false;
-							this.$emit('close');
+							this.$emit('optionSuccess');
+							// this.$emit('close');
 						}
 					}).catch( error => {
 

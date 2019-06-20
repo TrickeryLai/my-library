@@ -6,7 +6,7 @@
       :lock-scroll="false"
       @close="modelClose"
     >
-      <div class="model-content">
+      <div class="model-content" @touchmove.stop>
         <div style="height: 100%;overflow:auto;overflow-y:scroll;">
           <van-cell-group class="van-hairline--bottom">
             <h3 class="model-head-title">票据详情</h3>
@@ -23,6 +23,11 @@
                 <van-col class="detail-row-left" span="6">票据金额</van-col>
                 <van-col class="detail-row-right" span="18">{{initData.cpAmount &&
                   dealPrice(initData.cpAmount.toFixed(2)) }}元
+                </van-col>
+              </van-row>
+              <van-row class="detail-row">
+                <van-col class="detail-row-left" span="6">年化利率</van-col>
+                <van-col class="detail-row-right" span="18">{{initData.approvalApr}}%
                 </van-col>
               </van-row>
               <van-row class="detail-row">
@@ -99,7 +104,7 @@
           <van-cell-group class="van-hairline--bottom" style="padding-bottom: 60px;">
             <h3 class="model-head-title">报价信息</h3>
             <van-cell-group>
-              <van-row class="detail-row">
+              <van-row class="detail-row" v-if="hasBuyPrice">
                 <van-col class="detail-row-left" span="6"> 我的报价</van-col>
                 <van-col class="detail-row-right" span="18">
                   {{item.turnVolume && dealPrice(item.turnVolume.toFixed(2))}}元
@@ -142,7 +147,7 @@
                 </van-col>
               </van-row>
               <van-row class="detail-row-special"
-                       v-if="(item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '04')">
+                       v-if="((item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '04')) || (item.quoteStatus == '00')">
 
                 <van-col class="detail-row-left" span="12">年化利率</van-col>
                 <van-col class="detail-row-left" span="12">每十万扣款</van-col>
@@ -183,12 +188,23 @@
             <van-row type="flex" justify="center" style="width: 100%;height: 44px;position: absolute;left: 0; bottom: 0;">
               <div
                 style="width: 100%;"
-                v-if="(item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '04')">
+                v-if="((item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '04'))">
                 <van-col span="24">
                   <van-button
                     type="primary"
                     style="width: 100%;"
                     @click="buyAgain(item)">再次报价
+                  </van-button>
+                </van-col>
+              </div>
+              <div
+                style="width: 100%;"
+                v-if="(item.quoteStatus == '00')">
+                <van-col span="24">
+                  <van-button
+                    type="primary"
+                    style="width: 100%;"
+                    @click="buyAgain(item)">报价
                   </van-button>
                 </van-col>
               </div>
@@ -281,9 +297,9 @@
         priceListBaseData: '',
         refreshPriceState: false,
         hasBuyPrice: false,
-        buyPrice: '',
+        buyPrice: 0,
         buyPriceItem: {},
-        buyPriceText: '买家最新报价'
+        buyPriceText: '买家最高报价'
       }
     },
     watch: {
@@ -299,7 +315,7 @@
           if(this.initData.cpStatus == 2){
             this.buyPriceText = '撮合成交价';
           }else{
-            this.buyPriceText = '买家最新报价';
+            this.buyPriceText = '买家最高报价';
           }
         } else {
           clearInterval(this.timerOut);
@@ -330,7 +346,6 @@
       },
       checkedDeal(){
 
-        console.log(this.buyPriceItem);
         this.$dialog.confirm({
           title: '提示',
           message: '确认成交么？'
@@ -377,23 +392,37 @@
         _server.getQuotedPrice({
           _id,
           success(res) {
-            let result;
+            let result = res;
             _this.refreshPriceState = false;
             if (res && res.length > 0) {
-              _this.hasBuyPrice = true;
-              if(_this.initData.cpStatus == 2){
-                      result = res.filter(item => {
-                        if(item.quoteStatus == 2){
-                          return item;
-                        }
-                      })
-              _this.buyPrice = result[0].turnVolume;
-              _this.buyPriceItem = result[0];
-            }else{
-                      _this.buyPrice = res[0].turnVolume; 
-            }
+              //区分指定买家情况
+              if(res.length > 1){
+                _this.hasBuyPrice = true;
+                _this.buyPrice = parseFloat(result[0].turnVolume);
+                _this.buyPriceItem = result[0];
+              }
+              
+              result.forEach((item) =>{
+                if(item.turnVolume && item.turnVolume > _this.buyPrice){
+                   _this.buyPrice = item.turnVolume;
+                   _this.buyPriceItem = item;
+                   _this.hasBuyPrice = true;
+                }
+              })
 
-            } else {
+              if(_this.initData.cpStatus == 2){
+                  result = res.filter(item => {
+                    if(item.quoteStatus == 2){
+                       _this.buyPrice = item.turnVolume; 
+                      return item;
+                    }
+                })
+              
+              }else{
+                  _this.buyPrice = result[0].turnVolume; 
+              }
+
+            }else {
               _this.hasBuyPrice = false;
             }
           }
@@ -450,6 +479,7 @@
 
       },
       buyAgain(item) {
+        
         let currentPath = this.$router.history.current.fullPath;
         let _this = this;
         //判断是否验证
@@ -476,10 +506,10 @@
           return;
         }
 
-        if(parseFloat(this.submit.yearRate) > parseFloat(this.initData.approvalApr)){
-          this.$toast('年化利率不能大于卖家出售的年化利率！');
-          return;
-        }
+        // if(parseFloat(this.submit.yearRate) > parseFloat(this.initData.approvalApr)){
+        //   this.$toast('年化利率不能大于卖家出售的年化利率！');
+        //   return;
+        // }
         let data = {
           approvalApr: this.submit.yearRate,
           channel: "02",
@@ -506,13 +536,14 @@
         this.$router.push({path: '/home/ticketHolder/fbpj', query: {pjData: JSON.stringify(this.initData)}});
       },
       getLastTime() {
-        //获取剩余时间
+        // //获取剩余时间
+        // let dueDate = this.initData.dueDate;// 到期时间
+
+        // let LastTime = new Date(dueDate).getTime() - new Date().getTime();
+
+        // LastTime = Math.ceil(LastTime / (24 * 60 * 60));
         let dueDate = this.initData.dueDate;// 到期时间
-
-        let LastTime = new Date(dueDate).getTime() - new Date().getTime();
-
-        LastTime = Math.ceil(LastTime / (24 * 60 * 60));
-        return LastTime;
+        return _common.common_fn.getLastTime(dueDate);
       },
       changeData(type, value) {
         let cpAmount = this.initData.cpAmount;//票据金额
@@ -525,22 +556,23 @@
           this.submit.yearRate = '';
           return;
         }
+        if(type == 1){
 
-        if (type == 1) {
-          txje = ((cpAmount * calDay * this.submit.yearRate / 100) / 3600) / 100000;
+          txje = ((cpAmount*calDay*(this.submit.yearRate/100))/360/(cpAmount/100000));
           // this.submit.yearRate = 0;//年利率
           this.submit.reduceAmount = txje.toFixed(2);//每十万扣款
-          this.submit.dealAmount = (cpAmount - cpAmount / 100000 * txje).toFixed(2);//成交金额
+          this.submit.dealAmount = (cpAmount - cpAmount/100000*txje).toFixed(2);//成交金额
         }
-        if (type == 2) {
-          this.submit.dealAmount = (cpAmount - (cpAmount / 100000) * this.submit.reduceAmount).toFixed(2);//成交金额
-
-          this.submit.yearRate = ((cpAmount - this.submit.dealAmount) * 36000 / (calDay * cpAmount)).toFixed(8);//年利率
+        if(type == 2){
+          
+          this.submit.dealAmount = (cpAmount - (cpAmount/100000)*this.submit.reduceAmount).toFixed(2);//成交金额
+          this.submit.yearRate =((cpAmount -this.submit.dealAmount)*36000/(calDay*cpAmount)).toFixed(8);//年利率
           // this.submit.reduceAmount = 0;//每十万扣款
         }
-        if (type == 3) {
-          this.submit.reduceAmount = ((cpAmount - this.submit.dealAmount) / 10).toFixed(2);//每十万扣款
-          this.submit.yearRate = ((cpAmount - this.submit.dealAmount) * 36000 / (calDay * cpAmount)).toFixed(8);//年利率
+        if(type == 3){
+
+          this.submit.reduceAmount = ((cpAmount-this.submit.dealAmount)/(cpAmount/100000)).toFixed(2);//每十万扣款
+          this.submit.yearRate =((cpAmount -this.submit.dealAmount)*36000/(calDay*cpAmount)).toFixed(8);//年利率
           // this.submit.dealAmount = 0;//成交金额
         }
       }
@@ -553,6 +585,7 @@
   .model-content {
     text-align: left;
     height: 100%;
+    width: 100%;
     position: absolute;
   }
 

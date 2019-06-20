@@ -30,7 +30,7 @@
             @uploadPicProgress='pjfUploadPicFn' /> 
             <p class="picTitle" @click="showPjPic(2)"><span style="color: red;">*</span>票据背面<span class="blue-font">示例</span></p>
           </div>
-          <div class="pic-box" v-for="(item, index) in imageList" :key="index" v-if="item.imageName || (index == imageList.length - 1)">
+          <div class="pic-box" v-for="(item, index) in imageList" :key="index" v-if="(item.imageName || (index == imageList.length - 1) )&& pageType !== 1">
             <UploadImg
             uploadUrl = "open-cp/v1/upload"
             :initPic = "getPicUrl(item.imageName)"
@@ -64,6 +64,7 @@
                  type="number"
                  clearable
                  v-reset-page
+                 v-money-limit
                  placeholder="请输入金额(元)"
                  />
               </van-col>
@@ -104,12 +105,41 @@
             </van-row>
             <van-row class="realName-box-row">
               <van-col span="7" class="realName-content-box-left">
+                <i class="required">*</i>
                 背书次数
               </van-col>
               <van-col span="17">
                 <van-stepper 
                 v-model="bsValue"
                 min="0"
+                 />
+              </van-col>
+            </van-row>
+            <van-row class="realName-box-row" v-if="bsValue == 0">
+              <van-col span="7" class="realName-content-box-left">
+                <i class="required">*</i>
+                持票人全称
+              </van-col>
+              <van-col span="17" class="realName-content-box-right">
+                <van-field
+                  v-reset-page
+                 v-model.trim="submitData.owner"
+                 clearable
+                 placeholder="请输入持票人全称"
+                 />
+              </van-col>
+            </van-row>
+            <van-row class="realName-box-row" v-if="bsValue != 0">
+              <van-col span="7" class="realName-content-box-left">
+                <i class="required">*</i>
+                持票人全称
+              </van-col>
+              <van-col span="17" class="realName-content-box-right">
+                <van-field
+                  v-reset-page
+                 v-model.trim="submitData.endorsedName"
+                 clearable
+                 placeholder="请输入持票人全称"
                  />
               </van-col>
             </van-row>
@@ -135,15 +165,30 @@
         </div>
       </van-cell-group>
 
-      <van-cell-group class="realName-content-box" v-if="pageType == 0">
-        <h3 class="title van-hairline--bottom">可指定用户买家</h3>
+      <van-cell-group class="realName-content-box">
+        <h3 class="title van-hairline--bottom">可指定用户买家
+          <van-button
+            size="small"
+            type="info"
+            @click="choseBuyer"
+           >选择买家</van-button>
+        </h3>
         <div class="realName-conten-inner">
-          <van-field
+          <!-- <van-field
             v-reset-page
             v-model.trim="submitData.buyerId"
             clearable
             placeholder="可输入买家id"
-          /> 
+          />  -->
+          <van-row>
+            <van-col span="16">
+              <van-button v-if="toBuyerChosed" type="default" size="small" style="width: 100%;">{{toBuyerChosed.companyName}}</van-button>
+            </van-col>
+            <van-col span="8">
+              <van-button v-if="toBuyerChosed" type="info" size="small" @click="cancelToBuy" style="width: 100%;">取消指定</van-button>
+            </van-col>
+          </van-row>
+          
         </div>
       </van-cell-group>
       <van-cell-group class="realName-content-box">
@@ -168,6 +213,7 @@
                   @input="typeChange(1)"
                   type="number"
                   clearable
+                  v-money-limit
                   placeholder="每十万扣款(元)"
                 />
               </van-col>
@@ -185,6 +231,7 @@
               <van-col span="8">
                 <van-field
                   v-reset-page
+                  v-money-limit
                   v-model.trim="sell.turnVolume"
                   @input="typeChange(3)"
                   type="number"
@@ -199,7 +246,7 @@
         <van-row>
           <van-col span="24">
             <van-button v-if="pageType == 0" @click="submit" type="info" style="width:100%;">立即发布</van-button>
-            <van-button v-if="pageType == 1" @click="change" type="info" style="width:100%;">修改</van-button>
+            <van-button v-if="pageType == 1" @click="change" type="info" style="width:100%;">发布</van-button>
           </van-col>
         </van-row>
       </div>
@@ -230,6 +277,35 @@
       :key="index" 
       @click="choseXcItem(item)"
       >{{item.name}}</van-tag>
+    </van-popup>
+    <van-popup v-model="toBuyerState" @close="toBuyModelClose" position="right" style="width: 100%;height: 100%;">
+      <div style="width: 100%;height: 100%;position:absolute;">
+        <div style="width: 100%;height: 100%;padding-bootom: 50px;position: absolute;
+        left:0;top:0;overflow-y:scroll;">
+          <van-search placeholder="可输入企业名称筛查" v-model="toBuyerInput" />
+          <van-radio-group v-model="toBuyerRadio.companyId" >
+            <van-cell-group>
+              <van-cell v-for="(item, index) in searchList"
+                :key="index"
+                :title="item.companyName" 
+                clickable 
+                v-show="checkRadioIsShow(item.companyName)"
+                @click="choseRadioItem(item)"
+                >
+                <van-radio :name="item.companyId"  @click="choseRadioItem(item)" />
+              </van-cell>
+            </van-cell-group>
+          </van-radio-group>
+        </div>
+        <van-row style="margin-top: 20px;position: fixed;left:0;bottom:0;width: 100%;">
+          <van-col span="10" offset="1">
+            <van-button type="default" style="width:100%;" @click="toBuyModelClose">取消</van-button>
+          </van-col>
+          <van-col span="10" offset="2">
+            <van-button type="info" style="width:100%;" @click="toBuyModelConfirm">确认</van-button>
+          </van-col>
+        </van-row>
+      </div>
     </van-popup>
   </div>
 </template>
@@ -341,6 +417,13 @@ import _common from '@/server/index'
                   name: '其他',
                   value: 'qt'
                 }
+              ],
+              toBuyerState: false,//指定买家弹窗
+              toBuyerInput: '',
+              toBuyerRadio: '',
+              toBuyerChosed: '',
+              searchList: [
+                
               ]
           }
       },
@@ -353,6 +436,20 @@ import _common from '@/server/index'
           next();
           return;
         }
+
+        //如果弹窗存在，先关闭
+        if(this.toBuyerState){
+          this.toBuyModelClose();
+          next(false);
+          return;
+        }
+
+        if(this.xcModelState){
+          this.xcModelClose();
+          next(false);
+          return;
+        }
+
         if(this.pageType == 1){
           next();
           return;
@@ -362,6 +459,8 @@ import _common from '@/server/index'
           next();
           return ;
         }
+
+
         this.$dialog.confirm({
           title: '确认离开',
           message: '确认离开该页面么，系统将不会保存当前页面的信息？'
@@ -381,13 +480,32 @@ import _common from '@/server/index'
             }
             return _common.picUrl + url;
           },
+
+          getTicketsData(ordNo){
+            return new Promise((resolve, reject) => {
+              _server.getSelfTicketDetail(ordNo).then(response => {
+                return resolve(response);
+              }).catch(error => {
+                return reject(response);
+              })
+            })
+
+          },
           initType(){
+              this.submitData.endorsedName = this.submitData.owner = JSON.parse(localStorage.getItem('user')).orgName ? JSON.parse(localStorage.getItem('user')).orgName : JSON.parse(localStorage.getItem('user')).companyName
               let inData;
               if(this.$route.query.pjData){
                 this.pageType = 1;//修改票据
                 inData = JSON.parse(this.$route.query.pjData);
-                this.initData(inData);
-                this.title = '票据修改';
+                // this.initData(inData);
+                // this.title = '票据发布';
+                this.getTicketsData(inData.ordNo).then(response => {
+                  if(response.code == 0){
+                    this.initData(response.data);
+                  }else{
+                    this.$toast(response.errMsg);
+                  }
+                })
               }else{
                 this.pageType = 0;
                 this.title = '票据发布';
@@ -401,6 +519,8 @@ import _common from '@/server/index'
               this.submitData.acceptor = data.acceptor;
               this.submitData.cpAmount = data.cpAmount;
               this.submitData.cpNo = data.cpNo;
+              this.submitData.owner = data.owner;
+              this.submitData.endorsedName = data.endorsedName;
               this.bsValue = data.endorseTimes;
               this.sell.approvalApr = data.approvalApr;
               this.sell.deductAmount = data.deductAmount;
@@ -433,6 +553,39 @@ import _common from '@/server/index'
                 this.imageList.push({imageName: ''});
               }
               
+          },
+          checkRadioIsShow(name){
+            if(!name){
+              return false
+            }
+            if(name.indexOf(this.toBuyerInput) > -1){
+              return true;
+            }
+            return false;
+          },
+          choseBuyer(){
+            _server.getCompanyList().then((res) =>{
+              //选择买家
+              this.searchList = res;
+              this.toBuyerState = true;
+              this.toBuyerRadio = this.toBuyerChosed ? Object.assign({}, this.toBuyerChosed) : {};
+            })
+            
+          },
+          toBuyModelClose(){
+            this.toBuyerState = false;
+
+          },
+          choseRadioItem(item){
+            this.toBuyerRadio = Object.assign({}, item);
+          },
+          toBuyModelConfirm(){
+            //确认
+            this.toBuyerChosed = this.toBuyerRadio ? Object.assign({}, this.toBuyerRadio): {};
+            this.toBuyModelClose();
+          },
+          cancelToBuy(){
+            this.toBuyerChosed = '';
           },
           moreRemovePic(item){
             let result = [];
@@ -698,9 +851,22 @@ import _common from '@/server/index'
               return false;
             }
            
+
             if(!/^(0|[1-9]\d*)?$/.test(this.bsValue)){
               this.$toast('请输入正确的背书次数');
               return false;
+            }
+
+            if(this.bsValue == 0){
+              if(!this.submitData.owner){
+                this.$toast('请输入收款人');
+                return false;
+              }
+            }else{
+              if(!this.submitData.endorsedName){
+                this.$toast('请输入最后一手背书人');
+                return false;
+              }
             }
             if(!this.sell.approvalApr || !this.sell.turnVolume || !this.sell.deductAmount){
               this.$toast('请填写发布信息！');
@@ -744,12 +910,32 @@ import _common from '@/server/index'
             if(!this.checkSubmitData()){
               return;
             }
-
             let imgListD = this.imageList.filter(item => {
                 if(item.imageName){
                   return true;
                 }
             });
+
+            this.changeFn(imgListD);
+            return;
+            //如果输入了买家id， 则需要先验证买家id是否正确
+            if(this.submitData.buyerId){
+                _server.checkCommercialPaper({
+                  _id: this.submitData.buyerId,
+                  success(res){
+                      if(res.code == 0){
+                        //验证成功，提交
+                        _this.changeFn();
+                      }else{
+                        _this.$toast(res.errMsg)
+                      }
+                  }
+                })
+            }else{
+              this.changeFn();
+            }  
+          },
+          changeFn(imgListD){
 
             let initData = JSON.parse(this.$route.query.pjData);
             let data = {
@@ -765,12 +951,20 @@ import _common from '@/server/index'
               backBillImg: _common.common_fn.formateUlr(this.pjfPic),
               turnVolume: this.sell.turnVolume ? parseFloat(this.sell.turnVolume): '',
               cpId: initData.cpId,
-              imageList: imgListD
+              buyerId: this.toBuyerChosed.companyId,
+              imageList: imgListD,
+              cpOrdNo: initData.ordNo
+            };
+
+            if(this.bsValue == 0){
+              data.owner = this.submitData.owner;
+            }else{
+              data.endorsedName = this.submitData.endorsedName;
             }
 
             _server.changeCommercialPaper(data, (res) =>{
               if(res.code == 0){
-                this.$toast('修改成功！');
+                this.$toast('发布成功！');
                 this.$router.go(-1);
               }else{
                 this.$toast(res.errMsg);
@@ -785,7 +979,7 @@ import _common from '@/server/index'
             });
             let data = {
               channel: '02',
-              buyerId: this.submitData.buyerId,
+              buyerId: this.toBuyerChosed.companyId,
               cpCommercialPaperInfos: [
                 {
                   acceptor: this.submitData.acceptor,
@@ -803,11 +997,20 @@ import _common from '@/server/index'
                 }
               ]
             };
+
+            if(this.bsValue == 0){
+              data.cpCommercialPaperInfos[0].owner = this.submitData.owner;
+            }else{
+              data.cpCommercialPaperInfos[0].endorsedName = this.submitData.endorsedName;
+            }
+
             _server.getCommercialPaper(data, (res) =>{
                 if(res.code == 0){
                   this.isFbSuccess = true;
                   this.$toast('发布成功!');
                   this.$router.go(-1);
+                }else{
+                  _this.$toast(res.errMsg)
                 }
             })
           },
@@ -847,6 +1050,8 @@ import _common from '@/server/index'
             if(!this.checkSubmitData()){
               return;
             }
+            this.submitDataFn();
+            return;
             //如果输入了买家id， 则需要先验证买家id是否正确
             if(this.submitData.buyerId){
                 _server.checkCommercialPaper({

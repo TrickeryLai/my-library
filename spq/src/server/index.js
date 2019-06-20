@@ -16,12 +16,18 @@ let common = {
 
   ip: '117.71.57.247',//测试
   port: '3580',
-  xyPort: '3580'
+  xyPort: '3580',
+
+  // ip: '192.168.98.10',//测试
+  // port: '8890',
+  // xyPort: '8890'
 };
 let xyHeadUrl = protocol + '//' + common.ip + ':' + common.xyPort +'/open-cp/v1/protocol/pdf/';
 
 let commonUrl = {
 	headUrl: protocol + '//' + common.ip + ':' + common.port +'/',
+  pdfUrl: protocol + '//' + common.ip + ':' + common.port +
+'/open-cp/v1/esign/pdf/',
   picUrl: protocol + '//' + common.ip + ':' + common.xyPort +'/open-cp/v1/images/',
   mosPicUrl: protocol + '//' + common.ip + ':' + common.xyPort +'/open-cp/v1/images/mos/',
   xyData: [
@@ -39,6 +45,53 @@ let commonUrl = {
     },
   ],
   common_reg:{
+      checkSocialCreditCode(Code){ 
+  　　　　let patrn = /^[0-9A-Z]+$/;
+   　　//18位校验及大写校验
+  　　    if ((Code.length != 18) || (patrn.test(Code) == false)){ 
+            //alert("不是有效的统一社会信用编码！"); 
+            return false;
+  　　　　 } 
+  　　　　else { 
+  　　　　 var Ancode;//统一社会信用代码的每一个值
+   　　　　var Ancodevalue;//统一社会信用代码每一个值的权重 
+  　　　　 var total = 0; 
+  　　　　 var weightedfactors = [1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28];//加权因子 
+  　　　　 var str = '0123456789ABCDEFGHJKLMNPQRTUWXY';
+  　　　　//不用I、O、S、V、Z 
+  　　　　for (var i = 0; i < Code.length - 1; i++) 
+  　　　　{
+   　　　　Ancode = Code.substring(i, i + 1); 
+  　　　　 Ancodevalue = str.indexOf(Ancode); 
+  　　　　 total = total + Ancodevalue * weightedfactors[i];
+  　　　　//权重与加权因子相乘之和 
+  　　　　}
+   　　　　var logiccheckcode = 31 - total % 31;
+  　　　　if (logiccheckcode == 31)
+  　　　　{
+  　　　　　　logiccheckcode = 0;
+  　　　　}
+  　　　　var Str = "0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,G,H,J,K,L,M,N,P,Q,R,T,U,W,X,Y";
+  　　　　var Array_Str = Str.split(',');
+  　　　　logiccheckcode = Array_Str[logiccheckcode];
+
+
+  　　　　 var checkcode = Code.substring(17, 18);
+  　　　　 if (logiccheckcode != checkcode){ 
+              //alert("不是有效的统一社会信用编码！");
+              return false;
+   　　　　}
+   　　}
+      return true; 
+  　},
+    loginName(v){
+      let loginNameReg = /^[\dA-Za-z_]{6,20}$/i;
+      return loginNameReg.test(v);
+    },
+    password(v){
+      let password = /^[\dA-Za-z_]{6,15}$/i;
+      return password.test(v);
+    },
     email(v){
       let emailReg = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$");
       return emailReg.test(v);
@@ -47,44 +100,86 @@ let commonUrl = {
       let phoneReg = new RegExp("^[1][3,4,5,7,8,9][0-9]{9}$");
       return phoneReg.test(v);
     },
-    idCard(code){
-      var city={11:"北京",12:"天津",13:"河北",14:"山西",15:"内蒙古",21:"辽宁",22:"吉林",23:"黑龙江 ",31:"上海",32:"江苏",33:"浙江",34:"安徽",35:"福建",36:"江西",37:"山东",41:"河南",42:"湖北 ",43:"湖南",44:"广东",45:"广西",46:"海南",50:"重庆",51:"四川",52:"贵州",53:"云南",54:"西藏 ",61:"陕西",62:"甘肃",63:"青海",64:"宁夏",65:"新疆",71:"台湾",81:"香港",82:"澳门",91:"国外 "};
-        var pass= true;
-        var tip;
+    idCard(idcode){
+      // var city={11:"北京",12:"天津",13:"河北",14:"山西",15:"内蒙古",21:"辽宁",22:"吉林",23:"黑龙江 ",31:"上海",32:"江苏",33:"浙江",34:"安徽",35:"福建",36:"江西",37:"山东",41:"河南",42:"湖北 ",43:"湖南",44:"广东",45:"广西",46:"海南",50:"重庆",51:"四川",52:"贵州",53:"云南",54:"西藏 ",61:"陕西",62:"甘肃",63:"青海",64:"宁夏",65:"新疆",71:"台湾",81:"香港",82:"澳门",91:"国外 "};
+      //   var pass= true;
+      //   var tip;
             
-        if(!code || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[12])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i.test(code)){
-            // tip = "身份证号格式错误";
-            pass = false;
-        }else if(!city[code.substr(0,2)]){
-            // tip = "地址编码错误";
-            pass = false;
-        }else{
-                //18位身份证需要验证最后一位校验位
-              if(code.length == 18){
-                  code = code.split('');
-                  //∑(ai×Wi)(mod 11)
-                  //加权因子
-                  var factor = [ 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2 ];
-                  //校验位
-                  var parity = [ 1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2 ];
-                  var sum = 0;
-                  var ai = 0;
-                  var wi = 0;
-                  for (var i = 0; i < 17; i++)
-                  {
-                      ai = code[i];
-                      wi = factor[i];
-                      sum += ai * wi;
-                  }
-                  var last = parity[sum % 11];
-                  if(parity[sum % 11] != code[17]){
-                      tip = "校验位错误";
-                      pass =false;
-                  }
-              }
-          }
+      //   if(!code || !/^\d{6}(18|19|20)?\d{2}(0[1-9]|1[12])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i.test(code)){
+      //       // tip = "身份证号格式错误";
+      //       pass = false;
+      //   }else if(!city[code.substr(0,2)]){
+      //       // tip = "地址编码错误";
+      //       pass = false;
+      //   }else{
+      //           //18位身份证需要验证最后一位校验位
+      //         if(code.length == 18){
+      //             code = code.split('');
+      //             //∑(ai×Wi)(mod 11)
+      //             //加权因子
+      //             var factor = [ 7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2 ];
+      //             //校验位
+      //             var parity = [ 1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2 ];
+      //             var sum = 0;
+      //             var ai = 0;
+      //             var wi = 0;
+      //             for (var i = 0; i < 17; i++)
+      //             {
+      //                 ai = code[i];
+      //                 wi = factor[i];
+      //                 sum += ai * wi;
+      //             }
+      //             var last = parity[sum % 11];
+      //             if(parity[sum % 11] != code[17]){
+      //                 tip = "校验位错误";
+      //                 pass =false;
+      //             }
+      //         }
+      //     }
 
-        return pass;
+      //   return pass;
+      
+     // 加权因子
+        var weight_factor = [7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2];
+     // 校验码
+     var check_code = ['1', '0', 'X' , '9', '8', '7', '6', '5', '4', '3', '2'];
+  
+      var code = idcode + "";
+    var last = idcode[17];//最后一个
+
+     var seventeen = code.substring(0,17);
+ 
+     // ISO 7064:1983.MOD 11-2
+     // 判断最后一位校验码是否正确
+     var arr = seventeen.split("");
+     var len = arr.length;
+     var num = 0;
+     for(var i = 0; i < len; i++){
+         num = num + arr[i] * weight_factor[i];
+     }
+     
+     // 获取余数
+     var resisue = num%11;
+     var last_no = check_code[resisue];
+ 
+     // 格式的正则
+     // 正则思路
+     /*
+     第一位不可能是0
+     第二位到第六位可以是0-9
+     第七位到第十位是年份，所以七八位为19或者20
+     十一位和十二位是月份，这两位是01-12之间的数值
+     十三位和十四位是日期，是从01-31之间的数值
+    十五，十六，十七都是数字0-9
+     十八位可能是数字0-9，也可能是X
+     */
+     var idcard_patter = /^[1-9][0-9]{5}([1][9][0-9]{2}|[2][0][0|1][0-9])([0][1-9]|[1][0|1|2])([0][1-9]|[1|2][0-9]|[3][0|1])[0-9]{3}([0-9]|[X])$/;
+ 
+     // 判断格式是否正确
+     var format = idcard_patter.test(idcode);
+ 
+     // 返回验证结果，校验码和格式同时正确才算是合法的身份证号码
+     return last === last_no && format ? true : false;
     }
   },
   common_fn:{
@@ -185,6 +280,7 @@ let commonUrl = {
         type = type.replace('ss', ss);
         return type;
     },
+
     /**
      * [addZero 补0, ]
      * @param {[type]} v [description]

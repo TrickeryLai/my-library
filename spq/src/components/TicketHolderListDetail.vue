@@ -5,7 +5,7 @@
 	position="right"
 	@close="modelClose"
 	>
-		<div class="model-content">
+		<div class="model-content" @touchmove.stop>
 			<div style="height: 100%;overflow:auto;overflow-y:scroll;">
 				<van-cell-group class="van-hairline--bottom">
 					<h3 class="model-head-title">票据详情</h3>
@@ -148,7 +148,7 @@
 							style="width: 100%;"
 							@click="deleteP">注销</van-button>
 						</van-col>
-						<van-col span="12" v-if="(initData.cpStatus == 1 || initData.cpStatus == 5) && initData.stringDate >= 0">
+						<van-col span="12" v-if="(initData.cpStatus == 1 || initData.cpStatus == 5 || initData.cpStatus == 3) && initData.stringDate >= 0">
 							<van-button
 							type="primary"
 							style="width: 100%;"
@@ -202,7 +202,7 @@
 			return {
 				finished:true,
 				show: this.showState,
-				initD: this.initData,
+				initD: this.initData.cpCommercialPaperInfo,
 				timerOut: '',//计时器
 				time: 60,
 				imgs: [],
@@ -222,6 +222,9 @@
 		},
 		watch: {
 			showState(newValue, oldValue){
+				if(!this.initD){
+					return;
+				}
 				this.show = newValue;
 				this.submit.yearRate = '';
 				this.submit.reduceAmount = '';
@@ -230,22 +233,22 @@
 					this.transformRate();
 					this.setTimeoutFn();
 					this.getbuyPrice();
-					if(this.initData.cpStatus == 2){
-						this.buyPriceText = '撮合成交价';
-					}else{
-						this.buyPriceText = '买家最新报价';
-					}	
+					// if(this.initData.cpStatus == 2){
+					// 	this.buyPriceText = '撮合成交价';
+					// }else{
+					// 	this.buyPriceText = '买家最新报价';
+					// }	
 				}else{
 					clearInterval(this.timerOut);
 					this.time = 60;
 				}
-				this.imgs = [_common.picUrl + this.initData.frontBillImg, _common.picUrl + this.initData.backBillImg];
+				this.imgs = [_common.picUrl + this.initD.frontBillImg, _common.picUrl + this.initD.backBillImg];
 				// this.imgs = [_common.picUrl + this.initData.frontBillImg];
 			}
 		},
 		methods: {
 			setTimeoutFn(){
-				if(this.initData.cpStatus != '04' || this.initData.stringDate < 0){
+				if(this.initD.cpStatus != '04' || this.initData.stringDate < 0){
 					return;
 				}
 				this.timerOut = setInterval(() => {
@@ -306,7 +309,7 @@
 				if(this.refreshPriceState){
 					return;
 				}
-		        let _this = this, _id = this.initData.cpId;
+		        let _this = this, _id = this.initData.ordNo;
 				this.time = 60;
 				this.refreshPriceState = true;
 		        _server.getQuotedPrice({
@@ -376,9 +379,9 @@
 					message: '取消发布会影响信用评价,是否确认取消发布?'
 				}).then(() => {
 					let cpId = this.initData.cpId, cpStatus = this.initData.cpStatus;
-					if(cpStatus != 4){
-						return;
-					}
+					// if(cpStatus != 4){
+					// 	return;
+					// }
 					_server.deleteCommercialPaper(cpId, (res) =>{
 						if(res.code == 0){
 							this.$toast('注销成功！');

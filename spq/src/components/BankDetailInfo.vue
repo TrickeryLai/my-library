@@ -3,12 +3,10 @@
 	  	<van-nav-bar
 		    left-arrow
 		    fixed
-		    @click-right="onClickRight"
 		    @click-left="onClickLeft"
 		    class="top-bg"
 	  	>
 	  		<span slot="title" class="top-bg-title">{{title}}</span>
-	  		<span slot="right" class="top-bg-title">修改</span>
 	  		<i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
 	  	</van-nav-bar>
 	  	<div>
@@ -37,7 +35,8 @@
 	  		<van-button 
 		      type="danger" 
 		      style="width: 100%;"
-		      @click="deleteFn">删除</van-button>
+		      v-if="initItem.status == 2"
+		      @click="deleteFn">解绑</van-button>
 	  	</div>
 	</div>
 </template>
@@ -64,9 +63,6 @@
 			onClickLeft(){
 				window.history.go(-1);
 			},
-			onClickRight(){
-				this.$router.replace({path:'/home/selfInfo/changeAccount', query: {item: JSON.stringify(this.initItem)}});
-			},
 			initData(){
 				this.initItem = JSON.parse(this.$route.query.item);
 			},
@@ -86,14 +82,16 @@
 	      	deleteFn(){
 	      		let id = this.initItem.accountId;
 	      		Dialog.alert({
-	      			title: '确认删除',
-	      			message: '确认删除该账户么？'
+	      			title: '确认解绑',
+	      			message: '确认解绑该账户么？'
 	      		}).then(() => {
   					// on close
-  					_server.deleteAccount(id).then(response => {
+  					_server.unBindCard(id).then(response => {
   						if(response.code == 0){
-  							this.$toast('删除成功！');
-  							this.$router.replace('/home/selfInfo/matchBank');
+  							let winf = window.open("", "_blank");
+  							winf.location = response.data.acActiveUrl;
+  						}else{
+  							this.$toast(response.errMsg);
   						}
 	      			}).catch( error => {
 

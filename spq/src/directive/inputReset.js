@@ -22,10 +22,11 @@ Vue.directive('resetPage', {
     // })
     
     // 监听键盘收起事件
-    document.body.addEventListener('focusout', () => {
-       setTimeout(() => {
+    el.addEventListener('focusout', function(e){
+       let timer = setInterval(() => {
           const scrollHeight = document.documentElement.scrollTop || document.body.scrollTop || 0;
-          window.scrollTo(0, Math.max(scrollHeight - 1, 0));
+          window.scrollTo(0, Math.max(scrollHeight - 0.5, 0));
+          clearInterval(timer)
         }, 100)
       // if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
       //   //软键盘收起的事件处理

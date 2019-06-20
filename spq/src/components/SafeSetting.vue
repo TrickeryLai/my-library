@@ -14,8 +14,13 @@
 				<i slot="right-icon" class="iconfont icon-next"></i>
 			</van-cell>
 		</div>
-		<div style="padding-top: 0px;text-align: left;">
+		<!-- <div style="padding-top: 0px;text-align: left;">
 			<van-cell class="van-hairline--bottom" @click="gotoChange(2)" title="修改支付密码">
+				<i slot="right-icon" class="iconfont icon-next"></i>
+			</van-cell>
+		</div> -->
+		<div style="padding-top: 0px;text-align: left;">
+			<van-cell class="van-hairline--bottom" @click="gotoChangePhone()" title="修改登录手机号码">
 				<i slot="right-icon" class="iconfont icon-next"></i>
 			</van-cell>
 		</div>
@@ -35,7 +40,10 @@
 				window.history.go(-1);
 			},
 			gotoChange(type){
-				this.$router.push({path:'/home/selfInfo/changePassword', query:{type}})
+				this.$router.push({path:'/home/selfInfo/changePassword', query:{type}});
+			},
+			gotoChangePhone(){
+				this.$router.push({path: '/home/selfInfo/changePhone'});
 			}
 		}
 	}

@@ -18,20 +18,21 @@
         :offset-top="46"
         swipeable
         lazy-render
-        color="#1989fa"
+        color="#c00"
       >
         <van-tab title="提现银行账户">
           <BankList
             :listData="ListData"
             :type="active"
+            @refresh="refresh()"
           />
         </van-tab>
-        <van-tab title="签收银行账户">
+<!--         <van-tab title="签收银行账户">
           <BankList
             :listData="ListData"
             :type="active"
           />
-        </van-tab>
+        </van-tab> -->
       </van-tabs>
     </div>
   </div>
@@ -66,7 +67,7 @@
         window.history.go(-1);
       },
       onClickRight(){
-        this.$router.push({path:'/home/selfInfo/addBankCard'});
+        this.$router.push({path:'/home/selfInfo/addBankCardCommon'});
       },
       onChangeTabs(active){
         if(active == 0){
@@ -77,11 +78,13 @@
           this.getListData(2);
         }
       },
-      getListData(type = 1){
+      refresh(){
+        this.getListData();
+      },
+      getListData(){
         let data = {
           pageSize: 10000,
-          pageNum: 1,
-          accountType: type
+          pageNum: 1
         }
         _server.getCompanyAccount(data).then(response => {
           if(response.code == 0){

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+</body>
+
+<script type="text/javascript">
+	function aa(t, time, type){
+		// console.log(new Date(2017,1,17 + time))
+		// var tArrs = t.split('-');
+		// Date.call(this, tArrs + time)
+		// console.log(new Date.call(this, tArrs + time))
+		// return new Date(t + time)
+		type = type || 'yyyy-MM-dd'
+		var times = new Date(t).getTime() + time*24*60*60*1000;
+		var yyyy, MM, dd, hh,
+		times = new Date(times);
+		yyyy = time.getFullYear();
+	 	MM = addZero((time.getMonth() + 1));
+        dd = addZero(time.getDate());
+
+        hh = addZero(time.getHours());
+        mm = addZero(time.getMinutes());
+        ss = addZero(time.getSeconds());
+
+		type = type.replace('yyyy', yyyy);
+        type = type.replace('MM', MM);
+        type = type.replace('dd', dd);
+        type = type.replace('hh', hh);
+        type = type.replace('mm', mm);
+        type = type.replace('ss', ss);
+        return type
+	}
+
+    function addZero(v, n = 2){
+      let value = '0000' + v;
+      if(v.toString().length > n){
+        n = v.toString().length;
+      }
+      return value.substr(value.length - n, n);
+    },
+	aa('2017-8-17', 30)
+</script>
+</html>

@@ -81,13 +81,7 @@
 							<template slot="title">
 
 								<div @click="showDetail(item)" style="position: absolute;right:15px;top: 10px;z-index: 10;">
-									<van-button type="success" size="small" v-if="item.cpStatus == 1">审核中</van-button>
-									<van-button type="danger" size="small" v-else-if="item.cpStatus == 2">撮合成功</van-button>
-									<van-button v-else-if="item.cpStatus == 3" size="small">已注销</van-button>
-									<van-button style="background:#c00;border-color:#c00;color:#fff;" size="small" v-else-if="item.cpStatus == 4">票据详情</van-button>
-									<van-button type="success" size="small" v-else-if="item.cpStatus == 6">已成交</van-button>
-									<van-button size="small" v-else-if="item.cpStatus == 7">买方违约</van-button>
-									<van-button size="small" v-else-if="item.cpStatus == 8">卖方违约</van-button>
+									<van-button style="background:#c00;border-color:#c00;color:#fff;" size="small">票据详情</van-button>
 								</div>
 										
 								<van-row class="van-hairline--bottom text-left">
@@ -97,7 +91,7 @@
 								</van-row>
 								<van-row class="van-hairline--bottom text-left">
 									<van-col span="24">
-										票据金额：
+										票面金额：
 										<span v-if="item.cpAmount > 10000" class="black-font text-left">
 											<span class="price-txt">
 												{{item.cpAmount && dealPrice((item.cpAmount/10000).toFixed(2))}}
@@ -115,14 +109,14 @@
 									<van-col span="24">
 										年化利率：
 										<span class="black-font">
-											{{item.approvalApr}}%
+											{{item.approvalApr && (item.approvalApr-0).toFixed(4)}}%
 										</span>
 									</van-col>
 								</van-row>
 								<van-row class="van-hairline--bottom text-left">
 									<van-col span="24">
 										发布时间：
-										<span class="black-font">{{commonFn.formatterTime(new Date(item.createTime), 'yyyy年MM月dd日')}}</span>
+										<span class="black-font">{{commonFn.formatterTime(new Date(item.createTime.replace(/-/g, "/")), 'yyyy年MM月dd日')}}</span>
 									</van-col>
 								</van-row>
 								<van-row class="van-hairline--bottom text-left">
@@ -130,7 +124,7 @@
 										到期时间：
 										<span>
 											<span class="black-font">
-												{{commonFn.formatterTime(new Date(item.dueDate), 'yyyy年MM月dd日')}}
+												{{commonFn.formatterTime(new Date(item.dueDate.replace(/-/g, "/")), 'yyyy年MM月dd日')}}
 											</span>
 											<span style="text-align:right;" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)
 											</span>
@@ -467,6 +461,8 @@ import logoImg from '@/assets/logo.jpg'
       		_id: item.cpId,
       		success(res) {
       			if (res.code == 0) {
+      				//强制修改状态为发布中
+      				res.data.cpStatus = '04';
       				_this.detailItem = res.data;
       				_this.detailModelState = true;
       				_this.$noScroll();

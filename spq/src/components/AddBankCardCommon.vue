@@ -17,7 +17,6 @@
           v-model.trim="submitData.accountName"
           clearable
           :readonly="isCanChange"
-          disabled
           placeholder="请输入户名"
         />
       </van-col>
@@ -85,7 +84,7 @@
         />
       </van-col>
     </van-row>
-<!--     <van-row class="realName-box-row">
+    <!-- <van-row class="realName-box-row">
       <van-col span="7" class="realName-content-box-left"><i class="required">*</i>大额行号</van-col>
       <van-col span="17" class="realName-content-box-right">
         <van-field
@@ -168,17 +167,16 @@
   // import areaData from '@/server/areaData';
   import _server from '@/server/server';
   export default{
-    name: 'AddBankCard',
+    name: 'AddBankCardCommon',
     data(){
       return {
-        title: '实名认证',
+        title: '添加银行账户',
         btnTxt: '下一步',
         initPageData: {},
         isCanChange: false,//输入框是否能修改 true 不能， false 能
         inputWrap: false,//输入金额弹窗,显示状态
         inputWrapValue: '',
-        intervals: '',
-        intervalsN: 10,
+        accountId: '',//accountId 通过id 查询当前绑卡的信息及状态
         suppBank: {
           choseState: false,
           listData: [],
@@ -209,141 +207,92 @@
           bankCity: '',
           bankBranch: '',
           accountName: '',
-          accountNo: '',
+          accountNo: ''
         }
       }
     },
     created(){
-      this.getCompanyData(() => {
-        this.getBankListData();
-        this.initPageType();
-      })
+      this.getQueryData().then(() => {
+        if(this.accountId){
+          this.getCompanyData().then( () => {
+            this.getSuppBanks();
+            this.getAllProvince();
+          })
+        }else{
+          this.getSuppBanks();
+          this.getAllProvince();
+        }
+      });
       
-    },
-    beforeRouteLeave(to, from, next){
-      clearInterval(this.intervals);
-      next();
+      
     },
     methods:{
       onClickLeft(){
         window.history.go(-1);
       },
-      getCompanyData(callback){
-        let _id = localStorage.getItem('userId') ? JSON.parse(localStorage.getItem('userId')): '',
-              _this = this;
-        _server.getCompanyDataInfo(_id).then((res)=>{
-              if(res.code == 0){
-                this.submitData.accountName = res.companyName; //户名
-                localStorage.setItem('user', JSON.stringify(res));
-                callback && callback();
-              }else{
-                this.$toast(res.errMsg);
-              }
-              
-            })
+
+      getQueryData(){
+        //获取地址携带的accountId
+        return new Promise((resolve, reject) => {
+          if(this.$route.query.accountId){
+            this.accountId = this.$route.query.accountId;
+          }
+          return resolve();
+        })
       },
+
+      getCompanyData(callback){
+        return new Promise((resolve, reject) => {
+          //通过accountId 查询数据
+          const accountId = this.accountId;
+           _server.getBankData(accountId).then((res)=>{
+              this.initPageData = res;
+              this.submitData.accountName = res.accountName;//户名
+              this.submitData.accountNo = res.accountNo;//对公账号
+              return resolve();
+          })
+        })
+      },
+
       initPageType(){
-        let authStatus = JSON.parse(localStorage.getItem('user')).authStatus;
-        clearInterval(this.intervals);
-        switch (authStatus){
-            case '00':
-              // 已经完成第一步认证，还没开始第二步
-              this.isCanChange = false;
-              return true;
+        let authStatus = this.initPageData.status;
+        switch (authStatus - 0){
+
+          case 0:
+            //未认证--信息已提交但是未小额验证 - 不可修改
+            this.$router.replace({path: 'checkMoneyCommon', query:{accountId: this.accountId}});
+            this.isCanChange = true;
+            this.btnTxt='验证金额';
+            return false;
+          case 1:
+            //账户认证失败--信息可以修改， 重新提交
             
-            case '01':
-              //在第一步认证
-              this.$router.replace({path: 'realNameChange'});
-              return false;
-            case '02':
-              //在第一步认证
-              this.$router.replace({path: 'realNameChange'});
-              return false;
-            case '10':
-              //账户认证成功--小额打款成功
-              this.isCanChange = true;
-              this.btnTxt = '';
-              this.$router.replace({path: 'checkMoney'});
-              return false;
-            case '11':
-              //账户认证失败--小额打款失败--直接弹出小额打款弹窗
-              this.isCanChange = true;
-              // this.inputWrap = true;
-              this.btnTxt = '验证金额';
-              this.$router.replace({path: 'checkMoney'});
-
-              return false;
-            case '12':
-              //账户认证申请中 -- 提交了信息
-              // this.$toast('账户认证申请中，请收到金额之后输入金额验证！');
-              // this.$router.replace({path: 'checkMoney'});
-              this.$toast('信息已提交请等待审核通过！');
-              this.btnTxt = '等待审核通过';
-              this.isCanChange = true;
-              this.intervals = setInterval(()=>{
-                    this.intervalsN -= 1;
-                    // $(".tips-txt").text('账户认证申请中，请等待认证申请成功！('+globalData.initData.intervalsN+'秒刷新)');
-                    if(this.intervalsN == 0){
-                      this.intervalsN = 10;
-                      this.getCompanyData(() => {
-                        this.getBankListData();
-                        this.initPageType();
-                      })
-                }
-                    
-              }, 1000)
-              return false;
-
-            case '13':
-                //账户认证中--还没开始小额打款--不能修改
-                // this.isCanChange = true;
-                // this.inputWrap = true;
-                // this.btnTxt = '验证金额';
-                this.$router.replace({path: 'checkMoney'});
-
-                return;
-
-              case '14':
-                //账户认证申请失败 -- 提交了信息，信息错误--可以修改信息
-                this.isCanChange = false;
-                this.btnTxt = '下一步';
-                this.$toast('申请失败，请重新提交！');
-                return; 
-
-              case '20':
-                //开户成功 -- 不能修改
-                // this.isCanChange = false;
-                // this.btnTxt = '';
-                this.$router.replace({path: 'checkMoney'});
-
-                return;
-
-              case '21':
-                //开户失败
-                this.$router.replace({path: 'checkMoney'});
-                this.isCanChange = false;
-                this.btnTxt = '下一步';
-                this.$toast('开户失败，请重新提交绑定！');
-                return;
-              case '22':
-                //开户绑卡中
-                this.$router.replace({path: 'checkMoney'});
-
-                this.isCanChange = true;
-                this.btnTxt = '激活';
-                // this.$toast('账户认证申请中，请等待申请通过！');
-                return;
-              case '23':
-                //开户失败
-                this.$router.replace({path: 'checkMoney'});
-
-                this.isCanChange = true;
-                this.btnTxt = '重新开户';
-                this.$toast('开户失败！');
-                return;
-              case '9':
-                this.$router.replace({path: 'realNameChange'});
-                return;  
+            this.isCanChange = false;
+            this.btnTxt='下一步';
+            return false;
+          case 2:
+            //账户认证成功
+            this.$router.replace({path: 'checkMoneyCommon', query:{accountId: this.accountId}});
+            this.isCanChange = true;
+            this.btnTxt = '';
+            return false;
+          case 3:
+            //账户--解绑
+            this.isCanChange = true;
+            this.btnTxt = '';
+            return;
+          case 4:
+            //账户未激活-- 小额验证成功， 未激活
+            this.$router.replace({path: 'checkMoneyCommon', query:{accountId: this.accountId}});
+            this.isCanChange = true;
+            this.btnTxt = '激活';
+            return;   
+          default:
+            //还没开始小额打款
+  
+            this.isCanChange = false;
+            this.btnTxt = '下一步';
+            return;
         }
       },
       inputWrapConfirm(action, done){
@@ -351,16 +300,10 @@
           this.$toast('请先输入收到的金额!');
           return;
         }
-        _server.verifyAccount({
-          money:this.inputWrapValue
+        _server.verifyBindCardAccount({
+          money:this.inputWrapValue,
+          bankCardNo: this.initPageData.accountNo
         }).then(res=>{
-          // if(res.code == 0){
-          //   this.$toast('验证成功！');
-          //   this.$router.replace({path: 'realNameChange'});
-          //   window.open(res.data);
-          // }else{
-          //   this.$toast(res.errMsg);
-          // }
           if(res.code == 0){
             if(res.data && res.data.availableVeriCount == 0){
               this.$toast('请点击下一步重新提交，查看最新金额并输入！')
@@ -376,9 +319,7 @@
             }
 
             if( res.data && res.data.openStatus){
-              let userData = JSON.parse(localStorage.getItem('user'));
-              userData.authStatus = res.data.openStatus;
-              localStorage.setItem('user', JSON.stringify(userData));
+              this.initPageData.status = res.data.openStatus;
               this.initPageType();
             }
            
@@ -393,21 +334,6 @@
       },
       closeVanpopou(itemName){
         this[itemName].choseState = false;
-      },
-      getBankListData(){
-        _server.queryAccountInfo().then(response => {
-          if(response.code == 0 && response.data){
-            const data = response.data;
-            this.initPageData = response.data;
-            this.submitData.accountName = data.accountName; //户名
-            this.submitData.accountNo = data.accountNo;//对公账号
-            // this.submitData.largeAccountNo = data.largeAccountNo;//大额行号
-          }
-          this.getSuppBanks();
-          this.getAllProvince();
-        }).catch(error => {
-
-        })
       },
       openVanpopou(itemName){
         //如果不能修改，不弹窗时间
@@ -481,6 +407,7 @@
                 this.suppBank.choseItem = item;
                 this.suppBank.defaultIndex = index;
                 this.submitData.suppBank = item.bankName;
+                this.initPageType();
               }
             })
           }
@@ -565,10 +492,6 @@
           this.$toast('请选择开户行支行！');
           return false;
         }
-        // if(!this.submitData.largeAccountNo){
-        //   this.$toast('请填写大额行号！');
-        //   return false;
-        // }
         return true;
       },
       gotoActive(){
@@ -588,6 +511,7 @@
         })
       },
       addFn(){
+
         if(!this.checkedInfo()){
           return;
         }
@@ -606,7 +530,7 @@
 
         //如果是只读状态，提交，则直接弹窗验证金额
         if(this.isCanChange){
-          // this.inputWrap = true;
+          this.inputWrap = true;
           return;
         }
 
@@ -625,29 +549,26 @@
           bankCity: this.city.choseItem.cityCode,//开户行所在市
           bankSubbranch: this.bankBranch.choseItem.fkhmc1,//开户行支行
           bankSubbranchNo: this.bankBranch.choseItem.fqhho2,//开户行支行id
-          largeAccountNo: null,//大额行号
+          largeAccountNo: null//大额行号
         };
 
         if(this.initPageData && this.initPageData.accountId){
           data.accountId = this.initPageData.accountId;
         }
 
-        _server.insertOpenAccountInfo(data).then( response => {
+        _server.bindCard(data).then( response => {
             if(response.code == 0){
-                
 
-                // if(res.data.verifyStatus == 999999){
-                //   //信息错误
-                //   this.$toast('提交信息错误，请重新检查输入！');
-                // }else{
-                  
-                //   return;
-                // }
+              if(this.initPageData.accountId){
+                //当前有 accoutId ，提交的时候则重新根据accountId 查询
+                this.initPageData.status = response.data.status;
+                this.initPageType();
+              }else{
+                console.log(response.data.accountId);
                 this.initPageData.accountId = response.data.accountId;
-                // this.$toast('账户增加成功！');
-                this.getCompanyData(()=>{
-                  this.initPageType();
-                });
+                this.$router.replace({path: '/home/selfInfo/addBankCardCommon', query:{ accountId: response.data.accountId}});
+              }
+
             }else{
               this.$toast(response.errMsg);
             }

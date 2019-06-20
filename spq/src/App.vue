@@ -1,6 +1,16 @@
 <template>
   <div id="app">
-    <router-view/>
+    <!-- <keep-alive>
+        <router-view v-if="$route.meta.keepAlive">
+            
+        </router-view>
+    </keep-alive>
+     
+    <router-view v-if="!$route.meta.keepAlive">
+        
+    </router-view> -->
+
+    <router-view></router-view>
   </div>
 </template>
 
@@ -16,8 +26,23 @@
     name: 'App',
     data(){
       return{
-       
+        includeStr: ['odPage','TicketHolder']
       }
+    },
+
+    beforeRouteLeave(to, from, next){
+      if(to.name == 'Login'){
+        this.includeStr = [];
+        console.log('login123');
+        next();
+        return;
+      }
+    },
+
+    beforeRouteEnter(to, from, next){
+      this.includeStr = ['odPage','TicketHolder'];
+      console.log('loginEnter')
+      next();
     }
   }
 </script>
@@ -27,6 +52,9 @@
     margin: 0;
     padding: 0;
     cursor: pointer!important;
+  }
+  a{
+    color: #38b4ee;
   }
   .van-swipe{
     touch-callout: all!important; 
@@ -149,5 +177,20 @@
     background: #c00;
     vertical-align: -2px;
     margin-right: 7px;
+  }
+  .clear:after{
+    content: '';
+    width: 0;
+    height: 0;
+    line-height: 0;
+    display:block;
+    font-size:0;
+    clear:both;
+  }
+  .fl{
+    float: left;
+  }
+  .fr{
+    float: right;
   }
   </style>

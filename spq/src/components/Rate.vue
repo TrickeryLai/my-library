@@ -75,15 +75,16 @@
 			},
 			submitInfo(){
 				let data = {
-					cpNo: this.cpNo,
+					cpOrdNo: this.cpNo,
 				 	score: this.rate,
-                    createTime: new Date().getTime(),
-                    remark: this.message
+                    remark: this.message,
 				};
 				_server.submitComment(data).then(res => {
 					if(res.code == 0){
 						this.$toast('评价成功！');
 						this.$router.go(-1);
+					}else{
+						this.$toast(errMsg);
 					}
 				})
 			},

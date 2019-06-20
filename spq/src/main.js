@@ -13,6 +13,7 @@ import UploadImg from '@/components/UploadImg';
 import PreviewPdf from '@/components/PreviewPdf'
 
 import '@/directive/inputReset.js';
+import '@/directive/inputLimit.js'
 
 import '@/assets/font/iconfont.css';
 
@@ -76,21 +77,13 @@ router.beforeEach( (to, from, next) => {
   //     Toast('请先实名认证！');
   //     return;
   // }
-
+  
   if(to.meta.isNChecked){
     // authStatus(认证状态：1-待审核；2-审核不通过；9-已认证)
-    if(!authStatus){
-      // next({path: '/home/realName', query:{redirect: to.fullPath}});
-      next({path: '/home/realName'});
-      Toast('请先实名认证！');
-      return;
-    }else if(authStatus == 1){
+     if(authStatus != 9) {
       next({path: '/home/selfInfo/realNameChange', query:{redirect: to.fullPath}});
       return;
-    }else if(authStatus == 2){
-      next({path: '/home/selfInfo/realNameChange', query:{redirect: to.fullPath}});
-      return;
-    } 
+    }
   }
   
   //默认操作跳转下个页面

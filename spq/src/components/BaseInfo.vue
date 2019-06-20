@@ -34,14 +34,14 @@
             <van-col span="8" class="baseInfo-box-left">统一社会信用代码:</van-col>
             <van-col span="16" class="baseInfo-box-right">{{baseInfo.organizationCode || '-'}}</van-col>
         </van-row>
-        <van-row class="baseInfo-box-row">
+        <!-- <van-row class="baseInfo-box-row">
           <van-col span="8" class="baseInfo-box-left">联系人邮箱:</van-col>
           <van-col span="16" class="baseInfo-box-right">{{baseInfo.contactEmail || '-'}}</van-col>
         </van-row>
         <van-row class="baseInfo-box-row">
           <van-col span="8" class="baseInfo-box-left">联系人手机:</van-col>
           <van-col span="16" class="baseInfo-box-right">{{baseInfo.contactPhone || '-'}}</van-col>
-        </van-row>
+        </van-row> -->
         <van-row class="baseInfo-box-row">
           <van-col span="8" class="baseInfo-box-left">注册地址:</van-col>
           <van-col span="16" class="baseInfo-box-right">{{baseInfo.registerAddress || '-'}}</van-col>
@@ -118,11 +118,10 @@
         // this.$router.push({path:'/home/selfInfo/realNameChange',query: {data: JSON.stringify(this.baseInfo)}});
         let authStatus = JSON.parse(localStorage.getItem('user')).authStatus;
 
-        if(!authStatus){
-          this.$router.push({path:'/home/realName'});
-          this.$toast('请先实名认证！');
-        }else{
+        if(authStatus != 9){
           this.$router.push({path:'/home/selfInfo/realNameChange'});
+          // this.$router.push({path:'/home/realName'});
+          this.$toast('请先实名认证！');
         }
       },
       loginOut(){

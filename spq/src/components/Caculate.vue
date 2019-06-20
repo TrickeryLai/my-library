@@ -23,8 +23,8 @@
 					</van-col>
 				</van-row>
 				<van-row>
-					<van-col span="8" ><span style="vertical-align:-12px;">贴现日期</span></van-col>
-					<van-col span="16" >
+					<van-col span="8"><span style="vertical-align:-12px;">贴现日期</span></van-col>
+					<van-col span="16">
 						<van-field 
 						@click="choseTimeFn" 
 						v-model="timeChoseValue" 

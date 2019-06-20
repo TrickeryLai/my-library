@@ -3,6 +3,8 @@ import {Toast} from 'vant'
 import Axios from '@/server/axios';
 import router from '@/router/index';
 
+let project = 'open-cp';
+let version = '/v1';
 // axios请求
 let server = {
 	/**
@@ -13,7 +15,7 @@ let server = {
 
     return new Promise((resolve, reject) => {
       Axios.get({
-        url: 'open-cp/v1/captcha',
+        url: project + version + '/captcha',
         }).then((response) => {
               //请求成功返回的数据
               if(response.captchaKey){
@@ -36,7 +38,7 @@ let server = {
    * @return {[type]}            [description]
    */
   getSmsCaptcha(phoneNumber, loginName, type){
-    let url = 'open-cp/v1/smsCaptcha/?phoneNumber=' + phoneNumber;
+    let url = project + version + '/smsCaptcha/?phoneNumber=' + phoneNumber;
 
     if(loginName){
       url += '&loginName=' + loginName;
@@ -63,14 +65,14 @@ let server = {
     })
   },
   /**
-   * [getSmsCaptcha1 获取验证码]
+   * [getSmsCaptcha1 获取手机验证码]
    * @param  {[type]} phoneNumber [description]
    * @param  {[type]} loginName   [description]
    * @param  {[type]} type        [description]
    * @return {[type]}             [description]
    */
   getSmsCaptcha1(obj){
-    let url = 'open-cp/v1/smsCaptcha/?';
+    let url = project + version + '/smsCaptcha/?';
 
     for(let key in obj){
       url += `${key}=${obj[key]}&`;
@@ -100,7 +102,7 @@ let server = {
 	 * @return {[type]}            [this]
 	 */
 	login(data, callback){
-		let url = 'open-cp/v1/login';
+		let url = project + version + '/login';
 
     return new Promise((resolve, reject) => {
       Axios.post({
@@ -127,7 +129,7 @@ let server = {
    * @return {[type]}            [description]
    */
   logout(data, callback){
-    let url = 'open-cp/v1/login';
+    let url = project + version + '/login';
     Axios.delete({
       isLoading: true,
       url,
@@ -150,7 +152,7 @@ let server = {
    */
   changePassword(data, callback){
     let userId = localStorage.getItem('userId') ?  JSON.parse(localStorage.getItem('userId')): '';
-    let url = 'open-cp/v1/users/';
+    let url = project + version + '/users/';
     if(!userId){
       return;
     }
@@ -178,7 +180,7 @@ let server = {
 	 * @return {[type]}            [description]
 	 */
 	register(data, callback){
-		let url = 'open-cp/v1/register';
+		let url = project + version + '/register';
 		Axios.post({
 				isLoading: true,
 				url,
@@ -200,7 +202,34 @@ let server = {
    * @return {[type]}      [description]
    */
   forgetPassword(data){
-    let url = 'open-cp/v1/forgetPassword';
+    let url = project + version + '/forgetPassword';
+
+    return new Promise( (resolve, reject) => {
+      Axios.post({
+        isLoading: true,
+        url,
+        data: data,
+      }).then((response) => {
+          if(response.code == 0 || response.code == 110008){
+            return resolve(response);
+          }else{
+            response.errMsg && Toast(response.errMsg);
+            return reject(response);
+          }
+      }).catch(error => {
+        return reject(error);
+        // console.log(error);
+      });
+    })
+    
+  },
+  /**
+   * [forgetLoginName 忘记用户名]
+   * @param  {[type]} data [description]
+   * @return {[type]}      [description]
+   */
+  forgetLoginName(data){
+    let url = project + version + '/forgetLoginName';
 
     return new Promise( (resolve, reject) => {
       Axios.post({
@@ -228,7 +257,7 @@ let server = {
 	 * @return {[type]}            [description]
 	 */
 	getBusinessTickets(data, callback){
-		let url = 'open-cp/v1/businessTickets';
+		let url = project + version + '/businessTickets';
     return new Promise((resolve, reject) => {
       Axios.post({
         isLoading: true,
@@ -254,7 +283,7 @@ let server = {
 	 * @return {[type]}        [description]
 	 */
   	getBusinessTicketDetail(params){
-	    let url = 'open-cp/v1/businessTickets/' + params._id;
+	    let url = project + version + '/businessTickets/' + params._id;
 	    Axios.get({
         isLoading: true,
 	      url,
@@ -277,7 +306,7 @@ let server = {
      * @return {[type]}        [description]
      */
     getSelfTicketDetail(_id){
-      let url = 'open-cp/v1/commercialPaper/paper/' + _id;
+      let url = project + version + '/commercialPaper/paper/' + _id;
 
       return new Promise( (resolve, reject) => {
         Axios.get({
@@ -305,7 +334,7 @@ let server = {
   	 * @return {[type]}            [description]
   	 */
   	getCommercialPaper(data, callback){
-        let url = 'open-cp/v1/commercialPaper';
+        let url = project + version + '/commercialPaper';
         Axios.post({
           isLoading: true,
           url,
@@ -328,7 +357,7 @@ let server = {
   	 * @return {[type]}        [description]
   	 */
   	checkCommercialPaper(params){
-	    let url = 'open-cp/v1/commercialPaper/' + params._id;
+	    let url = project + version + '/commercialPaper/' + params._id;
 	    Axios.get({
 	      url,
 	      isLoading: true, 
@@ -351,9 +380,9 @@ let server = {
   	 * @return {[type]}            [description]
   	 */
     getAuthentication(data, callback){
-      let url = 'open-cp/v1/company/authentication';
+      let url = project + version + '/company/authentication';
       Axios.post({
-        isLoading: false,
+        isLoading: true,
         url,
         isdeal: false,
         data: data,
@@ -374,7 +403,7 @@ let server = {
      * @return {[type]}        [description]
      */
     getCompanyData(params){
-	    let url = 'open-cp/v1/company/' + params._id;
+	    let url = project + version + '/company/' + params._id;
 	    Axios.get({
 	      url,
 	      isLoading: true,  
@@ -398,7 +427,7 @@ let server = {
   	 * @return {[type]}            [description]
   	 */
   	buyFn(data, callback){
-      let url = 'open-cp/v1/company/authentication';
+      let url = project + version + '/company/authentication';
       Axios.post({
         isLoading: false,
         url,
@@ -421,9 +450,9 @@ let server = {
      * @return {[type]} [description]
      */
     editSave(data, callback){
-      let url = 'open-cp/v1/company/editSave';
+      let url = project + version + '/company/editSave';
       Axios.post({
-        isLoading: false,
+        isLoading: true,
         url,
         isdeal: false,
         data: data,
@@ -446,7 +475,7 @@ let server = {
      * @return {[type]}            [description]
      */
     insertQuotedInfo(data, callback){
-      let url = 'open-cp/v1/quotedPrice/insertQuotedInfo';
+      let url = project + version + '/quotedPrice/insertQuotedInfo';
       Axios.post({
         isLoading: false,
         url,
@@ -470,7 +499,7 @@ let server = {
      * @return {[type]}        [description]
      */
     getQuotedPrice(params){
-      let url = 'open-cp/v1/quotedPrice/detail/' + params._id;
+      let url = project + version + '/quotedPrice/detail/' + params._id;
       Axios.get({
         url,
       }).then((response) => {
@@ -490,11 +519,11 @@ let server = {
      * @param  {[type]} params [description]
      * @return {[type]}        [description]
      */
-    getCommercialPaperList(params){
-      let url = 'open-cp/v1/commercialPaper';
+    getCommercialPaperList(data){
+      let url = project + version + '/commercialPaper';
       return new Promise((resolve, reject) => {
         Axios.get({
-        data: params.data,
+        data: data,
         url,
         isLoading: true,
       }).then((response) => {
@@ -518,7 +547,7 @@ let server = {
      * @return {[type]}            [description]
      */
     deleteCommercialPaper(cpId, callback){
-      let url = 'open-cp/v1/commercialPaper/paper/'+ cpId;
+      let url = project + version + '/commercialPaper/paper/'+ cpId;
       Axios.delete({
         isLoading: true,
         url,
@@ -539,7 +568,7 @@ let server = {
      * @return {[type]}            [description]
      */
     changeCommercialPaper(data, callback){
-      let url = 'open-cp/v1/commercialPaper';
+      let url = project + version + '/commercialPaper';
       Axios.put({
           isLoading: true,
           url,
@@ -556,7 +585,7 @@ let server = {
       return this;
     },
     biddingFn(data, callback){
-      let url = 'open-cp/v1/commercialPaper/bidding';
+      let url = project + version + '/commercialPaper/bidding';
       Axios.put({
           isLoading: true,
           url,
@@ -576,7 +605,7 @@ let server = {
      * @return {[type]}            [description]
      */
     getQuotedPri(data){
-      let url = 'open-cp/v1/quotedPrice';
+      let url = project + version + '/quotedPrice';
       
       return new Promise((resolve, reject) => {
         Axios.get({
@@ -605,7 +634,7 @@ let server = {
      */
     cancelQuotedPrice(priceId, callback){
 
-      let url = 'open-cp/v1/quotedPrice/cancle/' + priceId;
+      let url = project + version + '/quotedPrice/cancle/' + priceId;
 
       Axios.delete({
         isLoading: true,
@@ -628,7 +657,7 @@ let server = {
      */
     resetPassword(data){
 
-      let url = 'open-cp/v1/company/resetPassword';
+      let url = project + version + '/company/resetPassword';
 
       return new Promise((resolve, reject) => {
         Axios.post({
@@ -653,7 +682,7 @@ let server = {
      * @return {[type]}    [description]
      */
     refuseQuotedPric(id){
-      let url = `open-cp/v1/quotedPrice/refuse/${id}`;
+      let url = project + version + `/quotedPrice/refuse/${id}`;
 
       return new Promise((resolve, reject) => {
         Axios.put({
@@ -678,7 +707,7 @@ let server = {
      * @param {[type]} data [description]
      */
     addCompanyAccount(data){
-      let url = 'open-cp/v1/companyAccount/insertAccountInfo';
+      let url = project + version + '/companyAccount/insertAccountInfo';
 
       return new Promise((resolve, reject) => {
         Axios.post({
@@ -704,7 +733,7 @@ let server = {
      * @return {[type]} [description]
      */
     getBankList(){
-      let url = 'open-cp/v1/companyAccount/queryAllBank';
+      let url = project + version + '/companyAccount/queryAllBank';
       return new Promise((resolve, reject) => {
         Axios.get({
           url
@@ -721,7 +750,7 @@ let server = {
      * @return {[type]}      [description]
      */
      getCompanyAccount(data){
-      let url = 'open-cp/v1/companyAccount';
+      let url = project + version + '/companyAccount';
 
       return new Promise((resolve, reject) => {
         Axios.post({
@@ -749,7 +778,7 @@ let server = {
      * @return {[type]}    [description]
      */
      changeCompanyAccount(id, data){
-      let url = `open-cp/v1/companyAccount/${id}`;
+      let url = project + version + `/companyAccount/${id}`;
 
       return new Promise((resolve, reject) => {
         Axios.put({
@@ -775,7 +804,7 @@ let server = {
      * @return {[type]} [description]
      */
     deleteAccount(id){
-      let url = `open-cp/v1/companyAccount/${id}`;
+      let url = project + version + `/companyAccount/${id}`;
 
       return new Promise((resolve, reject) => {
         Axios.deleteN({
@@ -800,7 +829,7 @@ let server = {
      * @return {[type]} [description]
      */
   	changeAccountType(data){
-      let url = 'open-cp/v1/companyAccount/copyAccount';
+      let url = project + version + '/companyAccount/copyAccount';
 
       return new Promise((resolve, reject) => {
         Axios.post({
@@ -825,10 +854,11 @@ let server = {
      * @return {[type]} [description]
      */
     getCompanyDataInfo(id){
-      let url = 'open-cp/v1/company/byUserId/'+id;
+      let url = project + version + '/company/byUserId/'+id;
       return new Promise((resolve, reject) => {
         Axios.get({
-          url
+          url,
+          isLoading: true,
         }).then(response => {
           return resolve(response);
         }).catch(error => {
@@ -842,7 +872,7 @@ let server = {
      * @return {[type]}      [description]
      */
     getOcrData(data){
-      let url = 'open-cp/v1/ocr/ticket';
+      let url = project + version + '/ocr/ticket';
 
       return new Promise((resolve, reject) => {
         Axios.post({
@@ -870,7 +900,7 @@ let server = {
      */
     checkedDeal(data){
       //id 是cpId imageName 1是我的卖出 0 是我的买入上传
-      let url = 'open-cp/v1/quotedPrice/upload';
+      let url = project + version + '/quotedPrice/upload';
 
       return new Promise((resolve, reject) => {
         Axios.post({
@@ -897,7 +927,7 @@ let server = {
      * @return {[type]}      [description]
      */
     submitComment(data){
-      let url = 'open-cp/v1/comment';
+      let url = project + version + '/comment';
 
       return new Promise((resolve, reject) => {
         Axios.post({
@@ -924,7 +954,7 @@ let server = {
      * @return {[type]}      [description]
      */
     getOcrBusinesslicenseData(data){
-      let url = 'open-cp/v1/ocr/businesslicense';
+      let url = project + version + '/ocr/businesslicense';
 
       return new Promise((resolve, reject) => {
         Axios.post({
@@ -951,7 +981,7 @@ let server = {
      * @return {[type]}      [description]
      */
     getOcrIdCardData(data){
-      let url = 'open-cp/v1/ocr/idcardfront';
+      let url = project + version + '/ocr/idcardfront';
 
       return new Promise((resolve, reject) => {
         Axios.post({
@@ -978,7 +1008,7 @@ let server = {
      * @return {[type]}      [description]
      */
     getOcrIdBackCardData(data){
-      let url = 'open-cp/v1/ocr/idcardback';
+      let url = project + version + '/ocr/idcardback';
 
       return new Promise((resolve, reject) => {
         Axios.post({
@@ -995,12 +1025,734 @@ let server = {
             return reject(response);
           }
         }).catch(error => {
-          return reject(response);
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [getCompanyList 获取指定买家列表]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    getCompanyList(){
+      let url = project + version + '/company/queryAllCompany';
+
+      return new Promise((resolve, reject) => {
+        Axios.get({
+          isLoading: true,
+          url,
+        }).then(response => {
+          return resolve(response);
+        }).catch(error =>{
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [verifyMobileNumber 修改登录手机号--验证旧手机号]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    verifyMobileNumber(data){
+      let url = project + version + '/comUsers/verifyMobileNumber';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          isLoading: true,
+          data,
+          url,
+        }).then(response => {
+          return resolve(response);
+        }).catch(error =>{
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [updateMobileNumber 修改登录手机号--验证新手机号]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    updateMobileNumber(data){
+      let url = project + version + '/comUsers/updateMobileNumber';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          isLoading: true,
+          data,
+          url,
+        }).then(response => {
+          return resolve(response);
+        }).catch(error =>{
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [getSuppBanks 获取开户行全称]
+     * @return {[type]} [description]
+     */
+    getSuppBanks(){
+      let url = project + version + '/banks/getSuppBanks';
+
+      return new Promise( (resolve, reject) => {
+        Axios.get({
+          url,
+        }).then(response =>{
+          return resolve(response);
+        }).catch(error =>{
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [getAllProvince 获取所有省]
+     * @return {[type]} [description]
+     */
+    getAllProvince(){
+      const url = project + version + '/areas/getAllProvince';
+
+      return new Promise( (resolve, reject) => {
+        Axios.get({
+          url
+        }).then( response => {
+          return resolve(response)
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    /**
+     * [getAllCity 获取所有市]
+     * @return {[type]} [description]
+     */
+    getAllCity(provId){
+      let url = project + version + '/areas/getAllCity';
+
+      if(provId){
+        url += `?provId=${provId}`;
+      }
+
+      return new Promise( (resolve, reject) => {
+        Axios.get({
+          url
+        }).then( response => {
+          return resolve(response)
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [getBanks 获取所有支行]
+     * @param  {[type]} provId [description]
+     * @return {[type]}        [description]
+     */
+    getBanks(cityCode, bankId){
+      let url = project + version + '/banks/getBanks';
+
+      if(cityCode && bankId){
+        url += `?cityCode=${cityCode}&bankId=${bankId}`;
+      }
+      
+      return new Promise( (resolve, reject) => {
+        Axios.get({
+          url
+        }).then( response => {
+          return resolve(response)
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [insertOpenAccountInfo 实名认证--绑定账户]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    insertOpenAccountInfo(data){
+      let url = project + version + '/companyAccount/insertOpenAccountInfo';
+
+      return new Promise( (resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isLoading: true,
+
+        }).then( response => {
+          return resolve(response);
+        }).catch( error => {
+          return reject(error);
+        })
+      })
+    },
+
+    /**
+     * [queryAccountInfo 获取默认绑卡信息]
+     * @return {[type]} [description]
+     */
+    queryAccountInfo(){
+      let url = project + version + '/companyAccount/queryAccountInfo';
+
+      return new Promise( (resolve, reject) => {
+        Axios.get({
+          url,
+        }).then( response => {
+          return resolve(response);
+        }).catch( error =>{
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [verifyAccount 验证金额]
+     * @return {[type]} [description]
+     */
+    verifyAccount(data){
+      let url = project + version + '/companyAccount/verifyAccount';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          isLoading:true,
+          data,
+        }).then(response => {
+          return resolve(response);
+        }).catch( error =>{
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [queryOpenAccountUrl 获取激活地址]
+     * @return {[type]} [description]
+     */
+    queryOpenAccountUrl(data){
+      let url = project + version + '/companyAccount/queryOpenAccountUrl';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isLoading: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    /**
+     * [openEAccount 重新开户]
+     * @return {[type]} [description]
+     */
+    openEAccount(){
+      let url = project + version + '/companyAccount/openEAccount';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          isLoading: true,
+        }).then( response =>{
+          return resolve(response);
+        }).catch(error =>{
+          return reject(error);
+        })
+      })
+    },
+
+    /**
+     * [getBankData 通过accountId 查询卡信息]
+     * @param  {[type]} id [accountId]
+     * @return {[type]}    [description]
+     */
+    getBankData(id){
+      let url = project + version + '/companyAccount/' + id;
+
+      return new Promise((resolve, reject) => {
+        Axios.get({
+          url
+        }).then( response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    /**
+     * [bindCard 新增卡]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    bindCard(data){
+      let url = project + version + '/companyAccount/bindCard';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isLoading: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch( error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [verifyBindCardAccount 新增卡验证金额]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    verifyBindCardAccount(data){
+      let url = project + version + '/companyAccount/verifyBindCardAccount';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isLoading: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [unBindCard 解绑卡]
+     * @param  {[type]} accountId [description]
+     * @return {[type]}           [description]
+     */
+    unBindCard(accountId){
+      let url = project + version + '/companyAccount/unBindCard';
+
+      url += `?accountId=${accountId}`;
+      return new Promise( (resolve, reject) => {
+        Axios.get({
+          url,
+          isLoading: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [modifyDefaultAccount 设置默认账户]
+     * @param  {[type]} accountId [description]
+     * @return {[type]}           [description]
+     */
+    modifyDefaultAccount(accountId){
+      let url = project + version + '/companyAccount/modifyDefaultAccount';
+
+      url += `?accountId=${accountId}`;
+      return new Promise( (resolve, reject) => {
+        Axios.get({
+          url,
+          isLoading: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    /**
+     * [accountAndBalance 获取资金账户相关信息]
+     * @return {[type]} [description]
+     */
+    accountAndBalance(){
+      let url = project + version + '/transaction/accountAndBalance';
+
+      return new Promise( (resolve, reject) => {
+        Axios.post({
+          url,
+        }).then( response => {
+          return resolve(response);
+        }).catch( error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [rechargeInfo 充值]
+     * @return {[type]} [description]
+     */
+    rechargeInfo(){
+      let url = project + version + '/transaction/rechargeInfo';
+
+      return new Promise( (resolve, reject) => {
+        Axios.post({
+          url,
+        }).then( response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [withDraw 提现]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    withDraw(data){
+      let url = project + version + '/transaction/withdraw';  
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url, 
+          data,
+          isdeal: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [cpOrder 撮合成交列表]
+     * @return {[type]} [description]
+     */
+    cpOrder(data){
+      let url = project + version + '/cpOrder?';  
+
+      for(let i in data){
+        url += `${i}=${data[i]}&`;
+      }
+
+      return new Promise((resolve, reject) => {
+        Axios.get({
+          url, 
+          isLoading: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [queryEndTime 查询剩余时间]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    queryEndTime(data){
+      let url = project + version + '/companyAccount/queryEndTime';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isLoading: true
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [cpOrderDetail 通过ordNo 查询详细]
+     * @param  {[type]} cpNo [description]
+     * @return {[type]}      [description]
+     */
+    cpOrderDetail(ordNo, type){
+      let url = project + version + '/cpOrder/detail?ordNo='+ordNo+'&type='+ type;
+
+      return new Promise((resolve, reject) => {
+        Axios.get({
+          url,
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [uploadFile 下载]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    uploadFile(data){
+      let url = project + version + '/cpOrder/pdf';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+          // responseType: 'blod',
+          responseType: 'arraybuffer',
+          isNoHeader: true,
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+    /**
+     * [cancelOrder 终止订单]
+     * @param  {[type]} data [description]
+     * @return {[type]}      [description]
+     */
+    cancelOrder(data){
+      let url = project + version + '/cpOrder/seller/cancel';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
         })
       })
     },
 
 
+    sellerCosts(data){
+      let url = project + version + '/cpOrder/sellerCosts';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch( error => {
+          return reject(error);
+        })
+      })
+    },
+
+    refuseCosts(data){
+
+      let url = project + version + '/cpOrder/seller/refuse';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch( error => {
+          return reject( error);
+        })
+      })
+    },
+
+    buyerCosts(data){
+      let url = project + version + '/cpOrder/buyerCosts';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch( error => {
+          return reject( error );
+        })
+      })
+    },
+
+    pay(data){
+      let url = project + version + '/cpOrder/pay';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isLoading: true,
+          isdeal: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch( error => {
+          return reject( error );
+        })
+      })
+    },
+
+    signEc(data){
+      let url = project + version + '/cpOrder/signEc';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch( error => {
+          return reject(error);
+        })
+      })
+    },
+
+    payDeposit(data){
+      let url = project + version + '/cpOrder/payDeposit';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+        }).then( response => {
+          return resolve( response );
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    queryBuyerAccount(ordNo){
+      let url = project + version + '/cpOrder/queryBuyerAccount/' + ordNo;
+
+      return new Promise((resolve, reject)=>{ 
+        Axios.get({
+          url,
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    confirmEndorse(data){
+      let url = project + version + '/cpOrder/confirmEndorse';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+          isLoading: true
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    buyerCancel(data){
+
+      let url =  project + version + '/cpOrder/buyer/cancel';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+          isLoading: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    buyerToPrice(data){
+      let url = project + version + '/cpOrder/buyer/toPrice';
+
+      return new Promise( (resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+          isLoading: true,
+        }).then( response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    rePrice(data){
+      let url = project + version + '/cpOrder/buyer/rePrice';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+          isLoading: true,
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    queryAgreeTamplate(data){
+      let url = project + version + '/esign/queryAgreeTamplate?';
+
+      for(let i in data){
+        url += `${i}=${data[i]}&`
+      }
+      
+      return new Promise((resolve, reject) => {
+        Axios.get({
+          url
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    signFor(data){
+
+      let url = project + version + '/cpOrder/signFor';
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+          isLoading: true,
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    transactionData(data){
+      let url = project + version + '/transaction';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+          isLoading: true,
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    }
 }
 
 export default server;

@@ -1,374 +1,738 @@
 <template>
-	<div class="order-page">
+<div class="ticketHolder">
 		<!-- <van-nav-bar
 		fixed
+		@click-right="onClickRight"
 		class="top-bg"
-		@click-right="rightClick"
 		>
 			<span slot="title" class="top-bg-title">{{title}}</span>
-			<span slot="right" class="top-bg-title">{{rightText}}</span>
+			<span slot="right" class="top-bg-title">发布</span>
 		</van-nav-bar> -->
-		<div class="">
-			<!-- <van-search
+		<!-- <div class="ticket-search">
+			<van-search
 			style="position:absolute;left: 0;top: 0;width: 100%;"
 			placeholder="请输入承兑人搜索"
 			v-model="searchValue"
 			@search="onSearch"
 			>
 				<i class="iconfont icon-search" slot="left-icon"></i>
-			</van-search> -->
-
-		</div>
-
-		<van-collapse class="ticket-content-list" v-model="activeName" accordion>
-			<transition name="van-slide-left">
-				<van-row v-show="showSearch">
-					<van-col span="24">
-
-						<van-field
-						style="vertical-align:middle;"
-						label="起始时间："
-						@click="choseTimeFn(1)"
-						v-model="beginTimeData.value"
-						readonly
-						placeholder="请选择起始时间"
-						/>
-					</van-col>
-					<van-col span="24">
-						<van-field
-						label="终止时间："
-						@click="choseTimeFn(2)"
-						v-model="endTimeData.value"
-						readonly
-						placeholder="请选择终止时间"
-						/>
-					</van-col>
-				</van-row>
-			</transition>
-			<van-collapse-item class="text-left" name="1" style="height: 100%;position: relative;overflow-y:scroll;">
-				<p slot="title">
-					我的买入
-					<span class="base-font-color" style="font-size: 12px;" @click.stop="rightClick">({{beginTimeData.value}}&nbsp-&nbsp{{endTimeData.value}})</span>
-				</p>
-				<div style="border: 1px solid #ccc;">
-					<van-pull-refresh 
-					v-model="fbListState.isLoading" 
-					@refresh="fbOnRefresh">
+			</van-search>
+		</div> -->
+	<van-collapse class="ticket-content-list" v-model="activeName" accordion>
+		<van-collapse-item class="text-left" title="待处理" name="1" style="position: relative;overflow-y:scroll;" :style="activeName == 1? collapseStyleH:''" >
+			<div style="border: 1px solid #ccc;">
+				<van-pull-refresh 
+				v-model="fbListState1.isLoading" 
+				@refresh="fbOnRefresh"
+				>
 					<van-list
-					v-model="fbListState.loading"
-					:finished="fbListState.finished"
+					v-model="fbListState1.loading"
+					:finished="fbListState1.finished"
 					finished-text="没有了"
-					:error.sync="error"
+					:error.sync="error1"
 					error-text="请求失败，点击重新加载"
 					:offset="30"
-					style="height: 100%;"
 					@load="fbOnLoad"
 					>
-					<van-cell
-					v-for="(item, index) in fbList"
-					:key="index"
-					:title="item.title"
-					style="margin-bottom: 5px;box-shadow: 1px 1px 1px 1px #ccc;"
-					@click="fbShowDetail(item)"
+						<van-cell
+						v-for="(item, index) in fbList1"
+						:key="index"
+						:title="item.title"
+						style="margin-bottom: 5px;box-shadow: 1px 1px 1px 1px #ccc;"
+						@click.stop="toDeal(item)"
+						>
+							<template slot="title">
+								<van-row>
+									<van-col span="24">
+										<span v-if="item.isAssignBuyer == 'Y'" style="color: #5974d9;font-size: 14px;float: left;margin-right: 5px;display: inline-block;">{{item.buyerCompanyName}}</span>
+										<van-tag type="success" v-if="item.isAssignBuyer == 'Y'">指定买家</van-tag>
+										<van-tag type="primary" v-else>非指定买家</van-tag>
+									</van-col>
+								</van-row>
+								<van-row>
+									<van-col span="18">
+										<span class="text-left">票面金额：</span>
+										<span v-if="item.cpAmt > 10000">
+											<span class="price-txt">
+												{{item.cpAmt&& (item.cpAmt/10000).toFixed(2)}} 
+											</span>
+											<span class="small-font">万元</span>
+										</span>
+										<span v-else>
+											<span class="price-txt">
+												{{item.cpAmt&& (item.cpAmt).toFixed(2)}} 
+											</span>
+											<span class="small-font">元</span>
+										</span>
+										
+									</van-col>
+									<van-col span="6" class="blue-font">
+                    					<van-button 
+										size="small" 
+										v-if="item.buyerOrdStatus == '01' && item.isAssignBuyer == 'Y'"
+										style="background:#c00;color: #fff;"
+										@click.stop="orderPrice(item)"
+										>报价</van-button>
+
+										<van-button 
+										size="small"
+										@click.stop="electronicContract(item)" 
+										style="background:#c00;color: #fff;"
+										v-if="item.buyerOrdStatus == '02'">签电子合同</van-button>
+
+										<van-button 
+										size="small" 
+										style="background:#c00;color: #fff;"
+										@click.stop="marginDeposit(item)"
+										v-if="item.buyerOrdStatus == '03'">交保证金</van-button>
+
+										<van-button 
+										size="small" 
+										v-else-if="item.buyerOrdStatus == '05'" 
+										style="background:#c00;color: #fff;"
+										@click.stop="pay(item)"
+										>打款</van-button>
+
+										<van-button 
+										size="small" 
+										style="background:#c00;color: #fff;"
+										@click.stop="signFor(item)"
+										v-if="item.buyerOrdStatus == '07'">签收</van-button>
+
+									</van-col>
+								</van-row>
+								<van-row>
+									<van-col span="18">
+										<span class="text-left">转让金额：</span>
+										<span v-if="item.turnVolume > 10000">
+											<span class="price-txt">
+												{{item.turnVolume&& (item.turnVolume/10000).toFixed(2)}} 
+											</span>
+											<span class="small-font">万元</span>
+										</span>
+										<span v-else>
+											<span class="price-txt">
+												{{item.turnVolume&& (item.turnVolume).toFixed(2)}} 
+											</span>
+											<span class="small-font">元</span>
+										</span>
+										
+									</van-col>
+									<van-col span="6" class="blue-font">
+										<span v-if="getLastTime(item.dueDate) < 0">(已过期)</span>
+										<span v-else>
+											(剩{{getLastTime(item.dueDate)}}天)
+										</span>
+									</van-col>
+								</van-row>
+								<van-row>
+									<van-col span="18">
+										<span class="text-left">每十万收益：</span>
+										<span>
+											￥{{item.deductAmount && dealPrice((item.deductAmount).toFixed(2))}} 
+										</span>
+									</van-col>
+									<van-col span="6" class="blue-font">
+										调整{{item.adjustmentDays}}天
+									</van-col>
+								</van-row>
+								<van-row>
+									<van-col span="18">
+										<span class="text-left">年化利率：</span>
+										<span>
+											{{item.approvalApr && (item.approvalApr - 0).toFixed(4)}}% 
+										</span>
+									</van-col>
+									<van-col span="6">
+										<van-tag color="#c00" v-if="item.buyerOrdStatus == '00'">交易完成</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '01'">待买方报价</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '02'">等待签电子合同</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '03'">等待交保证金</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '04'">等待卖方交保证金</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '05'">待买方支付</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '06'">等转让背书</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '07'">待买家签收</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '08'">等待签凭证</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '09'">待退保证金</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '11'">待确认报价</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '44'">违约</van-tag>
+									</van-col>
+								</van-row>
+								<van-row>
+									<van-col span="18">竞价日期：{{formatterTime(item.matchTime)}}</van-col>
+								</van-row>
+								<van-row>
+									<van-col span="18">到期日：{{formatterTime(item.dueDate, 'yyyy年MM月dd')}}</van-col>
+									
+								</van-row>
+								<van-row>
+									<van-col span="24">票据号码：{{item.cpNo}}</van-col>
+								</van-row>
+
+								<van-row>
+									<van-col span="24">
+										<van-button 
+										v-if="item.buyerOrdStatus == '01' || item.buyerOrdStatus == '02' || item.buyerOrdStatus == '03' || item.buyerOrdStatus == '04' || item.buyerOrdStatus == '05' || item.buyerOrdStatus == '06' || item.buyerOrdStatus == '11'" 
+										size="small"
+										@click.stop="cancelOrder(item)" 
+										style="width: 100%;background: #c00;color:#fff;"
+										>终止订单</van-button>
+									</van-col>
+								</van-row>
+							</template>
+						</van-cell>
+
+					</van-list>
+
+				</van-pull-refresh>
+			</div>
+
+		</van-collapse-item>
+		<van-collapse-item class="text-left" title="已完成" name="2" style="position: relative;overflow-y:scroll;" :style="activeName == 2? collapseStyleH:''" >
+			<div style="border: 1px solid #ccc;">
+				<van-pull-refresh 
+				v-model="fbListState2.isLoading" 
+				@refresh="fbOnRefresh"
+				>
+					<van-list
+					v-model="fbListState2.loading"
+					:finished="fbListState2.finished"
+					finished-text="没有了"
+					:error.sync="error2"
+					error-text="请求失败，点击重新加载"
+					:offset="30"
+					@load="fbOnLoad"
 					>
-					<template slot="title">
-						<van-row>
-							<van-col span="24" class="van-ellipsis text-left">票据号：
-								<div style="font-size:16px;" class="van-ellipsis black-font">{{item.cpNo}}</div>
-							</van-col>
-						</van-row>
-						<van-row>
-							<van-col span="19">
-								<span class="text-left">我的竞价金额：</span>
-								<!-- <span v-if="item.turnVolume > 10000">
-									<span class="price-txt">{{item.turnVolume && (item.turnVolume/10000).toFixed(2)}}</span> 
-									<span class="small-font">万元</span>
-								</span> -->
-								<span>
-									<span class="price-txt">{{item.turnVolume && dealPrice((item.turnVolume).toFixed(2))}}</span> 
-									<span class="small-font">元</span>	
-								</span>
-								
-							</van-col>
-							<van-col span="5">
-								<div style="text-align: right;">
-									<van-tag round  type="primary" v-if="item.quoteStatus == 1">
-										报价中
-									</van-tag>
-									<van-tag round type="success" v-else-if="item.quoteStatus == 2">撮合成功</van-tag>
-									<van-tag round v-else-if="item.quoteStatus == 3">撮合失败</van-tag>
-									<van-tag round v-else-if="item.quoteStatus == 4">取消报价</van-tag>
-									<van-tag round v-else-if="item.quoteStatus == 5">报价被拒</van-tag>
-								</div>
-							</van-col>
-						</van-row>
-						<van-row>
-							<van-col span="24">我的竞价时间：{{item.quoteTime}}</van-col>
-							<van-col span="24" v-if="item.quoteStatus == 2">撮合时间：{{item.matchTime}}</van-col>
-						</van-row>
-					</template>
-				</van-cell>
+						<van-cell
+						v-for="(item, index) in fbList2"
+						:key="index"
+						:title="item.title"
+						style="margin-bottom: 5px;box-shadow: 1px 1px 1px 1px #ccc;"
+						@click.stop="toDeal(item)"
+						>
+							<template slot="title" style="position: relative;">
+								<van-row>
+									<van-col span="24" class="van-ellipsis text-left">买方：{{item.buyerCompanyName}}</van-col>
+								</van-row>
+								<van-row>
+									<van-col span="24">
+										<span class="text-left">票面金额：</span>
+										<span v-if="item.cpAmt > 10000">
+											<span class="price-txt">
+												{{item.cpAmt && (item.cpAmt/10000).toFixed(2)}} 
+											</span>
+											<span class="small-font">万元</span>
+										</span>
+										<span v-else>
+											<span class="price-txt">
+												{{item.cpAmt&& (item.cpAmt).toFixed(2)}} 
+											</span>
+											<span class="small-font">元</span>
+										</span>
+										
+									</van-col>
+								</van-row>
+								<van-row>
+									<van-col span="18">时间：{{item.matchTime && formatterTime(item.matchTime)}}</van-col>
+									<van-col span="6">
+										<van-button 
+										style="position: absolute;right: 20px;top: 40px;background:#c00;border-color:#c00;color:#fff;" 
+										size="small"
+										@click.stop="rateFn(item)"
+										v-if="(item.scoredFlag == '1' || item.scoredFlag == '3') && item.buyerOrdStatus == '00'"
+										>评价</van-button>
+									</van-col>
+								</van-row>
+								<van-row>
+									<van-col span="24">票据号：{{item.cpNo}}</van-col>
+								</van-row>
+								<van-row>
+									<van-col span="18">
+										状态：
+										<van-tag color="#c00" v-if="item.buyerOrdStatus == '00'">交易完成</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '01'">待买方报价</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '02'">等待签电子合同</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '03'">等待交保证金</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '04'">等待买家交保证金</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '05'">待买方支付</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '06'">等转让背书</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '07'">待买家签收</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '08'">等待签凭证</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '09'">待退保证金</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '11'">待确认报价</van-tag>
+										<van-tag v-else-if="item.buyerOrdStatus == '40'">报价已取消</van-tag>
+										<van-tag v-else-if="item.buyerOrdStatus == '41'">报价已拒绝</van-tag>
+										<van-tag v-else-if="item.buyerOrdStatus == '43'">订单已取消</van-tag>
+										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '44'">违约</van-tag>
+									</van-col>
+								</van-row>
+								<van-row>
+									<van-col span="24">
+										<van-button 
+										v-if="(item.buyerOrdStatus == '40' || item.buyerOrdStatus == '41') && item.sellerOrdStatus != '43'"
+										style="width:100%;background: #c00;color:#fff;"
+										size="small"
+										@click.stop="orderPrice(item)"
+										>重新报价</van-button>
+									</van-col>
+								</van-row>
+							</template>
+						</van-cell>
 
-			</van-list>
+					</van-list>
 
-		</van-pull-refresh>
-	</div>
-
-	</van-collapse-item>
-			<!-- <van-collapse-item class="text-left" title="暂存中" name="2">
-				
-			</van-collapse-item> -->
+				</van-pull-refresh>
+			</div>
+		</van-collapse-item>
 		</van-collapse>
-		<OrderDetail 
-		:showState = 'fbListState.detailModelState'
+		<PriceAgain 
+		:showState = 'fbListState1.detailModelState'
 		@ok= 'detailModelOk'
 		@refresh='refreshFn'
 		@close= 'detailModelClose'
-		:initData = 'fbListState.detailItem'
-		:item = 'fbListState.currentItem'
+		:initData = 'fbListState1.detailItem'
+		:item = 'fbListState1.currentItem'
+		/>
+		<PriceAgain 
+		:showState = 'fbListState2.detailModelState'
+		@ok= 'detailModelOk'
+		@refresh='refreshFn'
+		@close= 'detailModelClose'
+		:initData = 'fbListState2.detailItem'
+		:item = 'fbListState2.currentItem'
 		/>
 
-		<van-popup v-model="beginTimeData.show" position="bottom" @close="timeModelClose">
-			<van-datetime-picker
-			v-model="beginTimeData.currentDate"
-			type="date"
-			:min-date="beginTimeData.minDate"
-			:max-date="endTimeData.currentDate"
-			:formatter="formatter"
-			@confirm="timeChoseConfirm(1, beginTimeData.currentDate)"
-			@cancel="timeChoseCancel(1)"
-			/>
-		</van-popup>
-		<van-popup v-model="endTimeData.show" position="bottom" @close="timeModelClose">
-			<van-datetime-picker
-			v-model="endTimeData.currentDate"
-			type="date"
-			:min-date="beginTimeData.currentDate"
-			:max-date="new Date(new Date().getTime() + 24*60*60*1000)"
-			:formatter="formatter"
-			@confirm="timeChoseConfirm(2, endTimeData.currentDate)"
-			@cancel="timeChoseCancel(2)"
-			/>
-		</van-popup>
+		<PriceList 
+			:show='priceListShow'
+			:baseData='priceListBaseData'
+			:type = "priceType"
+			@close='priceListClose'
+			@optionSuccess='biddingSuccess'
+		/>
 	</div>
 </template>
 
 <script>
-import _server from '@/server/server'
-import _common from '@/server/index'
-import OrderDetail from '@/components/OrderDetail'
+import _server from '@/server/server';
+import _common from '@/server/index';
+import PriceAgain from '@/components/PriceAgain';
+import PriceList from '@/components/PriceList';
+
 export default{
 	name: 'Order',
 	props:['modelState'],
-	components:{OrderDetail},
+	components:{PriceAgain, PriceList},
 	data(){
 		return {
-			title: '资方',
+			title: '票方',
 			searchValue: '',
 			activeName: '1',
-			error: false,
-			showSearch: false,
-			rightText: '选择',
-			endTimeData: {
-				show:　false,
-				minDate: new Date('2019-01-01'),
-				currentDate: new Date(),
-				value: this.getTime(new Date()),
+			priceListShow: false,
+			priceListBaseData: [],
+			priceType: '',
+			error1: false,
+			error2: false,
+			error3: false,
+			collapseStyleH: {
+				height: '100%'
 			},
-			beginTimeData: {
-				value: this.getTime(new Date(new Date().getTime() - 24*60*60*1000*7)),
-				show: false,
-				minDate: new Date('2019-01-01'),
-				currentDate: new Date(new Date().getTime() - 24*60*60*1000*7)
+			fbListState1:{
+				finished: false,//是否已经加载完成
+				isLoading: false,
+				loading: false,
+				currentItem: {},//当前查看详情项
+				detailItem: {},//查询的具体信息
+				detailModelState: false,//弹窗显示隐藏状态
 			},
-			fbListState:{
-					finished: false,//是否已经加载完成
-					isLoading: false,
-					loading: false,
-					currentItem: {},//当前查看详情项
-					detailItem: {},//查询的具体信息
-					detailModelState: false,//弹窗显示隐藏状态
-				},
-				fbList:[],//已发布的票据列表	
-				fbPageInfo:{
-					pageNum: 0,
-					pageSize: 5,
-					total: 0
-				}
+			fbList1:[],//已发布的票据列表	
+			fbPageInfo1:{
+				pageNum: 0,
+				pageSize: 5,
+				total: 0,
+				type: '01'
+			},
+			fbListState2:{
+				finished: false,//是否已经加载完成
+				isLoading: false,
+				loading: false,
+				currentItem: {},//当前查看详情项
+				detailItem: {},//查询的具体信息
+				detailModelState: false,//弹窗显示隐藏状态
+			},
+			fbList2:[],//已发布的票据列表	
+			fbPageInfo2:{
+				pageNum: 0,
+				pageSize: 5,
+				total: 0,
+				type: '02'
+			},
+			fbListState3:{
+				finished: false,//是否已经加载完成
+				isLoading: false,
+				loading: false,
+				currentItem: {},//当前查看详情项
+				detailItem: {},//查询的具体信息
+				detailModelState: false,//弹窗显示隐藏状态
+			},
+			fbList3:[],//已发布的票据列表	
+			fbPageInfo3:{
+				pageNum: 0,
+				pageSize: 5,
+				total: 0,
+				type: ''
+			},
 			}
-		},
-		created(){
-			this.fbOnLoad();
-
 		},
 		watch: {
 			modelState(newValue, oldValue) {
 				if(!newValue){
 					this.detailModelClose();
 				}
+			},
+			activeName(newValue){
+				if(newValue){
+					this.fbOnRefresh();
+					this['fbPageInfo' + newValue].pageNum = 1;
+				}
 			}
+		},
+		mounted(){
+			// this.fbOnLoad();
+		},
+		created(){
+			this.collapseStyleH.height = parseFloat(window.screen.height) - 250 + 'px';
+			console.log('created');
+		},
+		destoryed(){
+			
+		},
+		beforeRouteEnter(){
+			this.collapseStyleH.height = parseFloat(window.screen.height) - 250 + 'px';
+			next();
+			console.log('beforeRouteEnterTicketHolder');
 		},
 		beforeRouteLeave(to, from, next){
 			if(to.name == 'Login' || to.name == 'RealName' || to.name == 'RealNameChange'){
 				next();
 				return;
 			}
-	      	if(this.fbListState.detailModelState){
-		        this.detailModelClose();
-		        next(false);
-		        return;
-	      	} 
+			if(to.name=='Fbpj'){
+				next();
+				return;
+			}
+			if(this['fbListState' + this.activeName].detailModelState){
+				this['fbListState' + this.activeName].detailModelState = false;
+				next(false);
+				return;
+			}	
 
-	      	next();
-	    },
+			next();
+		},
 		methods:{
+			onClickRight(){
+				this.$router.push({path: '/home/ticketHolder/fbpj'});
+			},
 			spliceTime(item){
 				if(!item){
 					return;
 				}
 				return item.substr(0,10);
 			},
-			rightClick(){
-				this.showSearch = !this.showSearch;
-				if(this.showSearch){
-					this.rightText = '收起';
-				}else{
-					this.rightText = '选择';
-				}
-			},
+
 			dealPrice(price){
 				return _common.common_fn.dealPrice(price);
+			},
+			formatterTime(time, type = 'yyyy年MM月dd hh:mm:ss'){
+
+				return _common.common_fn.formatterTime(time, type);
 			},
 			getLastTime(endTime){
 				return _common.common_fn.getLastTime(endTime);
 			},
-			getTime(t = new Date(), type){
-				return _common.common_fn.formatterTime(t, type);
-			},
-			choseTimeFn(type, state = true){
-				if(type == 1){
-					this.beginTimeData.show = state;
-				}else{
-					this.endTimeData.show = state;
-				}
-			},
-			timeChoseConfirm(type, value){
-				this.timeChoseCancel(type);
+			signFor(item){
+				this.$dialog.confirm({
+					title:'确认签收',
+					message: '<p>票据号码：'+item.cpNo+'</p><p>交易对手：'+item.sellerCompanyName+'</p><p style="color:#000;font-size:16px;">请在网银确认收到票据后，再确认签收票据</p>'
+				}).then(() => {
+					_server.signFor({ordNo: item.ordNo}).then(response => {
+						if(response.code == 0){
+	                        if(response.data && response.data.payUrl){
+	                            var winRef = window.open('',"_blank");
+	                            winRef.location = response.data.payUrl;
+	                        }
+	                        this.fbGetData();
+	                    }else{
+	                        this.$toast(response.errMsg)
+	                    }
+	                }).catch(error => {
 
-				if(type == 1){
-					this.beginTimeData.value = this.getTime(value);
-				}else{
-					this.endTimeData.value = this.getTime(value);
-				}
-				this.fbPageInfo.pageNum = 1;
-				this.fbGetData();
-			},
-			timeChoseCancel(type){
-				this.choseTimeFn(type, false);
-			},
-			timeModelClose(){
+					})
+				}).catch(error => {
 
+				})
+				
+			},
+			orderPrice(item){
+				// 报价
+				this['fbListState'+this.activeName].detailModelState = true;
+				this['fbListState'+this.activeName].detailItem = item;
+				this['fbListState'+this.activeName].currentItem = item;
+			},
+			priceListClose(){
+				//查看所有报价--关闭
+				this.priceListShow = false;
+			},
+			biddingSuccess(){
+				//撮合成功
+				// this.$emit("refresh");
+				this.fbOnRefresh();
+				this.priceListClose();
+			},
+
+			buyerCoasts(ordNo){
+				return new Promise((resolve, reject) => {
+					_server.buyerCosts({ordNo: ordNo}).then(res => {
+						return resolve(res);
+					}).catch(error => {
+						return reject(error);
+					})
+				})
+			},
+
+			pay(item){
+				this.buyerCoasts(item.ordNo).then(res => {
+					if(res.code == 0){
+						let data = res.data;
+						this.$dialog.confirm({
+							title:'确认打款',
+							message: '票面金额：'+data.cpAmt+'元<br/>利息：'+data.discountInterest+'元'
+						}).then(() => {
+							_server.pay({ordNo: item.ordNo}).then(res => {
+								if(res.code == 0){
+									this.$toast('操作成功！');
+									this.fbGetData();
+								}else{
+									this.$toast(res.errMsg);
+								}
+							})
+						})
+					}
+				}).catch(error=>{
+
+				})
+			},
+			electronicContract(item){
+				this.$dialog.confirm({
+					title:'签电子合同',
+					message: `确认签电子合同吗？<br/>订单号：${item.ordNo}`,
+				}).then(() =>{
+					_server.signEc({ordNo: item.ordNO}).then(res => {
+						if(res.code == 0){
+							this.$toast('操作成功！');
+							this.fbGetData();
+						}else{
+							this.$toast(res.errMsg);
+						}
+					})
+				}).catch(()=>{
+
+				})
+			},
+			
+			marginDeposit(item){
+				this.$dialog.confirm({
+					title: '交保证金',
+					message: `确认交保证金吗？<br/>订单号：${item.ordNo}`
+				}).then(()=>{
+					_server.payDeposit({ordNo: item.ordNo}).then( res => {
+						if(res.code == 0){
+							this.$toast('操作成功！');
+							this.fbGetData();
+						}else{
+							this.$toast(res.errMsg);
+						}
+					}).catch( error => {
+
+					})
+				}).catch(error => {
+
+				})
+			},
+
+			cancelOrder(item){
+				//终止订单
+				this.$dialog.confirm({
+					title: '确认终止订单',
+					// message: '取消发布会影响信用评价,是否确认取消发布?'
+					message: '确认取消么？'
+				}).then(() => {
+					_server.buyerCancel({ordNo: item.ordNo}).then(res => {
+						if(res.code == 0){
+							this.$toast('操作成功！');
+							this.fbGetData();
+						}else{
+							this.$toast(res.errMsg);
+						}
+					})
+				}).catch(error=>{
+
+				})
+				
+			},
+			publishAgain(item){
+				this.$router.push({path: '/home/ticketHolder/fbpj', query: {pjData: JSON.stringify(item)}});
+			},
+			toDeal(item){
+				this.$router.push({path: '/orderNewDetail', query: {data: JSON.stringify(item)}});
+			},
+			rateFn(item){
+				this.$router.push({path: '/home/rate', query:{cpNo: item.ordNo}})
 			},
 			onSearch(){
-				this.fbPageInfo.pageNum = 1;
+				this['fbPageInfo'+this.activeName].pageNum = 1;
 				this.fbGetData();
 			},
+
+			getDataType(data){
+				if(false){
+					return new Promise( (resolve, reject) => {
+						_server.getCommercialPaperList(data).then(response => {
+							return resolve(response);
+						}).catch( error => {
+							return reject(error);
+						})
+					})
+				}else{
+					return new Promise((resolve, reject) => {
+						_server.cpOrder(data).then(response => {
+							return resolve(response);
+						}).catch( error => {
+							return reject(error);
+						})
+					})
+				}
+			},
+
 			fbGetData(data = {}){
-				//获取订单列表
-				this.fbListState.loading = true;//处于加载状态，不触发onLoad
+				//获取已发布的票据列表
+				this['fbListState'+this.activeName].loading = true;//处于加载状态，不触发onLoad
 				let _this = this;
-				let pageData = Object.assign({}, this.fbPageInfo);
+				let pageData = Object.assign({}, this['fbPageInfo'+this.activeName]);
 				if(pageData.pageNum == 1){
-					this.fbList = [];//不清空，在滚动至多页的时候，重新刷新会一直触发onload
+					this['fbList'+this.activeName] = [];//不清空，在滚动至多页的时候，重新刷新会一直触发onload
 				}
 				//查询条件
-				data = Object.assign({}, pageData, {
-					endTime: this.getTime(this.endTimeData.currentDate, 'yyyy-MM-dd'),
-					startTime: this.getTime(this.beginTimeData.currentDate, 'yyyy-MM-dd')
-				});
+				// data = Object.assign({}, pageData, {acceptor: this['searchValue' + this.activeName], createTimeSort: 0});
+				data = Object.assign({}, pageData);
 				delete data.total;
 				//获取列表数据
-				_server.getQuotedPri({
-					data, 	
-				}).then((response) =>{
-					this.error = false;
-					this.fbListState.loading = false;
-					this.fbListState.isLoading = false;	
+				this.getDataType(data).then((response) =>{
 					if(response.code == 0){
-						if(_this.fbPageInfo.pageNum > 1){
+						this['error'+this.activeName] = false;
+						response.list = response.list ? response.list: [];
+						if(_this['fbPageInfo' + this.activeName].pageNum > 1){
 							response.list.forEach((item) => {
-								this.fbList.push(item);
+								this['fbList'+this.activeName].push(item);
 							});
 						}else{
-							this.fbList = response.list;
+							this['fbList' + this.activeName] = response.list;
 						}
 				          //数据全部加载完成
-				          if (this.fbList.length >= response.pageInfo.total) {
-				          	this.fbListState.finished = true;
+				          if (this['fbList' + this.activeName].length >= parseFloat(response.pageInfo.total)) {
+				          	this['fbListState' + this.activeName].finished = true;
 				          }else{
-				          	this.fbListState.finished = false;
+				          	this['fbListState' + this.activeName].finished = false;
 				          }
+				      }else{
+				      	this['error'+this.activeName] = true;
+				      	this['fbPageInfo' + this.activeName].pageNum = 0;
+				      	this.$toast(response.errMsg);
 				      }
+					this['fbListState' + this.activeName].loading = false;
+					this['fbListState' + this.activeName].isLoading = false;	
 				  })
 				.catch((error) => {
-					this.fbListState.isLoading = false;
-					this.fbListState.loading = false;
-					this.error = true;
-					this.fbPageInfo.pageNum -=1;
+					this['fbListState' + this.activeName].isLoading = false;
+					this['fbListState' + this.activeName].loading = false;
+					this['error' + this.activeName] = true;
+					this['fbPageInfo' + this.activeName].pageNum = 0;
 				})
 			},
 			fbOnRefresh(){
 				//获取列表数据
-				this.fbListState.finished = false;
-				this.fbPageInfo.pageNum = 1;
+				this['fbListState' + this.activeName].finished = false;
+				this['fbPageInfo' + this.activeName].pageNum = 1;
 				this.fbGetData();
 			},
 			fbOnLoad(){
-				this.fbListState.loading = true;//处于加载状态，不触发onLoad
-				this.fbPageInfo.pageNum += 1;
+				
+				if(this['fbListState' + this.activeName].finished){
+					return;
+				}
+				this['fbListState' + this.activeName].loading = true;//处于加载状态，不触发onLoad
+				this['fbPageInfo' + this.activeName].pageNum += 1;
 				this.fbGetData();
 			},
 			fbShowDetail(item){
-				let _this = this;
-				this.fbListState.currentItem = item;
-				_server.getBusinessTicketDetail({
-					_id: item.cpId,
-					success(res){
-						if(res.code == 0){
-							_this.fbListState.detailItem = res.data;
-							_this.fbListState.detailModelState = true;
-
-							//通知外部窗口打开
-							_this.$emit('modelChange', true);
-						}
+				_server.cpOrderDetail(item.ordNo, '11').then(res => {
+					if(res.code == 0){
+						this['fbListState' + this.activeName].currentItem = item.data;
+						this['fbListState' + this.activeName].detailItem = item;
+						this['fbListState' + this.activeName].detailModelState = true;
+						this.$noScroll();
+						//通知外部窗口关闭
+						this.$emit('modelChange', true);
+					}else{
+						this.$toast(res.errMsg);
 					}
-				});
+				}).catch(error => {
+
+				})
+
+				return;
+				let _this = this;
+				this['fbListState' + this.activeName].currentItem = item;
+				_server.getSelfTicketDetail(
+					item.cpId,	
+				).then((res) =>{
+						if(res.code == 0){
+							// _this.fbListState.detailItem = res.data;
+							_this['fbListState' + this.activeName].detailItem = item;
+							_this['fbListState' + this.activeName].detailModelState = true;
+							_this.$noScroll();
+							//通知外部窗口关闭
+							_this.$emit('modelChange', true);
+							
+						}
+					}).catch(error => {
+
+					})
 			},
 			detailModelOk(){
 				this.detailModelClose();
+				this['fbPageInfo' + this.activeName].pageNum = 1;
+				this.fbGetData();
+				this.$canScroll();
 			},
 			refreshFn(){
 				this.detailModelClose();
-				this.fbPageInfo.pageNum = 1;
+				this['fbPageInfo' + this.activeName].pageNum = 1;
 				this.fbGetData();
 			},
 			detailModelClose(){
+				this['fbListState' + this.activeName].detailModelState = false;
 				this.$canScroll();
-				this.fbListState.detailModelState = false;
 
 				//通知外部窗口关闭
 				this.$emit('modelChange', false);
-			},
-			formatter(type, value) {
-				return _common.common_fn.formatter(type, value);
-			},
+			}
 
 		}
 	}
 	</script>
 
 	<style>
-	.order-page{
+	.ticketHolder{
 		position: absolute;
 		left: 0;
 		top: 0px;
@@ -377,21 +741,21 @@ export default{
 		flex-direction: column;
         height: 100%;
 	}
-	.order-page .van-collapse-item__content{
+	.ticketHolder .van-collapse-item__content{
 		background-color: #f5f5f5;
 		padding-left: 0;
 		padding-right: 0;
 		padding-top: 0px;
 	}
-	.order-page .ticket-search{
+	.ticketHolder .ticket-search{
 		position: fixed;
 		left: 0;
-		top: 45px;
+		top: 90px;
 		width: 100%;
-		height: 0px;
+		height: 50px;
 		z-index: 5;
 	}	
-	.order-page .ticket-content-list{
+	.ticketHolder .ticket-content-list{
 		background: #f5f5f5;
 		flex: 1;
 		height: 100%;
@@ -399,17 +763,20 @@ export default{
 		box-sizing: border-box;
 		overflow-y: scroll;
 	}
-	.order-page .van-collapse-item__wrapper{
+	.ticketHolder .van-collapse-item__wrapper{
 		position: absolute;
 		left: 0;
 		top: 0;
-		padding-top:50px;
+		padding-top:46px;
 		width: 100%;
 		height: 100%;
 		box-sizing: border-box;
 		overflow-y: scroll;
 	}
-	.order-page .van-collapse-item__title{
+	.ticketHolder .van-collapse-item__wrapper{
+		
+	}
+	.ticketHolder .van-collapse-item__title{
 		z-index: 999;
 	}
 	</style>

@@ -1,6 +1,9 @@
 <template>
 	<div>
-		<router-view/>	
+
+		<router-view >
+		    <!-- 这里是不被缓存的视图组件，比如 page3 -->
+		</router-view>
 		<van-tabbar v-model="active" active-color = "#c00">
 			<van-tabbar-item to="/home/billHall">
 				票库

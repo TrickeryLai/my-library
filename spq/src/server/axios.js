@@ -86,7 +86,8 @@ let _Axios = {
         method: 'get',
         params: params.data,
         header: params.header,
-        url: params.url
+        url: params.url,
+        responseType: params.responseType
       }).then((res)=>{
         if(params.isLoading){
           setTimeout(()=>{
@@ -122,7 +123,8 @@ let _Axios = {
       method: 'delete',
       params: params.data,
       header: params.header,
-      url: params.url
+      url: params.url,
+      responseType: params.responseType
     }).then((res)=>{
       if(params.isLoading){
         setTimeout(()=>{
@@ -156,7 +158,8 @@ let _Axios = {
       method: 'delete',
       params: params.data,
       header: params.header,
-      url: params.url
+      url: params.url,
+      responseType: params.responseType
     }).then((res)=>{
       if(params.isLoading){
         setTimeout(()=>{
@@ -187,7 +190,8 @@ let _Axios = {
       method: 'patch',
       data: params.data,
       header: params.header,
-      url: params.url
+      url: params.url,
+      responseType: params.responseType
     }).then((res)=>{
       if(params.isLoading){
         setTimeout(()=>{
@@ -218,11 +222,16 @@ let _Axios = {
     let header = {
       'content-type': 'application/json;charset=UTF-8'
     };
+
+    if(params.isNoHeader){
+      header = {};
+    }
     let option = {
       method: 'post',
       url: params.url,
       header: header,
-      data: params.data
+      data: params.data,
+      responseType: params.responseType
     };
 
     if(params.isdeal){
@@ -274,7 +283,8 @@ let _Axios = {
       method: 'put',
       url: params.url,
       header: header,
-      data: params.data
+      data: params.data,
+      responseType: params.responseType
     };
 
     if(params.isdeal){

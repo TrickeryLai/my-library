@@ -12,11 +12,8 @@
 			<div class="checked-icon" v-if="!baseInfo.authStatus" @click="goChecked">
 				<span class="point"></span>未认证
 			</div>
-			<div class="checked-icon active-d" v-if="baseInfo.authStatus == 1" @click="goChecked" >
-				<span class="point"></span>待审核
-			</div>
-			<div class="checked-icon active-n" v-if="baseInfo.authStatus == 2" @click="goChecked" >
-				<span class="point"></span>审核未通过
+			<div class="checked-icon active-d" v-if="baseInfo.authStatus && baseInfo.authStatus !=9" @click="goChecked" >
+				<span class="point"></span>待处理
 			</div>
 			<div class="checked-icon active-c" v-if="baseInfo.authStatus == 9" @click="goChecked" >
 				<span class="point"></span>已认证
@@ -93,6 +90,15 @@
 			</van-cell>
 		</div>
 		<div style="padding-top: 0px;text-align: left;">
+			<van-cell class="van-hairline--bottom" @click="walletFn">
+				<span slot="title">
+					<i class="iconfont icon-yinhangqia title-icon-sy"></i>
+					我的钱包
+				</span>
+				<i slot="right-icon" class="iconfont icon-next"></i>
+			</van-cell>
+		</div>
+		<div style="padding-top: 0px;text-align: left;">
 			<van-cell class="van-hairline--bottom" @click="gotoRealName">
 				<span slot="title">
 					<i class="iconfont icon-safety-certificate title-icon-sy"></i>
@@ -101,7 +107,7 @@
 				<i slot="right-icon" class="iconfont icon-next"></i>
 			</van-cell>
 		</div>
-		<div style="padding-top: 0px;text-align: left;">
+		<!-- <div style="padding-top: 0px;text-align: left;">
 			<van-cell class="van-hairline--bottom" @click="xyFn">
 				<span slot="title">
 					<i class="iconfont icon-gongdan title-icon-sy"></i>
@@ -109,7 +115,7 @@
 				</span>
 				<i slot="right-icon" class="iconfont icon-next"></i>
 			</van-cell>
-		</div>
+		</div> -->
 		<div style="padding-top: 0px;text-align: left;margin-top: 10px;">
 			<van-cell class="van-hairline--bottom" @click="gotoCaculate">
 				<span slot="title">
@@ -233,18 +239,14 @@ export default{
     	},
     	methods: {
     		goChecked(){
-    			let path = ''
-    			if(!this.baseInfo.authStatus){
-    				path = '/home/realName';
-    			}else{
-    				path = '/home/selfInfo/realNameChange';
-    			}
+    			let path = '/home/selfInfo/realNameChange';
+    			
     			this.$router.push({path})
     		},
     		initData(){
     			this.xyData = _common.xyData;
     			this.orgName = localStorage.getItem('user')?JSON.parse(localStorage.getItem('user')).companyName: '';
-    			this.baseInfo = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')): {};
+    			this.baseInfo = localStorage.getItem('user') ? (JSON.parse(localStorage.getItem('user')).createBy ? JSON.parse(localStorage.getItem('user')):JSON.parse(localStorage.getItem('loginData')).user ) : JSON.parse(localStorage.getItem('loginData')).user;
     		},
     		overTxt(str){
     			if(!str){
@@ -283,31 +285,31 @@ export default{
     				}
     			})
     		},
+    		walletFn(){
+    			this.$router.push({path:'/wallet'});
+    		},
     		safeFn(){
-    			this.$router.push({path:'/home/selfInfo/safeSetting'})
+    			this.$router.push({path:'/home/selfInfo/safeSetting'});
     		},
     		bankFn(){
-    			this.$router.push({path: '/home/selfInfo/matchBank'})
+    			this.$router.push({path: '/home/selfInfo/matchBank'});
     		},
     		gotoCaculate(){
-    			this.$router.push({path:'/home/selfInfo/caculate'})
+    			this.$router.push({path:'/home/selfInfo/caculate'});
     		},
     		gotoBaseInfo(){
-    			this.$router.push({path:'/home/selfInfo/baseInfo'})
+    			this.$router.push({path:'/home/selfInfo/baseInfo'});
     		},
     		gotoRealName(){
     			let user = JSON.parse(localStorage.getItem('user'));
     			let authStatus = user ? user.authStatus : '';
-
+    			this.$router.push({path: '/home/selfInfo/realNameChange'});
     			//未认证进入实名认证页面， 有了认证操作进入修改页面
-    			if(!authStatus){
-			      // next({path: '/home/realName', query:{redirect: to.fullPath}});
-			      	this.$router.push({path: '/home/realName'});
-			      	return;
-				  }else{
-				  	this.$router.push({path: '/home/selfInfo/realNameChange'});
-				  	return;
-				  }
+    		// 	if(authStatus != 9){
+			   //    // next({path: '/home/realName', query:{redirect: to.fullPath}});
+			   //    	this.$router.push({path: '/home/selfInfo/realNameChange'});
+			   //    	return;
+				  // }
     		},
 			// getBaseInfo(){
 			// 	let baseInfo = localStorage.getItem('user');

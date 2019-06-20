@@ -21,6 +21,19 @@ import ChangeAccount from '@/components/ChangeAccount'
 import ForgetPassword from '@/components/ForgetPassword'
 import OdPage from '@/components/OdPage'
 import Rate from '@/components/Rate'
+import ForgetUserName from '@/components/ForgetUserName'
+import ChangePhone from '@/components/ChangePhone'
+import ChangePhoneNext from '@/components/ChangePhoneNext'
+import AddBankCardCommon from '@/components/AddBankCardCommon'
+import Wallet from '@/components/Wallet.vue';
+import CashIn from '@/components/CashIn'
+import CashOut from '@/components/CashOut';
+import MatchUp from '@/components/MatchUp';
+import CheckMoney from '@/components/CheckMoney';
+import CheckMoneyCommon from '@/components/CheckMoneyCommon';
+import OrderNewDetail from '@/components/OrderNewDetail';
+import PriceAgain from '@/components/PriceAgain';
+import CashDetail from '@/components/CashDetail';
 
 import PushPage from '@/components/PushPage';
 
@@ -60,6 +73,7 @@ let routerData = {
       meta:{
         isLogin: true,//是否需要登录权限
         isNChecked: true,//是否需要认证权限
+        keepAlive: true,
       },
       component: OdPage
     },
@@ -131,7 +145,7 @@ let routerData = {
       name: 'Fbpj',
       meta:{
         isLogin: true,
-        isNChecked: true,
+        isNChecked: false,
       },
       component: Fbpj
     },
@@ -167,9 +181,27 @@ let routerData = {
       name: 'AddBankCard',
       meta:{
         isLogin: true,
-        isNChecked: true,
+        isNChecked: false,
       },
       component: AddBankCard
+    },
+    {
+      path: '/home/selfInfo/checkMoney',
+      name: 'CheckMoney',
+      meta:{
+        isLogin: true,
+        isNChecked: false,
+      },
+      component: CheckMoney
+    },
+    {
+      path: '/home/selfInfo/checkMoneyCommon',
+      name: 'CheckMoneyCommon',
+      meta:{
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: CheckMoneyCommon
     },
     {
       path: '/home/selfInfo/bankDetailInfo',
@@ -190,6 +222,33 @@ let routerData = {
       component: ChangeAccount
     },
     {
+      path: '/home/selfInfo/changePhone',
+      name: 'ChangePhone',
+      meta:{
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: ChangePhone
+    },
+    {
+      path: '/home/selfInfo/changePhoneNext',
+      name: 'ChangePhoneNext',
+      meta:{
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: ChangePhoneNext
+    },
+    {
+      path: '/home/selfInfo/addBankCardCommon',
+      name: 'AddBankCardCommon',
+      meta:{
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: AddBankCardCommon
+    },
+    {
       path: '/home/rate',
       name: 'Rate',
       meta:{
@@ -200,6 +259,60 @@ let routerData = {
     }
 
     ]
+  },
+  {
+      path: '/wallet',
+      name: 'Wallet',
+      meta:{
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: Wallet
+  },
+  {
+      path: '/cashIn',
+      name: 'CashIn',
+      meta:{
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: CashIn
+  },
+  {
+      path: '/cashOut',
+      name: 'CashOut',
+      meta:{
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: CashOut
+  },
+  {
+    path: '/cashDetail',
+    name: 'CashDetail',
+    meta:{
+      isLogin: true,
+      isNChecked: true,
+    },
+    component: CashDetail
+  },
+  {
+      path: '/matchUp',
+      name: 'MatchUp',
+      meta:{
+        isLogin: true,
+        isNChecked: false,
+      },
+      component: MatchUp
+  },
+  {
+      path: '/orderNewDetail',
+      name: 'OrderNewDetail',
+      meta: {
+        isLogin: true,
+        isNChecked: true,
+      },
+      component: OrderNewDetail,
   },
   {
     path: '/register',
@@ -236,6 +349,15 @@ let routerData = {
       isNChecked: false,
     },
     component: ForgetPassword
+  },
+  {
+    path: '/forgetUserName',
+    name: 'ForgetUserName',
+    meta:{
+      isLogin: false,
+      isNChecked: false,
+    },
+    component: ForgetUserName
   }
   ]
 }

@@ -44,7 +44,7 @@
   import _common from '@/server/index';
   import _server from '@/server/server';
   export default{
-    name: 'OdPage',
+    name: 'odPage',
     components:{Order, TicketHolder},
     data(){
       return{
@@ -59,19 +59,36 @@
         ]
       }
     },
+    activated(to, from){
+
+    },
     created(){
+      if(localStorage.getItem('odActiveTabs')){
+        this.active = localStorage.getItem('odActiveTabs');
+      }
+      
+      this.$canScroll();
         // this.onChangeTabs(this.active);
       window.addEventListener('resize', this.getHeight);
-      this.getHeight()
+      this.getHeight();
+      
+
+
     },
     mounted(){
-     
+      
         
     },
     watch: {
       active(newV){    
-        this.onChangeTabs(newV);   
+        this.onChangeTabs(newV);  
+        localStorage.setItem('odActiveTabs', newV); 
       }
+    },
+    beforeRouteEnter(to, from, next){
+      // console.log(to, from, next);
+      console.log('beforeRouteEnter');
+      next();
     },
     beforeRouteLeave(to, from, next){
       if(to.name == 'Login' || to.name == 'RealName' || to.name == 'RealNameChange' || to.name == 'Rate'){
@@ -111,7 +128,6 @@
       },
       getHeight(){
         var scrollH = window.screen.height;
-
         this.tabsH.height = scrollH - 195 + 'px';
       },
       TicketModelChange(state){
