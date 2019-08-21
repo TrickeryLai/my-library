@@ -230,6 +230,7 @@
       </van-cell-group>
       <div style="padding: 5px 5px;">
           <van-button 
+          class="baseBtn"
           style="width: 100%;"
           type="info"
           @click="submitInfo"
@@ -285,6 +286,7 @@
             <van-button
               size="small"
               type="info"
+              class="baseBtn"
               style="font-size: 12px;width: 100%;height: 34px;color: #fff;"
               @click="getSmsCaptcha"
               :disabled="getSmsAgainTime != 61"
@@ -427,7 +429,7 @@
           },
           getSmsCaptcha(){
             //获取短信验证码
-            _server.getSmsCaptcha1({
+            _server.getSmsCaptchaCheck({
               phoneNumber: this.loginphone,
               type: '07'
             }).then(res => {

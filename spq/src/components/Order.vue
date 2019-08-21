@@ -34,6 +34,7 @@
 					:offset="30"
 					@load="fbOnLoad"
 					>
+						<div v-if ="!fbList1 || fbList1.length <= 0" style="height: 250px;"></div>
 						<van-cell
 						v-for="(item, index) in fbList1"
 						:key="index"
@@ -42,6 +43,14 @@
 						@click.stop="toDeal(item)"
 						>
 							<template slot="title">
+								<van-row v-if="item.seconds">
+									<van-col span="24">
+										<CountDown 
+											:time="item.seconds"
+											@timeEnd="timeEndFn(item)"
+										/>
+									</van-col>
+								</van-row>
 								<van-row>
 									<van-col span="24">
 										<span v-if="item.isAssignBuyer == 'Y'" style="color: #5974d9;font-size: 14px;float: left;margin-right: 5px;display: inline-block;">{{item.buyerCompanyName}}</span>
@@ -52,19 +61,20 @@
 								<van-row>
 									<van-col span="18">
 										<span class="text-left">票面金额：</span>
-										<span v-if="item.cpAmt > 10000">
-											<span class="price-txt">
-												{{item.cpAmt&& (item.cpAmt/10000).toFixed(2)}} 
+										<span v-if="item.cpAmt">
+											<span v-if="item.cpAmt > 10000">
+												<span class="price-txt">
+													{{item.cpAmt&& (item.cpAmt/10000).toFixed(2)}} 
+												</span>
+												<span class="small-font">万元</span>
 											</span>
-											<span class="small-font">万元</span>
-										</span>
-										<span v-else>
-											<span class="price-txt">
-												{{item.cpAmt&& (item.cpAmt).toFixed(2)}} 
+											<span v-else>
+												<span class="price-txt">
+													{{item.cpAmt&& (item.cpAmt).toFixed(2)}} 
+												</span>
+												<span class="small-font">元</span>
 											</span>
-											<span class="small-font">元</span>
 										</span>
-										
 									</van-col>
 									<van-col span="6" class="blue-font">
                     					<van-button 
@@ -104,18 +114,21 @@
 								<van-row>
 									<van-col span="18">
 										<span class="text-left">转让金额：</span>
-										<span v-if="item.turnVolume > 10000">
-											<span class="price-txt">
-												{{item.turnVolume&& (item.turnVolume/10000).toFixed(2)}} 
+										<span v-if="item.turnVolume">
+											<span v-if="item.turnVolume > 10000">
+												<span class="price-txt">
+													{{item.turnVolume&& (item.turnVolume/10000).toFixed(2)}} 
+												</span>
+												<span class="small-font">万元</span>
 											</span>
-											<span class="small-font">万元</span>
-										</span>
-										<span v-else>
-											<span class="price-txt">
-												{{item.turnVolume&& (item.turnVolume).toFixed(2)}} 
+											<span v-else>
+												<span class="price-txt">
+													{{item.turnVolume&& (item.turnVolume).toFixed(2)}} 
+												</span>
+												<span class="small-font">元</span>
 											</span>
-											<span class="small-font">元</span>
 										</span>
+										
 										
 									</van-col>
 									<van-col span="6" class="blue-font">
@@ -128,7 +141,7 @@
 								<van-row>
 									<van-col span="18">
 										<span class="text-left">每十万收益：</span>
-										<span>
+										<span v-if="item.deductAmount">
 											￥{{item.deductAmount && dealPrice((item.deductAmount).toFixed(2))}} 
 										</span>
 									</van-col>
@@ -137,29 +150,30 @@
 									</van-col>
 								</van-row>
 								<van-row>
-									<van-col span="18">
+									<van-col span="14">
 										<span class="text-left">年化利率：</span>
-										<span>
+										<span v-if="item.approvalApr">
 											{{item.approvalApr && (item.approvalApr - 0).toFixed(4)}}% 
 										</span>
 									</van-col>
-									<van-col span="6">
-										<van-tag color="#c00" v-if="item.buyerOrdStatus == '00'">交易完成</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '01'">待买方报价</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '02'">等待签电子合同</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '03'">等待交保证金</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '04'">等待卖方交保证金</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '05'">待买方支付</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '06'">等转让背书</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '07'">待买家签收</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '08'">等待签凭证</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '09'">待退保证金</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '11'">待确认报价</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '44'">违约</van-tag>
+									<van-col span="10" style="text-align: right;">
+										<van-tag type="primary" v-if="item.buyerOrdStatus == '00'">交易完成</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '01'">待买方报价</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '02'">待确认合同</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '03'">待交保证金</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '04'">待卖方交保证金</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '05'">待冻结对价</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '06'">待卖方背书</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '07'">待签收背书</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '08'">等待签凭证</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '09'">待退保证金</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '11'">待卖方确认</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '12'">待卖方签合同</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '44'">卖方已取消</van-tag>
 									</van-col>
 								</van-row>
 								<van-row>
-									<van-col span="18">竞价日期：{{formatterTime(item.matchTime)}}</van-col>
+									<van-col span="18">竞价日期：{{formatterTime(item.priceDate)}}</van-col>
 								</van-row>
 								<van-row>
 									<van-col span="18">到期日：{{formatterTime(item.dueDate, 'yyyy年MM月dd')}}</van-col>
@@ -172,7 +186,7 @@
 								<van-row>
 									<van-col span="24">
 										<van-button 
-										v-if="item.buyerOrdStatus == '01' || item.buyerOrdStatus == '02' || item.buyerOrdStatus == '03' || item.buyerOrdStatus == '04' || item.buyerOrdStatus == '05' || item.buyerOrdStatus == '06' || item.buyerOrdStatus == '11'" 
+										v-if="item.buyerOrdStatus == '01' || item.buyerOrdStatus == '02' || item.buyerOrdStatus == '03' || item.buyerOrdStatus == '04' || item.buyerOrdStatus == '05' || item.buyerOrdStatus == '06' || item.buyerOrdStatus == '11' || item.buyerOrdStatus == '12'" 
 										size="small"
 										@click.stop="cancelOrder(item)" 
 										style="width: 100%;background: #c00;color:#fff;"
@@ -181,12 +195,9 @@
 								</van-row>
 							</template>
 						</van-cell>
-
 					</van-list>
-
 				</van-pull-refresh>
 			</div>
-
 		</van-collapse-item>
 		<van-collapse-item class="text-left" title="已完成" name="2" style="position: relative;overflow-y:scroll;" :style="activeName == 2? collapseStyleH:''" >
 			<div style="border: 1px solid #ccc;">
@@ -203,6 +214,7 @@
 					:offset="30"
 					@load="fbOnLoad"
 					>
+						<div v-if ="!fbList2 || fbList2.length <= 0" style="height: 250px;"></div>
 						<van-cell
 						v-for="(item, index) in fbList2"
 						:key="index"
@@ -233,7 +245,7 @@
 									</van-col>
 								</van-row>
 								<van-row>
-									<van-col span="18">时间：{{item.matchTime && formatterTime(item.matchTime)}}</van-col>
+									<van-col span="18">时间：{{item.receiptTime && formatterTime(item.receiptTime)}}</van-col>
 									<van-col span="6">
 										<van-button 
 										style="position: absolute;right: 20px;top: 40px;background:#c00;border-color:#c00;color:#fff;" 
@@ -249,27 +261,28 @@
 								<van-row>
 									<van-col span="18">
 										状态：
-										<van-tag color="#c00" v-if="item.buyerOrdStatus == '00'">交易完成</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '01'">待买方报价</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '02'">等待签电子合同</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '03'">等待交保证金</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '04'">等待买家交保证金</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '05'">待买方支付</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '06'">等转让背书</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '07'">待买家签收</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '08'">等待签凭证</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '09'">待退保证金</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '11'">待确认报价</van-tag>
-										<van-tag v-else-if="item.buyerOrdStatus == '40'">报价已取消</van-tag>
-										<van-tag v-else-if="item.buyerOrdStatus == '41'">报价已拒绝</van-tag>
-										<van-tag v-else-if="item.buyerOrdStatus == '43'">订单已取消</van-tag>
-										<van-tag color="#c00" v-else-if="item.buyerOrdStatus == '44'">违约</van-tag>
+										<van-tag type="primary" v-if="item.buyerOrdStatus == '00'">交易完成</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '01'">待买方报价</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '02'">待确认合同</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '03'">待交保证金</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '04'">待卖方交保证金</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '05'">待冻结对价</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '06'">待卖方背书</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '07'">待签收背书</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '08'">等待签凭证</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '09'">待退保证金</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '11'">待卖方确认</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '12'">待卖方签合同</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '40'">报价已取消</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '41'">报价已拒绝</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '43'">订单已取消</van-tag>
+										<van-tag type="primary" v-else-if="item.buyerOrdStatus == '44'">卖方已取消</van-tag>
 									</van-col>
 								</van-row>
 								<van-row>
 									<van-col span="24">
 										<van-button 
-										v-if="(item.buyerOrdStatus == '40' || item.buyerOrdStatus == '41') && item.sellerOrdStatus != '43'"
+										v-if="(item.buyerOrdStatus == '40' || item.buyerOrdStatus == '41' || item.buyerOrdStatus == '43') && item.flowStatus != '43'"
 										style="width:100%;background: #c00;color:#fff;"
 										size="small"
 										@click.stop="orderPrice(item)"
@@ -317,11 +330,12 @@ import _server from '@/server/server';
 import _common from '@/server/index';
 import PriceAgain from '@/components/PriceAgain';
 import PriceList from '@/components/PriceList';
+import CountDown from '@/components/CountDown';
 
 export default{
 	name: 'Order',
 	props:['modelState'],
-	components:{PriceAgain, PriceList},
+	components:{PriceAgain, PriceList, CountDown},
 	data(){
 		return {
 			title: '票方',
@@ -400,14 +414,14 @@ export default{
 			// this.fbOnLoad();
 		},
 		created(){
-			this.collapseStyleH.height = parseFloat(window.screen.height) - 250 + 'px';
+			this.collapseStyleH.height = parseFloat(window.screen.height) - 300 + 'px';
 			console.log('created');
 		},
 		destoryed(){
 			
 		},
 		beforeRouteEnter(){
-			this.collapseStyleH.height = parseFloat(window.screen.height) - 250 + 'px';
+			this.collapseStyleH.height = parseFloat(window.screen.height) - 300 + 'px';
 			next();
 			console.log('beforeRouteEnterTicketHolder');
 		},
@@ -448,6 +462,9 @@ export default{
 			},
 			getLastTime(endTime){
 				return _common.common_fn.getLastTime(endTime);
+			},
+			timeEndFn(item){
+				item.seconds = 0;
 			},
 			signFor(item){
 				this.$dialog.confirm({
@@ -505,7 +522,7 @@ export default{
 						let data = res.data;
 						this.$dialog.confirm({
 							title:'确认打款',
-							message: '票面金额：'+data.cpAmt+'元<br/>利息：'+data.discountInterest+'元'
+							message: '票面金额：'+_common.common_fn.dealPrice((data.cpAmt-0).toFixed(2))+'元<br/>收益：'+_common.common_fn.dealPrice(data.discountInterest)+'元'
 						}).then(() => {
 							_server.pay({ordNo: item.ordNo}).then(res => {
 								if(res.code == 0){
@@ -522,21 +539,26 @@ export default{
 				})
 			},
 			electronicContract(item){
-				this.$dialog.confirm({
-					title:'签电子合同',
-					message: `确认签电子合同吗？<br/>订单号：${item.ordNo}`,
-				}).then(() =>{
-					_server.signEc({ordNo: item.ordNO}).then(res => {
-						if(res.code == 0){
-							this.$toast('操作成功！');
-							this.fbGetData();
-						}else{
-							this.$toast(res.errMsg);
-						}
-					})
-				}).catch(()=>{
 
-				})
+				item.$type = '00';
+				this.$router.push({path: '/promisePre',query:{
+					data: JSON.stringify(item)
+				}})
+				// this.$dialog.confirm({
+				// 	title:'签电子合同',
+				// 	message: `确认签电子合同吗？<br/>订单号：${item.ordNo}`,
+				// }).then(() =>{
+				// 	_server.signEc({ordNo: item.ordNO}).then(res => {
+				// 		if(res.code == 0){
+				// 			this.$toast('操作成功！');
+				// 			this.fbGetData();
+				// 		}else{
+				// 			this.$toast(res.errMsg);
+				// 		}
+				// 	})
+				// }).catch(()=>{
+
+				// })
 			},
 			
 			marginDeposit(item){

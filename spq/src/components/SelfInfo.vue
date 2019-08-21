@@ -2,9 +2,11 @@
 	<div>
 		<van-nav-bar
 		fixed
+		@click-right="onClickRight"
 		class="top-bg"
 		>
 		<span slot="title" class="top-bg-title">{{title}}</span>
+		<span slot="right" class="top-bg-title">切换企业</span>
 	</van-nav-bar>
 	<div class="selfInfo-top">
 		<!-- <img :src="bgImg" style="position: absolute;left:0; top:0; width: 100%;height: 100%;"> -->
@@ -94,6 +96,15 @@
 				<span slot="title">
 					<i class="iconfont icon-yinhangqia title-icon-sy"></i>
 					我的钱包
+				</span>
+				<i slot="right-icon" class="iconfont icon-next"></i>
+			</van-cell>
+		</div>
+		<div style="padding-top: 0px;text-align: left;">
+			<van-cell class="van-hairline--bottom" @click="whiteNameFn">
+				<span slot="title">
+					<i class="iconfont icon-yinhangqia title-icon-sy"></i>
+					白名单
 				</span>
 				<i slot="right-icon" class="iconfont icon-next"></i>
 			</van-cell>
@@ -238,6 +249,9 @@ export default{
     		this.getBaseInfo();
     	},
     	methods: {
+    		onClickRight(){
+    			this.$router.push({path: '/choseCompany'});
+    		},
     		goChecked(){
     			let path = '/home/selfInfo/realNameChange';
     			
@@ -284,6 +298,9 @@ export default{
     					}
     				}
     			})
+    		},
+    		whiteNameFn(){
+    			this.$router.push({path: '/whiteName'});
     		},
     		walletFn(){
     			this.$router.push({path:'/wallet'});

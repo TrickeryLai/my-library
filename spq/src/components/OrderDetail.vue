@@ -150,7 +150,7 @@
                        v-if="((item.quoteStatus == '04' || item.quoteStatus == '05') && (initData.cpStatus == '04')) || (item.quoteStatus == '00')">
 
                 <van-col class="detail-row-left" span="12">年化利率</van-col>
-                <van-col class="detail-row-left" span="12">每十万扣款</van-col>
+                <van-col class="detail-row-left" span="12">每十万收益</van-col>
                 <van-col class="detail-row-left" span="24">
                   <van-field
                     class="detail-small-input w-35p"
@@ -164,18 +164,18 @@
                     class="detail-small-input w-35p"
                     v-model.trim="submit.reduceAmount"
                     @input="changeData(2, submit.reduceAmount)"
-                    placeholder="每十万扣款"
+                    placeholder="每十万收益"
                     clearable
                     type="number"/>
                   <span>元/十万</span>
                 </van-col>
                 <van-col span="24">
-                  <span class="detail-row-left">成交金额（元）</span>
+                  <span class="detail-row-left">转让金额（元）</span>
                   <van-field
                     class="detail-small-input"
                     v-model.trim="submit.dealAmount"
                     @input="changeData(3, submit.dealAmount)"
-                    placeholder="成交金额"
+                    placeholder="转让金额"
                     clearable
                     type="number"/>
                 </van-col>
@@ -498,11 +498,11 @@
           return;
         }
         if (parseFloat(this.submit.dealAmount) < 0) {
-          this.$toast('成交金额不能小于0！');
+          this.$toast('转让金额不能小于0！');
           return;
         }
         if(parseFloat(this.submit.dealAmount) > parseFloat(this.initData.cpAmount)){
-          this.$toast('成交金额不能大于票据金额！');
+          this.$toast('转让金额不能大于票据金额！');
           return;
         }
 

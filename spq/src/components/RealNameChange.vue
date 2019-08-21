@@ -191,7 +191,7 @@
               size="large"
               required
               v-model="submitData.registerAddress"
-              :readonly="isInputread"
+              :readonly="isInputread && isChange"
               label="企业注册地址："
               type="textarea"
               placeholder="企业注册地址"
@@ -217,7 +217,7 @@
              <van-field
             v-reset-page
             v-model.trim="submitData.phone"
-            :readonly="isInputread"
+            :readonly="isInputread && isChange"
             type="phone"
             clearable
             required
@@ -320,9 +320,17 @@
       <div style="padding: 5px 5px;">
           <van-button 
           style="width: 100%;"
+          class="baseBtn"
           type="info"
           @click="submitInfo"
-          v-if="companyData.authStatus != 9"
+          v-if="companyData.authStatus != 9 && isChange"
+        >提交</van-button>
+        <van-button 
+          style="width: 100%;"
+          class="baseBtn"
+          type="info"
+          @click="changeFInfo"
+          v-if="!isChange"
         >下一步</van-button>
       </div>
     </div>
@@ -375,6 +383,7 @@
             <van-button
               size="small"
               type="info"
+              class="baseBtn"
               style="font-size: 12px;width: 100%;height: 34px;color: #fff;"
               @click="getSmsCaptcha"
               :disabled="getSmsAgainTime != 61"
@@ -410,6 +419,7 @@
       data(){
           return{
               title: '实名认证',
+              isChange: true,
               isInputread: false,
               zIndex: 999,
               common: _common,
@@ -528,9 +538,10 @@
           },
           getSmsCaptcha(){
             //获取短信验证码
-            _server.getSmsCaptcha1({
+            _server.getSmsCaptchaCheck({
               phoneNumber: this.loginphone,
-              type: '07'
+              type: '07',
+              companyName: this.submitData.orgName
             }).then(res => {
               if(res.errMsg){
                 this.$toast(res.errMsg);
@@ -568,8 +579,8 @@
             switch (authStatus){
               case '00':
               //实名认证成功 --不能修改
-              
-              this.$router.replace({path: '/home/selfInfo/addBankCard'});
+              this.isChange = false;
+              // this.$router.replace({path: '/home/selfInfo/addBankCard'});
               return true;
               case '01':
               //实名认证失败 -- 可以修
@@ -577,49 +588,57 @@
               return false;
               case '02':
               //实名认证处理中 -- 不可以修改
-              
+              this.isChange = false;
               return true;
               case '10':
               //账户认证成功
-              this.$router.replace({path: '/home/selfInfo/checkMoney'});
-              
+              // this.$router.replace({path: '/home/selfInfo/checkMoney'});
+              this.isChange = false;
               return true;
               case '11':
               //账户认证失败
-              this.$router.replace({path: '/home/selfInfo/checkMoney'});
+              this.isChange = false;
+              // this.$router.replace({path: '/home/selfInfo/checkMoney'});
               return true;
               case '12':
               //账户认证申请中
-              this.$router.replace({path: '/home/selfInfo/addBankCard'});
+              this.isChange = false;
+              // this.$router.replace({path: '/home/selfInfo/addBankCard'});
               return true;
               case '13':
               //账户认证中
-              this.$router.replace({path: '/home/selfInfo/checkMoney'});
+              this.isChange = false;
+              // this.$router.replace({path: '/home/selfInfo/checkMoney'});
               return true;
               case '14':
               //账户认证申请失败
-              this.$router.replace({path: '/home/selfInfo/addBankCard'});
+              this.isChange = false;
+              // this.$router.replace({path: '/home/selfInfo/addBankCard'});
               return true;
               case '20':
               //开户成功
+              this.isChange = true;
               this.$router.replace({path: '/home/selfInfo/checkMoney'});
               return true;
 
               case '21':
               //开户失败
-              this.$router.replace({path: '/home/selfInfo/addBankCard'});
+              this.isChange = false;
+              // this.$router.replace({path: '/home/selfInfo/addBankCard'});
               return true;
               case '22':
               //开户绑卡中
-              this.$router.replace({path: '/home/selfInfo/checkMoney'});
+              this.isChange = true;
+              // this.$router.replace({path: '/home/selfInfo/checkMoney'});
               return true;
               case '23':
               //电子账户开户失败
-              this.$router.replace({path: '/home/selfInfo/checkMoney'});
+              this.isChange = false;
+              // this.$router.replace({path: '/home/selfInfo/checkMoney'});
               return true;
               case '9':
               //已认证
-
+              this.isChange = true;
               return true; 
 
               default:
@@ -919,6 +938,25 @@
               return false;
             }
             return true;
+          },
+
+          changeFInfo(){
+              if(!this.submitDataCheck()){
+                return;
+              }
+
+              let data = {
+                legalPersonPhone: this.submitData.phone,
+                registerAddress: this.submitData.registerAddress,
+              };
+
+              _server.updateCompanyInfo(data).then(res => {
+                if(res.code == 0){
+                  this.$router.replace({path: '/home/selfInfo/addBankCard'});
+                }else{
+                  this.$toast(res.errMsg);
+                }
+              })
           },
           submitInfo(){
             this.getSmsAgainTime = 61;

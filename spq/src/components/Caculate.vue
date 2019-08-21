@@ -99,7 +99,7 @@
 						<van-button plain type="info" style="width:100%;" @click="reset">清空</van-button>
 					</van-col>
 					<van-col span="12">
-						<van-button type="info" style="width:100%;" @click="caculateResultFn">计算</van-button>
+						<van-button class="baseBtn" type="info" style="width:100%;" @click="caculateResultFn">计算</van-button>
 					</van-col>
 				</van-row>
 			</div>

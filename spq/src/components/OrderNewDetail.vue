@@ -30,7 +30,7 @@
 				</van-row>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">背书次数</van-col>
-					<van-col class="detail-row-right" span="18">{{detailData.cpCommercialPaperInfo.endorseTimes}}</van-col>
+					<van-col class="detail-row-right" span="18">{{detailData.cpCommercialPaperInfo.endorseTimes}}次</van-col>
 				</van-row>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">持票人全称</van-col>
@@ -43,7 +43,7 @@
 				</van-row> -->
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">剩余天数</van-col>
-					<van-col class="detail-row-right" span="18">{{detailData.cpCommercialPaperInfo.stringDate}}</van-col>
+					<van-col class="detail-row-right" span="18">{{detailData.cpCommercialPaperInfo.stringDate}}天</van-col>
 				</van-row>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">调整天数</van-col>
@@ -70,19 +70,20 @@
 					<van-col class="detail-row-right" span="18" v-if="detailData.cpOrder">
 						<van-tag color="#c00" v-if="detailData.cpOrder.buyerOrdStatus == '00'">交易完成</van-tag>
 						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '01'">待买方报价</van-tag>
-						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '02'">等待签电子合同</van-tag>
-						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '03'">等待交保证金</van-tag>
-						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '04'">等待买家交保证金</van-tag>
-						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '05'">待买方支付</van-tag>
-						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '06'">等转让背书</van-tag>
-						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '07'">待买家签收</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '02'">待确认合同</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '03'">待交保证金</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '04'">待卖方交保证金</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '05'">待冻结对价</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '06'">待卖方背书</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '07'">待签收背书</van-tag>
 						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '08'">等待签凭证</van-tag>
 						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '09'">待退保证金</van-tag>
-						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '11'">待确认报价</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '11'">待卖方确认</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '12'">待卖方签合同</van-tag>
 						<van-tag v-else-if="detailData.cpOrder.buyerOrdStatus == '40'">报价已取消</van-tag>
 						<van-tag v-else-if="detailData.cpOrder.buyerOrdStatus == '41'">报价被拒绝</van-tag>
 						<van-tag v-else-if="detailData.cpOrder.buyerOrdStatus == '43'">订单已取消</van-tag>
-						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '44'">违约</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.buyerOrdStatus == '44'">卖方已取消</van-tag>
 					</van-col>
 				</van-row>
 			</van-cell-group>
@@ -94,18 +95,18 @@
 				</van-row>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">报价年化利率</van-col>
-					<van-col class="detail-row-right" span="18">{{detailData.cpQuotedPriceInfo.approvalApr && detailData.cpQuotedPriceInfo.approvalApr.toFixed(4)}}%</van-col>
+					<van-col class="detail-row-right" span="18" v-if="detailData.cpQuotedPriceInfo.approvalApr">{{detailData.cpQuotedPriceInfo.approvalApr && detailData.cpQuotedPriceInfo.approvalApr.toFixed(4)}}%</van-col>
 				</van-row>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">报价每十万收益</van-col>
-					<van-col class="detail-row-right" span="18">￥{{detailData.cpQuotedPriceInfo.deductAmount && dealPrice(detailData.cpQuotedPriceInfo.deductAmount.toFixed(2))}}</van-col>
+					<van-col class="detail-row-right" span="18" v-if="detailData.cpQuotedPriceInfo.deductAmount">￥{{detailData.cpQuotedPriceInfo.deductAmount && dealPrice(detailData.cpQuotedPriceInfo.deductAmount.toFixed(2))}}</van-col>
 				</van-row>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">报价金额</van-col>
-					<van-col class="detail-row-right" span="18">￥{{detailData.cpQuotedPriceInfo.turnVolume && dealPrice(detailData.cpQuotedPriceInfo.turnVolume.toFixed(2))}}</van-col>
+					<van-col class="detail-row-right" span="18" v-if="detailData.cpQuotedPriceInfo.turnVolume">￥{{detailData.cpQuotedPriceInfo.turnVolume && dealPrice(detailData.cpQuotedPriceInfo.turnVolume.toFixed(2))}}</van-col>
 				</van-row>
 				<van-row class="detail-row">
-					<van-col class="detail-row-left" span="6">竞价时间</van-col>
+					<van-col class="detail-row-left" span="6">报价时间</van-col>
 					<van-col class="detail-row-right" span="18">{{detailData.cpQuotedPriceInfo.quoteTime}}</van-col>
 				</van-row>
 				<van-row class="detail-row">
@@ -224,7 +225,7 @@
 			previewPic(index, status){
 				let imageResult = [_common.picUrl + this.detailData.cpCommercialPaperInfo.frontBillImg];
 				
-				if(status != '0'){
+				if(status != '00'){
 					imageResult = [_common.mosPicUrl + this.detailData.cpCommercialPaperInfo.frontBillImg]
 				}else{
 					imageResult = [_common.picUrl + this.detailData.cpCommercialPaperInfo.frontBillImg, _common.picUrl + this.detailData.cpCommercialPaperInfo.backBillImg]
@@ -238,7 +239,8 @@
 				});
 			},
 			uploadFile(item){
-				
+				this.$toast('鉴于电子合同涉及您企业的敏感信息，建议前往web网页端下载并保存，谢谢！');
+				return;
 				_server.uploadFile({
 					ordNo: this.detailData.ordNo,
 					flowId: item.flowId,
@@ -252,7 +254,8 @@
                         a.download = item.name;
                         a.href = e.target.result;
                         document.body.appendChild(a);
-                        a.click();
+                        a.click(true);
+                        // a.dispatchEvent('touchstart');
                         document.body.removeChild(a);
                     }
 				})

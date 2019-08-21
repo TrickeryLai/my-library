@@ -51,6 +51,7 @@
             <h3 class="model-head-title">票面金额</h3>
             <van-tag
             	class="my-tag"	
+          		:color="searchData.amountChosed.val == item.val ? '#c00': ''"
               	v-for="(item, index) in amountType"
               	clearable
               	:key="index"
@@ -79,6 +80,7 @@
             <van-tag
               class="my-tag"
               v-for="(item, index) in dayType"
+              :color="searchData.dayChoose.val == item.val ? '#c00': ''"
               :type="searchData.dayChoose.val == item.val ? 'primary': ''"
               :key="index"
               @click="choseLastDay(item)"
@@ -105,6 +107,7 @@
               class="my-tag"
               v-for="(item, index) in perfectType"
               :key="index"
+              :color="searchData.isPerfect.val == item.val ? '#c00': ''"
               :type="searchData.isPerfect.val === item.val ? 'primary': ''"
               @click="chosePerfect(item)"
             >{{item.name}}</van-tag>
@@ -115,6 +118,7 @@
               class="my-tag"
               v-for="(item, index) in dealType"
               :key="index"
+              :color="searchData.dealChoose.val == item.val ? '#c00': ''"
               :type="searchData.dealChoose.val == item.val ? 'primary': ''"
               @click="choseDeal(item)"
             >{{item.name}}</van-tag>
@@ -125,8 +129,20 @@
               class="my-tag"
               v-for="(item, index) in cpStatus"
               :key="index"
+              :color="searchData.cpStatus.val == item.val ? '#c00': ''"
               :type="searchData.cpStatus.val == item.val ? 'primary': ''"
               @click="choseCpStatus(item)"
+            >{{item.name}}</van-tag>
+          </van-cell-group>
+          <van-cell-group>
+            <h3 class="model-head-title">票据状态</h3>
+            <van-tag
+              class="my-tag"
+              v-for="(item, index) in whiteName"
+              :key="index"
+              :color="searchData.whiteListFlag.val == item.val ? '#c00': ''"
+              :type="searchData.whiteListFlag.val == item.val ? 'primary': ''"
+              @click="choseWhiteStatus(item)"
             >{{item.name}}</van-tag>
           </van-cell-group>
           <!-- <van-checkbox v-model="searchData.onlyShow" name="onlyShow" style="margin-top: 10px;">
@@ -192,6 +208,7 @@
         <van-col span="12">
           <van-button
             type="info"
+            class="baseBtn"
             style="width:100%;"
             @click="ok">确认</van-button>
         </van-col>
@@ -230,6 +247,9 @@
 					cpNo: '',//票据号码
 					amountChosed: {},//面额选择
 					dayChoose: {},//剩余天数选择
+					whiteListFlag: {
+
+					},
 					isPerfect: {
 						
 					},//瑕疵
@@ -239,7 +259,7 @@
           			cpStatus: {
 
           			},//票据状态
-					onlyShow: false,//只显示我的白名单票据
+					// onlyShow: false,//只显示我的白名单票据
 				},
 		        cpStatus:[
         			{
@@ -319,6 +339,16 @@
 						val: 0
 					}
 				],
+				whiteName:[
+					{
+						name: '全部',
+						val: ''
+					},
+					{
+						name: '是',
+						val: 'Y'
+					}
+				],
 				dealType:[
 					{
 						name: '全部',
@@ -392,6 +422,9 @@
 	      	},
 			choseAmount(item){
 				this.searchData.amountChosed = item;
+			},
+			choseWhiteStatus(item){
+				this.searchData.whiteListFlag = item;
 			},
 			choseLastDay(item){
 				this.searchData.dayChoose = item;

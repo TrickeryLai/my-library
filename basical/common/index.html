@@ -39,6 +39,9 @@
 	<script type="text/javascript" src="./index.js"></script>
 	<script type="text/javascript" src="./typeMachine.js"></script>
 	<style type="text/css">
+		html{
+			font-size: 16px;
+		}
 		/**{
 			text-size-adjust: 100%;
 			}*/
@@ -52,21 +55,33 @@
 			background: red;
 			display: inline-block;
 			}*/
-			input + span {
-				background: yellow;
-				width: 20px;
-				height: 20px;
-				display:inline-block;
-			}
+			
 			input ~ span {
 				background: green;
 				width: 20px;
 				height: 20px;
 				display: inline-block;
 			}
+
+			input + span {
+				background: yellow;
+				width: 20px;
+				height: 20px;
+				display:inline-block;
+			}
+
+			.font-test{
+				font-size: 2rem;
+				border: 1px solid #c00;
+				height: 10rem;
+				display: inline-block;
+			}
 		</style>
 	</head>
 	<body>
+		<div>
+			<span class="font-test">字体</span>
+		</div>
 		<div>
 			<img src="">
 			<input type="text" name="" id="myInput">
@@ -106,6 +121,17 @@
 				
 			}
 
+
+			window.onresize = function(){
+				var screenW = document.body.clientWidth;
+
+				var fontSize = (screenW / 675)*10 ;
+
+				document.getElementsByTagName('html')[0].style.fontSize = fontSize + 'px';
+
+
+				console.log(screenW, window.screen.width, document.body.clientWidth);
+			}
 		</script>
 	</body>
 	</html>

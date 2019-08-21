@@ -170,6 +170,7 @@
           <van-button
             size="small"
             type="info"
+            class="baseBtn"
             @click="choseBuyer"
            >选择买家</van-button>
         </h3>
@@ -196,31 +197,20 @@
         <div class="realName-conten-inner">
             <van-row style="font-size: 14px;text-align: center;">
               <van-col span="8">
-                每十万扣款(元)
+                每十万收益(元)
               </van-col>
               <van-col span="8">
                 年化利率(%)
               </van-col>
               <van-col span="8">
-                成交金额(元)
+                转让金额(元)
               </van-col>
             </van-row>
             <van-row>
               <van-col span="8">
                 <van-field
                   v-reset-page
-                  v-model.trim="sell.deductAmount"
-                  @input="typeChange(1)"
-                  type="number"
-                  clearable
-                  v-money-limit
-                  placeholder="每十万扣款(元)"
-                />
-              </van-col>
-
-              <van-col span="8">
-                <van-field
-                  v-reset-page
+                  v-money-limit="4"
                   v-model.trim="sell.approvalApr"
                   @input="typeChange(2)"
                   type="number"
@@ -231,12 +221,23 @@
               <van-col span="8">
                 <van-field
                   v-reset-page
+                  v-model.trim="sell.deductAmount"
+                  @input="typeChange(1)"
+                  type="number"
+                  clearable
+                  v-money-limit
+                  placeholder="每十万收益(元)"
+                />
+              </van-col>
+              <van-col span="8">
+                <van-field
+                  v-reset-page
                   v-money-limit
                   v-model.trim="sell.turnVolume"
                   @input="typeChange(3)"
                   type="number"
                   clearable
-                  placeholder="成交金额(元)"
+                  placeholder="转让金额(元)"
                 />
               </van-col>
             </van-row>
@@ -245,8 +246,8 @@
       <div>
         <van-row>
           <van-col span="24">
-            <van-button v-if="pageType == 0" @click="submit" type="info" style="width:100%;">立即发布</van-button>
-            <van-button v-if="pageType == 1" @click="change" type="info" style="width:100%;">发布</van-button>
+            <van-button class="baseBtn" v-if="pageType == 0" @click="submit" type="info" style="width:100%;">立即发布</van-button>
+            <van-button class="baseBtn" v-if="pageType == 1" @click="change" type="info" style="width:100%;">发布</van-button>
           </van-col>
         </van-row>
       </div>
@@ -283,26 +284,27 @@
         <div style="width: 100%;height: 100%;padding-bootom: 50px;position: absolute;
         left:0;top:0;overflow-y:scroll;">
           <van-search placeholder="可输入企业名称筛查" v-model="toBuyerInput" />
-          <van-radio-group v-model="toBuyerRadio.companyId" >
+          <van-radio-group v-model="toBuyerRadio.companyId" style="padding-bottom: 70px;">
             <van-cell-group>
               <van-cell v-for="(item, index) in searchList"
                 :key="index"
-                :title="item.companyName" 
+                
                 clickable 
                 v-show="checkRadioIsShow(item.companyName)"
                 @click="choseRadioItem(item)"
                 >
+                <span slot="title" style="width: 150%;display: inline-block;">{{item.companyName}}</span>
                 <van-radio :name="item.companyId"  @click="choseRadioItem(item)" />
               </van-cell>
             </van-cell-group>
           </van-radio-group>
         </div>
-        <van-row style="margin-top: 20px;position: fixed;left:0;bottom:0;width: 100%;">
+        <van-row style="margin-top: 20px;position: fixed;left:0;bottom:0;width: 100%;background: #fff;padding: 10px 0;">
           <van-col span="10" offset="1">
-            <van-button type="default" style="width:100%;" @click="toBuyModelClose">取消</van-button>
+            <van-button  type="default" style="width:100%;" @click="toBuyModelClose">取消</van-button>
           </van-col>
           <van-col span="10" offset="2">
-            <van-button type="info" style="width:100%;" @click="toBuyModelConfirm">确认</van-button>
+            <van-button class="baseBtn" type="info" style="width:100%;" @click="toBuyModelConfirm">确认</van-button>
           </van-col>
         </van-row>
       </div>
@@ -463,7 +465,7 @@ import _common from '@/server/index'
 
         this.$dialog.confirm({
           title: '确认离开',
-          message: '确认离开该页面么，系统将不会保存当前页面的信息？'
+          message: '请注意当前页面无法保存您输入的信息，离开此页面再回来需要全部重新填写'
         }).then(() =>{
           next();
         }).catch(()=>{
@@ -1088,7 +1090,7 @@ import _common from '@/server/index'
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #0079f3;
+  background: #c00;
   vertical-align: 2px;
   margin-right: 7px;
 }

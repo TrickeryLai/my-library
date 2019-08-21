@@ -140,12 +140,12 @@ let commonUrl = {
       //   return pass;
       
      // 加权因子
-        var weight_factor = [7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2];
+      var weight_factor = [7,9,10,5,8,4,2,1,6,3,7,9,10,5,8,4,2];
      // 校验码
-     var check_code = ['1', '0', 'X' , '9', '8', '7', '6', '5', '4', '3', '2'];
+      var check_code = ['1', '0', 'X' , '9', '8', '7', '6', '5', '4', '3', '2'];
   
       var code = idcode + "";
-    var last = idcode[17];//最后一个
+      var last = idcode[17];//最后一个
 
      var seventeen = code.substring(0,17);
  
@@ -293,6 +293,50 @@ let commonUrl = {
       }
       return value.substr(value.length - n, n);
     },
+
+    formatLastTime(t, format = 'mm:ss'){
+      if(t <= 0){
+        t = 0;
+      }
+      let date = '', lsT = t, y, M, d, h, m, s;
+
+      y = Math.floor(lsT/(365*24*60*60));
+      lsT = lsT % (365*24*60*60);
+      M = Math.floor(lsT/(30*24*60*60));
+      lsT = lsT % (30*24*60*60);
+      d = Math.floor(lsT/(24*60*60));
+      lsT = lsT % (24*60*60);
+      h = Math.floor(lsT/(60*60));
+      lsT = lsT % (60*60);
+      m = Math.floor(lsT/(60));
+      lsT = lsT % (60);
+      s = lsT;
+
+      if(format.indexOf('yyyy') < 0){
+        M += (y * 365);
+      }
+      if(format.indexOf('MM') < 0){
+        d += (M * 30);
+      }
+      if(format.indexOf('dd') < 0){
+        h += (d * 24);
+      }
+      if(format.indexOf('hh') < 0){
+        m += (h * 60);
+      }
+      if(format.indexOf('mm') < 0){
+        s += (m * 60);
+      }
+
+      format = format.replace('yyyy', y);
+      format = format.replace('MM', M);
+      format = format.replace('dd', d);
+      format = format.replace('hh', h);
+      format = format.replace('mm', m);
+      format = format.replace('ss', s);
+      return format;
+    },
+
     changeNumToTex(n) {
       //数字转换为大小写
         if(!n){

@@ -80,8 +80,8 @@
 						>
 							<template slot="title">
 
-								<div @click="showDetail(item)" style="position: absolute;right:15px;top: 10px;z-index: 10;">
-									<van-button style="background:#c00;border-color:#c00;color:#fff;" size="small">票据详情</van-button>
+								<div @click="showDetail(item)" style="position: absolute;right:15px;top: 40px;z-index: 10;">
+									<van-button class="baseBtn" size="small">我要买</van-button>
 								</div>
 										
 								<van-row class="van-hairline--bottom text-left">
@@ -110,6 +110,30 @@
 										年化利率：
 										<span class="black-font">
 											{{item.approvalApr && (item.approvalApr-0).toFixed(4)}}%
+										</span>
+									</van-col>
+								</van-row>
+								<van-row class="van-hairline--bottom text-left">
+									<van-col span="24">
+										每十万收益：
+										<span class="black-font">
+											{{item.deductAmount && dealPrice((item.deductAmount).toFixed(2))}}元
+										</span>
+									</van-col>
+								</van-row>
+								<van-row class="van-hairline--bottom text-left">
+									<van-col span="24">
+										转让金额：
+										<span v-if="item.turnVolume > 10000" class="black-font text-left">
+											<span class="price-txt">
+												{{item.turnVolume && dealPrice((item.turnVolume/10000).toFixed(2))}}
+											</span>
+											<span class="small-font">万元</span>
+										</span>
+										<span v-else class="black-font text-left">
+											<span  class="price-txt">{{item.turnVolume && dealPrice((item.turnVolume).toFixed(2))}}
+											</span>
+											<span class="small-font">元</span>
 										</span>
 									</van-col>
 								</van-row>
@@ -147,33 +171,6 @@
 										</span>
 									</van-col>
 								</van-row>
-							<!-- <van-row  class="van-hairline--bottom" style="overflow: hidden;">
-								<van-col span="4">
-									<span class="xy-txt" v-if="item.creditRating == 1">优秀</span>
-									<span class="xy-txt" v-else-if="item.creditRating == 2">良好</span>
-									<span class="xy-txt" v-else-if="item.creditRating == 3">一般</span>
-									<span style="color: #eee;padding: 0 2px;">|</span>
-								</van-col>
-								<van-col span="10" class="van-ellipsis text-left">
-									承兑人：{{item.acceptor}}
-								</van-col>
-								<van-col span="5" style="text-align:right;" class="blue-font">(剩{{getLastTime(item.dueDate)}}天)
-								</van-col>
-								<van-col span="5">
-									<van-tag type="success" v-if="item.cpStatus == 1">审核中</van-tag>
-									<van-tag type="danger" v-else-if="item.cpStatus == 2">撮合成功</van-tag>
-									<van-tag v-else-if="item.cpStatus == 3">已注销</van-tag>
-									<van-tag type="primary" v-else-if="item.cpStatus == 4">我要买</van-tag>
-									<van-tag type="success" v-else-if="item.cpStatus == 6">已成交</van-tag>
-									<van-tag v-else-if="item.cpStatus == 7">买方违约</van-tag>
-									<van-tag v-else-if="item.cpStatus == 8">卖方违约</van-tag>
-								</van-col>
-							</van-row> -->
-							<!-- <van-row style="margin-top: 5px;">
-								
-								<van-col span="8" class="black-font">{{spliceTime(item.createTime)}}</van-col>
-								<van-col span="7" class="black-font">{{item.dueDate}}</van-col>
-							</van-row> -->
 						</template>
 					</van-cell>
 				</van-list>
@@ -373,10 +370,18 @@ import logoImg from '@/assets/logo.jpg'
 	      	if (this.pageData.pageNum == 1) {
 	      		this.list = [];//不清空，在滚动至多页的时候，重新刷新会一直触发onload
 	      	}
+	      	
 	        //查询条件
 	        data = Object.assign({}, initData, data);
+	        let url;
+	        if(localStorage.getItem('loginData')){
+	        	url = '/businessTickets/queryBussinessTickets';
+	        }else{
+	        	url = false;
+	        }
+
 	        //获取列表数据
-	        _server.getBusinessTickets(data).then((response) => {
+	        _server.getBusinessTickets(data, url).then((response) => {
 	        	this.isGetData = false;
 	        	this.loading = false;
 	        	this.isLoading = false;
@@ -491,7 +496,8 @@ import logoImg from '@/assets/logo.jpg'
     		acceptor: data.acceptor ? data.acceptor : '' ,
     		startDate: data.startDate ? data.startDate : '', 
     		endDate: data.endDate ? data.endDate : '',
-    		cpNo: data.cpNo ? data.cpNo : '' 
+    		cpNo: data.cpNo ? data.cpNo : '' ,
+    		whiteListFlag: data.whiteListFlag ? data.whiteListFlag : '',
           // onlyShow: data.onlyShow
       	};
       	this.searchData = searchData;

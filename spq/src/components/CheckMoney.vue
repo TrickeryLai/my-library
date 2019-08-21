@@ -11,11 +11,11 @@
 	  	</van-nav-bar>
 		<div class="checkMoney-page" v-show="!nextStepStatus">
 			<p class="checkMoney-page-topTitle">剩余填写金额时间 <span style="color:#c00;" id="lastTime">{{lastTime}}</span></p>
-			<p style="color: #999;">已向您的银行转入一笔资金，请注意查收</p>
+			<p style="color: #999;">已向您绑定的结算账户转入一笔资金，请注意查收</p>
 			<p class="checkMoney-page-black">付款方：<span style="color:#c00;">中金支付有限公司客户备付金</span></p>
 			<p style="font-size:14px;padding-bottom:20px;font-weight: normal;">预计10分钟内到账</p>
 			<div style="display: inline-block;margin-top: 20px;margin-bottom: 5px;">
-				<input type="text" class="checkMoney-input" id="checkMoneyInput" v-model.trim="submitData.checkMoneyInput" name="" placeholder="请输入您的银行收到的资金的数目(元)">
+				<input type="number" class="checkMoney-input" id="checkMoneyInput" v-model.trim="submitData.checkMoneyInput" name="" placeholder="请输入您收到的资金数目（元）">
 				<!-- <van-field
 		          v-model.trim="submitData.checkMoneyInput"
 		          clearable
@@ -25,15 +25,29 @@
 			</div>
 			<p class="checkMoney-page-tip">提示：<span style="color:#c00;">您只有三次机会，请仔细填写哦</span></p>
 			<div style="margin-top: 30px;">
-				<button type="button" class="btn btn-default checkMoney-btn" @click="checkMoney">下一步</button>
+				<van-button 
+					style="background: #c00;color: #fff;"
+					@click="checkMoney"
+					>下一步</van-button>
+				<!-- <button type="button" class="btn btn-default checkMoney-btn" @click="checkMoney">下一步</button> -->
 			</div>
 		</div>
 		<div class="checkMoney-page" v-show="nextStepStatus">
 			<p class="checkMoney-page-topTitle" style="font-size: 18px;width: 70%;display:inline-block;">您在银行开立的交易账户正在审核中，请耐心等待短信通知；当前发布票据不受影响，票据报价和报价撮合功能暂时不允许交易，需账户激活后才能完成</p>
 			<p class="checkMoney-page-tip">提示：<span style="color:#c00;">如未进行激活操作，请先点击激活按钮进行激活</span></p>
 			<div style="margin-top: 30px;">
-				<button v-show="!isOpenAgain" type="button" class="btn btn-default checkMoney-btn" id="active" @click="gotoActivePage">激活</button>
-				<button v-show="isOpenAgain" type="button" class="btn btn-default checkMoney-btn" id="openAgain" @click="gotoOpenAmountAgain">重新开户</button>
+				<van-button 
+					v-show="!isOpenAgain"
+					style="background: #c00;color: #fff;"
+					@click="gotoActivePage"
+					>激活</van-button>
+				<van-button 
+					style="background: #c00;color: #fff;"
+					v-show="isOpenAgain"
+					@click="gotoOpenAmountAgain"
+					>重新开户</van-button>
+				<!-- <button v-show="!isOpenAgain" type="button" class="btn btn-default checkMoney-btn" id="active" @click="gotoActivePage">激活</button>
+				<button v-show="isOpenAgain" type="button" class="btn btn-default checkMoney-btn" id="openAgain" @click="gotoOpenAmountAgain">重新开户</button> -->
 			</div>
 		</div>
 
@@ -326,6 +340,7 @@
 	.checkMoney-input{
 		border: 1px solid #ccc;
 		padding: 8px;
+		width: 100%;
 	}
 	.checkMoney-btn{
 		padding: 5px 8px;

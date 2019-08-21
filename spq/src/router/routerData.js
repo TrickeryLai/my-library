@@ -34,6 +34,12 @@ import CheckMoneyCommon from '@/components/CheckMoneyCommon';
 import OrderNewDetail from '@/components/OrderNewDetail';
 import PriceAgain from '@/components/PriceAgain';
 import CashDetail from '@/components/CashDetail';
+import PromisePre from '@/components/PromisePre';
+import WhiteName from '@/components/WhiteName';
+import ChoseCompany from '@/components/ChoseCompany';
+
+import BindWechat from '@/components/BindWechat';
+import BindWechatPushPage from '@/components/BindWechatPushPage';
 
 import PushPage from '@/components/PushPage';
 
@@ -47,6 +53,15 @@ let routerData = {
         isNChecked: false,
     },
     component: PushPage
+  },
+  {
+    path: '/choseCompany',
+    name: 'ChoseCompany',
+    meta:{
+        isLogin: false,
+        isNChecked: false,
+    },
+    component: ChoseCompany
   },
   {
     path: '/home',
@@ -297,6 +312,15 @@ let routerData = {
     component: CashDetail
   },
   {
+    path: '/whiteName',
+    name: 'WhiteName',
+    meta:{
+      isLogin: true,
+      isNChecked: true,
+    },
+    component: WhiteName
+  },
+  {
       path: '/matchUp',
       name: 'MatchUp',
       meta:{
@@ -304,6 +328,15 @@ let routerData = {
         isNChecked: false,
       },
       component: MatchUp
+  },
+  {
+    path: '/promisePre',
+    name: 'PromisePre',
+    meta: {
+      isLogin: true,
+      isNChecked: false,
+    },
+    component: PromisePre
   },
   {
       path: '/orderNewDetail',
@@ -358,7 +391,27 @@ let routerData = {
       isNChecked: false,
     },
     component: ForgetUserName
-  }
+  },
+
+  {
+    path: '/bindWechat',
+    name: 'BindWechat',
+    meta:{
+      isLogin: false,
+      isNChecked: false,
+    },
+    component: BindWechat
+  },
+  {
+    path: '/bindWechatPushPage',
+    name: 'BindWechatPushPage',
+    meta:{
+      isLogin: false,
+      isNChecked: false,
+    },
+    component: BindWechatPushPage
+  },
+
   ]
 }
 

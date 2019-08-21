@@ -99,6 +99,7 @@
     <van-button 
       v-if="btnTxt"
       type="info" 
+      class="baseBtn"
       style="width: 100%;margin-top: 10px;"
       @click="addFn">{{btnTxt}}</van-button>
   </div>

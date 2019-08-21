@@ -95,6 +95,31 @@ let server = {
         });
     })
   },
+
+   getSmsCaptchaCheck(obj){
+    let url = project + version + '/smsCaptchaOfTransactor?';
+
+    for(let key in obj){
+      url += `${key}=${obj[key]}&`;
+    }
+    return new Promise((resolve, reject) => {
+      Axios.get({
+        url: url,
+        }).then((response) => {
+
+          return resolve(response);
+              //请求成功返回的数据
+              if(response.captchaKey){
+                callback && callback(response);
+              }else{
+                response.errMsg && Toast(response.errMsg);
+                }
+            })
+        .catch((error) => {
+          return reject(error);
+        });
+    })
+  },
 	/**
 	 * [登录]
 	 * @param  {[type]}   data     [axios 传递的数据]
@@ -256,8 +281,11 @@ let server = {
 	 * @param  {Function} callback [description]
 	 * @return {[type]}            [description]
 	 */
-	getBusinessTickets(data, callback){
-		let url = project + version + '/businessTickets';
+	getBusinessTickets(data, url){
+    if(!url){
+      url = '/businessTickets';
+    }
+		url = (project + version + url);
     return new Promise((resolve, reject) => {
       Axios.post({
         isLoading: true,
@@ -267,7 +295,7 @@ let server = {
       }).then((response) => {
         if(response.code == 0 || response.code == 110008){
           return resolve(response);
-          callback && callback(response);
+          
         }else{
           response.errMsg && Toast(response.errMsg);
           return reject(response);
@@ -1752,7 +1780,174 @@ let server = {
           return reject(error);
         })
       })
+    },
+
+    contract(data){
+      let url = project + version + '/cpOrder/contract?';
+
+      for(let i in data){
+        url += `${i}=${data[i]}&`;
+      }
+
+      return new Promise((resolve, reject) => {
+        Axios.get({
+          url
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    contractSms(data){
+      let url = project + version + '/cpOrder/contract/sms';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isLoading: true,
+          isdeal: true,
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    contractConfirm(data){
+      let url = project + version + '/cpOrder/contract/confirm';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+          isLoading: true
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    getWhiteNameList(data){
+      let url = project + version + '/acceptorWhiteList?';
+
+      for(let i in data){
+        url += `${i}=${data[i]}&`;
+      }
+
+      return new Promise((resolve, reject) => {
+        Axios.get({
+          url,
+          isLoading: true
+        }).then(response => {
+          return resolve(response);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    insertData(data){
+      let url = project + version + '/acceptorWhiteList/insert';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isLoading: true,
+        }).then((res) => {
+          return resolve(res);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    delAcceptorWhiteList(id){
+      let url = project + version + '/acceptorWhiteList/' + id;
+
+      return new Promise((resolve, reject) => {
+        Axios.deleteN({
+          url,
+        }).then((res) => {
+          return resolve(res);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    bindWechat(data){
+      let url = project + version + '/acceptorWhiteList';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isLoading: true,
+          isdeal: true,
+        }).then(res => {
+          return resolve(res);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    updateCompanyInfo(data){
+      let url = project + version + '/company/updateInfo';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isLoading: true,
+        }).then(res => {
+          return resolve(res);
+        }).catch(error => {
+          return reject(error);
+        })
+      })
+    },
+
+    getCompanies(){
+      let url = project + version + '/companies';
+
+      return new Promise((resolve, reject) => {
+        Axios.get({
+          url,
+          isLoading: true
+        }).then( res => {
+          return resolve(res);
+        }).catch( error => {
+          return reject(error);
+        })
+      })
+    },
+
+    changeCompany(data){
+      let url = project + version + '/companies/change';
+
+      return new Promise((resolve, reject) => {
+        Axios.post({
+          url,
+          data,
+          isdeal: true,
+          isLoading: true,
+        }).then( res => {
+          return resolve(res);
+        }).catch( error => {
+          return reject(error);
+        })
+      })
     }
+    
 }
 
 export default server;

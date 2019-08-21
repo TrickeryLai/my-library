@@ -139,7 +139,7 @@
 					</van-row>
 					<van-row class="detail-row-special" v-if="initData.cpStatus == '04'">
 						<van-col class="detail-row-left" span="12">年化利率</van-col>
-						<van-col class="detail-row-left" span="12">每十万扣款</van-col>
+						<van-col class="detail-row-left" span="12">每十万收益</van-col>
 						<van-col class="detail-row-left" span="24">
 							<van-field
 							v-reset-page
@@ -158,12 +158,12 @@
 							class="detail-small-input w-35p"
 							v-model.trim="submit.reduceAmount"
 							@input="changeData(2, submit.reduceAmount)" 
-							placeholder="每十万扣款"
+							placeholder="每十万收益"
 							type="number" />
 							<span>元/十万</span>
 						</van-col>
 						<van-col span="24">
-							<span class="detail-row-left">成交金额（元）</span>
+							<span class="detail-row-left">转让金额（元）</span>
 							<van-field 
 							v-reset-page
 							v-money-limit="2"
@@ -171,7 +171,7 @@
 							class="detail-small-input" 
 							v-model.trim="submit.dealAmount" 
 							@input="changeData(3, submit.dealAmount)"
-							placeholder="成交金额"
+							placeholder="转让金额"
 							type="number" />
 						</van-col>
 					</van-row>
@@ -185,6 +185,7 @@
 					<van-button
 						v-if="initData.cpStatus == '04'"
 						type="info"
+						class="baseBtn"
 						style="width: 100%;height: 100%;"
 						@click="okFn">确认报价</van-button>
 				</div>
@@ -209,12 +210,13 @@
 	// 01-审核中；02-成交；03-注销;04-报价中;05-审核失败
 	export default{
 		name: 'DetailList',
-		props: ['showState', 'initData', 'item'],
+		
 		components:{PriceList},
 		data(){
 			return {
 				commonFn: _common.common_fn,
 				finished:true,
+				confirmAgain: false,
 				isPreviewPic: false,
 				show: this.showState,
 				initD: this.initData,
@@ -263,6 +265,8 @@
 				}
 			}
 		},
+
+		props: ['showState', 'initData', 'item'],
 		methods: {
 			touchmove(e){
 				// e.stopPropagation();
@@ -270,6 +274,9 @@
 			},
 			transformRate(rate){
 				this.initData.creditRating = 6 - this.initData.creditRating;
+			},
+			confirmAgainClose(){
+				this.confirmAgain = false;
 			},
 			setTimeoutFn(){
 				//如果不是报价状态，则可用取消查询
@@ -380,11 +387,11 @@
 					return;
 				}
 				if(parseFloat(this.submit.dealAmount) < 0){
-					this.$toast('成交金额不能小于0！');
+					this.$toast('转让金额不能小于0！');
 					return;
 				}
 				if(parseFloat(this.submit.dealAmount) > parseFloat(this.initData.cpAmount)){
-					this.$toast('成交金额不能大于票面金额！');
+					this.$toast('转让金额不能大于票面金额！');
 					return;
 				}
 
@@ -400,7 +407,7 @@
  					
  				})
           	},
-			ok(){
+			ok(isSure){
 				let currentPath = this.$router.history.current.fullPath;
 				let _this = this;
 				//判断是否验证
@@ -424,11 +431,25 @@
 					turnVolume: this.submit.dealAmount
 				};
 
+				if(isSure){
+					data.confirm = 'Y';
+				}
 				_server.insertQuotedInfo(data, (response) => {
+
 					if(response.code == 0){
 						this.$toast('操作成功');
 						this.$emit("ok");
 						this.modelClose();
+					}else if(response.code == 400025){
+						this.$dialog.confirm({
+							title: '确认报价',
+							// message: '取消发布会影响信用评价,是否确认取消发布?'
+							message: '该票据今日已被该发布人发布并转让完成，建议查看票据信息准确性后再报价，谢谢'
+						}).then(() => {
+							_this.ok(true);
+						}).catch(error=>{
+
+						})
 					}else{
 						_this.$toast(response.errMsg);
 					}

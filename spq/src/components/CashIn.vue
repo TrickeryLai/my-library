@@ -21,7 +21,7 @@
 		  			</van-col>
 		  		</van-row>
 		  		<van-row class="text-line">
-		  			<van-col span="6">行号；</van-col>
+		  			<van-col span="6">行号：</van-col>
 		  			<van-col span="14">{{pageData.bankNo}}</van-col>
 		  			<van-col span="4" class="copyBtn" >
 			  			<copy-btn :copy-value="pageData.bankNo"></copy-btn>

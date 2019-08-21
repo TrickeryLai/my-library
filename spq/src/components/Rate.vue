@@ -40,6 +40,7 @@
 			<van-button 
 	          style="width: 100%;"
 	          type="info"
+	          class="baseBtn"
 	          @click="submitInfo"
 	        >提交</van-button>
 		</div>

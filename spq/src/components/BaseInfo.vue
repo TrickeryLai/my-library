@@ -87,7 +87,7 @@
       </van-row>
     </van-cell-group>
     <van-cell-group class="baseInfo-box">
-      <van-button @click="loginOut" type="info" style="width:100%;"> 退出登录 </van-button>
+      <van-button @click="loginOut" type="info" style="width:100%;" class="baseBtn"> 退出登录 </van-button>
     </van-cell-group>
   </div>
 </template>

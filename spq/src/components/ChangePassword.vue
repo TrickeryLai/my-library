@@ -38,7 +38,8 @@
 			</van-cell-group>
 
 			<div style="padding: 5px;">
-				<van-button 
+				<van-button
+				class="baseBtn" 
 				style="width: 100%;"
 				type="info"
 				@click="submitInfo"
@@ -81,8 +82,14 @@
 					this.$toast('请输入原密码！');
 					return false;
 				}
+				
 				if(this.submitData.newPwd !== this.submitData.confirmPwd){
 					this.$toast('两次密码输入不一致！');
+					return false;
+				}
+
+				if(!_common.common_reg.password(this.submitData.newPwd)){
+					this.$toast('密码应为6-20位的字母、数字！');
 					return false;
 				}
 				return true;

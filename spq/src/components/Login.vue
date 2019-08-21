@@ -37,7 +37,7 @@
 							v-reset-page
 							class="van-hairline--surround register-input"
 							style="display:inline-block;margin:0;padding:0;" 
-							v-model.trim="register.username" placeholder="请输入用户名"
+							v-model.trim="register.username" placeholder="请输入用户名或手机号"
 							type="text" />
 
 					</van-col>
@@ -305,7 +305,13 @@ export default{
 
 					localStorage.setItem('userId', JSON.stringify(response.user.userId));
 					localStorage.setItem('phonenumber', JSON.stringify(response.user.phonenumber));
-					this.$router.replace({path});
+
+					if(response.companies){
+						this.$router.replace({path: '/choseCompany'});
+					}else{
+						this.$router.replace({path});
+					}
+					
             	//注册成功
                 }else if(response.code == 110008){
                 	//验证码已失效

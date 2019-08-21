@@ -91,7 +91,8 @@
         </van-radio-group>
       </van-col>
     </van-row>
-    <van-button 
+    <van-button
+      class="baseBtn" 
       type="info" 
       style="width: 100%;margin-top: 10px;"
       @click="addFn">修改</van-button>

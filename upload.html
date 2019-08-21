@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<div>
+	<input type="file" name="" id="inputFile">
+	<button type="button" id="btn">Btn</button>
+</div>
+
+</body>
+</html>
+
+<script type="text/javascript">
+
+	var ajax = function(setting){
+		var xhr = new XMLHttpRequest();
+		xhr.withCredentials = true;
+
+		xhr.addEventListener("readystatechange", function () {
+		  if (this.readyState === 4) {
+		    // console.log(this.responseText);
+		    setting.success(this.responseText);
+		  }
+		});
+
+		xhr.open(setting.type, setting.url);
+
+		if(setting.requestHeader){
+			for(var requestHeaderKey in setting.requestHeader){
+				xhr.setRequestHeader(requestHeaderKey, setting.requestHeader[requestHeaderKey]);
+			}
+		}
+		
+		xhr.send(setting.data);
+	};
+
+
+	document.getElementById("btn").addEventListener("click", function(){
+		var files, reader, file, data;
+		files = document.getElementById("inputFile").files;
+
+		//如果没有选择文件
+		if(files.length <= 0){
+			console.log('选择文件')
+			return;
+		}
+		//上传的文件
+    	file = files[files.length - 1];
+    	console.log(file)
+    	// reader = new FileReader();
+    	// reader.readAsDataURL(file); 
+    	data = new FormData();
+		data.append("app_key", "40e28c95a94743ec8e90283d766f9a60");
+		data.append("app_secret", "33a5d2767fc0233f8e73219f89eb029d");
+		// data.append("image_binary", "/Users/jacksonshawn/Documents/VNB/商票之家/01 图片资料/商票图片整理包/E_front.jpeg");
+		
+		data.append("image_binary", file);
+        
+		//发送请求
+		ajax({
+			type: "POST",
+			url:"api/ocr/v1/general",
+			data: data,
+			requestHeader: {
+				"Content-Type": "application/x-www-form-urlencoded",
+				"User-Agent": "PostmanRuntime/7.15.0",
+				"Accept": "*/*",
+				"Cache-Control": "no-cache",
+				"Postman-Token": "5bd81f95-635d-47d4-9b67-af742534188b,cc32400e-0b2d-453f-b97b-414e5371d468",
+				"Host": "api.exocr.com",
+				"accept-encoding": "gzip, deflate",
+				"content-length": "85539",
+				"Connection": "keep-alive",
+				"cache-control": "no-cache"
+			},
+			success: function(res){
+				//回调处理
+				
+			},
+		})
+	})
+</script>

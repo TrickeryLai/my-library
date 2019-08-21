@@ -33,7 +33,7 @@
 		</van-cell-group>
 		<van-row style="margin-top: 20px;">
 			<van-col span="24">
-				<van-button type="danger" style="width: 100%;" :disabled="!cashOutValue" @click="cashOutBtnFn">确认提现</van-button>
+				<van-button class="baseBtn" style="width: 100%;" :disabled="!cashOutValue" @click="cashOutBtnFn">确认提现</van-button>
 			</van-col>
 		</van-row>
 		<van-popup v-model="bankListStatus" position="bottom" style="width: 100%;padding: 20px 0;max-height:350px;overflow-y: scroll;">

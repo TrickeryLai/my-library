@@ -67,6 +67,11 @@
 				</td>
 			</tr>
 		</table> -->
+		<div v-if="!list  || list.length <= 0">
+			<van-row>
+				无报价信息！
+			</van-row>
+		</div>
 		<div 
 			v-for="(item, index) in list"
 			:key = "index"
@@ -90,7 +95,7 @@
 				<van-col span="16">{{item.approvalApr && (item.approvalApr - 0).toFixed(4)}} %</van-col>
 			</van-row>
 			<van-row>
-				<van-col span="8">竞价每十万扣款</van-col>
+				<van-col span="8">竞价每十万收益</van-col>
 				<van-col span="16">{{item.deductAmount}}&nbsp元</van-col>
 			</van-row>
 			<!-- <van-row>
@@ -200,6 +205,7 @@
 	          	})
 			},
 			getSellCoast(item){
+				
 				//查询卖家的相关金额
 				_server.sellerCosts({
 					ordNo: this.baseData.ordNo,
@@ -209,7 +215,7 @@
 						let data = res.data;
 						this.$dialog.confirm({
 							title: '确认撮合',
-							message: '保证金：' + data.securityDeposit + '元<br/>手续费：'+data.fee +'元<br/>票面金额：'+data.cpAmt+'元<br/>利息：'+data.discountInterest+'元',
+							message: '保证金：' + _common.common_fn.dealPrice(data.securityDeposit.toFixed(2)) + '元<br/>手续费：'+  _common.common_fn.dealPrice(data.fee.toFixed(2))  +'元<br/>票面金额：'+ _common.common_fn.dealPrice(data.cpAmt.toFixed(2))+'元<br/>成本：'+_common.common_fn.dealPrice(data.discountInterest.toFixed(2))+'元',
 						}).then(() => {
 							this.biddingFn(item);
 						}).catch(()=>{
@@ -264,6 +270,8 @@
 						}).catch(()=>{
 							_this.getData(_this.baseData.ordNo);
 						})
+					}else{
+						this.$toast(res.errMsg);
 					}
 				})
 			},

@@ -34,20 +34,20 @@
 		  	</van-cell-group>
 		  	<van-cell-group class='txt-box'>
 		  		<van-row class="txt-box-line">
-			  		<van-col span="6">户名：</van-col>
-			  		<van-col span="18" class="txt-box-line-right">{{pageData.accountName || '-'}}</van-col>
+			  		<van-col span="9"><span style="letter-spacing: 16px;">户名</span>：</van-col>
+			  		<van-col span="15" class="txt-box-line-right">{{pageData.accountName || '-'}}</van-col>
 			  	</van-row>
 			  	<van-row class="txt-box-line">
-			  		<van-col span="6">交易账号：</van-col>
-			  		<van-col span="18" class="txt-box-line-right">{{pageData.subAcNo || '-'}}</van-col>
+			  		<van-col span="9"><span>交易账号</span>：</van-col>
+			  		<van-col span="15" class="txt-box-line-right">{{pageData.subAcNo || '-'}}</van-col>
 			  	</van-row>
 			  	<van-row class="txt-box-line">
-			  		<van-col span="6">开户行：</van-col>
-			  		<van-col span="18" class="txt-box-line-right">{{pageData.bankName || '-'}}</van-col>
+			  		<van-col span="9"><span style="letter-spacing: 5px;">开户行</span>：</van-col>
+			  		<van-col span="15" class="txt-box-line-right">{{pageData.bankName || '-'}}</van-col>
 			  	</van-row>
 			  	<van-row class="txt-box-line">
-			  		<van-col span="6">大额行号：</van-col>
-			  		<van-col span="18" class="txt-box-line-right">{{pageData.bankNo || '-'}}</van-col>
+			  		<van-col span="9"><span>大额行号</span>：</van-col>
+			  		<van-col span="15" class="txt-box-line-right">{{pageData.bankNo || '-'}}</van-col>
 			  	</van-row>
 		  	</van-cell-group>
 		  </div>

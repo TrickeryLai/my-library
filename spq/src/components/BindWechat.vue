@@ -1,13 +1,13 @@
 <template>
 	<div>
 		<van-nav-bar
-		left-arrow
+		
 		fixed
-		@click-left="onClickLeft"
+		
 		class="top-bg"
 		>
 			<span slot="title" class="top-bg-title">{{title}}</span>
-			<i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
+			<!-- <i class="iconfont icon-previous_step top-bg-title" slot="left"></i> -->
 		</van-nav-bar>
 		<div style="padding: 10px;background: #fff;">
 			<van-cell-group>
@@ -20,8 +20,7 @@
 						v-reset-page
 						class="van-hairline--surround register-input"
 						style="display:inline-block;margin:0;padding:0;" 
-						v-model="oldPhone"
-						readonly
+						v-model.trim="oldPhone"
 						type="number"
 						
 						/>
@@ -63,8 +62,9 @@
 				style="width: 100%;"
 				type="info"
 				class="baseBtn"
-				@click="verifyMobileNumber()"
-				>下一步</van-button>
+				:disabled="!oldPhone || !smsCaptcha || !smsCaptchaKey"
+				@click="bindWechat()"
+				>绑定</van-button>
 			</div>
 			
 		</div>
@@ -74,12 +74,14 @@
 <script>
 
   	import _server from '@/server/server';
+  	import _common from '@/server/index';
 	export default {
-		name: 'ChangePhone',
+		name: 'BindWechat',
 		data(){
 			return {
-				title: '修改登录手机号',
+				title: '绑定手机号',
 				oldPhone: '',
+				code: '',
 				smsCaptchaTxt: '获取验证码',
 				smsCaptchaKey: '',
 				getSmsAgainTime: 61,
@@ -90,24 +92,13 @@
 			}
 		},
 		created(){
-			//获取登录的手机号返显
-			// let phone = JSON.parse(localStorage.getItem('phonenumber'));
-			// this.oldPhone = phone;
-			this.getCompanyInfo();
+			if(this.$route.query.code){
+				this.code = this.$route.query.code;
+			}
 		},
 		methods:{
 			onClickLeft(){
 				window.history.go(-1);
-			},
-			getCompanyInfo(){
-				let _id = localStorage.getItem('userId') ? JSON.parse(localStorage.getItem('userId')): '';
-             	_server.getCompanyDataInfo(_id).then((res)=>{
-                    if(res.code == 0){
-                      this.oldPhone = res.legalPersonPhone;
-                    }else{
-                      this.$toast(res.errMsg)
-                    }
-                  })
 			},
 			getSmsAgain(){
 				let smsCaptchaTxt = '再次获取', intervaler;
@@ -124,10 +115,13 @@
 				}, 1000)
 			},
 			getSmsCaptcha(){
+				if(!_common.common_reg.phone(this.oldPhone)){
+					this.$toast('请输入正确的手机号！');
+					return;
+				}
 				//获取短信验证码
 				_server.getSmsCaptcha1({
 					phoneNumber: this.oldPhone,
-					type: '05'
 				}).then(res => {
 					if(res.errMsg){
 						this.$toast(res.errMsg);
@@ -141,17 +135,24 @@
 				})
 			},
 
-			verifyMobileNumber(){
+			bindWechat(){
+				this.$toast('已过期');
+				this.$router.go({path: '/bindWechatPushPage'});
+				return;
 				//验证旧手机号
 				let data = {
 					oldPhoneNumber: this.oldPhone,
                 	smsCaptchaKey: this.smsCaptchaKey,
-                	smsCaptcha: this.smsCaptcha
+                	smsCaptcha: this.smsCaptcha,
+                	code: this.code
 				};
-				_server.verifyMobileNumber(data).then(res => {
+				_server.bindWechat(data).then(res => {
 					if(res.code == 0){
-						this.$router.replace({path: '/home/selfInfo/changePhoneNext'});
-						this.$toast('旧手机号验证成功！')
+						this.$toast('绑定成功')
+					}else if(res.code == 1111){
+						//过期的时候
+						this.$toast('已过期');
+						this.$router.go({path: '/bindWechatPushPage'});
 					}else{
 						this.$toast(res.errMsg);
 					}

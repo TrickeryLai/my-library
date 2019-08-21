@@ -203,7 +203,7 @@ export default{
 				};
 			_server.forgetLoginName(data).then((response) =>{
 				if(response.code == 0){
-						this.$toast('账号稍后将会以短信形式发送给您！');
+						this.$toast('用户名稍后将会通过短信发送至您的手机号，请注意查收并留意手机短信拦截问题！');
 						
 		        }else if(response.code == 110008){
 		          //验证码已失效

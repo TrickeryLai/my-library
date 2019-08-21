@@ -41,7 +41,7 @@
 										<span v-if="item.bizType == '03'">扣除保证金</span>
 										<span v-if="item.bizType == '05'">违约金</span>
 									</p>
-									<p class="cashDetail-time">{{commonFn.formatterTime(item.txTime)}}</p>
+									<p class="cashDetail-time">{{commonFn.formatterTime(item.txTime, 'yyyy年MM月dd hh:mm:ss')}}</p>
 									<p class="cashDetail-amount">
 										<span v-if="item.bizType == '00'">-</span>
 										<span v-else-if="item.bizType == '00A'">+</span>
@@ -55,10 +55,10 @@
 
 								</van-row>
 								<van-row>
-									<p class="cashDetail-line"><span class="cashDetail-line-l">对方户名：</span><span class="cashDetail-line-c">{{item.rptAcName}}</span></p>
-									<p class="cashDetail-line"><span class="cashDetail-line-l">对方账号：</span><span class="cashDetail-line-c">{{item.rptAcNo}}</span></p>
-									<p class="cashDetail-line"><span class="cashDetail-line-l">手续费：</span><span class="cashDetail-line-c">{{item.fee && dealPrice(item.fee.toFixed(2))}}元</span></p>
-									<p class="cashDetail-line"><span class="cashDetail-line-l">流水号：</span><span class="cashDetail-line-c">{{item.requestNo}}</span></p>
+									<p class="cashDetail-line"><span class="cashDetail-line-l">对方户名</span>：<span class="cashDetail-line-c">{{item.rptAcName}}</span></p>
+									<p class="cashDetail-line"><span class="cashDetail-line-l">对方账号</span>：<span class="cashDetail-line-c">{{item.rptAcNo}}</span></p>
+									<p class="cashDetail-line"><span class="cashDetail-line-l" style="letter-spacing: 4px;">手续费</span>：<span class="cashDetail-line-c">{{item.fee && dealPrice(item.fee.toFixed(2))}}元</span></p>
+									<p class="cashDetail-line"><span class="cashDetail-line-l" style="letter-spacing: 4px;">流水号</span>：<span class="cashDetail-line-c">{{item.requestNo}}</span></p>
 								</van-row>
 							</template>
 						</van-cell>

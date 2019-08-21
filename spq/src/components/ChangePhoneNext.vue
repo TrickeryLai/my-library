@@ -48,6 +48,7 @@
 							size="small"
 							type="info"
 							style="font-size: 12px;width: 100%;height: 34px;color: #fff;"
+							class="baseBtn"
 							@click="getSmsCaptcha"
 							:disabled="getSmsAgainTime != 61"
 						>
@@ -61,6 +62,7 @@
 				<van-button 
 				style="width: 100%;"
 				type="info"
+				class="baseBtn"
 				@click="updateMobileNumber()"
 				>确认</van-button>
 			</div>

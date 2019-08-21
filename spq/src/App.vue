@@ -193,4 +193,13 @@
   .fr{
     float: right;
   }
+  .baseBtn{
+    background:#c00;
+    border-color:#c00;
+    color:#fff;
+  }
+
+  button{
+    font-weight: bold!important;
+  }
   </style>

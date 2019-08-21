@@ -16,7 +16,7 @@
         <van-field
           v-model.trim="submitData.accountName"
           clearable
-          :readonly="isCanChange"
+          :readonly="true"
           placeholder="请输入户名"
         />
       </van-col>
@@ -98,6 +98,7 @@
     <van-button 
       v-if="btnTxt"
       type="info" 
+      class="baseBtn"
       style="width: 100%;margin-top: 10px;"
       @click="addFn">{{btnTxt}}</van-button>
   </div>
@@ -212,6 +213,7 @@
       }
     },
     created(){
+      console.log(123);
       this.getQueryData().then(() => {
         if(this.accountId){
           this.getCompanyData().then( () => {
@@ -219,12 +221,27 @@
             this.getAllProvince();
           })
         }else{
+          this.submitData.accountName = JSON.parse(localStorage.getItem('user')).companyName ? JSON.parse(localStorage.getItem('user')).companyName : '';
           this.getSuppBanks();
           this.getAllProvince();
         }
       });
-      
-      
+    },
+    watch: {
+    　　'$route' (to, from) {
+          this.getQueryData().then(() => {
+            if(this.accountId){
+              this.getCompanyData().then( () => {
+                this.getSuppBanks();
+                this.getAllProvince();
+              })
+            }else{
+              this.submitData.accountName = JSON.parse(localStorage.getItem('user')).companyName ? JSON.parse(localStorage.getItem('user')).companyName : '';
+              this.getSuppBanks();
+              this.getAllProvince();
+            }
+          });
+    　　}
     },
     methods:{
       onClickLeft(){
@@ -564,9 +581,13 @@
                 this.initPageData.status = response.data.status;
                 this.initPageType();
               }else{
-                console.log(response.data.accountId);
                 this.initPageData.accountId = response.data.accountId;
-                this.$router.replace({path: '/home/selfInfo/addBankCardCommon', query:{ accountId: response.data.accountId}});
+                this.initPageData.status = response.data.status;
+                // this.initPageType();
+                setTimeout(()=>{
+                  this.$router.replace({path: '/home/selfInfo/addBankCardCommon', query:{ accountId: response.data.accountId}});
+                })
+
               }
 
             }else{

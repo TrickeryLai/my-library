@@ -10,7 +10,7 @@
 	      <i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
 	    </van-nav-bar>
 	    <div @touchmove.stop class="model-content">
-						<van-cell-group v-if="detailData.cpCommercialPaperInfo">
+				<van-cell-group v-if="detailData.cpCommercialPaperInfo">
 				<h3 class="title">基本信息</h3>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">承兑人</van-col>
@@ -30,7 +30,7 @@
 				</van-row>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">背书次数</van-col>
-					<van-col class="detail-row-right" span="18">{{detailData.cpCommercialPaperInfo.endorseTimes}}</van-col>
+					<van-col class="detail-row-right" span="18">{{detailData.cpCommercialPaperInfo.endorseTimes}}次</van-col>
 				</van-row>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">持票人全称</van-col>
@@ -43,7 +43,7 @@
 				</van-row> -->
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">剩余天数</van-col>
-					<van-col class="detail-row-right" span="18">{{detailData.cpCommercialPaperInfo.stringDate}}</van-col>
+					<van-col class="detail-row-right" span="18">{{detailData.cpCommercialPaperInfo.stringDate}}天</van-col>
 				</van-row>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">调整天数</van-col>
@@ -70,21 +70,22 @@
 					<van-col class="detail-row-right" span="18" v-if="detailData.cpOrder">
 						<van-tag color="#c00" v-if="detailData.cpOrder.sellerOrdStatus == '00'">交易完成</van-tag>
 						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '01'">待买方报价</van-tag>
-						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '02'">等待签电子合同</van-tag>
-						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '03'">等待交保证金</van-tag>
-						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '04'">等待买家交保证金</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '02'">待确认合同</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '03'">待交保证金</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '04'">待买方交保证金</van-tag>
 						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '05'">待买方支付</van-tag>
-						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '06'">等转让背书</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '06'">待转让背书</van-tag>
 						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '07'">待买家签收</van-tag>
 						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '08'">等待签凭证</van-tag>
 						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '09'">待退保证金</van-tag>
 						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '11'">待确认报价</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '12'">待买方签合同</van-tag>
 						<van-tag v-else-if="detailData.cpOrder.sellerOrdStatus == '43'">订单已取消</van-tag>
-						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '44'">违约</van-tag>
+						<van-tag color="#c00" v-else-if="detailData.cpOrder.sellerOrdStatus == '44'">买方已取消</van-tag>
 					</van-col>
 				</van-row>
 			</van-cell-group>
-			<van-cell-group v-if="detailData.cpQuotedPriceInfo">
+			<van-cell-group v-if="detailData.cpQuotedPriceInfo && detailData.cpQuotedPriceInfo.approvalApr">
 				<h3 class="title">报价撮合信息</h3>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">报价人</van-col>
@@ -92,18 +93,18 @@
 				</van-row>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">报价年化利率</van-col>
-					<van-col class="detail-row-right" span="18">{{detailData.cpQuotedPriceInfo.approvalApr.toFixed(4)}}%</van-col>
+					<van-col class="detail-row-right" span="18">{{detailData.cpQuotedPriceInfo.approvalApr && detailData.cpQuotedPriceInfo.approvalApr.toFixed(4)}}%</van-col>
 				</van-row>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">报价每十万收益</van-col>
-					<van-col class="detail-row-right" span="18">￥{{dealPrice(detailData.cpQuotedPriceInfo.deductAmount.toFixed(2))}}</van-col>
+					<van-col class="detail-row-right" span="18">￥{{detailData.cpQuotedPriceInfo.deductAmount && dealPrice(detailData.cpQuotedPriceInfo.deductAmount.toFixed(2))}}</van-col>
 				</van-row>
 				<van-row class="detail-row">
 					<van-col class="detail-row-left" span="6">报价金额</van-col>
-					<van-col class="detail-row-right" span="18">￥{{dealPrice(detailData.cpQuotedPriceInfo.turnVolume.toFixed(2))}}</van-col>
+					<van-col class="detail-row-right" span="18">￥{{detailData.cpQuotedPriceInfo.turnVolume && dealPrice(detailData.cpQuotedPriceInfo.turnVolume.toFixed(2))}}</van-col>
 				</van-row>
 				<van-row class="detail-row">
-					<van-col class="detail-row-left" span="6">竞价时间</van-col>
+					<van-col class="detail-row-left" span="6">报价时间</van-col>
 					<van-col class="detail-row-right" span="18">{{detailData.cpQuotedPriceInfo.quoteTime}}</van-col>
 				</van-row>
 				<van-row class="detail-row">
@@ -226,23 +227,32 @@
 				});
 			},
 			uploadFile(item){
-				
+				this.$toast('鉴于电子合同涉及您企业的敏感信息，建议前往web网页端下载并保存，谢谢！');
+				return;
 				_server.uploadFile({
 					ordNo: this.detailData.ordNo,
 					flowId: item.flowId,
 					fileName: item.url
 				}).then(data => {
 			       	data = new Blob([data]);
-                    var reader = new FileReader();
-                    reader.readAsDataURL(data);
-                    reader.onload = function (e) {
-                        var a = document.createElement('a');
-                        a.download = item.name;
-                        a.href = e.target.result;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                    }
+           //          var reader = new FileReader();
+           //          reader.readAsDataURL(data);
+           //          reader.onload = function (e) {
+           //              var a = document.createElement('a');
+           //              a.download = item.name;
+           //              a.href = e.target.result;
+           //              document.body.appendChild(a);
+           //              a.click();
+           //              document.body.removeChild(a);
+           //          }
+           			
+           			let link = document.createElement('a');
+    				link.href = window.URL.createObjectURL(data);
+    				link.download = item.name;
+    				document.body.appendChild(link);
+    				link.click(true);
+    				// link.dispatchEvent('click');
+    				window.URL.revokeObjectURL(link.href);
 				})
 			},
 			deleteP(){
