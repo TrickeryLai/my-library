@@ -1,4 +1,9 @@
 
-var fs = require('fs');
-fs.open('input.txt', 'r+', function(err, fd){console.log('文件打开成功');console.log(fd);});
+let fs = require('fs');
+
+fs.open('input.txt', 'rs', '0666',function(err, data){
+	console.log(data);
+})
+
+
 

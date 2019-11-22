@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		
+	</title>
+	<style type="text/css">
+		div{
+			display: inline-block;
+			text-align: center;
+		}
+		.relative{
+			position: relative;
+			left: 0;
+			top: 0;
+			color: #fff;
+		}
+		.absolute{
+			position: absolute;
+			left: 0;
+			top: 0;
+			color:#fff;
+		}
+		.fixed{
+			position: fixed;
+			left: 0;
+			top: 0;
+			color:#fff;
+		}
+	</style>
+</head>
+<body>
+<!-- <div>
+	<div style="height: 1200px;"></div>
+	
+	<div class="fixed">relative</div>
+	<div class="relative">fixed</div>
+</div> -->
+<div>空白</div>
+<div class="relative">
+	relative
+	<div>空白</div>
+	<div class="absolute">
+		absolute
+		<div class="relative">
+			relative
+		</div>
+	</div>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+	window.onload = function(){
+		var divDom = document.getElementsByTagName('div');
+		Array.prototype.forEach.call(divDom, function(item, index){
+			var random = Math.floor(Math.random()*1000000).toFixed(6) * 1000000;
+			random = random.toString().slice(0, 6);
+			console.log(random)
+			item.style.width =  400 - 40*index + 'px';
+			item.style.height = 400 - 10*index + 'px';
+			item.style.backgroundColor = '#' + random;
+		})
+	}
+</script>

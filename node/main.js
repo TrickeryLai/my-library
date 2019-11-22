@@ -1,5 +1,12 @@
-'读取文件完成'
-var fs = require("fs");
-var data = fs.readFileSync("input.text");
-console.log(data.toString());
-console.log("程序执行结束");
+
+let fs = require('fs');
+
+fs.readFile('input.text',(err, data)=>{
+	if(err){
+		return console.log(err);
+	}
+
+	console.log(data.toString());
+});
+
+console.log('回调读取');

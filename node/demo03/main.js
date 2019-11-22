@@ -1,11 +1,19 @@
-var events = require('events')
-var eventEmitter = new events.EventEmitter();
-var connectHandler = function connected(){
-console.log("连接成功。");
-eventEmitter.emit('data_received');
-}
-eventEmitter.on('connection', connectHandler);
-eventEmitter.on ('data_received', function(){
-console.log("数据接收成功。");} );
+
+const events = require('events');
+const eventEmitter = new events.EventEmitter();
+
+
+const eventHandle = function(){
+	console.log('连接')
+	console.log('开始接收')
+	eventEmitter.emit('data_receive');
+};
+
+eventEmitter.on('connection', eventHandle);
+
+eventEmitter.on('data_receive', ()=>{
+	console.log('')
+	console.log('data');
+})
+
 eventEmitter.emit('connection');
-console.log('程序执行完毕');
