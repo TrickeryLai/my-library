@@ -5,6 +5,7 @@
     fixed
     @click-left="onClickLeft"
     class="top-bg"
+	
   >
     <span slot="title" class="top-bg-title">{{title}}</span>
     <i class="iconfont icon-previous_step top-bg-title" slot="left"></i>
