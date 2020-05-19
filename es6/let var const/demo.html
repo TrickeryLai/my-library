@@ -1,20 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+
 <body>
-<p id="123">阿斯蒂芬付付付付付付付付付付付付付付付付<!-- dcEditor css start --><style type="text/css">* {                        max-width: 100% !important;                        text-align: justify; color: red;                       word-break: break-all !important;                        word-wrap: break-word !important;                        white-space: normal !important;                    }                    span {                        display:inline-block;                        vertical-align: middle;                    }</style><!-- end --><em></em></p><button type="button" id="btn">btn</button>
+    <p id="123">阿斯蒂芬付付付付付付付付付付付付付付付付
+        <!-- dcEditor css start -->
+        <style type="text/css">
+            * {
+                max-width: 100% !important;
+                text-align: justify;
+                color: red;
+                word-break: break-all !important;
+                word-wrap: break-word !important;
+                white-space: normal !important;
+            }
+
+            span {
+                display: inline-block;
+                vertical-align: middle;
+            }
+        </style><!-- end --><em></em>
+    </p><button type="button" id="btn">btn</button>
 </body>
 <script>
-    window.onload = function(){
+    window.onload = function () {
 
-        document.getElementById('btn').onclick = function(){
-//            document.getElementsByTagName('style')[0].innerText = "";
+        document.getElementById('btn').onclick = function () {
+            //            document.getElementsByTagName('style')[0].innerText = "";
 
-            document.body.innerHTML =  document.body.innerHTML.replace(/<style(([\s\S])*)<\/style>/g, '');
+            document.body.innerHTML = document.body.innerHTML.replace(/<style(([\s\S])*)<\/style>/g, '');
         }
     }
+
+    function test(a, ...b) {
+        console.log(a, b)
+        console.log(a, ...b)
+    }
+
+    test(1, 2, 3, 4, 5)
+    test(1, ...[2, 3, 4, 5, 6])
+
+    function abc(v) {
+        var a = 0;
+
+        return function () {
+            return a += v
+        }
+    }
+
+    var result = abc(2)
+
+    console.log(result())
+    console.log(result())
+    console.log(result())
 </script>
+
 </html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+
+</body>
+
+<script type="text/javascript">
+    var Sub = function (options) {
+        console.log(options)
+        this.a = options && options.a || 1;
+        this.b = options && options.b || 2
+    }
+
+    Sub.prototype = {
+        getT: function () {
+            return this.a + this.b
+        }
+    }
+
+    var Middle = function (options) {
+        // Sub.call(this, options)
+        Sub(options)
+        console.log('a', a, b)
+    }
+    // Middle.constructor = Sub.constructor
+
+    Middle.prototype = new Sub;
+
+    console.log('middle', Middle, Sub.constructor)
+
+    var sup = new Middle({
+        a: 4,
+        b: 5
+    })
+
+    var sup2 = new Middle({
+        a: 4,
+        b: 50
+    })
+
+    console.log('aw', a, b)
+
+
+    sup.__proto__.__proto__.a = 2
+    console.log(sup.getT(), sup.constructor === sup)
+    console.log(sup2.getT(), sup2.constructor)
+</script>
+
+</html>
