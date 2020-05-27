@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>概率</title>
 </head>
+
 <body>
-<div id="likelihood">
-	<p>概率</p>
-</div>
+	<div id="likelihood">
+		<p>概率</p>
+	</div>
 
-<script type="text/javascript">
-	window.onload = function(){
-		function combination(a, b){
-			var aR = bR = 1,
-				aRs = bRs = '';
+	<script type="text/javascript">
+		window.onload = function () {
+			function combination(a, b) {
+				var aR = bR = 1,
+					aRs = bRs = '';
 
-			for(var i = a; i > (a - b); i--){
-				aR *= i;
-				aRs += '*' + i;
+				for (var i = a; i > (a - b); i--) {
+					aR *= i;
+					aRs += i + '*';
+				}
+
+				for (var j = b; j > 0; j--) {
+					bR *= j;
+					bRs += j + '*';
+				}
+				return aR / bR;
 			}
+			console.log(combination(10, 4));
 
-			for(var j = b; j > 0; j--){
-				bR *= j;
-				bRs += '*' + j;
-			}
-			return aR/bR;
 		}
-		console.log(combination(10, 4));
-
-	}
-</script>
+	</script>
 </body>
+
 </html>

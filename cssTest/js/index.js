@@ -1,11 +1,9 @@
-
-
-window.onload = function(){
+window.onload = function () {
     "use strict";
-  var initSize = new InitSize();
+    var initSize = new InitSize();
     initSize.onloadSet();
 
-    document.body.onclick = function(e){
+    document.body.onclick = function (e) {
         var fireWork = new Firework({
             number: 5,
             minSize: 50
@@ -16,7 +14,7 @@ window.onload = function(){
 
 };
 
-function InitSize(obj){
+function InitSize(obj) {
 
     obj = obj || {};
 
@@ -27,7 +25,7 @@ function InitSize(obj){
 }
 
 InitSize.prototype = {
-    getClientMsg: function(){
+    getClientMsg: function () {
         "use strict";
         var clientW = document.body.clientWidth;
         var clientH = document.body.clientHeight;
@@ -37,7 +35,7 @@ InitSize.prototype = {
             clientH: clientH
         };
     },
-    setFontSize: function(){
+    setFontSize: function () {
         "use strict";
 
         var clientMsg = this.getClientMsg();
@@ -46,7 +44,7 @@ InitSize.prototype = {
 
         document.getElementsByTagName('html')[0].style.fontSize = newFont + 'px';
     },
-    onloadSet: function(){
+    onloadSet: function () {
         "use strict";
 
         document.body.addEventListener('resize', this.setFontSize());

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <!-- X-Content-Type-Options -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <div>
+            <span @click="clickHandler(b)">
+                {{a}} click
+            </span>
+        </div>
+        <div>{{a}} {{b}}abc {{a}}</div>
+        <input mv-model="a" />
+        <div> bbb{{c.a}} {{c.b.a}}
+        </div>
+        <input mv-model="c.a" type="text" />
+
+        <textarea name="" id="" cols="30" rows="10" mv-model="b"></textarea>
+    </div>
+</body>
+
+</html>
+
+<script>
+    (function () {
+        class Mv {
+            constructor(options) {
+                // 设置代理
+                const {
+                    data = {}, el, methods = {}
+                } = options
+                this.data = new Proxy(data, this.proxyHanlder());
+                this.el = el;
+                this._dataNodes = {};
+                // 将 methods 内的上下文改变至当前
+                Object.keys(methods).forEach(method => {
+                    methods[method] = methods[method].bind(this)
+                })
+                this.methods = methods
+                this.init();
+            }
+
+            init() {
+                const nodes = document.querySelector(this.el).childNodes;
+                this.mvNodesHandler(nodes);
+            }
+
+            // 代理 data 设置
+            proxyHanlder() {
+                return {
+                    get: (target, key, receive) => {
+                        return Reflect.get(target, key);
+                    },
+
+                    set: (target, key, value, receive) => {
+                        Reflect.set(target, key, value);
+                        this.getKeys(key, value).forEach(k => {
+                            this.renderView(k)
+                        })
+                        return true;
+                    },
+                };
+            }
+
+            // 以 . 拼接 key 和 value 的每项 key 
+            getKeys(key, value) {
+                if (Object.prototype.toString.call(value) === '[object Object]') {
+                    return Object.keys(value).map(k => {
+                        if (Object.prototype.toString.call(value[k]) === '[object Object]') {
+                            return this.getKeys(`${key}.${k}`, value[k]).flat()
+                        }
+                        return `${key}.${k}`
+                    }).flat()
+                }
+
+                return [key]
+            }
+
+            // 更新 dataNodes 存储的 dom
+            renderView(key) {
+                this._dataNodes[key] && this._dataNodes[key].forEach((item) => {
+                    const nodeType = item.nodeType;
+                    if (nodeType === 3) {
+                        item.data = item._MVoData.replace(/(\{\{).*?(}})/g, (v) => {
+                            const result = v.replace(/[(\{\{)|(}})}]/g, "");
+                            return this.getModelData(result);
+                        });
+                    } else if (nodeType === 1) {
+                        const models = item.getAttribute("mv-model");
+                        item.value = this.getModelData(models);
+                    }
+                });
+            }
+
+            // dom 节点处理
+            mvNodesHandler(nodes) {
+                const _this = this;
+                const inputsName = ['INPUT', 'TEXTAREA']
+
+                nodes.forEach((item) => {
+                    const nodeType = item.nodeType;
+                    const nodeName = item.nodeName.toUpperCase()
+                    // 如果元素节点
+                    if (nodeType === 1) {
+                        this.handlerDl(item)
+                        // 如果是输入框
+                        if (inputsName.includes(nodeName)) {
+                            const models = item.getAttribute("mv-model");
+                            if (models) {
+                                item.value = this.getModelData(models);
+                                item.addEventListener("input", function (e) {
+                                    _this.data[models] = this.value;
+                                });
+
+                                this.setDataNodes(models, item);
+                            }
+                        } else {
+                            this.mvNodesHandler(item.childNodes);
+                        }
+
+                    } else if (nodeType === 3) {
+                        // 将原始文本存储
+                        item._MVoData = item.data;
+                        // data 替换
+                        item.data = item._MVoData.replace(/(\{\{).*?(}})/g, (v) => {
+                            // 匹配 {{key}}
+                            const models = v.replace(/[(\{\{)|(}})}]/g, "");
+                            this.setDataNodes(models, item);
+                            return this.getModelData(models);
+                        });
+                        // 输入框
+                    } else {
+                        this.mvNodesHandler(item.childNodes);
+                    }
+                });
+            }
+
+            // 根据绑定的data 存储对应的node
+            setDataNodes(keys, item, data = this._dataNodes) {
+                const key = keys
+                if (!data[key]) {
+                    data[key] = [];
+                }
+
+                data[key].push(item);
+            }
+
+            // 查找当前 model 的值
+            getModelData(models) {
+                let result = JSON.parse(JSON.stringify(this.data));
+                models.split(".").forEach((model) => {
+                    if (model) result = result[model];
+                });
+                return result;
+            }
+
+            // @事件处理
+            handlerDl(item) {
+                const _this = this;
+                const attrs = item.attributes
+                const regs = new RegExp('^@')
+                Array.prototype.forEach.call(attrs, (attr => {
+                    // 绑定事件操作
+                    const handlerEvent = attr.name
+                    // 绑定事件
+                    const handlers = attr.value.split(/[(|)]/)
+                    // 绑定事件回调名称
+                    const handlerName = handlers[0]
+                    // 回调参数
+                    const handlerArgs = handlers[1]
+                    if (regs.test(handlerEvent)) {
+                        const hand = handlerEvent.replace('@', '')
+                        // 绑定事件并且从 methods 内寻找事件触发
+                        item.addEventListener(hand, (function (e) {
+                            return _this.methods[handlerName].bind(null, _this
+                                .getModelData(
+                                    handlerArgs)
+                            )
+                        })())
+                    }
+                }))
+            }
+        }
+
+        new Mv({
+            el: "#app",
+            data: {
+                a: 1,
+                b: 2,
+                c: {
+                    a: "1",
+                    b: {
+                        a: 2
+                    }
+                },
+            },
+            methods: {
+                clickHandler(v, e) {
+                    this.data.c = {
+                        a: 2,
+                        b: {
+                            a: 4
+                        }
+                    }
+                }
+            }
+        });
+    })();
+</script>
