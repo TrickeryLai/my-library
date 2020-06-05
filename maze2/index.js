@@ -26,18 +26,23 @@
             this.start = start // 开始节点
             this.end = end // 结束点
             this.aliveNodes = [] // 对应以访问节点可用点坐标集合
+            this.successPath = [] // 起点至终点路径 
             this.totalF = 0 // 计数
 
             this.init()
         }
 
         init() {
+            this.itemColor = this.randomColor()
             this.initData()
             this.setStartItem()
             this.created()
             console.log(this.result, this.totalF)
-            this.render()
             return this
+        }
+
+        getResultPath() {
+            return this.successPath
         }
 
         // 设置开始点
@@ -54,6 +59,9 @@
             this.setItemId(x, y)
             this.currentItem = this.result[x][y]
             this.visitedArr.push(this.currentItem)
+            if (this.currentItem.type === 1) {
+                this.currentItem.color = this.itemColor
+            }
             this.aliveNodes.push({
                 p: this.visitedArr.length - 1,
                 item: JSON.parse(JSON.stringify(this.currentItem))
@@ -86,7 +94,7 @@
                 t: false, // 左
                 b: false, // 右
                 visited: false, // 是否已经访问
-                type: 1, // 类型， 1 普通节点, 2开始点 3 结束点
+                type: 1, // 类型， 1 普通节点, 2开始点 3 结束点 4 路线节点
                 id: false, // 以 坐标 "_"拼接
             }
             // 按照 width, height 初始化对应的二维数组
@@ -110,6 +118,13 @@
             }
         }
 
+        randomColor() {
+            const r = Math.floor(Math.random() * 255)
+            const g = Math.floor(Math.random() * 255)
+            const b = Math.floor(Math.random() * 255)
+            return `rgba(${r}, ${g}, ${b}, .4)`
+        }
+
         // 随机方向, 如果周围点无法访问，则返回false
         randomPosition(positionData = ['l', 'r', 't', 'b']) {
             if (positionData.length <= 0) {
@@ -130,17 +145,14 @@
                 const index = positionData.indexOf('t')
                 positionData.splice(index, 1)
             }
-
             if (width >= this.width - 1) {
                 const index = positionData.indexOf('b')
                 positionData.splice(index, 1)
             }
-
             if (height <= 0) {
                 const index = positionData.indexOf('l')
                 positionData.splice(index, 1)
             }
-
             if (height >= this.height - 1) {
                 const index = positionData.indexOf('r')
                 positionData.splice(index, 1)
@@ -168,7 +180,6 @@
         // 遍历生成
         created() {
             const result = this.result.flat()
-
             const lastLength = result.length - this.visitedArr.length
             if (lastLength <= 0) {
                 return false
@@ -176,18 +187,17 @@
             for (let i = 0; i < lastLength; i++) {
                 this.totalF++
                 let [cx, cy] = this.getItemIdArr(this.currentItem)
-
                 cx = Number(cx)
                 cy = Number(cy)
                 // 获取随机位置，如果当前节点周围点已访问，则会返回 false
                 const randomP = this.randomPosition(this.getPositionData(cx, cy))
+                // randomP 为 false 则表示该节点周围没有路，将会把此节点从 aliveNodes 内删除，同时将当前节点设置为上一个节点，如果上一个节点也没有路了，则会重复删除， 设置。
                 if (!randomP) {
                     if (-this.back > this.visitedArr.length - 2) {
                         break;
                     }
+                    this.itemColor = this.randomColor()
                     this.back -= 1
-                    // this.currentItem = this.visitedArr[this.aliveNodes.length - 1 + this.back]
-
                     // 当前周围点已经访问，则该节点从aliveNodes 中删除，并取上一个节点重新开始
                     this.aliveNodes.splice(-1, 1)
                     this.currentItem = this.aliveNodes.slice(-1)[0].item
@@ -195,7 +205,6 @@
                 }
                 // 将当前项的该方向设置为 true
                 this.result[cx][cy][randomP] = true
-
                 // 下一个节点处理
                 if (randomP === 'l') {
                     cy = cy - 1
@@ -204,7 +213,6 @@
                 if (randomP === 'r') {
                     cy = cy + 1
                     this.result[cx][cy].l = true
-
                 }
                 if (randomP === 't') {
                     cx = cx - 1
@@ -214,18 +222,21 @@
                 if (randomP === 'b') {
                     cx = cx + 1
                     this.result[cx][cy].t = true
-
                 }
 
-                // this.setItemId(cx, cy)
-                // // this.back 大于等于 0 的时候，则当前点不是之前节点
-                // this.aliveNodes.push({
-                //     p: this.visitedArr.length - 1,
-                //     item: JSON.parse(JSON.stringify(this.currentItem))
-                // })
+                // 如果当前到达了终点，因为 aliveNodes 内记录的是之前走的节点，并且已经删除了错误的路线节点，所以将 aliveNodes 内的点类型设置为 4，代表路线节点
+                if (cx === this.end.x && cy === this.end.y) {
+                    this.findsEnd = true
+                    this.successPath = [...this.aliveNodes]
+                    this.aliveNodes.forEach(aliveNode => {
+                        if (aliveNode.item.type !== 1) {
+                            return
+                        }
+                        const [x, y] = this.getItemIdArr(aliveNode.item)
 
-                // this.currentItem = JSON.parse(JSON.stringify(this.result[cx][cy]))
-                // this.visitedArr.push(this.currentItem)
+                        this.result[x][y].type = 4
+                    })
+                }
                 this.nodeTo(cx, cy)
                 this.back = 0
             }
@@ -250,8 +261,12 @@
                         t,
                         b,
                         type,
-                        id
+                        id,
+                        color
                     } = this.result[i][j]
+                    if (type === 1) {
+                        // block.style.background = color
+                    }
                     block.classList = `item l-${l} r-${r} t-${t} b-${b} item-type-${type} item-${id}`
                     line.appendChild(block)
                 }
@@ -262,14 +277,25 @@
         }
     }
 
-    new Maze({
-        width: 70,
-        height: 70,
+    const myMaze = new Maze({
+        width: 30,
+        height: 60,
         el: '#app',
         start: {
-            x: 20,
-            y: 20
+            x: 0,
+            y: 0
         },
 
     })
+
+    myMaze.render()
+
+    document.querySelector('#showLine').addEventListener('click', () => {
+        myMaze.getResultPath().forEach((item, index) => {
+            setTimeout(() => {
+                document.querySelector(`.item-${item.item.id}`).style.background = 'orange'
+            }, 0 * index)
+        })
+    })
+
 })()

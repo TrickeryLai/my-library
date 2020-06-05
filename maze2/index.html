@@ -20,17 +20,21 @@
             width: 20px;
             height: 20px;
             display: inline-block;
-            border: 2px solid #ccc;
+            border: 2px solid #aaa;
             box-sizing: border-box;
         }
 
         .item-type-2 {
-            background-color: #000;
+            background-color: #000 !important;
         }
 
         .item-type-3 {
-            background-color: red;
+            background-color: red !important;
         }
+
+        /* .item-type-4 {
+            background-color: orange;
+        } */
 
         .l-true {
             border-left-color: transparent;
@@ -51,7 +55,11 @@
 </head>
 
 <body>
-    <div id="app"></div>
+    <div id="app">
+        <div>
+            <button id="showLine">showLine</button>
+        </div>
+    </div>
 </body>
 
 </html>
