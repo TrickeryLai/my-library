@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>history && hash</title>
+</head>
+
+<body>
+    <input type="text" id="hash">
+    <select name="type" id="type">
+        <option value="go">go</option>
+        <option value="back">back</option>
+        <option value="replace">replace</option>
+    </select>
+    <button id="go">go</button>
+    <button id="hashChange">hashChange</button>
+    <a href="http://www.baidu.com">baidu</a>
+    <button id="get">history</button>
+</body>
+<script>
+    var btn = document.querySelector('#go')
+    window.onpopstate = function (state) {
+        console.log('popstate', state)
+    }
+    window.onhashchange = function (e) {
+        console.log('hashchange', e)
+    }
+    document.querySelector('#hashChange').addEventListener('click', function (e) {
+        window.location.hash += '1';
+    })
+    btn.addEventListener('click', function (e) {
+        var select = document.querySelector('select[name="type"]').value
+        // url 必须同源
+        window.history.pushState(['123', 412], 'title1', '')
+        window.history.forward()
+        // window.location.href = 'http://www.baidu.com'
+    })
+    document.querySelector('#get').addEventListener('click', function (e) {
+        console.log(history)
+    })
+</script>
+
+</html>

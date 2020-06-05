@@ -61,7 +61,9 @@
                     },
 
                     set: (target, key, value, receive) => {
+                        // 设置 data
                         Reflect.set(target, key, value);
+                        // data 更改，根据 key, value 重新处理 key, value 渲染
                         this.getKeys(key, value).forEach(k => {
                             this.renderView(k)
                         })
@@ -104,12 +106,12 @@
             mvNodesHandler(nodes) {
                 const _this = this;
                 const inputsName = ['INPUT', 'TEXTAREA']
-
                 nodes.forEach((item) => {
                     const nodeType = item.nodeType;
                     const nodeName = item.nodeName.toUpperCase()
                     // 如果元素节点
                     if (nodeType === 1) {
+                        // 事件绑定
                         this.handlerDl(item)
                         // 如果是输入框
                         if (inputsName.includes(nodeName)) {
@@ -119,13 +121,11 @@
                                 item.addEventListener("input", function (e) {
                                     _this.data[models] = this.value;
                                 });
-
                                 this.setDataNodes(models, item);
                             }
                         } else {
                             this.mvNodesHandler(item.childNodes);
                         }
-
                     } else if (nodeType === 3) {
                         // 将原始文本存储
                         item._MVoData = item.data;
@@ -136,7 +136,6 @@
                             this.setDataNodes(models, item);
                             return this.getModelData(models);
                         });
-                        // 输入框
                     } else {
                         this.mvNodesHandler(item.childNodes);
                     }

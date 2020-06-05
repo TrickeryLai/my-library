@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/index.css"],"names":[],"mappings":"AAAA;AACA;AACA;AACA;AACA;AACA,C","file":"style/app.71d176a538236077ca1c.css","sourcesContent":[".red {\r\n  padding: 100px;\r\n  height: 400px;\r\n  color: red;\r\n  background: url(./../6efee6c45bc80637abe8d08cbf7679fd.jpg) no-repeat scroll center / cover content-box;\r\n}"],"sourceRoot":""}

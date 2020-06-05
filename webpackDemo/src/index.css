@@ -1,0 +1,6 @@
+.red {
+  padding: 100px;
+  height: 400px;
+  color: red;
+  background: url("./pic01.jpg") no-repeat scroll center / cover content-box;
+}
